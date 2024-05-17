@@ -7,11 +7,14 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "textlint docs/**"
   },
   "author": "philomagi <tooppoo56@gmail.com>",
   "license": "SEE LICENSE IN LICENSE",
   "devDependencies": {
-    "textlint": "^14.0.4"
+    "textlint": "^14.0.4",
+    "textlint-rule-no-doubled-joshi": "^5.1.0",
+    "textlint-rule-preset-ja-spacing": "^2.4.3",
+    "textlint-rule-preset-japanese": "^10.0.3"
   }
 }
