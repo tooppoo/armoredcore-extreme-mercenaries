@@ -54,7 +54,7 @@ kramdown:
   # https://github.com/jekyll/jekyll/issues/8588
   link_defs: >
     {
-      invite: ["https://discord.gg/F9HkPsQ37J", "Discordサーバー"],
+      invite: ["https://discord.gg/F9HkPsQ37J", "招待リンク"],
       question: ["https://discord.com/channels/1240446809906610236/1240455428589223996", "運営への質問"],
       suggestion: ["https://discord.com/channels/1240446809906610236/1240455802272092211", "要望・改善案"],
     }
