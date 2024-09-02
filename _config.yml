@@ -43,3 +43,8 @@ plugins:
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
+
+# options
+## http://jekyllrb-ja.github.io/docs/configuration/options/
+timezone: Asia/Tokyo
+encoding: utf-8

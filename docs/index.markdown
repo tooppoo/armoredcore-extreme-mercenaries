@@ -6,8 +6,14 @@ layout: default
 title: TOP
 ---
 
-# このページについて
-フロム・ソフトウェア開発のゲーム「アーマードコア」シリーズの非公式discordサーバー「ARMOREDCORE EXTREME MERCENARIES」に関する情報を公開するサイトです
+# [このページについて](#about)
+フロム・ソフトウェア開発のゲーム「アーマードコア」シリーズの非公式discordサーバー「ARMOREDCORE EXTREME MERCENARIES」に関する情報を公開するサイトです。
 
-# [利用規約](/armoredcore-extreme-mercenaries/rule)
-サーバーの利用者は必ず目を通してください
+# [利用規約](#rule)
+サーバーの利用規約は[こちら](./rule)から確認できます。
+サーバーの利用者は必ず目を通してください。
+
+# [Discordサーバー](#server)
+以下のリンクからサーバーに加入できます。
+
+[https://discord.gg/F9HkPsQ37J](https://discord.gg/F9HkPsQ37J)
