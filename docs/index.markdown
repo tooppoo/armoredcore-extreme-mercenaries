@@ -14,6 +14,6 @@ title: TOP
 サーバーの利用者は必ず目を通してください。
 
 # [Discordサーバー](#server)
-以下のリンクからサーバーに加入できます。
+以下の招待リンクからアクセスできます
 
-[https://discord.gg/F9HkPsQ37J](https://discord.gg/F9HkPsQ37J)
+[招待リンク][invite]{:target="_blank"}
