@@ -1,0 +1,21 @@
+changelog:
+  categories:
+    - title: 利用規約の更新
+      labels:
+        - Rule
+    - title: デザインの更新
+      labels:
+        - Design
+    - title: FAQ関連の更新
+      labels:
+        - FAQ
+    - title: Discord関連の更新
+      labels:
+        - Discord
+    - title: Build関連の更新
+      labels:
+        - Build
+    - title: その他の更新
+      labels:
+        - '*'
+
