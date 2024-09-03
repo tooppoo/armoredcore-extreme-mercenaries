@@ -13,22 +13,23 @@ function main(): void {
   const ymd = formatInTimeZone(new Date(), 'Asia/Tokyo', 'yyyy-MM-dd');
 
   const fileName = `${ymd}-${id}.md`
-  const body = template(title)
+  const body = template(title, ymd)
   const dist = distPath(path.resolve('docs', '_posts'), fileName)
 
   $`echo ${body} > ${dist}`
 }
 
-function template(title: string): string {
+function template(title: string, date: string): string {
   return `---
 # metadata for jekyll
-layout: default
+layout: updates
 title: "${title}"
 # tags: 
 # categories: 
 ---
 
-# ${title}
+# 更新履歴 - ${date}
+## ${title}
 
 write body here
 `
