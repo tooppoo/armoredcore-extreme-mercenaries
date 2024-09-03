@@ -108,7 +108,7 @@ title: 利用規約
 # [12. 他コミュニティの宣伝行為について](#advertisement) {#advertisement}
 1. アーマードコア関連のコミュニティである場合、宣伝・共有には特に制限を設けません
 1. アーマードコアに関連しないコミュニティを宣伝・共有したい場合、[{{ site.discord.link_defs.question.caption }}]({{ site.discord.link_defs.question.url }}){:target="_blank"}からご相談ください
-1. [禁止コンテンツ](#denied-contents) {#denied-contents}を取り扱うコミュニティの宣伝・共有行為は禁止です
+1. [禁止コンテンツ](#denied-contents)を取り扱うコミュニティの宣伝・共有行為は禁止です
 
 # [13. 上記ルールに従わない場合について](#penalties) {#penalties}
 1. 上記ルールに従わないことで発生したあらゆるトラブル・問題について、本サーバーの管理者・運営は一切の責任を負いかねます
