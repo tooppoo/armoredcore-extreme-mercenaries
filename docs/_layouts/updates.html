@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="{{ site.lang }}">
+
+<head>
+  {% include head.html %}
+</head>
+
+<body>
+  <!-- remove header -->
+  <div class="wrapper">
+    <section id="main-contents">
+      {% include title.html %}
+
+      {{ content }}
+
+      <div>
+        <a href="{{ site.baseurl }}/updates">
+          更新履歴 一覧に戻る
+        </a>
+      </div>
+    </section>
+
+  </div>
+  <hr class="mb-10" />
+  {% include footer.html %}
+</body>
+
+</html>

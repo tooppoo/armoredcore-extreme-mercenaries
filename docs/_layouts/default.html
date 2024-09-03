@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="{{ site.lang }}">
+
+<head>
+  {% include head.html %}
+</head>
+
+<body>
+  <!-- remove header -->
+  <div class="wrapper">
+    <section id="main-contents">
+      {% include title.html %}
+
+      {{ content }}
+    </section>
+
+  </div>
+  <hr class="mb-10" />
+  {% include footer.html %}
+</body>
+
+</html>

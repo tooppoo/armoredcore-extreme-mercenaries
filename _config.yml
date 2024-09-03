@@ -1,0 +1,76 @@
+# Site settings
+# These are used to personalize your new site. If you look in the HTML files,
+# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
+# You can create any custom variable you would like, and they will be accessible
+# in the templates via {{ site.myvariable }}.
+
+# my variables
+variables:
+  game: ARMORED CORE
+  server: EXTREME MERCENARIES
+
+# common
+title: ARMORED CORE EXTREME MERCENARIES
+email: tooppoo56@gmail.com
+description: >- # this means to ignore newlines until "baseurl:"
+  フロム・ソフトウェア開発のゲーム<br>
+  「アーマードコア」シリーズの非公式discordサーバー<br>
+  「ARMOREDCORE EXTREME MERCENARIES」の情報公開サイトです
+domain: "tooppoo.github.io"
+baseurl: "/armoredcore-extreme-mercenaries"
+url: "https://tooppoo.github.io"
+repository: "tooppoo/armoredcore-extreme-mercenaries"
+twitter_username: Philomagi
+github_username:  tooppoo
+google_analytics: G-QVY9FDWE2X
+
+lang: 'ja_JP'
+locale: 'ja_JP'
+source: docs
+
+# Build settings
+theme: jekyll-theme-midnight
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+# Exclude from processing.
+# The following items will not be processed, by default.
+# Any item listed under the `exclude:` key here will be automatically added to
+# the internal "default list".
+#
+# Excluded items can be processed by explicitly listing the directories or
+# their entries' file path in the `include:` list.
+#
+# exclude:
+#   - .sass-cache/
+#   - .jekyll-cache/
+#   - gemfiles/
+#   - Gemfile
+#   - Gemfile.lock
+#   - node_modules/
+#   - vendor/bundle/
+#   - vendor/cache/
+#   - vendor/gems/
+#   - vendor/ruby/
+
+# options
+## http://jekyllrb-ja.github.io/docs/configuration/options/
+timezone: Asia/Tokyo
+encoding: utf-8
+
+discord:
+  link_defs:
+    invite:
+      url: https://discord.gg/F9HkPsQ37J
+      caption: 招待リンク
+    question:
+      url: https://discord.com/channels/1240446809906610236/1240455428589223996
+      caption: 運営への質問
+    suggestion:
+      url: https://discord.com/channels/1240446809906610236/1240455802272092211
+      caption: 要望・改善案
+
+# override
+github:
+  owner_name: Philomagi
