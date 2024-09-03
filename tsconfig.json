@@ -14,6 +14,7 @@
     /* Emit */
     "outDir": "./scripts/dist",
     "newLine": "lf",
+    "noEmit": true,
 
     /* Interop Constraints */
     "esModuleInterop": true,
