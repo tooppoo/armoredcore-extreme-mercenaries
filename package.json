@@ -1,7 +1,7 @@
 {
   "name": "ac6-mission-deeply-docs",
   "version": "1.0.0",
-  "description": "Docs for AC& MISSION DEEPLY",
+  "description": "Docs for AC EXTREME MERCENARIES",
   "main": "index.js",
   "directories": {
     "doc": "docs"
@@ -9,10 +9,10 @@
   "scripts": {
     "dev": "bundle exec jekyll serve --incremental",
     "build": "bundle exec jekyll clean && bundle exec jekyll build",
-    "test": "bundle exec jekyll doctor&& textlint _site/**"
+    "test": "bundle exec jekyll doctor && textlint _site/**"
   },
   "author": "philomagi <tooppoo56@gmail.com>",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "SEE LICENSE file",
   "devDependencies": {
     "textlint": "^14.0.4",
     "textlint-plugin-html": "^1.0.1",
