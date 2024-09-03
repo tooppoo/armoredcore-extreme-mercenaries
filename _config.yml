@@ -7,7 +7,9 @@
 title: ARMORED CORE<br>EXTREME MERCENARIES
 email: tooppoo56@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  フロム・ソフトウェア開発のゲーム「アーマードコア」シリーズの非公式discordサーバー「ARMOREDCORE EXTREME MERCENARIES」の情報公開サイトです
+  フロム・ソフトウェア開発のゲーム<br>
+  「アーマードコア」シリーズの非公式discordサーバー<br>
+  「ARMOREDCORE EXTREME MERCENARIES」の情報公開サイトです
 domain: "tooppoo.github.io"
 baseurl: "/armoredcore-extreme-mercenaries"
 url: "https://tooppoo.github.io/"
@@ -16,7 +18,8 @@ twitter_username: Philomagi
 github_username:  tooppoo
 google_analytics: G-QVY9FDWE2X
 
-show_downloads: false
+lang: 'ja_JP'
+locale: 'ja_JP'
 source: docs
 
 # Build settings
@@ -61,3 +64,7 @@ discord:
     suggestion:
       url: https://discord.com/channels/1240446809906610236/1240455802272092211
       caption: 要望・改善案
+
+# override
+github:
+  owner_name: Philomagi
