@@ -5,10 +5,6 @@ _site
 .jekyll-metadata
 vendor
 
-# Github Pages
-## https://docs.github.com/ja/pages/setting-up-a-github-pages-site-with-jekyll/creating-a-github-pages-site-with-jekyll
-Gemfile.lock
-
 # nodejs
 node_modules
 
