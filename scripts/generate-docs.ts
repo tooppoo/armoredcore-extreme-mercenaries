@@ -20,7 +20,7 @@ function template(title: string): string {
   return `---
 # metadata for jekyll
 layout: default
-title: ${title}
+title: "${title}"
 ---
 
 # ${title}

@@ -28,6 +28,9 @@ title: TOP
 
 利用規約・罰則規定を確認して納得いただいた上でご参加ください。
 
+# [更新履歴](#updates) {#updates}
+本文書の更新履歴は[こちら](./updates)からご確認いただけます
+
 # [ライセンス](#license) {#license}
 本文書は[CC BY-ND 4.0](https://creativecommons.org/licenses/by-nd/4.0){:target="_blank"}によってライセンスされています
 

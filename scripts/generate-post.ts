@@ -1,6 +1,7 @@
 
 import { argv, $ } from 'zx'
 import { formatInTimeZone } from 'date-fns-tz'
+import path from 'path'
 import { require } from './common/require.ts';
 import { distPath } from './common/dist-path.ts';
 
@@ -13,7 +14,7 @@ function main(): void {
 
   const fileName = `${ymd}-${id}.md`
   const body = template(title)
-  const dist = distPath('_posts', fileName)
+  const dist = distPath(path.resolve('docs', '_posts'), fileName)
 
   $`echo ${body} > ${dist}`
 }
@@ -22,7 +23,7 @@ function template(title: string): string {
   return `---
 # metadata for jekyll
 layout: default
-title: ${title}
+title: "${title}"
 # tags: 
 # categories: 
 ---
