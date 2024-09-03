@@ -15,21 +15,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    # setup runtime
     - uses: actions/setup-node@v4
       with:
         node-version-file: '.node-version'
         cache: 'npm'
-    - run: npm ci
-    - run: npm test
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
     - uses: ruby/setup-ruby@v1
       with:
         bundler-cache: true
-    - run: bundle exec jekyll doctor
-    - run: bundle exec jekyll build
+    # integration
+    - run: npm ci
+    - run: npm run build
+    - run: npm test
+    # save artifacts
     - uses: actions/upload-artifact@v4
       with:
         name: documents

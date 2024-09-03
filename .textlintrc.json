@@ -1,5 +1,7 @@
 {
-  "plugins": {},
+  "plugins": [
+    "html"
+  ],
   "filters": {},
   "rules": {
     "no-doubled-joshi": true,

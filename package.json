@@ -1,18 +1,21 @@
 {
-  "name": "ac6-misson-deeply-docs",
+  "name": "ac6-mission-deeply-docs",
   "version": "1.0.0",
-  "description": "Docs for AC& MISSON DEEPLY",
+  "description": "Docs for AC& MISSION DEEPLY",
   "main": "index.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "test": "textlint docs/**"
+    "dev": "bundle exec jekyll serve --incremental",
+    "build": "bundle exec jekyll clean && bundle exec jekyll build",
+    "test": "bundle exec jekyll doctor&& textlint _site/**"
   },
   "author": "philomagi <tooppoo56@gmail.com>",
   "license": "SEE LICENSE IN LICENSE",
   "devDependencies": {
     "textlint": "^14.0.4",
+    "textlint-plugin-html": "^1.0.1",
     "textlint-rule-no-doubled-joshi": "^5.1.0",
     "textlint-rule-preset-ja-spacing": "^2.4.3",
     "textlint-rule-preset-japanese": "^10.0.3"
