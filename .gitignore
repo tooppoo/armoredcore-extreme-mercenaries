@@ -8,5 +8,8 @@ vendor
 # nodejs
 node_modules
 
+# scripts
+scripts/dist
+
 # editor
 .vscode

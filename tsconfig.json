@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    /* Projects */
+    /* Language and Environment */
+    "target": "ESNext",
+
+    /* Modules */
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowImportingTsExtensions": true,
+
+    /* JavaScript Support */
+
+    /* Emit */
+    "outDir": "./scripts/dist",
+    "newLine": "lf",
+
+    /* Interop Constraints */
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Type Checking */
+    "strict": true,
+
+    /* Completeness */
+    "skipLibCheck": true
+  },
+  "include": [
+    "scripts/**/*"
+  ]
+}

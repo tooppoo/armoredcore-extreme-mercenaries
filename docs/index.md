@@ -8,7 +8,7 @@ title: TOP
 
 # [このページについて](#about) {#about}
 フロム・ソフトウェア開発のゲーム「アーマードコア」シリーズの非公式discordサーバー<br>
-「ARMOREDCORE EXTREME MERCENARIES」に関する情報を公開するサイトです。
+「{{ site.title }}」に関する情報を公開するサイトです。
 
 # [利用規約](#rule) {#rule}
 サーバーの利用規約は[こちら](./rule)から確認できます。
