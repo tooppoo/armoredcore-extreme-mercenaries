@@ -50,12 +50,14 @@ plugins:
 timezone: Asia/Tokyo
 encoding: utf-8
 
-# markdown
-kramdown:
-  # https://github.com/jekyll/jekyll/issues/8588
-  link_defs: >
-    {
-      invite: ["https://discord.gg/F9HkPsQ37J", "招待リンク"],
-      question: ["https://discord.com/channels/1240446809906610236/1240455428589223996", "運営への質問"],
-      suggestion: ["https://discord.com/channels/1240446809906610236/1240455802272092211", "要望・改善案"],
-    }
+discord:
+  link_defs:
+    invite:
+      url: https://discord.gg/F9HkPsQ37J
+      caption: 招待リンク
+    question:
+      url: https://discord.com/channels/1240446809906610236/1240455428589223996
+      caption: 運営への質問
+    suggestion:
+      url: https://discord.com/channels/1240446809906610236/1240455802272092211
+      caption: 要望・改善案
