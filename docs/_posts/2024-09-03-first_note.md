@@ -8,5 +8,4 @@ title: "初版公開"
 
 # 初版公開
 
-write body here
-
+{{ site.title }}のドキュメント初版を公開しました
