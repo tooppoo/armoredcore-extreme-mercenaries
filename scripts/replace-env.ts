@@ -13,7 +13,7 @@ function main() {
 
   const replaced = Object.entries(env).reduce(
     (result, [key, value]) => {
-      const pattern = new RegExp(`\{\{ *env\.${key} *\}\}`, 'g')
+      const pattern = new RegExp(`{{ *env.${key} *}}`, 'g')
 
       return result.replaceAll(pattern, value)
     },
