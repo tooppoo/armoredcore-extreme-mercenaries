@@ -18,7 +18,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      artifact_name: ${{ steps.define-artifact-name.output.artifact_name }}
+      artifact_name: ${{ steps.define-artifact-name.outputs.artifact_name }}
     steps:
     - uses: actions/checkout@v4
     # setup runtime
