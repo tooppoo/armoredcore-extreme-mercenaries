@@ -1,10 +1,9 @@
 import { fileURLToPath } from 'url'
 import path from 'path'
 
-export function distPath(target: string, fileName: string): string {
+export function distPath(...paths: string[]): string {
   const here = fileURLToPath(import.meta.url)
   const dir = path.dirname(here)
 
-  return path.resolve(dir, '..', '..', target, fileName)
+  return path.resolve(dir, '..', '..', ...paths)
 }
-

@@ -13,3 +13,6 @@ scripts/dist
 
 # editor
 .vscode
+
+# env
+.env
