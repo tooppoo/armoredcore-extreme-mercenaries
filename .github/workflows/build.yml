@@ -9,10 +9,16 @@ on:
   pull_request:
     branches: [ "main" ]
   workflow_call:
+    outputs:
+      artifact_name:
+        description: "built artifact name, it is ready to deploy"
+        value: ${{ jobs.build.outputs.artifact_name }}
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      artifact_name: ${{ steps.define-artifact-name.output.artifact_name }}
     steps:
     - uses: actions/checkout@v4
     # setup runtime
@@ -28,7 +34,10 @@ jobs:
     - run: npm run build
     - run: npm test
     # save artifacts
+    - name: define artifact name
+      id: define-artifact-name
+      run: echo "artifact_name=documents-${{ github.sha }}.zip" >> $GITHUB_OUTPUT
     - uses: actions/upload-artifact@v4
       with:
-        name: documents
+        name: ${{ steps.define-artifact-name.outputs.artifact_name }}
         path: _site
