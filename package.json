@@ -14,7 +14,8 @@
     "test": "bundle exec jekyll doctor && textlint _site/**",
     "post:new": "tsx ./scripts/generate-post.ts",
     "docs:new": "tsx ./scripts/generate-docs.ts",
-    "replace-env": "tsx ./scripts/replace-env.ts",
+    "env:generate": "tsx ./scripts/generate-env.ts",
+    "env:apply": "tsx ./scripts/replace-env.ts",
     "tsc": "tsc"
   },
   "author": "philomagi <tooppoo56@gmail.com>",

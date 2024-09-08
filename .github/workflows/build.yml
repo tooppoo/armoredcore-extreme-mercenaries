@@ -31,6 +31,13 @@ jobs:
         bundler-cache: true
     # integration
     - run: npm ci
+    - run: |
+        npm run env:generate
+        npm run env:apply
+      env:
+        DISCORD_LINK_INVITE: ${{ vars.DISCORD_LINK_INVITE }}
+        DISCORD_LINK_QUESTION: ${{ vars.DISCORD_LINK_QUESTION }}
+        DISCORD_LINK_SUGGESTION: ${{ vars.DISCORD_LINK_SUGGESTION }}
     - run: npm run build
     - run: npm test
     # save artifacts
