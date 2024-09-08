@@ -36,7 +36,7 @@ jobs:
     # save artifacts
     - name: define artifact name
       id: define-artifact-name
-      run: echo "artifact_name=documents-${{ github.sha }}.zip" >> $GITHUB_OUTPUT
+      run: echo "artifact_name=documents-${{ github.sha }}" >> $GITHUB_OUTPUT
     - uses: actions/upload-artifact@v4
       with:
         name: ${{ steps.define-artifact-name.outputs.artifact_name }}
