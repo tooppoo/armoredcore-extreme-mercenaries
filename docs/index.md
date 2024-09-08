@@ -26,7 +26,7 @@ title: TOP
 
 [{{ site.discord.link_defs.invite.url }}]({{ site.discord.link_defs.invite.url }}){:target="_blank"}
 
-利用規約・罰則規定を確認して納得いただいた上でご参加ください。
+利用規約・罰則規定を確認・同意いただいた上でご参加ください。
 
 # [更新履歴](#updates) {#updates}
 本文書の更新履歴は[こちら](./updates)からご確認いただけます
