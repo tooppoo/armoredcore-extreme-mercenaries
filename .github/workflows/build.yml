@@ -20,9 +20,9 @@ jobs:
     outputs:
       artifact_name: ${{ steps.define-artifact-name.outputs.artifact_name }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
     # setup runtime
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # v4
       with:
         node-version-file: '.node-version'
         cache: 'npm'
@@ -44,7 +44,7 @@ jobs:
     - name: define artifact name
       id: define-artifact-name
       run: echo "artifact_name=documents-${{ github.sha }}" >> $GITHUB_OUTPUT
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4
       with:
         name: ${{ steps.define-artifact-name.outputs.artifact_name }}
         path: _site
