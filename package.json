@@ -24,7 +24,7 @@
     "@types/node": "22.7.4",
     "date-fns": "3.6.0",
     "date-fns-tz": "3.2.0",
-    "textlint": "14.2.0",
+    "textlint": "14.2.1",
     "textlint-plugin-html": "1.0.1",
     "textlint-rule-no-doubled-joshi": "5.1.0",
     "textlint-rule-preset-ja-spacing": "2.4.3",
