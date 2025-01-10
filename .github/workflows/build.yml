@@ -44,7 +44,7 @@ jobs:
     - name: define artifact name
       id: define-artifact-name
       run: echo "artifact_name=documents-${{ github.sha }}" >> $GITHUB_OUTPUT
-    - uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4
+    - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
       with:
         name: ${{ steps.define-artifact-name.outputs.artifact_name }}
         path: _site
