@@ -1,5 +1,6 @@
 import type { LinksFunction } from "@remix-run/cloudflare";
 import {
+  Link,
   Links,
   Meta,
   Outlet,
@@ -7,7 +8,6 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
-import "./root.css";
 import "./tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -33,11 +33,25 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <header>
-          <div>ARMORED CORE</div>
-          <div>EXTREME MERCENARIES</div>
+        <header className="flex justify-center items-center py-3">
+          <h1 className="text-center">
+            ARMORED CORE<br/>
+            EXTREME MERCENARIES
+          </h1>
         </header>
         {children}
+        <footer className="py-3">
+          <div className="flex items-center justify-center text-xs">
+            <Link to='/'>TOP</Link>
+          </div>
+          <div className="my-1"></div>
+          <div className="flex items-end justify-end text-xs">
+            This document is maintained on&nbsp;
+            <a href="https://github.com/tooppoo/armoredcore-extreme-mercenaries">GitHub</a>
+            &nbsp;by&nbsp; 
+            <a href="https://x.com/Philomagi">Philomagi</a>
+          </div>
+        </footer>
         <ScrollRestoration />
         <Scripts />
       </body>
