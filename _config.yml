@@ -17,8 +17,8 @@ description: >- # this means to ignore newlines until "baseurl:"
   「アーマードコア」シリーズの非公式discordサーバー<br>
   「ARMOREDCORE EXTREME MERCENARIES」の情報公開サイトです
 domain: "tooppoo.github.io"
-baseurl: "/armoredcore-extreme-mercenaries"
-url: "https://tooppoo.github.io"
+baseurl: "/"
+url: "armoredcore-extreme-mercenaries.philomagi.dev"
 repository: "tooppoo/armoredcore-extreme-mercenaries"
 twitter_username: Philomagi
 github_username:  tooppoo
