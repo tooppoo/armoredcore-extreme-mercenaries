@@ -32,16 +32,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
-        <header className="flex justify-center items-center py-3">
+      <body className="p-5">
+        <header className="flex justify-center items-center">
           <h1 className="text-center">
             ARMORED CORE<br/>
             EXTREME MERCENARIES
           </h1>
         </header>
-        {children}
-        <footer className="py-3">
-          <div className="flex items-center justify-center text-xs">
+        <div className="my-4 border-b"></div>
+        <article>
+          {children}
+        </article>
+        <div className="my-4 border-b"></div>
+        <footer>
+          <div className="flex items-center justify-center text-base">
             <Link to='/'>TOP</Link>
           </div>
           <div className="my-1"></div>
