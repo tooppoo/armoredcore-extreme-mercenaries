@@ -5,7 +5,7 @@ import { SitemapFunction } from 'remix-sitemap';
 import { Margin } from '~/lib/components/utils/spacer';
 import { buildMeta, defaultMeta, unofficialServer } from '~/lib/head/build-meta';
 import { toTitle } from '~/lib/updates/functions';
-import { Update, updates } from '~/lib/updates/record.server';
+import { Update, updates } from '~/lib/updates/record';
 
 type AnUpdateLoader = Readonly<{
   record: Update
