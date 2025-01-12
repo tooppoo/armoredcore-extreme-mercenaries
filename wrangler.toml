@@ -77,8 +77,10 @@ pages_build_output_dir = "./build/client"
 
 ######## PRODUCTION environment config ########
 
-# [env.production.vars]
-# API_KEY = "abc123"
+[env.production.vars]
+DISCORD_LINK_INVITE     = "https://discord.gg/F9HkPsQ37J"
+DISCORD_LINK_QUESTION   = "https://discord.com/channels/1240446809906610236/1240455428589223996"
+DISCORD_LINK_SUGGESTION = "https://discord.com/channels/1240446809906610236/1240455802272092211"
 
 # [[env.production.kv_namespaces]]
 # binding = "MY_KV_NAMESPACE"
