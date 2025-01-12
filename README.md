@@ -1,27 +1,47 @@
-[![build documents](https://github.com/tooppoo/armoredcore-extreme-mercenaries/actions/workflows/build.yml/badge.svg)](https://github.com/tooppoo/armoredcore-extreme-mercenaries/actions/workflows/build.yml)
+# Welcome to Remix + Cloudflare!
 
- <p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><a property="dct:title" rel="cc:attributionURL" href="https://github.com/tooppoo/armoredcore-extreme-mercenaries"> This document </a> by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://twitter.com/Philomagi">philomagi</a> is licensed under <a href="https://creativecommons.org/licenses/by-nd/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY-ND 4.0<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nd.svg?ref=chooser-v1" alt=""></a></p> 
+- 📖 [Remix docs](https://remix.run/docs)
+- 📖 [Remix Cloudflare docs](https://remix.run/guides/vite#cloudflare)
 
-# Maintenance
-## View on local
+## Development
+
+Run the dev server:
+
 ```sh
 npm run dev
 ```
 
-## Build
+To run Wrangler:
+
+```sh
+npm run build
+npm run start
+```
+
+## Typegen
+
+Generate types for your Cloudflare bindings in `wrangler.toml`:
+
+```sh
+npm run typegen
+```
+
+You will need to rerun typegen whenever you make changes to `wrangler.toml`.
+
+## Deployment
+
+First, build your app for production:
+
 ```sh
 npm run build
 ```
 
-## Create new docs
+Then, deploy your app to Cloudflare Pages:
+
 ```sh
-npm run post:new
-```
-```sh
-npm run docs:new
+npm run deploy
 ```
 
-## Lint
-```sh
-npm run test
-```
+## Styling
+
+This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.
