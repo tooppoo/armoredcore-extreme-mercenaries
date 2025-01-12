@@ -8,5 +8,5 @@ import { ServerBuild } from '@remix-run/cloudflare';
 
 // workaround
 // https://github.com/remix-run/remix/issues/9529#issuecomment-2469743054
-const buildWithHackedType = build as ServerBuild
+const buildWithHackedType = build as unknown as ServerBuild
 export const onRequest = createPagesFunctionHandler({ build: buildWithHackedType })

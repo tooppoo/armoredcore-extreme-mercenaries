@@ -51,4 +51,5 @@ const AnUpdate: React.FC = () => {
     </div>
   )
 }
+
 export default AnUpdate

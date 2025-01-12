@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@date-fns/tz": "1.2.0",
+    "@nasa-gcn/remix-seo": "2.0.1",
     "@remix-run/cloudflare": "^2.15.2",
     "@remix-run/cloudflare-pages": "^2.15.2",
     "@remix-run/react": "^2.15.2",
