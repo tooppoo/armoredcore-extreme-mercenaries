@@ -1,24 +1,15 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-name: build documents
+name: build app
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  workflow_call:
-    outputs:
-      artifact_name:
-        description: "built artifact name, it is ready to deploy"
-        value: ${{ jobs.build.outputs.artifact_name }}
+    branches: "*"
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs:
-      artifact_name: ${{ steps.define-artifact-name.outputs.artifact_name }}
     steps:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
     # setup runtime
@@ -26,25 +17,8 @@ jobs:
       with:
         node-version-file: '.node-version'
         cache: 'npm'
-    - uses: ruby/setup-ruby@v1
-      with:
-        bundler-cache: true
     # integration
     - run: npm ci
-    - run: |
-        npm run env:generate
-        npm run env:apply
-      env:
-        DISCORD_LINK_INVITE: ${{ vars.DISCORD_LINK_INVITE }}
-        DISCORD_LINK_QUESTION: ${{ vars.DISCORD_LINK_QUESTION }}
-        DISCORD_LINK_SUGGESTION: ${{ vars.DISCORD_LINK_SUGGESTION }}
     - run: npm run build
-    - run: npm test
-    # save artifacts
-    - name: define artifact name
-      id: define-artifact-name
-      run: echo "artifact_name=documents-${{ github.sha }}" >> $GITHUB_OUTPUT
-    - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
-      with:
-        name: ${{ steps.define-artifact-name.outputs.artifact_name }}
-        path: _site
+    - run: npm run typecheck
+    - run: npm run lint
