@@ -13,6 +13,9 @@
     "typecheck": "tsc",
     "typegen": "wrangler types",
     "preview": "npm run build && wrangler pages dev",
+    "migration:gen": "drizzle-kit generate",
+    "migration": "wrangler d1 migrations apply ac-extreme-mercenaries-db --local --persist-to ./app/db/local",
+    "migration:prod": "wrangler d1 migrations apply ac-extreme-mercenaries-db --remote",
     "cf-typegen": "wrangler types"
   },
   "dependencies": {
@@ -26,7 +29,8 @@
     "prop-types": "15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "remix-sitemap": "^3.2.0"
+    "remix-sitemap": "^3.2.0",
+    "uuid": "11.0.5"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "4.20250109.0",

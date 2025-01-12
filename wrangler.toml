@@ -25,10 +25,11 @@ pages_build_output_dir = "./build/client"
 
 # Bind a D1 database. D1 is Cloudflare’s native serverless SQL database.
 # Docs: https://developers.cloudflare.com/pages/functions/bindings/#d1-databases
-# [[d1_databases]]
-# binding = "MY_DB"
-# database_name = "my-database"
-# database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+[[d1_databases]]
+binding = "DB"
+database_name = "ac-extreme-mercenaries-db"
+database_id = "dbadda99-8351-4150-a843-bb474d28ad4e"
+migrations_dir = "./app/db/migrations"
 
 # Bind a Durable Object. Durable objects are a scale-to-zero compute primitive based on the actor model.
 # Durable Objects can live for as long as needed. Use these when you need a long-running "server", such as in realtime apps.
@@ -78,7 +79,6 @@ pages_build_output_dir = "./build/client"
 ######## PRODUCTION environment config ########
 
 [env.production.vars]
-ENV = "production"
 DISCORD_LINK_INVITE     = "https://discord.gg/F9HkPsQ37J"
 DISCORD_LINK_QUESTION   = "https://discord.com/channels/1240446809906610236/1240455428589223996"
 DISCORD_LINK_SUGGESTION = "https://discord.com/channels/1240446809906610236/1240455802272092211"
