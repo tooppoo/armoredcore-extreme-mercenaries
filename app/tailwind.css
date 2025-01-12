@@ -21,3 +21,13 @@ h1 {
 h2 {
   @apply text-xl my-1
 }
+
+ol, ul, li {
+  @apply my-1
+}
+ol {
+  @apply list-decimal list-inside ml-4
+}
+ul {
+  @apply list-disc list-inside ml-4
+}
