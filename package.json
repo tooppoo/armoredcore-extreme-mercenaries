@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@date-fns/tz": "1.2.0",
-    "@nasa-gcn/remix-seo": "2.0.1",
     "@remix-run/cloudflare": "^2.15.2",
     "@remix-run/cloudflare-pages": "^2.15.2",
     "@remix-run/react": "^2.15.2",
@@ -25,7 +24,8 @@
     "isbot": "^4.1.0",
     "prop-types": "15.8.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "remix-sitemap": "^3.2.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250109.0",

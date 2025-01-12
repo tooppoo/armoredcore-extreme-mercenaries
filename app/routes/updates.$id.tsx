@@ -1,5 +1,7 @@
 import { LoaderFunction, MetaFunction } from '@remix-run/cloudflare';
 import { Link, useLoaderData } from '@remix-run/react';
+import { formatRFC3339 } from 'date-fns';
+import { SitemapFunction } from 'remix-sitemap';
 import { Margin } from '~/lib/components/utils/spacer';
 import { buildMeta, defaultMeta, unofficialServer } from '~/lib/head/build-meta';
 import { toTitle } from '~/lib/updates/functions';
@@ -51,5 +53,12 @@ const AnUpdate: React.FC = () => {
     </div>
   )
 }
+
+export const sitemap: SitemapFunction = async () => {
+  return updates.map(r => ({
+    loc: `/updates/${r.external_id}`, 
+    lastmod: formatRFC3339(r.published_at, { fractionDigits: 3 }),
+  }));
+};
 
 export default AnUpdate

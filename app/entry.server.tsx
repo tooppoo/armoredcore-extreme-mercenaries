@@ -8,8 +8,17 @@ import type { AppLoadContext, EntryContext } from "@remix-run/cloudflare";
 import { RemixServer } from "@remix-run/react";
 import { isbot } from "isbot";
 import { renderToReadableStream } from "react-dom/server";
+import { createSitemapGenerator } from 'remix-sitemap';
+import { origin } from '~/lib/constants';
 
 const ABORT_DELAY = 5000;
+
+const { isSitemapUrl, sitemap } = createSitemapGenerator({
+  siteUrl: origin,
+  generateRobotsTxt: true
+  // configure other things here
+})
+
 
 export default async function handleRequest(
   request: Request,
@@ -21,6 +30,11 @@ export default async function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
+  if (isSitemapUrl(request)) {
+    // @ts-expect-error workaround
+    return await sitemap(request, remixContext)
+  }
+
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), ABORT_DELAY);
 
