@@ -247,7 +247,7 @@ type RuleItemProps = Readonly<{
 const RuleItem: React.FC<RuleItemProps> = ({ caption, hash, children }) => (
   <li className='text-lg'>
     <Link to={{ hash }} id={hash}>{caption}</Link>
-    <ol className='text-xs'>
+    <ol className='text-sm'>
       {children}
     </ol>
   </li>

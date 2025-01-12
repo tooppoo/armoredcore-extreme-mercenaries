@@ -49,12 +49,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </article>
         <div className="my-4 border-b"></div>
         <footer>
-          <div className="flex items-center justify-center text-base">
+          <div className="flex items-center justify-center text-lg">
             <Link to='/'>TOP</Link>
           </div>
           <div className="my-1"></div>
-          <div className="flex items-end justify-end text-xs">
-            This document is maintained on&nbsp;
+          <div className="flex items-end justify-end">
+            maintained on&nbsp;
             <a href="https://github.com/tooppoo/armoredcore-extreme-mercenaries">GitHub</a>
             &nbsp;by&nbsp; 
             <a href="https://x.com/Philomagi">Philomagi</a>
