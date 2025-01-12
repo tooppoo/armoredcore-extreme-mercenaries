@@ -20,7 +20,11 @@ export const links: LinksFunction = () => [
   {
     rel: 'stylesheet',
     href: 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap',
-  }
+  },
+  { rel: "apple-touch-icon", sizes: "180x180", href: "/favicon/apple-touch-icon.png" },
+  { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon/favicon-32x32.png" },
+  { rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon/favicon-16x16.png" },
+  { rel: "manifest", href: '/manifest.json' },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
