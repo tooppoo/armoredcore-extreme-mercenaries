@@ -1,13 +1,13 @@
 import { MetaFunction } from '@remix-run/cloudflare';
 import { Link } from '@remix-run/react';
 import { siteName } from '~/lib/constants';
-import { buildMeta } from '~/lib/head/build-meta';
+import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 
 export const meta: MetaFunction = ({ location }) => {
   return [
     ...buildMeta({
       title: '罰則規定',
-      description: 'フロム・ソフトウェア開発のゲーム 「アーマードコア」シリーズの非公式discordサーバー 「ARMOREDCORE EXTREME MERCENARIES」の罰則規定ページです',
+      description: `${unofficialServer}の罰則規定ページです`,
       pathname: location.pathname,
     })
   ];

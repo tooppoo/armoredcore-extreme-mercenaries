@@ -2,13 +2,13 @@ import type { LoaderFunction, MetaFunction } from "@remix-run/cloudflare";
 import { Link, useLoaderData } from '@remix-run/react';
 import { siteName } from '~/lib/constants';
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server';
-import { buildMeta } from '~/lib/head/build-meta';
+import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 
 export const meta: MetaFunction = ({ location }) => {
   return [
     ...buildMeta({
       title: 'TOP',
-      description: 'フロム・ソフトウェア開発のゲーム 「アーマードコア」シリーズの非公式discordサーバー 「ARMOREDCORE EXTREME MERCENARIES」の情報公開サイトです',
+      description: `${unofficialServer}の情報公開サイトです`,
       pathname: location.pathname,
     })
   ];

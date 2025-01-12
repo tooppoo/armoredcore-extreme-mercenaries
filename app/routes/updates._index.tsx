@@ -1,6 +1,6 @@
-import { LoaderFunction } from '@remix-run/cloudflare';
+import { LoaderFunction, MetaFunction } from '@remix-run/cloudflare';
 import { Link, useLoaderData } from '@remix-run/react';
-import { format } from 'date-fns';
+import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 import { toTitle } from '~/lib/updates/functions';
 import { updates as updateRecords, type Update } from '~/lib/updates/record.server';
 
@@ -12,6 +12,13 @@ export const loader: LoaderFunction = async (): Promise<UpdatesLoader> => {
     records: updateRecords,
   }
 }
+export const meta: MetaFunction = ({ location }) => [
+  ...buildMeta({
+    title: '更新履歴',
+    description: `${unofficialServer}の更新履歴です`,
+    pathname: location.pathname,
+  }),
+]
 
 const updates: React.FC = () => {
   const { records } = useLoaderData<UpdatesLoader>()

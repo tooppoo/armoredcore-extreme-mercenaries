@@ -16,3 +16,4 @@ scripts/dist
 
 # env
 .env
+.dev.vars

@@ -4,13 +4,13 @@ import { ReactElement } from 'react'
 import { Margin } from '~/lib/components/utils/spacer'
 import { siteName } from '~/lib/constants'
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server';
-import { buildMeta } from '~/lib/head/build-meta';
+import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 
 export const meta: MetaFunction = ({ location }) => {
   return [
     ...buildMeta({
       title: '利用規約',
-      description: 'フロム・ソフトウェア開発のゲーム 「アーマードコア」シリーズの非公式discordサーバー 「ARMOREDCORE EXTREME MERCENARIES」の利用規約ページです',
+      description: `${unofficialServer}の利用規約ページです`,
       pathname: location.pathname,
     })
   ];

@@ -22,6 +22,14 @@ export function buildMeta(args: BuildMetaArgs): Meta {
     { name: 'og:type', content: 'website' },
   ]
 }
+export function defaultMeta(pathname: string): Meta {
+  return buildMeta({
+    title: siteName,
+    description: `${unofficialServer}の情報公開サイトです`,
+    pathname,
+  })
+}
+export const unofficialServer = `フロム・ソフトウェア開発のゲーム 「アーマードコア」シリーズの非公式discordサーバー「${siteName}」`
 
 function title(s: string): Meta {
   return [
@@ -54,7 +62,7 @@ function jsonLd({ title, description, url }: JsonLdArgs): Meta {
         "@type":"WebSite",
         description,
         "headline": title,
-        "name":"ARMORED CORE EXTREME MERCENARIES",
+        "name": siteName,
         url,
       },
     },
