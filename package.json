@@ -15,9 +15,11 @@
     "cf-typegen": "wrangler types"
   },
   "dependencies": {
+    "@date-fns/tz": "1.2.0",
     "@remix-run/cloudflare": "^2.15.2",
     "@remix-run/cloudflare-pages": "^2.15.2",
     "@remix-run/react": "^2.15.2",
+    "date-fns": "4.1.0",
     "isbot": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
