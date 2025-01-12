@@ -20,7 +20,7 @@ export const meta: MetaFunction = ({ location }) => [
   }),
 ]
 
-const updates: React.FC = () => {
+const Updates: React.FC = () => {
   const { records } = useLoaderData<UpdatesLoader>()
   return (
     <>
@@ -38,4 +38,4 @@ const updates: React.FC = () => {
   )
 }
 
-export default updates
+export default Updates

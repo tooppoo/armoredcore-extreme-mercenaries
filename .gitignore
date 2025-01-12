@@ -1,19 +1,8 @@
-# jekyll
-_site
-.sass-cache
-.jekyll-cache
-.jekyll-metadata
-vendor
-
-# nodejs
 node_modules
 
-# scripts
-scripts/dist
-
-# editor
-.vscode
-
-# env
+/.cache
+/build
 .env
 .dev.vars
+
+.wrangler

@@ -34,7 +34,7 @@ export const meta: MetaFunction<() => Promise<AnUpdateLoader>> = ({ data, locati
   ]
 }
 
-const anUpdate: React.FC = () => {
+const AnUpdate: React.FC = () => {
   const { record } = useLoaderData<AnUpdateLoader>()
 
   return (
@@ -51,4 +51,4 @@ const anUpdate: React.FC = () => {
     </div>
   )
 }
-export default anUpdate
+export default AnUpdate

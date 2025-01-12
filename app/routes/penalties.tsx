@@ -1,6 +1,5 @@
 import { MetaFunction } from '@remix-run/cloudflare';
 import { Link } from '@remix-run/react';
-import { siteName } from '~/lib/constants';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 
 export const meta: MetaFunction = ({ location }) => {
@@ -12,7 +11,6 @@ export const meta: MetaFunction = ({ location }) => {
     })
   ];
 };
-
 export const Penalties: React.FC = () => {
   return (
     <>
