@@ -2,14 +2,8 @@ import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 import { sql } from 'drizzle-orm';
 import { v7 as uuidv7 } from 'uuid'
 
-export const users = sqliteTable('users', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  createdAt: integer('created_at', { mode: 'timestamp' }).$default(() => sql`CURRENT_TIMESTAMP`),
-});
-
-export const authDiscord = sqliteTable('auth_discord', {
-  userId: integer('user_id').primaryKey().references(() => users.id),
-  discordUserId: text('discord_user_id').unique().notNull(),
+export const discordMembers = sqliteTable('discord_members', {
+  discordUserId: text('discord_user_id').primaryKey(),
   discordUserDiscriminator: text('discord_user_discriminator').notNull(),
   createdAt: integer('created_at', { mode: 'timestamp' }).$default(() => sql`CURRENT_TIMESTAMP`),
 });
@@ -21,7 +15,7 @@ export const archives = sqliteTable('archives', {
   title: text('title').notNull(),
   description: text('description').notNull(),
   imageUrl: text('image_url').notNull(),
-  uploadUserId: integer('upload_user_id').notNull().references(() => users.id),
+  uploadMemberId: integer('upload_member_id').notNull().references(() => discordMembers.discordUserId),
   createdAt: integer('created_at', { mode: 'timestamp' }).$default(() => sql`CURRENT_TIMESTAMP`),
 });
 
@@ -37,6 +31,6 @@ export const deleteArchiveRequests = sqliteTable('delete_archive_requests', {
 export const deletedArchives = sqliteTable('deleted_archives', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   archiveUrl: text('archive_url').notNull(),
-  uploadUserId: integer('upload_user_id').notNull().references(() => users.id),
+  uploadMemberId: integer('upload_member_id').notNull().references(() => discordMembers.discordUserId),
   createdAt: integer('created_at', { mode: 'timestamp' }).$default(() => sql`CURRENT_TIMESTAMP`),
 });

@@ -1,0 +1,19 @@
+{
+  "include": [
+    "**/*.ts",
+  ],
+  "compilerOptions": {
+    "lib": ["ES2022"],
+    "outDir": "build",
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "module": "CommonJS",
+    "moduleResolution": "node10",
+    "resolveJsonModule": true,
+    "strict": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+  }
+}
