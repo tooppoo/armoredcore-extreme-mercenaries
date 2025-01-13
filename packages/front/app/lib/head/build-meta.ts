@@ -1,5 +1,5 @@
 import { MetaFunction } from '@remix-run/cloudflare';
-import { origin, siteName } from '~/lib/constants';
+import { origin, siteName } from 'packages/front/app/lib/constants';
 
 type Meta = ReturnType<MetaFunction>
 

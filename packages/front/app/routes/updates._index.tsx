@@ -1,8 +1,8 @@
 import { LoaderFunction, MetaFunction } from '@remix-run/cloudflare';
 import { Link, useLoaderData } from '@remix-run/react';
-import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
-import { toTitle } from '~/lib/updates/functions';
-import { updates as updateRecords, type Update } from '~/lib/updates/record';
+import { buildMeta, unofficialServer } from 'packages/front/app/lib/head/build-meta';
+import { toTitle } from 'packages/front/app/lib/updates/functions';
+import { updates as updateRecords, type Update } from 'packages/front/app/lib/updates/record';
 
 type UpdatesLoader = Readonly<{
   records: readonly Update[]

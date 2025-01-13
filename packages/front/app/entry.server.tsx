@@ -9,7 +9,7 @@ import { RemixServer } from "@remix-run/react";
 import { isbot } from "isbot";
 import { renderToReadableStream } from "react-dom/server";
 import { createSitemapGenerator } from 'remix-sitemap';
-import { origin } from '~/lib/constants';
+import { origin } from 'packages/front/app/lib/constants';
 
 const ABORT_DELAY = 5000;
 

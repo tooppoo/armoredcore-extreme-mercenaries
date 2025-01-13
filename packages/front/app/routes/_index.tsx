@@ -1,8 +1,8 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/cloudflare";
 import { Link, useLoaderData } from '@remix-run/react';
-import { siteName } from '~/lib/constants';
-import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server';
-import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
+import { siteName } from 'packages/front/app/lib/constants';
+import { LoadDiscord, loadDiscord } from 'packages/front/app/lib/discord/loader.server';
+import { buildMeta, unofficialServer } from 'packages/front/app/lib/head/build-meta';
 
 export const meta: MetaFunction = ({ location }) => {
   return [

@@ -2,11 +2,11 @@ import { LoaderFunction, MetaFunction } from '@remix-run/cloudflare';
 import { Link, useLoaderData } from '@remix-run/react'
 import PropTypes from 'prop-types';
 import { ReactElement } from 'react'
-import { childrenTypes } from '~/lib/utils/components/prop-types';
-import { Margin } from '~/lib/utils/components/spacer'
-import { siteName } from '~/lib/constants'
-import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server';
-import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
+import { childrenTypes } from 'packages/front/app/lib/utils/components/prop-types';
+import { Margin } from 'packages/front/app/lib/utils/components/spacer'
+import { siteName } from 'packages/front/app/lib/constants'
+import { LoadDiscord, loadDiscord } from 'packages/front/app/lib/discord/loader.server';
+import { buildMeta, unofficialServer } from 'packages/front/app/lib/head/build-meta';
 
 export const meta: MetaFunction = ({ location }) => {
   return [

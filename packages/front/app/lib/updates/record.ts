@@ -1,5 +1,5 @@
 import { TZDate } from '@date-fns/tz'
-import { siteName, timezone } from '~/lib/constants'
+import { siteName, timezone } from 'packages/front/app/lib/constants'
 
 export type Update = Readonly<{
   external_id: string
