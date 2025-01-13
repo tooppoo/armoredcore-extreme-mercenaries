@@ -4,20 +4,14 @@
 
 ```mermaid
 erDiagram
-    users ||--|| auth_discord : "has"
-    users ||--o{ archives : "uploads"
-    users ||--o{ deleted_archives : "deletes"
+    discord_members ||--o{ archives : "uploads"
+    discord_members ||--o{ deleted_archives : "deletes"
     archives ||--o{ delete_archive_requests : "receives"
+    delete_archive_requests_status ||--o{ delete_archive_requests : "has"
 
-    users {
-        int id PK "autoincrement"
-        timestamp created_at
-    }
-
-    auth_discord {
-        int user_id PK, FK
-        string discord_user_id UK
-        string discord_user_discriminator
+    discord_members {
+        string discord_user_id PK
+        string discord_user_name
         timestamp created_at
     }
 
@@ -28,23 +22,27 @@ erDiagram
         string title
         string description
         string image_url
-        int upload_user_id FK
+        string upload_member_id FK
         timestamp created_at
     }
 
     delete_archive_requests {
         int id PK "autoincrement"
-        string archive_external_id FK
         string reason
         string email_for_notice
-        string status "enum"
+        int status_id FK
         timestamp created_at
+    }
+
+    delete_archive_requests_status {
+        int id PK "autoincrement"
+        string value
     }
 
     deleted_archives {
         int id PK "autoincrement"
         string archive_url
-        int upload_user_id FK
+        string upload_member_id FK
         timestamp created_at
     }
 ```

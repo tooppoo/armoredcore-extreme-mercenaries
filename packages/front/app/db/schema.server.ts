@@ -21,12 +21,15 @@ export const archives = sqliteTable('archives', {
 
 export const deleteArchiveRequests = sqliteTable('delete_archive_requests', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  archiveExternalId: text('archive_external_id').notNull().references(() => archives.externalId),
   reason: text('reason').notNull(),
   emailForNotice: text('email_for_notice'),
-  status: text('status', { enum: ['pending', 'approved', 'rejected'] }).default('pending'),
+  statusId: integer('status_id').notNull().references(() => deleteArchiveRequestsStatus.id),
   createdAt: integer('created_at', { mode: 'timestamp' }).$default(() => sql`CURRENT_TIMESTAMP`),
 });
+export const deleteArchiveRequestsStatus = sqliteTable('delete_archive_requests_status', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  value: text('value').notNull(),
+})
 
 export const deletedArchives = sqliteTable('deleted_archives', {
   id: integer('id').primaryKey({ autoIncrement: true }),
