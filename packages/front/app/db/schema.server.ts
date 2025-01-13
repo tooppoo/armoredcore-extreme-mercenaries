@@ -4,7 +4,7 @@ import { v7 as uuidv7 } from 'uuid'
 
 export const discordMembers = sqliteTable('discord_members', {
   discordUserId: text('discord_user_id').primaryKey(),
-  discordUserDiscriminator: text('discord_user_discriminator').notNull(),
+  discordUserName: text('discord_user_name').notNull(),
   createdAt: integer('created_at', { mode: 'timestamp' }).$default(() => sql`CURRENT_TIMESTAMP`),
 });
 

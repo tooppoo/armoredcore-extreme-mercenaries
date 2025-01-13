@@ -4,6 +4,14 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
+    "bot": "npm run -w @ac-extreme-mercenaries/discord-bot",
+    "bot:install": "npm install -w @ac-extreme-mercenaries/discord-bot",
+    "bot:uninstall": "npm uninstall -w @ac-extreme-mercenaries/discord-bot",
+    "bot:dev": "npm run bot -- dev",
+    "front": "npm run -w @ac-extreme-mercenaries/front",
+    "front:install": "npm install -w @ac-extreme-mercenaries/front",
+    "front:uninstall": "npm uninstall -w @ac-extreme-mercenaries/front",
+    "front:dev": "npm run front -- dev"
   },
   "engines": {
     "node": ">=20.0.0"

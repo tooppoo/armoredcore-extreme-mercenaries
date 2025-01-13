@@ -1,6 +1,6 @@
 import { MetaFunction } from '@remix-run/cloudflare';
 import { Link } from '@remix-run/react';
-import { buildMeta, unofficialServer } from 'packages/front/app/lib/head/build-meta';
+import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 
 export const meta: MetaFunction = ({ location }) => {
   return [
