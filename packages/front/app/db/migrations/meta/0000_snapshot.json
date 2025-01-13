@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "5517e93c-0d3c-4f70-9a74-9396b05db539",
+  "id": "a62bce55-62ce-4949-9a76-5b4a5af48401",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "archives": {
@@ -49,8 +49,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "upload_user_id": {
-          "name": "upload_user_id",
+        "upload_member_id": {
+          "name": "upload_member_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -74,75 +74,15 @@
         }
       },
       "foreignKeys": {
-        "archives_upload_user_id_users_id_fk": {
-          "name": "archives_upload_user_id_users_id_fk",
+        "archives_upload_member_id_discord_members_discord_user_id_fk": {
+          "name": "archives_upload_member_id_discord_members_discord_user_id_fk",
           "tableFrom": "archives",
-          "tableTo": "users",
+          "tableTo": "discord_members",
           "columnsFrom": [
-            "upload_user_id"
+            "upload_member_id"
           ],
           "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "auth_discord": {
-      "name": "auth_discord",
-      "columns": {
-        "user_id": {
-          "name": "user_id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "discord_user_id": {
-          "name": "discord_user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "discord_user_discriminator": {
-          "name": "discord_user_discriminator",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {
-        "auth_discord_discord_user_id_unique": {
-          "name": "auth_discord_discord_user_id_unique",
-          "columns": [
             "discord_user_id"
-          ],
-          "isUnique": true
-        }
-      },
-      "foreignKeys": {
-        "auth_discord_user_id_users_id_fk": {
-          "name": "auth_discord_user_id_users_id_fk",
-          "tableFrom": "auth_discord",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -162,13 +102,6 @@
           "notNull": true,
           "autoincrement": true
         },
-        "archive_external_id": {
-          "name": "archive_external_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "reason": {
           "name": "reason",
           "type": "text",
@@ -183,13 +116,12 @@
           "notNull": false,
           "autoincrement": false
         },
-        "status": {
-          "name": "status",
-          "type": "text",
+        "status_id": {
+          "name": "status_id",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "'pending'"
+          "notNull": true,
+          "autoincrement": false
         },
         "created_at": {
           "name": "created_at",
@@ -201,20 +133,44 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "delete_archive_requests_archive_external_id_archives_external_id_fk": {
-          "name": "delete_archive_requests_archive_external_id_archives_external_id_fk",
+        "delete_archive_requests_status_id_delete_archive_requests_status_id_fk": {
+          "name": "delete_archive_requests_status_id_delete_archive_requests_status_id_fk",
           "tableFrom": "delete_archive_requests",
-          "tableTo": "archives",
+          "tableTo": "delete_archive_requests_status",
           "columnsFrom": [
-            "archive_external_id"
+            "status_id"
           ],
           "columnsTo": [
-            "external_id"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "delete_archive_requests_status": {
+      "name": "delete_archive_requests_status",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}
@@ -236,8 +192,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "upload_user_id": {
-          "name": "upload_user_id",
+        "upload_member_id": {
+          "name": "upload_member_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -253,15 +209,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "deleted_archives_upload_user_id_users_id_fk": {
-          "name": "deleted_archives_upload_user_id_users_id_fk",
+        "deleted_archives_upload_member_id_discord_members_discord_user_id_fk": {
+          "name": "deleted_archives_upload_member_id_discord_members_discord_user_id_fk",
           "tableFrom": "deleted_archives",
-          "tableTo": "users",
+          "tableTo": "discord_members",
           "columnsFrom": [
-            "upload_user_id"
+            "upload_member_id"
           ],
           "columnsTo": [
-            "id"
+            "discord_user_id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -271,15 +227,22 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "users": {
-      "name": "users",
+    "discord_members": {
+      "name": "discord_members",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
+        "discord_user_id": {
+          "name": "discord_user_id",
+          "type": "text",
           "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
+        },
+        "discord_user_name": {
+          "name": "discord_user_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         },
         "created_at": {
           "name": "created_at",
