@@ -2,7 +2,7 @@ import { LoaderFunction, MetaFunction } from '@remix-run/cloudflare';
 import { Link, useLoaderData } from '@remix-run/react';
 import { formatRFC3339 } from 'date-fns';
 import { SitemapFunction } from 'remix-sitemap';
-import { Margin } from '~/lib/components/utils/spacer';
+import { Margin } from '~/lib/utils/components/spacer';
 import { buildMeta, defaultMeta, unofficialServer } from '~/lib/head/build-meta';
 import { toTitle } from '~/lib/updates/functions';
 import { Update, updates } from '~/lib/updates/record';

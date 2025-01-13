@@ -2,8 +2,8 @@ import { LoaderFunction, MetaFunction } from '@remix-run/cloudflare';
 import { Link, useLoaderData } from '@remix-run/react'
 import PropTypes from 'prop-types';
 import { ReactElement } from 'react'
-import { childrenTypes } from '~/lib/components/prop-types';
-import { Margin } from '~/lib/components/utils/spacer'
+import { childrenTypes } from '~/lib/utils/components/prop-types';
+import { Margin } from '~/lib/utils/components/spacer'
 import { siteName } from '~/lib/constants'
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
