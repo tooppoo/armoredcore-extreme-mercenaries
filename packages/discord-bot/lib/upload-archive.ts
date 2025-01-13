@@ -1,14 +1,15 @@
 import { Message, OmitPartialGroupDMChannel } from 'discord.js';
 import { frontApi } from './front';
 
+export type UploadResult = Readonly<{ message: string }>
 export async function uploadArchive(
   message: OmitPartialGroupDMChannel<Message<boolean>>
-) {
+): Promise<UploadResult> {
   const body = {
     url: message.content,
     discord_user: {
       id: message.author.id,
-      name: message.author.displayName,
+      name: message.author.username,
     }
   }
 
@@ -19,13 +20,34 @@ export async function uploadArchive(
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${process.env.FRONT_AUTH_UPLOAD_ARCHIVE}`,
     },
-  }).catch(error => {
-    throw { reason: JSON.stringify(error) }
-  }).then((res) => {
+  }).catch((error: unknown) => {
+    throw {
+      message: [
+        'エラーが発生しました',
+        JSON.stringify(error),
+      ].join('\n')
+    }
+  }).then(async (res) => {
     if (400 < res.status) {
-      throw { reason: res.statusText }
+      const body = (await res.json()) as ErrorResponse
+      const message = errorMessageMap[body.code] || [
+        'アーカイブ追加に失敗しました',
+        `${res.status} ${res.statusText} ${JSON.stringify(body)}`,
+      ].join('\n')
+
+      throw { message }
     }
 
-    return res
+    return { message: 'アーカイブに追加しました' }
   })
+}
+
+type ErrorResponse = Readonly<{
+  code: string
+  message: string
+}>
+
+const errorMessageMap: Record<string, string> = {
+  'unsupported-url': 'サポート外のURLなのでスキップしました',
+  'failed-get-ogp': 'アーカイブの情報を取得できませんでした',
 }
