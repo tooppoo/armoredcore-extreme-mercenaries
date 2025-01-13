@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { Margin } from '~/lib/components/utils/spacer';
 import { Reducer, useReducer } from 'react';
 import { ArchiveItem, ArchiveItemProps } from '../lib/components/archive/ArchiveItem'
-import { extractOgpFromHtml } from '~/lib/ogp/extractor';
+import { OGPExtractor, withDomParser, withOGPScanner, withYoutubeAPI } from '~/lib/ogp/extractor';
 import { Spinner } from '~/lib/components/utils/loading';
 
 export const sitemap: SitemapFunction = () => ({
@@ -115,7 +115,6 @@ const ArchivesUpload: React.FC = () => {
           confirmState.error && (
             <div className='text-red-500'>
               エラーが発生したため、URLを確認できませんでした<br/>
-              {confirmState.error.message}
             </div>
           )
         }
@@ -174,15 +173,20 @@ const reduceConfirmState: Reducer<ConfirmState, ConfirmStateAction> = (_state, a
 }
 
 async function fetchArchive(url: string): Promise<ArchiveItemProps> {
-  const target = `https://corsproxy.io/?url=${encodeURI(url)}`
-  const res = await fetch(target)
-  if (400 < res.status) {
-    const body = await res.text()
-    throw new Error(body)
-  }
-  const html = await res.text()
+  const isTwitter = /^https:\/\/x.com/.test(url)
+  const isYoutube= /^https:\/\/(www.)?youtube.com/.test(url)
+  // Twitterはbotに対してのみOGPを返すため、取得方法の切り替えが必要
+  // https://qiita.com/JunkiHiroi/items/f03d4297e11ce5db172e
+  const extractor: OGPExtractor = (
+    isTwitter ? withOGPScanner
+      : (isYoutube ? withYoutubeAPI : withDomParser)
+  )
 
-  const ogp = extractOgpFromHtml(html)
+  const ogp = await extractor(url).catch((error) => {
+    console.error(error)
+
+    throw error
+  })
 
   return { ...ogp, url }
 }
