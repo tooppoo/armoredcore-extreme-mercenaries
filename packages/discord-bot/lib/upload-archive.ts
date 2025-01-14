@@ -29,7 +29,14 @@ export async function uploadArchive(
     }
   }).then(async (res) => {
     if (400 < res.status) {
-      const body = (await res.json()) as ErrorResponse
+      const body = (await res.json().catch(async (error) => {
+        throw {
+          message: [
+            '予期しないエラーが発生しました',
+            error,
+          ].join('\n'),
+        }
+      })) as ErrorResponse
       const message = errorMessageMap[body.code] || [
         'アーカイブ追加に失敗しました',
         `${res.status} ${res.statusText} ${JSON.stringify(body)}`,

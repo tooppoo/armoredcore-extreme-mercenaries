@@ -11,11 +11,12 @@
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "lint:fix": "eslint --fix --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "wrangler pages dev ./build/client",
+    "start:dev": "wrangler pages dev --local",
     "typecheck": "tsc",
     "typegen": "wrangler types",
     "preview": "npm run build && wrangler pages dev",
     "migration:gen": "drizzle-kit generate",
-    "migration": "wrangler d1 migrations apply ac-extreme-mercenaries-db --local --persist-to ./app/db/local",
+    "migration": "wrangler d1 migrations apply ac-extreme-mercenaries-db --local",
     "migration:prod": "wrangler d1 migrations apply ac-extreme-mercenaries-db --remote",
     "cf-typegen": "wrangler types",
     "secrets:gen": "openssl rand -base64 32"

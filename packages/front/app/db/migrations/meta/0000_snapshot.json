@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "a62bce55-62ce-4949-9a76-5b4a5af48401",
+  "id": "4a1af906-befb-49ff-a439-4354e533b48a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "archives": {
@@ -51,7 +51,7 @@
         },
         "upload_member_id": {
           "name": "upload_member_id",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false

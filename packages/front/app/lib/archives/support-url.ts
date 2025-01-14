@@ -1,5 +1,6 @@
 
-export const youtubePattern = /^https:\/\/(www\.)?youtube.com\/[^\s]+$/
+// 短縮URLにも対応
+export const youtubePattern = /^https:\/\/((www\.)?youtube.com|youtu.be)\/[^\s]+$/
 export const niconicoPattern = /^https:\/\/(www\.)?nicovideo.jp\/[^\s]+$/
 export const twitterPattern = /^https:\/\/(www\.)?(x|twitter).com\/[^\s]+$/
 

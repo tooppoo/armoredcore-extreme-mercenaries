@@ -1,12 +1,15 @@
 import { ActionFunction } from '@remix-run/cloudflare';
 import { SitemapFunction } from 'remix-sitemap';
+import { getDB } from '~/db/driver.server';
+import { buildArchiveFromUrl } from '~/lib/archives/upload/functions.server';
+import { saveArchive } from '~/lib/archives/upload/repository/save-archive';
 
 export const action: ActionFunction = (args) => {
   switch (args.request.method) {
     case 'POST':
       return post(args)
     default:
-      throw new Response(null, {
+      throw Response.json(null, {
         status: 403,
         statusText: 'Forbidden',
       })
@@ -25,7 +28,7 @@ const post: ActionFunction = async ({ request, context }) => {
   const token = auth?.replace('Bearer ', '')
 
   if (!token) {
-    throw new Response(null, {
+    throw Response.json(null, {
       status: 400,
       statusText: 'BadRequest',
       headers: {
@@ -34,7 +37,7 @@ const post: ActionFunction = async ({ request, context }) => {
     })
   }
   if (token !== context.cloudflare.env.AUTH_UPLOAD_ARCHIVE) {
-    throw new Response(null, {
+    throw Response.json(null, {
       status: 400,
       statusText: 'BadRequest',
       headers: {
@@ -44,9 +47,20 @@ const post: ActionFunction = async ({ request, context }) => {
   }
 
   const data = await request.json<PostArchivesBody>()
-  console.log({ data })
+  const archive = await buildArchiveFromUrl(new URL(data.url))
 
-  return new Response(null, {
+  await saveArchive(
+    {
+      contents: archive,
+      uploader: {
+        id: data.discord_user.id,
+        name: data.discord_user.name,
+      }
+    },
+    getDB(context.cloudflare.env)
+  )
+
+  return Response.json(null, {
     status: 200,
     headers: {
       'WWW-Authenticate': 'Bearer realm=""'

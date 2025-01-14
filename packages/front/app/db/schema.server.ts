@@ -15,7 +15,7 @@ export const archives = sqliteTable('archives', {
   title: text('title').notNull(),
   description: text('description').notNull(),
   imageUrl: text('image_url').notNull(),
-  uploadMemberId: integer('upload_member_id').notNull().references(() => discordMembers.discordUserId),
+  uploadMemberId: text('upload_member_id').notNull().references(() => discordMembers.discordUserId),
   createdAt: integer('created_at', { mode: 'timestamp' }).$default(() => sql`CURRENT_TIMESTAMP`),
 });
 

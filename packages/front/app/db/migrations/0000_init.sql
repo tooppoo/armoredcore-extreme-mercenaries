@@ -5,7 +5,7 @@ CREATE TABLE `archives` (
 	`title` text NOT NULL,
 	`description` text NOT NULL,
 	`image_url` text NOT NULL,
-	`upload_member_id` integer NOT NULL,
+	`upload_member_id` text NOT NULL,
 	`created_at` integer,
 	FOREIGN KEY (`upload_member_id`) REFERENCES `discord_members`(`discord_user_id`) ON UPDATE no action ON DELETE no action
 );
