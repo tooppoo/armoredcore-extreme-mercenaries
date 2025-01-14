@@ -15,7 +15,12 @@ const ABORT_DELAY = 5000;
 
 const { isSitemapUrl, sitemap } = createSitemapGenerator({
   siteUrl: origin,
-  generateRobotsTxt: true
+  generateRobotsTxt: true,
+  robotsTxtOptions: {
+    policies: [
+      { allow: '/', disallow: '/api', userAgent: '*' },
+    ],
+  },
   // configure other things here
 })
 
