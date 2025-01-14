@@ -1,6 +1,5 @@
 import { ActionFunction } from '@remix-run/cloudflare';
 import { SitemapFunction } from 'remix-sitemap';
-import { getDB } from '~/db/driver.server';
 import { buildArchiveFromUrl } from '~/lib/archives/upload/functions.server';
 import { saveArchive } from '~/lib/archives/upload/repository/save-archive';
 
@@ -57,7 +56,7 @@ const post: ActionFunction = async ({ request, context }) => {
         name: data.discord_user.name,
       }
     },
-    getDB(context.cloudflare.env)
+    context.db
   )
 
   return Response.json(null, {

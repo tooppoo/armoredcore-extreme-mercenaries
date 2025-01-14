@@ -4,5 +4,10 @@
   ],
   "yaml.schemas": {
     "https://json.schemastore.org/github-workflow.json": "file:///Users/apple/personal/ac/armoredcore-misson-deeply-docs/.github/workflows/deploy.yml"
-  }
+  },
+  "eslint.format.enable": true,
+  "eslint.ignoreUntitled": true,
+  "eslint.workingDirectories": [
+    "packages/front", "packages/discord-bot"
+  ]
 }
