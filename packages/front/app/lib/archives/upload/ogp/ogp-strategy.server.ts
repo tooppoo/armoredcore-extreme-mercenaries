@@ -1,4 +1,4 @@
-import { isSupported, youtubePattern } from '~/lib/archives/support-url'
+import { isSupported, youtubePattern } from '~/lib/archives/upload/support-url.server'
 
 export type OGP = Readonly<{
   title: string

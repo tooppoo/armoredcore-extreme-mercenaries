@@ -1,6 +1,6 @@
-import { GetLoadContextFunction } from '@remix-run/cloudflare-pages';
+import { AppLoadContext } from '@remix-run/cloudflare';
 import { type PlatformProxy } from "wrangler";
-import { Database, getDB } from '~/db/driver.server';
+import { Database, getDB } from './app/db/driver.server';
 
 type Cloudflare = Omit<PlatformProxy<Env>, "dispose">;
 
@@ -11,10 +11,13 @@ declare module "@remix-run/cloudflare" {
   }
 }
 
-export const getLoadContext: GetLoadContextFunction<Env> = async ({ context }) => {
-  return {
-    ...context,
-    cloudflare: context.cloudflare as Cloudflare,
-    db: getDB(context.cloudflare.env),
-  }
-}
+// https://remix-docs-ja.techtalk.jp/guides/vite#%E3%83%AD%E3%83%BC%E3%83%89%E3%82%B3%E3%83%B3%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E3%81%AE%E6%8B%A1%E5%BC%B5
+type GetLoadContext = (args: {
+  request: Request;
+  context: { cloudflare: Cloudflare };
+}) => AppLoadContext;
+
+export const getLoadContext: GetLoadContext = ({ context }) => ({
+  ...context,
+  db: getDB(context.cloudflare.env),
+})

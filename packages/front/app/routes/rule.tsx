@@ -1,8 +1,6 @@
 import { LoaderFunction, MetaFunction } from '@remix-run/cloudflare';
 import { Link, useLoaderData } from '@remix-run/react'
-import PropTypes from 'prop-types';
 import { ReactElement } from 'react'
-import { childrenTypes } from '~/lib/utils/components/prop-types';
 import { Margin } from '~/lib/utils/components/spacer'
 import { siteName } from '~/lib/constants'
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server';
@@ -235,9 +233,6 @@ export const Rule: React.FC = () => {
 
 type RuleListProps = Readonly<{ children: ReactElement[] }>
 const RuleList: React.FC<RuleListProps> = ({ children }) => <ol className='ml-0'>{children}</ol>
-RuleList.propTypes = {
-  children: childrenTypes,
-}
 
 type RuleItemProps = Readonly<{
   caption: string
@@ -252,10 +247,5 @@ const RuleItem: React.FC<RuleItemProps> = ({ caption, hash, children }) => (
     </ol>
   </li>
 )
-RuleItem.propTypes = {
-  caption: PropTypes.string.isRequired,
-  hash: PropTypes.string.isRequired,
-  children: childrenTypes,
-}
 
 export default Rule

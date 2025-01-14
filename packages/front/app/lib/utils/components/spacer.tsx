@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 
 type MarginProps = Readonly<Partial<{
   h: number
@@ -7,7 +6,7 @@ type MarginProps = Readonly<Partial<{
 export const Margin: React.FC<MarginProps> = ({ h = 0, w = 0 }) => (
   <div style={{ height: h, width: w, display: 'block' }}></div>
 )
-Margin.propTypes = {
-  h: PropTypes.number,
-  w: PropTypes.number,
-}
+
+export const Hr: React.FC<MarginProps> = ({ h = 2, w }) => (
+  <hr style={{ marginTop: h / 2, marginBottom: h / 2, width: w }} />
+)

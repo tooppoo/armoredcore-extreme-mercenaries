@@ -48,6 +48,11 @@ module.exports = {
           typescript: {},
         },
       },
+      overrides: {
+        rules: {
+          "react/prop-type": "off",
+        },
+      },
     },
 
     // Typescript

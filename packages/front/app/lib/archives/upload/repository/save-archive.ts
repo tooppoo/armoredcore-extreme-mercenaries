@@ -9,6 +9,7 @@ import { Archive } from '~/lib/archives/upload/entity.server';
 export const saveArchive = async (entity: Archive, db: Database): Promise<void> => {
   // D1でトランザクションが使えないのでworkaround
   // https://leaysgur.github.io/posts/2023/10/17/213948/
+  const t = await db.get
   await db.batch([
     db
       .insert(discordMembers)
