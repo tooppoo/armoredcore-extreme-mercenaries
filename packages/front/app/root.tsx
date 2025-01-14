@@ -54,9 +54,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </div>
           <div className="my-1"></div>
           <div className="flex items-end justify-end">
-            maintained on&nbsp;
-            <a href="https://github.com/tooppoo/armoredcore-extreme-mercenaries">GitHub</a>
-            &nbsp;by&nbsp; 
+            maintained by&nbsp; 
             <a href="https://x.com/Philomagi">Philomagi</a>
           </div>
         </footer>
