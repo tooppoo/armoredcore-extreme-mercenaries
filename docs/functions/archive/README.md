@@ -98,3 +98,7 @@ sequenceDiagram
     Archive->>DB: アーカイブ削除
     Archive-->>Admin: 削除完了通知
 ```
+
+## データ
+
+[ER図](../../data/README.md)を参照
