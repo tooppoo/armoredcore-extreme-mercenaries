@@ -25,7 +25,7 @@ export async function uploadArchive(
     throw {
       message: [
         'エラーが発生しました',
-        makeCatchesSerializable(error),
+        JSON.stringify(makeCatchesSerializable(error)),
       ].join('\n')
     }
   }).then(async (res) => {
@@ -36,7 +36,7 @@ export async function uploadArchive(
         throw {
           message: [
             '不正な応答です',
-            makeCatchesSerializable(error),
+            JSON.stringify(makeCatchesSerializable(error)),
           ].join('\n'),
         }
       })) as ErrorResponse
