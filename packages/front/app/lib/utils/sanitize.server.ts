@@ -1,7 +1,6 @@
-import createDOMPurify from 'dompurify'
-import { JSDOM } from 'jsdom'
+import sanitizeHtml from 'sanitize-html';
 
-const purify = createDOMPurify(new JSDOM('').window)
+type Sanitize = (s: string) => string
 
-export const htmlSanitize = (s: string) => purify.sanitize(s)
-export const h = htmlSanitize
+export const htmlSanitize: Sanitize = sanitizeHtml
+export const h: Sanitize = htmlSanitize
