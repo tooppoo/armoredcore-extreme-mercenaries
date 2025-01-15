@@ -14,6 +14,9 @@ declare module "@remix-run/cloudflare" {
 }
 
 export default defineConfig({
+  build: {
+    target: 'es2023',
+  },
   plugins: [
     remixCloudflareDevProxy({
       getLoadContext,

@@ -7,7 +7,9 @@ type PageUpdatesArgs = Readonly<{
   page: number
 }>
 export async function pageUpdates({ page }: PageUpdatesArgs): Promise<ReadUpdate[]> {
-  return records[page - 1].map(transform)
+  return records[page - 1].map(transform).toSorted(
+    (a, b) => a.createdAt > b.createdAt ? -1 : 1
+  )
 }
 
 type FindUpdateArgs = Readonly<{
