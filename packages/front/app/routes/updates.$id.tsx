@@ -1,26 +1,23 @@
 import { LoaderFunction, MetaFunction } from '@remix-run/cloudflare';
 import { Link, useLoaderData } from '@remix-run/react';
-import { formatRFC3339 } from 'date-fns';
-import { SitemapFunction } from 'remix-sitemap';
 import { Margin } from '~/lib/utils/components/spacer';
 import { buildMeta, defaultMeta, unofficialServer } from '~/lib/head/build-meta';
-import { toTitle } from '~/lib/updates/functions';
-import { Update, updates } from '~/lib/updates/record';
-import { serverOnly$ } from 'vite-env-only/macros';
+import { findUpdate } from '~/lib/updates/repository/read.server';
+import { ReadUpdate } from '~/lib/updates/entity.server';
 
 type AnUpdateLoader = Readonly<{
-  record: Update
+  update: ReadUpdate
 }>
 export const loader: LoaderFunction = async ({ params }): Promise<AnUpdateLoader> => {
-  const record = updates.find(r => r.external_id === params.id)
+  const update = await findUpdate({ externalId: params.id! })
   
-  if (!record) {
+  if (!update) {
     throw new Response(null, {
       status: 404,
     })
   }
 
-  return { record }
+  return { update }
 }
 
 export const meta: MetaFunction<() => Promise<AnUpdateLoader>> = ({ data, location }) => {
@@ -30,22 +27,22 @@ export const meta: MetaFunction<() => Promise<AnUpdateLoader>> = ({ data, locati
 
   return [
     ...buildMeta({
-      title: data.record.title,
-      description: `${unofficialServer} の更新履歴 ${toTitle(data.record)}`,
+      title: data.update.title,
+      description: `${unofficialServer} の更新履歴 ${data.update.caption}`,
       pathname: location.pathname,
     }),
   ]
 }
 
 const AnUpdate: React.FC = () => {
-  const { record } = useLoaderData<AnUpdateLoader>()
+  const { update } = useLoaderData<AnUpdateLoader>()
 
   return (
     <div>
       <section>
-        <h2>{toTitle(record)}</h2>
+        <h2>{update.caption}</h2>
 
-        {record.content}
+        {update.content}
       </section>
       <Margin h={16} />
       <div>
@@ -54,12 +51,5 @@ const AnUpdate: React.FC = () => {
     </div>
   )
 }
-
-export const sitemap = serverOnly$<SitemapFunction>(async () => {
-  return updates.map(r => ({
-    loc: `/updates/${r.external_id}`, 
-    lastmod: formatRFC3339(r.published_at, { fractionDigits: 3 }),
-  }));
-});
 
 export default AnUpdate

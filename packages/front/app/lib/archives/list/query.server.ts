@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { zx } from 'zodix';
 import { orderQueryKeys } from '~/lib/archives/list/query';
-import { orderByCreated } from '~/lib/archives/list/repository/pagination.server';
+import { orderByCreated } from '~/lib/archives/list/repository/read.server';
 
 export const querySchema = {
   p: zx.IntAsString.optional().pipe(

@@ -6,7 +6,7 @@ import { zx } from 'zodix'
 import { type ReadArchive } from '~/lib/archives/list/entity'
 import { orderQueryKeys, orderQueryMap } from '~/lib/archives/list/query'
 import { QuerySchema, querySchema } from '~/lib/archives/list/query.server'
-import { pageArchives } from '~/lib/archives/list/repository/pagination.server'
+import { pageArchives } from '~/lib/archives/list/repository/read.server'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import { Hr, Margin } from '~/lib/utils/components/spacer'
 

@@ -1,15 +1,16 @@
 import { LoaderFunction, MetaFunction } from '@remix-run/cloudflare';
 import { Link, useLoaderData } from '@remix-run/react';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
-import { toTitle } from '~/lib/updates/functions';
-import { updates as updateRecords, type Update } from '~/lib/updates/record';
+import { ReadUpdate } from '~/lib/updates/entity.server';
+import { pageUpdates } from '~/lib/updates/repository/read.server';
+import { records as updateRecords, type Update } from '~/lib/updates/repository/record.server';
 
 type UpdatesLoader = Readonly<{
-  records: readonly Update[]
+  updates: readonly ReadUpdate[]
 }>
 export const loader: LoaderFunction = async (): Promise<UpdatesLoader> => {
   return {
-    records: updateRecords,
+    updates: await pageUpdates({ page: 1 }),
   }
 }
 export const meta: MetaFunction = ({ location }) => [
@@ -21,15 +22,15 @@ export const meta: MetaFunction = ({ location }) => [
 ]
 
 const Updates: React.FC = () => {
-  const { records } = useLoaderData<UpdatesLoader>()
+  const { updates: records } = useLoaderData<UpdatesLoader>()
   return (
     <>
       <h2>更新履歴</h2>
       <ul>
         {records.map((r) => (
-          <li key={r.external_id}>
-            <Link to={`/updates/${r.external_id}`}>
-              {toTitle(r)}
+          <li key={r.externalId}>
+            <Link to={`/updates/${r.externalId}`}>
+              {r.caption}
             </Link>
           </li>
         ))}
