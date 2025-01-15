@@ -1,6 +1,6 @@
 import { Database } from '~/db/driver.server'
 import { archives } from '~/db/schema.server'
-import { asc, count, desc, eq, like, or, SQL } from 'drizzle-orm'
+import { asc, count, desc, like, or, SQL } from 'drizzle-orm'
 import { ReadArchive } from '~/lib/archives/list/entity'
 
 type PageArchivesArgs = Readonly<{

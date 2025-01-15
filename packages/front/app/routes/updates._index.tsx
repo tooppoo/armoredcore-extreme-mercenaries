@@ -3,7 +3,6 @@ import { Link, useLoaderData } from '@remix-run/react';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 import { ReadUpdate } from '~/lib/updates/entity.server';
 import { pageUpdates } from '~/lib/updates/repository/read.server';
-import { records as updateRecords, type Update } from '~/lib/updates/repository/record.server';
 
 type UpdatesLoader = Readonly<{
   updates: readonly ReadUpdate[]

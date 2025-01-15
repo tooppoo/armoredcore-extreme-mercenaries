@@ -4,6 +4,8 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
+    "lint": "npm run run-all -- lint",
+    "lint:fix": "npm run run-all -- lint:fix",
     "run-all": "npm run --workspaces --if-present",
     "bot": "npm run -w @ac-extreme-mercenaries/discord-bot",
     "bot:install": "npm install -w @ac-extreme-mercenaries/discord-bot",
