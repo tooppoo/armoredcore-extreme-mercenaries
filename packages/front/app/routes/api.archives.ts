@@ -13,10 +13,10 @@ export const action: ActionFunction = (args) => {
   const token = auth?.replace('Bearer ', '')
 
   if (!token) {
-    throw tokenRequired(null)
+    throw tokenRequired({ cause: 'token is required' })
   }
   if (token !== args.context.cloudflare.env.AUTH_UPLOAD_ARCHIVE) {
-    throw invalidToken(null)
+    throw invalidToken({ cause: 'invalid token' })
   }
 
   switch (args.request.method.toUpperCase()) {

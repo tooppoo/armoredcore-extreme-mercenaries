@@ -1,32 +1,23 @@
 import { makeCatchesSerializable } from '~/lib/error'
 
-export const badRequest = (data: object | null, init: ResponseInit = {}) => Response.json(data, {
-  ...init,
-  status: 400,
-  statusText: 'Bad Request',
-})
-export const unauthorized = (data: object | null, init: ResponseInit = {}) => Response.json(data, {
-  ...init,
-  status: 401,
-  statusText: 'Unauthorized',
-})
-export const forbidden = (data: object | null, init: ResponseInit = {}) => Response.json(data, {
-  ...init,
-  status: 403,
-  statusText: 'Forbidden',
-})
-export const notFound = (data: object | null, init: ResponseInit = {}) => Response.json(data, {
-  ...init,
-  status: 404,
-  statusText: 'Not Found',
-})
+export const badRequest = errorResponse(400, 'Bad Request');
+export const unauthorized = errorResponse(401, 'Unauthorized')
+export const forbidden = errorResponse(403, 'Forbidden')
+export const notFound = errorResponse(404, 'Not Found')
+export const internalServerError = errorResponse(500, 'Internal Server Error')
 
-export const internalServerError = (data: object | null, init: ResponseInit = {}) => Response.json(data, {
-  ...init,
-  status: 500,
-  statusText: 'Internal Server Error',
-})
 export const unknownError = (error: unknown) => internalServerError({
   code: 'unknownError',
   message: error instanceof Error ? error.message : makeCatchesSerializable(error),
 })
+
+function errorResponse(status: number, statusText: string) {
+  return <T extends object>(data: T | null, init: ResponseInit = {}) => Response.json(
+    { ...(data || {}), code: status, message: statusText },
+    {
+      ...init,
+      status,
+      statusText,
+    }
+  )
+}
