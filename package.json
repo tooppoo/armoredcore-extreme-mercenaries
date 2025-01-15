@@ -22,5 +22,8 @@
   "workspaces": [
     "packages/discord-bot",
     "packages/front"
-  ]
+  ],
+  "devDependencies": {
+    "@ysk8hori/typescript-graph": "^0.21.0"
+  }
 }

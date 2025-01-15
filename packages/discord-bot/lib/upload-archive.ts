@@ -1,5 +1,6 @@
 import { Message, OmitPartialGroupDMChannel } from 'discord.js';
 import { frontApi } from './front';
+import { makeCatchesSerializable } from './error';
 
 export type UploadResult = Readonly<{ message: string }>
 export async function uploadArchive(
@@ -24,16 +25,18 @@ export async function uploadArchive(
     throw {
       message: [
         'エラーが発生しました',
-        JSON.stringify(error),
+        makeCatchesSerializable(error),
       ].join('\n')
     }
   }).then(async (res) => {
-    if (400 < res.status) {
+    console.debug(`status = ${res.status}`)
+
+    if (400 <= res.status) {
       const body = (await res.json().catch(async (error) => {
         throw {
           message: [
-            '予期しないエラーが発生しました',
-            error,
+            '不正な応答です',
+            makeCatchesSerializable(error),
           ].join('\n'),
         }
       })) as ErrorResponse
@@ -56,5 +59,6 @@ type ErrorResponse = Readonly<{
 
 const errorMessageMap: Record<string, string> = {
   'unsupported-url': 'サポート外のURLなのでスキップしました',
+  'duplicated-url': '既にアーカイブ済みのURLなのでスキップしました',
   'failed-get-ogp': 'アーカイブの情報を取得できませんでした',
 }

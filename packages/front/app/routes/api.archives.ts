@@ -1,17 +1,29 @@
 import { ActionFunction } from '@remix-run/cloudflare';
 import { SitemapFunction } from 'remix-sitemap';
+import { invalidToken, successWithoutToken, tokenRequired } from '~/lib/api/response/json/auth.server';
+import { badRequest, forbidden, internalServerError, unknownError } from '~/lib/api/response/json/error';
+import { ArchiveError, duplicatedUrl, failedGetOGP, unsupportedUrl } from '~/lib/archives/upload/errors.server';
 import { buildArchiveFromUrl } from '~/lib/archives/upload/functions.server';
-import { saveArchive } from '~/lib/archives/upload/repository/save-archive';
+import { getOGPStrategy } from '~/lib/archives/upload/ogp/ogp-strategy.server';
+import { saveArchive } from '~/lib/archives/upload/repository/save-archive.server';
+import { findByURL } from '~/lib/archives/upload/repository/find-by-url';
 
 export const action: ActionFunction = (args) => {
+  const auth = args.request.headers.get('Authorization')
+  const token = auth?.replace('Bearer ', '')
+
+  if (!token) {
+    throw tokenRequired(null)
+  }
+  if (token !== args.context.cloudflare.env.AUTH_UPLOAD_ARCHIVE) {
+    throw invalidToken(null)
+  }
+
   switch (args.request.method) {
     case 'POST':
       return post(args)
     default:
-      throw Response.json(null, {
-        status: 403,
-        statusText: 'Forbidden',
-      })
+      throw forbidden(null)
   }
 }
 
@@ -23,30 +35,26 @@ type PostArchivesBody = Readonly<{
   }
 }>
 const post: ActionFunction = async ({ request, context }) => {
-  const auth = request.headers.get('Authorization')
-  const token = auth?.replace('Bearer ', '')
-
-  if (!token) {
-    throw Response.json(null, {
-      status: 400,
-      statusText: 'BadRequest',
-      headers: {
-        'WWW-Authenticate': 'Bearer error="token_required"'
-      }
-    })
-  }
-  if (token !== context.cloudflare.env.AUTH_UPLOAD_ARCHIVE) {
-    throw Response.json(null, {
-      status: 400,
-      statusText: 'BadRequest',
-      headers: {
-        'WWW-Authenticate': 'Bearer error="invalid_token"'
-      }
-    })
-  }
-
   const data = await request.json<PostArchivesBody>()
-  const archive = await buildArchiveFromUrl(new URL(data.url))
+
+  const archive = await buildArchiveFromUrl(
+    new URL(data.url),
+    {
+      getOGPStrategy,
+      findByURL: findByURL(context.db),
+    }
+  ).catch((error: ArchiveError) => {
+    console.debug({ error })
+    switch (error.code) {
+      case unsupportedUrl:
+      case duplicatedUrl:
+        throw badRequest(error)
+      case failedGetOGP:
+        throw internalServerError(error)
+      default:
+        throw unknownError(error)
+    }
+  })
 
   await saveArchive(
     {
@@ -57,14 +65,9 @@ const post: ActionFunction = async ({ request, context }) => {
       }
     },
     context.db
-  )
+  ).catch(unknownError)
 
-  return Response.json(null, {
-    status: 200,
-    headers: {
-      'WWW-Authenticate': 'Bearer realm=""'
-    }
-  })
+  return successWithoutToken(null)
 }
 
 export const sitemap: SitemapFunction = () => ({

@@ -1,7 +1,13 @@
 
-export type ErrorData<T extends object = object> = ErrorResponse<T>
-export type ErrorResponse<T extends object = object> = Readonly<T & {
-  code: string
+export type ErrorData<
+  C extends string,
+  T extends object = object
+> = ErrorResponse<C, T>
+export type ErrorResponse<
+  C extends string,
+  T extends object = object
+> = Readonly<T & {
+  code: C
   message: string
 }>
 

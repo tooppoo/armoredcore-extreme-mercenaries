@@ -1,4 +1,4 @@
-import { isSupported, youtubePattern } from '~/lib/archives/upload/support-url.server'
+import { isSupported, youtubePattern, youtubeWithQueryPattern } from '~/lib/archives/upload/url/support-url.server'
 
 export type OGP = Readonly<{
   title: string
@@ -51,13 +51,16 @@ export const withYouTubeEmbed: OGPStrategy = async (url) => {
   }
 }
 
-export type SelectOgpStrategy = (url: URL) => OGPStrategy | null
-export const defaultSelectOgpStrategy: SelectOgpStrategy = (url) => {
-  if (!isSupported(url.toString())) {
+export type GetOGPStrategy = (url: URL) => OGPStrategy | null
+export const getOGPStrategy: GetOGPStrategy = (url) => {
+  if (!isSupported(url)) {
     return null
   }
 
-  if (youtubePattern.test(url.toString())) {
+  if (
+    youtubePattern.test(url.toString()) ||
+    youtubeWithQueryPattern.test(url.toString())
+  ) {
     return withYouTubeEmbed
   }
   else {

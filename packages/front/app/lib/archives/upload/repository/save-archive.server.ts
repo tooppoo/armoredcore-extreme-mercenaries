@@ -5,13 +5,11 @@
 import { Database } from '~/db/driver.server';
 import { archives, discordMembers } from '~/db/schema.server';
 import { Archive } from '~/lib/archives/upload/entity.server';
+import { normalizeUrl } from '../url/support-url.server'
 
 export const saveArchive = async (entity: Archive, db: Database): Promise<void> => {
   // D1でトランザクションが使えないのでworkaround
   // https://leaysgur.github.io/posts/2023/10/17/213948/
-  // TODO:
-  // URL重複排除、クエリやハッシュは除外
-  // ただしYouTubeはクエリで動画をヒットさせるケースがある点に注意
   await db.batch([
     db
       .insert(discordMembers)
@@ -20,7 +18,7 @@ export const saveArchive = async (entity: Archive, db: Database): Promise<void> 
     db
       .insert(archives)
       .values({
-        url: entity.contents.url.toString(),
+        url: normalizeUrl(entity.contents.url).toString(),
         title: entity.contents.title,
         description: entity.contents.description,
         imageUrl: entity.contents.imageUrl.toString(),
