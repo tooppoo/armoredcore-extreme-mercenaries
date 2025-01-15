@@ -5,6 +5,7 @@ import {
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { getLoadContext } from './load-context';
+import { envOnlyMacros } from 'vite-env-only';
 
 declare module "@remix-run/cloudflare" {
   interface Future {
@@ -27,5 +28,6 @@ export default defineConfig({
       },
     }),
     tsconfigPaths(),
+    envOnlyMacros(),
   ],
 });

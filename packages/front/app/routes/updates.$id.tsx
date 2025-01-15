@@ -6,6 +6,7 @@ import { Margin } from '~/lib/utils/components/spacer';
 import { buildMeta, defaultMeta, unofficialServer } from '~/lib/head/build-meta';
 import { toTitle } from '~/lib/updates/functions';
 import { Update, updates } from '~/lib/updates/record';
+import { serverOnly$ } from 'vite-env-only/macros';
 
 type AnUpdateLoader = Readonly<{
   record: Update
@@ -54,11 +55,11 @@ const AnUpdate: React.FC = () => {
   )
 }
 
-export const sitemap: SitemapFunction = async () => {
+export const sitemap = serverOnly$<SitemapFunction>(async () => {
   return updates.map(r => ({
     loc: `/updates/${r.external_id}`, 
     lastmod: formatRFC3339(r.published_at, { fractionDigits: 3 }),
   }));
-};
+});
 
 export default AnUpdate
