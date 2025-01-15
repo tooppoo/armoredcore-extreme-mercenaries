@@ -6,3 +6,5 @@ build/
 .dev.vars
 
 .wrangler
+
+coverage/
