@@ -1,12 +1,13 @@
 import { format } from 'date-fns'
 import { ReadUpdate } from '~/lib/updates/entity.server'
 import { records, Update } from '~/lib/updates/repository/record.server'
+import { h } from '~/lib/utils/sanitize.server'
 
 type PageUpdatesArgs = Readonly<{
   page: number
 }>
 export async function pageUpdates({ page }: PageUpdatesArgs): Promise<ReadUpdate[]> {
-  return records[page].map(transform)
+  return records[page - 1].map(transform)
 }
 
 type FindUpdateArgs = Readonly<{
@@ -22,5 +23,6 @@ function transform(r: Update): ReadUpdate {
   return {
     ...r,
     caption: `${r.title} - ${format(r.createdAt, 'yyyy/MM/dd')}`,
+    content: h(r.content),
   }
 }
