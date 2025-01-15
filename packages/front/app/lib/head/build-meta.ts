@@ -19,23 +19,17 @@ export function buildMeta(args: BuildMetaArgs): Meta {
       url,
     }),
     ...buildUrl(url),
+    { name: 'og:site_name', content: siteName },
     { name: 'og:type', content: 'website' },
   ]
 }
-export function defaultMeta(pathname: string): Meta {
-  return buildMeta({
-    title: siteName,
-    description: `${unofficialServer}の情報公開サイトです`,
-    pathname,
-  })
-}
+
 export const unofficialServer = `フロム・ソフトウェア開発のゲーム 「アーマードコア」シリーズの非公式discordサーバー「${siteName}」`
 
 function title(s: string): Meta {
   return [
     { title: _title(s) },
     { name: 'og:title', content: _title(s) },
-    { name: 'og:site_name', content: siteName },
   ]
 }
 function _title(s: string): string {

@@ -2,7 +2,7 @@ import { LoaderFunction, MetaFunction } from '@remix-run/cloudflare';
 import { Link, useLoaderData } from '@remix-run/react';
 import parse from 'html-react-parser'
 import { Margin } from '~/lib/utils/components/spacer';
-import { buildMeta, defaultMeta, unofficialServer } from '~/lib/head/build-meta';
+import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 import { findUpdate } from '~/lib/updates/repository/read.server';
 import { ReadUpdate } from '~/lib/updates/entity.server';
 
@@ -23,7 +23,7 @@ export const loader: LoaderFunction = async ({ params }): Promise<AnUpdateLoader
 
 export const meta: MetaFunction<() => Promise<AnUpdateLoader>> = ({ data, location }) => {
   if (!data) {
-    return [...defaultMeta(location.pathname)]
+    return []
   }
 
   return [

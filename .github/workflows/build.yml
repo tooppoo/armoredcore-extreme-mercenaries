@@ -21,4 +21,5 @@ jobs:
     - run: npm ci
     - run: npm run run-all -- build
     - run: npm run run-all -- typecheck
-    - run: npm run run-all -- lint
+    - run: npm run test
+    - run: npm run lint

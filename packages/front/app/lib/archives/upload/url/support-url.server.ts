@@ -1,4 +1,4 @@
-import { clearQuery, cloneURLSearchParams } from '~/lib/utils/url'
+import { clearParameters, cloneURLSearchParams } from '~/lib/utils/url'
 
 // 短縮URLにも対応
 export const youtubePattern = /^https:\/\/(www\.)?youtu.be\/[^\s]+$/
@@ -21,10 +21,10 @@ export function normalizeUrl(url: URL): URL {
   if (youtubeWithQueryPattern.test(url.toString())) {
     const query = cloneURLSearchParams(url.searchParams)
     const vId = query.get('v')
-    const parent = clearQuery(url)
+    const parent = clearParameters(url)
 
     return new URL(`${parent.toString()}?v=${vId}`)
   }
 
-  return clearQuery(url)
+  return clearParameters(url)
 } 
