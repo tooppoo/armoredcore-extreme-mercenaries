@@ -19,7 +19,7 @@ export const action: ActionFunction = (args) => {
     throw invalidToken(null)
   }
 
-  switch (args.request.method) {
+  switch (args.request.method.toUpperCase()) {
     case 'POST':
       return post(args)
     default:
