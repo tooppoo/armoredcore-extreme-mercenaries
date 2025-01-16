@@ -18,7 +18,7 @@ type LoadArchives = Readonly<{
   }>
 }>
 export const loader: LoaderFunction = async ({ context, request }) => {
-  const query = zx.parseQuery(request, querySchema) 
+  const query = zx.parseQuery(request, querySchema)
 
   const {
     list: archives,

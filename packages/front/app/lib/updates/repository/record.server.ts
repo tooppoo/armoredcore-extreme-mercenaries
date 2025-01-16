@@ -16,19 +16,19 @@ export const records: readonly Update[][] = [
       createdAt: new TZDate(2024, 9, 3, timezone),
       content: `${siteName}のドキュメント初版を公開しました`,
     },
-    // {
-    //   externalId: 'ab9a8c84-dfc9-3783-240e-d32eb4fa7809',
-    //   title: 'アーカイブ一覧 公開',
-    //   createdAt: new TZDate(2025, 1, 15, timezone),
-    //   content: `
-    //   <p>
-    //     ・<a href="/archives">アーカイブ一覧ページ</a>を公開しました
-    //   </p>
-    //   <div style="margin-top: 5px; margin-bottom: 5px;" />
-    //   <p>
-    //     ・TOPページに<a href="/#archives">アーカイブ一覧ページへのリンク</a>を追加しました
-    //   </p>
-    //   `,
-    // },
+    {
+      externalId: 'ab9a8c84-dfc9-3783-240e-d32eb4fa7809',
+      title: 'アーカイブ一覧 公開',
+      createdAt: new TZDate(2025, 1, 15, timezone),
+      content: `
+      <p>
+        ・<a href="/archives">アーカイブ一覧ページ</a>を公開しました
+      </p>
+      <div style="margin-top: 5px; margin-bottom: 5px;" />
+      <p>
+        ・TOPページに<a href="/#archives">アーカイブ一覧ページへのリンク</a>を追加しました
+      </p>
+      `,
+    },
   ],
 ]
