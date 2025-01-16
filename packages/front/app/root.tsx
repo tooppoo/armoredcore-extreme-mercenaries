@@ -43,11 +43,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
             EXTREME MERCENARIES
           </h1>
         </header>
-        <div className="my-4 border-b"></div>
+        <hr className="my-4" />
         <article>
           {children}
         </article>
-        <div className="my-4 border-b"></div>
+        <hr className="my-4" />
         <footer>
           <div className="flex items-center justify-center text-lg">
             <Link to='/'>TOP</Link>

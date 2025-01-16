@@ -8,7 +8,7 @@ import { orderQueryKeys, orderQueryMap } from '~/lib/archives/list/query'
 import { QuerySchema, querySchema } from '~/lib/archives/list/query.server'
 import { pageArchives } from '~/lib/archives/list/repository/read.server'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
-import { Hr, Margin } from '~/lib/utils/components/spacer'
+import { Margin } from '~/lib/utils/components/spacer'
 import { serverOnly$ } from 'vite-env-only/macros'
 
 type LoadArchives = Readonly<{
@@ -60,13 +60,13 @@ const Archives: React.FC = () => {
       <Form action="/archives" method="GET">
         <FormItem labelFor="keyword" label="キーワード検索">
           <input
-            className="px-2 border"
+            className="px-2 ac-border"
             id="keyword" type="text" defaultValue={query.k}
             {...register('k')}
           />
           <Margin w={16} />
           <button
-            className="border rounded-md px-2"
+            className="rounded-md px-2 ac-border"
             type="button"
             onClick={() => {
               setValue('k', '')
@@ -78,7 +78,7 @@ const Archives: React.FC = () => {
         <Margin h={16} />
         <FormItem labelFor="order" label="並び替え">
           <select
-            className="px-2 border"
+            className="px-2 ac-border"
             id="order"
             defaultValue={query.o}
             {...register('o')}
@@ -93,13 +93,13 @@ const Archives: React.FC = () => {
         <Margin h={16} />
         <button
           type='submit'
-          className='border rounded-md px-4 py-1'
+          className='ac-border rounded-md px-4 py-1'
         >
           適用
         </button>
       </Form>
 
-      <Hr h={64} />
+      <hr className='my-10' />
 
       <section
         className={[
@@ -117,7 +117,6 @@ const Archives: React.FC = () => {
             description={a.description}
             url={a.url}
             imageUrl={a.imageUrl}
-            height='min-h-64 sm:min-h-72 lg:min-h-80'
           />
         ))}
       </section>
@@ -191,30 +190,26 @@ export type ArchiveItemProps = Readonly<{
   description: string
   imageUrl: string
   url: string
-  height?: string
 }>
 export const ArchiveItem: React.FC<ArchiveItemProps> = ({
   title,
   description,
   imageUrl,
   url,
-  height = ''
 }) => {
   return (
     <a
       href={url}
-      className={`${height} flex flex-col justify-between p-2 border-b dark:hover:bg-gray-700`}
+      className='min-h-64 sm:min-h-72 lg:min-h-80 flex flex-col justify-between p-2 ac-border-b ac-hover'
     >
       <div
         className={`h-6 overflow-hidden whitespace-nowrap text-ellipsis`}
       >
         {title}
       </div>
-      <div />
       <img
-        src={imageUrl} alt={description}
+        src={imageUrl} alt={title}
       />
-      <div />
       <div
         className={`h-6 overflow-hidden whitespace-nowrap text-ellipsis`}
       >
