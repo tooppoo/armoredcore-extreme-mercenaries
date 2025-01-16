@@ -25,21 +25,21 @@ export async function pageArchives(
   }: PageArchivesArgs,
   db: Database
 ): Promise<PageArchivesResult> {
+  const where = keyword.length > 0
+    ? or(
+        like(archives.title, `%${keyword}%`),
+        like(archives.description, `%${keyword}%`),
+      )
+    : undefined
+
   const list = await db
     .select()
     .from(archives)
-    .where(
-      keyword.length > 0
-      ? or(
-          like(archives.title, `%${keyword}%`),
-          like(archives.description, `%${keyword}%`),
-        )
-      : undefined,
-    )
+    .where(where)
     .orderBy(...order.order())
     .offset(cursor(page))
     .limit(countPerPage)
-  const [total] = await db.select({ count: count() }).from(archives).all()
+  const [total] = await db.select({ count: count(archives.id) }).from(archives).where(where).all()
   const totalPage = Math.ceil(total.count / countPerPage)
 
   return { list, totalPage }
