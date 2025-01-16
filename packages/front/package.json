@@ -10,7 +10,7 @@
     "test:watch": "vitest",
     "coverage": "vitest --coverage --run",
     "deploy": "npm run build && wrangler pages deploy",
-    "dev": "remix vite:dev --logLevel debug",
+    "dev": "remix vite:dev",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "lint:fix": "eslint --fix --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "wrangler pages dev ./build/client",
