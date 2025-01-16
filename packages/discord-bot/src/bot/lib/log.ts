@@ -7,10 +7,10 @@ export function log(level: LogLevel, data: Loggable): void {
     return
   }
   if (typeof data === 'string') {
-    console[level]({ level, message: data })
+    console.log({ level, message: data })
   }
   else {
-    console[level]({ level, ...data })
+    console.log({ level, ...data })
   }
 }
 function isLowThanLogLevel(level: LogLevel): boolean {

@@ -1,4 +1,4 @@
-import { Message, OmitPartialGroupDMChannel } from 'discord.js';
+import { Message, type OmitPartialGroupDMChannel } from 'discord.js';
 import { frontApi } from './front';
 import { makeCatchesSerializable } from './error';
 

@@ -1,18 +1,15 @@
 {
-  "include": [
-    "**/*.ts",
-  ],
   "compilerOptions": {
-    "lib": ["ES2022"],
-    "outDir": "build",
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "module": "CommonJS",
-    "moduleResolution": "node10",
-    "resolveJsonModule": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "strict": true,
-    "allowJs": true,
+    "verbatimModuleSyntax": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "types": [
+      "node"
+    ],
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx",
   }
 }
