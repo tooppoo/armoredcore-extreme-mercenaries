@@ -5,6 +5,8 @@ import type { SearchSameURLArchive } from './functions.server'
 import { unsupportedUrl, duplicatedUrl, failedGetOGP } from '~/lib/archives/upload/errors.server'
 
 describe('buildArchiveFromUrl', () => {
+  const env: Env = {} as unknown as Env
+
   it('should use the correct strategy and return the resulting ArchiveContents', async () => {
     const mockUrl = new URL('https://www.youtube.com/watch?v=abc123')
     const mockStrategyResult: OGP = { title: 'video title', description: 'video description', image: 'https://example.com/video.jpg' }
@@ -16,6 +18,7 @@ describe('buildArchiveFromUrl', () => {
     const findByURLMock: SearchSameURLArchive = vi.fn().mockResolvedValue(null)
 
     const result = await buildArchiveFromUrl(mockUrl, {
+      env,
       getOGPStrategy: getOGPStrategyMock,
       findByURL: findByURLMock,
     })
@@ -36,6 +39,7 @@ describe('buildArchiveFromUrl', () => {
     const findByURLMock: SearchSameURLArchive = vi.fn().mockResolvedValue(null)
 
     const action = () => buildArchiveFromUrl(mockUrl, {
+      env,
       getOGPStrategy: getOGPStrategyMock,
       findByURL: findByURLMock,
     })
@@ -60,6 +64,7 @@ describe('buildArchiveFromUrl', () => {
     })
 
     const action = () => buildArchiveFromUrl(mockUrl, {
+      env,
       getOGPStrategy: getOGPStrategyMock,
       findByURL: findByURLMock,
     })
@@ -77,6 +82,7 @@ describe('buildArchiveFromUrl', () => {
     const findByURLMock: SearchSameURLArchive = vi.fn().mockResolvedValue(null)
 
     const action = () => buildArchiveFromUrl(mockUrl, {
+      env,
       getOGPStrategy: getOGPStrategyMock,
       findByURL: findByURLMock,
     })

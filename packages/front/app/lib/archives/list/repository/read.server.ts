@@ -10,7 +10,7 @@ type PageArchivesArgs = Readonly<{
 }>
 
 // 1, 2, 3, 4列に対応
-const countPerPage = 1 * 2 * 3 * 4
+const countPerPage = 12
 const cursor = (page: number): number => countPerPage * (page - 1)
 
 type PageArchivesResult = Readonly<{
