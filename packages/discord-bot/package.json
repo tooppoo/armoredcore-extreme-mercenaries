@@ -1,0 +1,19 @@
+{
+  "name": "@ac-extreme-mercenaries/discord-bot",
+  "version": "1.0.0",
+  "main": "build/index.js",
+  "scripts": {
+    "start": "dotenvx run -f .env.production -- node .",
+    "dev": "dotenvx run -f .env.local -f .env -- node .",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "author": "",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "@dotenvx/dotenvx": "^1.32.1",
+    "discord.js": "14.17.3",
+    "dotenv": "16.4.7"
+  }
+}

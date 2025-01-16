@@ -4,51 +4,28 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "build": "remix vite:build",
-    "deploy": "npm run build && wrangler pages deploy",
-    "dev": "remix vite:dev",
-    "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
-    "lint:fix": "eslint --fix --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
-    "start": "wrangler pages dev ./build/client",
-    "typecheck": "tsc",
-    "typegen": "wrangler types",
-    "preview": "npm run build && wrangler pages dev",
-    "cf-typegen": "wrangler types"
-  },
-  "dependencies": {
-    "@date-fns/tz": "1.2.0",
-    "@remix-run/cloudflare": "^2.15.2",
-    "@remix-run/cloudflare-pages": "^2.15.2",
-    "@remix-run/react": "^2.15.2",
-    "date-fns": "4.1.0",
-    "isbot": "^5.0.0",
-    "prop-types": "15.8.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "remix-sitemap": "^3.2.0"
-  },
-  "devDependencies": {
-    "@cloudflare/workers-types": "4.20250109.0",
-    "@remix-run/dev": "2.15.2",
-    "@types/react": "18.3.18",
-    "@types/react-dom": "18.3.5",
-    "@typescript-eslint/eslint-plugin": "6.21.0",
-    "@typescript-eslint/parser": "6.21.0",
-    "autoprefixer": "10.4.20",
-    "eslint": "8.57.1",
-    "eslint-import-resolver-typescript": "3.7.0",
-    "eslint-plugin-import": "2.31.0",
-    "eslint-plugin-jsx-a11y": "6.10.2",
-    "eslint-plugin-react": "7.37.4",
-    "eslint-plugin-react-hooks": "4.6.2",
-    "postcss": "8.4.49",
-    "tailwindcss": "3.4.17",
-    "typescript": "5.7.3",
-    "vite": "5.4.11",
-    "vite-tsconfig-paths": "4.3.2",
-    "wrangler": "3.101.0"
+    "test": "npm run run-all -- test",
+    "coverage": "npm run run-all -- coverage",
+    "lint": "npm run run-all -- lint",
+    "lint:fix": "npm run run-all -- lint:fix",
+    "run-all": "npm run --workspaces --if-present",
+    "bot": "npm run -w @ac-extreme-mercenaries/discord-bot",
+    "bot:install": "npm install -w @ac-extreme-mercenaries/discord-bot",
+    "bot:uninstall": "npm uninstall -w @ac-extreme-mercenaries/discord-bot",
+    "bot:dev": "npm run bot -- dev",
+    "front": "npm run -w @ac-extreme-mercenaries/front",
+    "front:install": "npm install -w @ac-extreme-mercenaries/front",
+    "front:uninstall": "npm uninstall -w @ac-extreme-mercenaries/front",
+    "front:dev": "npm run front -- dev"
   },
   "engines": {
     "node": ">=20.0.0"
+  },
+  "workspaces": [
+    "packages/discord-bot",
+    "packages/front"
+  ],
+  "devDependencies": {
+    "@ysk8hori/typescript-graph": "^0.21.0"
   }
 }
