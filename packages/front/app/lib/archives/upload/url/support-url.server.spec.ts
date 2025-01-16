@@ -4,6 +4,7 @@ import { isSupported, normalizeUrl } from './support-url.server'
 describe('support-url', () => {
   describe.each([
     ['https://www.youtube.com/watch?v=abc123', true],
+    ['https://m.youtube.com/watch?v=abc123', true],
     ['https://youtube.com/watch?v=abc123', true],
     ['https://youtu.be/123', true],
     ['https://www.nicovideo.jp/watch/sm12345678', true],
