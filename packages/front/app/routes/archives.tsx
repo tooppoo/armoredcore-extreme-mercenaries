@@ -9,6 +9,7 @@ import { QuerySchema, querySchema } from '~/lib/archives/list/query.server'
 import { pageArchives } from '~/lib/archives/list/repository/read.server'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import { Hr, Margin } from '~/lib/utils/components/spacer'
+import { serverOnly$ } from 'vite-env-only/macros'
 
 type LoadArchives = Readonly<{
   totalPage: number
@@ -90,18 +91,6 @@ const Archives: React.FC = () => {
           </select>
         </FormItem>
         <Margin h={16} />
-        <FormItem labelFor="page" label="ページ指定">
-          <input
-            className="px-2 border"
-            id="page"
-            type="number"
-            min="1"
-            max={totalPage}
-            defaultValue={page}
-            {...register('p')}
-          />
-        </FormItem>
-        <Margin h={16} />
         <button
           type='submit'
           className='border rounded-md px-4 py-1'
@@ -134,13 +123,19 @@ const Archives: React.FC = () => {
       </section>
       <Margin h={32} />
       <section className="flex justify-center items-center">
-        <MovePage page={page - 1} {...{ totalPage, query }}>
+        <MovePage page={1} {...{ totalPage, query }}>
           &lt;&lt;
         </MovePage>
+        <MovePage page={page - 1} {...{ totalPage, query }}>
+          &lt;
+        </MovePage>
 
-        {page} / {totalPage}
+        {page}
 
         <MovePage page={page + 1} {...{ totalPage, query }}>
+          &gt;
+        </MovePage>
+        <MovePage page={totalPage} {...{ totalPage, query }}>
           &gt;&gt;
         </MovePage>
       </section>
@@ -184,6 +179,7 @@ const MovePage: React.FC<MovePageProps> = ({ page, totalPage, children, query })
             {children}
           </Link>
         : <span>
+            {children}
           </span>
       }
     </div>
@@ -207,7 +203,7 @@ export const ArchiveItem: React.FC<ArchiveItemProps> = ({
   return (
     <a
       href={url}
-      className={`${height} flex flex-col justify-between p-2 border rounded-md`}
+      className={`${height} flex flex-col justify-between p-2 border-b dark:hover:bg-gray-700`}
     >
       <div
         className={`h-6 overflow-hidden whitespace-nowrap text-ellipsis`}
@@ -228,7 +224,7 @@ export const ArchiveItem: React.FC<ArchiveItemProps> = ({
   )
 }
 
-export const meta: MetaFunction = ({ location }) => {
+export const meta = serverOnly$<MetaFunction>(({ location }) => {
   return [
     ...buildMeta({
       title: '攻略動画アーカイブ',
@@ -239,6 +235,6 @@ export const meta: MetaFunction = ({ location }) => {
       pathname: location.pathname,
     })
   ];
-};
+});
 
 export default Archives
