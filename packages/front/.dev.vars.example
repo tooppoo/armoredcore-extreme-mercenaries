@@ -1,9 +1,5 @@
 APP_ENV=
 
-# session
-## openssl rand -base64 32
-SESSION_SECRETS=
-
 # auth
 AUTH_UPLOAD_ARCHIVE=
 
