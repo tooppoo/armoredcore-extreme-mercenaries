@@ -200,6 +200,7 @@ export const ArchiveItem: React.FC<ArchiveItemProps> = ({
   return (
     <a
       href={url}
+      title={title}
       className='min-h-64 sm:min-h-72 lg:min-h-80 flex flex-col justify-between p-2 ac-border-b ac-hover'
     >
       <div
