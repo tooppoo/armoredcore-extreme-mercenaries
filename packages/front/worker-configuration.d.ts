@@ -6,5 +6,6 @@ interface Env {
 	DISCORD_LINK_INVITE: string;
 	DISCORD_LINK_QUESTION: string;
 	DISCORD_LINK_SUGGESTION: string;
+	YOUTUBE_PUBLIC_DATA_API_KEY: string;
 	DB: D1Database;
 }

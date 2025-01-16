@@ -41,6 +41,7 @@ const post: ActionFunction = async ({ request, context }) => {
   const archive = await buildArchiveFromUrl(
     new URL(data.url),
     {
+      env: context.cloudflare.env,
       getOGPStrategy,
       findByURL: findByURL(context.db),
     }

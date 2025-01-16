@@ -11,6 +11,7 @@ import { makeCatchesSerializable } from '~/lib/error'
 export type SearchSameURLArchive = (url: URL) => Promise<ArchiveContents | null>
 
 type IODeps = Readonly<{
+  env: Env
   getOGPStrategy: GetOGPStrategy
   findByURL: SearchSameURLArchive
 }>
@@ -20,6 +21,7 @@ type IODeps = Readonly<{
 export async function buildArchiveFromUrl(
   url: URL,
   {
+    env,
     getOGPStrategy,
     findByURL,
   }: IODeps
@@ -43,7 +45,7 @@ export async function buildArchiveFromUrl(
     } satisfies DuplicateUrlError
   }
 
-  const ogp = await strategy(url).catch((error) => {
+  const ogp = await strategy(url, env).catch((error) => {
     throw {
       code: failedGetOGP,
       message: error instanceof Error

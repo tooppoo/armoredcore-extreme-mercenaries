@@ -1,4 +1,5 @@
 import { isSupported, youtubePattern, youtubeWithQueryPattern } from '~/lib/archives/upload/url/support-url.server'
+import { youtube, youtube_v3 } from '@googleapis/youtube'
 
 export type OGP = Readonly<{
   title: string
@@ -6,7 +7,7 @@ export type OGP = Readonly<{
   image: string
 }>
 
-export type OGPStrategy = (url: URL) => Promise<OGP>
+export type OGPStrategy = (url: URL, env: Env) => Promise<OGP>
 type OGPScannerResponse = Readonly<{
   ogp: {
     'og:title': [string]
@@ -30,26 +31,35 @@ export const withOGPScanner: OGPStrategy = async (url) => {
   }
 }
 
-type YouTubeEmbed = Readonly<{
-  title: string
-  thumbnail_url: string
-}>
-export const withYouTubeEmbed: OGPStrategy = async (url) => {
-  const res = await fetch(`https://www.youtube.com/oembed?url=${encodeURI(url.toString())}`, {
-    method: 'GET',
-    headers: {
-      'Accept': 'application/json',
-    },
-  })
+export const withYouTubeData: OGPStrategy = (() => {
+  let youtubeClient: youtube_v3.Youtube
 
-  const json = await res.json<YouTubeEmbed>()
+  return async (url, env) => {
+    if (youtubeClient === undefined) {
+      youtubeClient = youtube({
+        version: 'v3',
+        auth: env.YOUTUBE_PUBLIC_DATA_API_KEY,
+      })
+    }
+    const id = url.searchParams.get('v') || url.pathname.replace('/','')
 
-  return {
-    title: json.title,
-    image: json.thumbnail_url,
-    description: '',
+    const res = await youtubeClient.videos.list({
+      id: [id],
+      part: ['snippet'],
+    })
+    const target = res.data.items?.[0]
+
+    if (!target) {
+      throw new Error(`no video found by ${id}`)
+    }
+
+    return {
+      title: target.snippet?.title || '',
+      description: target.snippet?.description || '',
+      image: target.snippet?.thumbnails?.high?.url || '',
+    }
   }
-}
+})()
 
 export type GetOGPStrategy = (url: URL) => OGPStrategy | null
 export const getOGPStrategy: GetOGPStrategy = (url) => {
@@ -61,7 +71,7 @@ export const getOGPStrategy: GetOGPStrategy = (url) => {
     youtubePattern.test(url.toString()) ||
     youtubeWithQueryPattern.test(url.toString())
   ) {
-    return withYouTubeEmbed
+    return withYouTubeData
   }
   else {
     return withOGPScanner
