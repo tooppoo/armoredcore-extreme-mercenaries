@@ -2,9 +2,10 @@
   "name": "@ac-extreme-mercenaries/discord-bot",
   "version": "1.0.0",
   "main": "build/index.js",
+  "type": "module",
   "scripts": {
-    "start": "dotenvx run -f .env.production -- node .",
-    "dev": "dotenvx run -f .env.local -f .env -- node .",
+    "start": "tsx src/app.ts",
+    "dev": "dotenvx run -f .env.local -f .env -- tsx watch src/app.ts",
     "build": "tsc",
     "typecheck": "tsc --noEmit"
   },
@@ -14,6 +15,12 @@
   "dependencies": {
     "@dotenvx/dotenvx": "^1.32.1",
     "discord.js": "14.17.3",
-    "dotenv": "16.4.7"
+    "dotenv": "16.4.7",
+    "@hono/node-server": "^1.13.7",
+    "hono": "^4.6.16"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "tsx": "^4.7.1"
   }
 }

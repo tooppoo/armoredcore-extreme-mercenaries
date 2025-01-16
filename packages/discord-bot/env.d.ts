@@ -1,4 +1,4 @@
-import { LogLevel } from './lib/log'
+import { LogLevel } from './src/bot/lib/log'
 
 declare module 'process' {
 	global {
@@ -6,7 +6,7 @@ declare module 'process' {
 			interface ProcessEnv {
         readonly DISCORD_TOKEN: string
 
-        readonly ARCHIVE_CHANNEL: string
+        readonly DISCORD_ARCHIVE_CHANNEL: string
 
         readonly FRONT_URL: string
         readonly FRONT_AUTH_UPLOAD_ARCHIVE: string
