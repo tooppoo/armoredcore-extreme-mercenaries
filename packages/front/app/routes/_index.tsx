@@ -91,20 +91,20 @@ const lists = (discord: LoadDiscord['discord']) => [
       </>
     )
   },
-  {
-    caption: 'アーカイブ',
-    hash: '#archives',
-    content: (
-      <>
-        <p>
-          アーマードコア攻略動画へのリンク一覧を、アーカイブとして公開しています。
-        </p>
-        <p>
-          アーカイブは<Link to="/archives">こちら</Link>からご確認いただけます。
-        </p>
-      </>
-    )
-  },
+  // {
+  //   caption: 'アーカイブ',
+  //   hash: '#archives',
+  //   content: (
+  //     <>
+  //       <p>
+  //         アーマードコア攻略動画へのリンク一覧を、アーカイブとして公開しています。
+  //       </p>
+  //       <p>
+  //         アーカイブは<Link to="/archives">こちら</Link>からご確認いただけます。
+  //       </p>
+  //     </>
+  //   )
+  // },
   {
     caption: 'ライセンス',
     hash: '#license',
