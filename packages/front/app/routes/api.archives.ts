@@ -7,6 +7,7 @@ import { buildArchiveFromUrl } from '~/lib/archives/upload/functions.server';
 import { getOGPStrategy } from '~/lib/archives/upload/ogp/ogp-strategy.server';
 import { saveArchive } from '~/lib/archives/upload/repository/save-archive.server';
 import { findByURL } from '~/lib/archives/upload/repository/find-by-url';
+import { makeCatchesSerializable } from '~/lib/error';
 
 export const action: ActionFunction = (args) => {
   const auth = args.request.headers.get('Authorization')
@@ -44,7 +45,8 @@ const post: ActionFunction = async ({ request, context }) => {
       findByURL: findByURL(context.db),
     }
   ).catch((error: ArchiveError) => {
-    console.debug({ error })
+    console.error({ error: makeCatchesSerializable(error) })
+
     switch (error.code) {
       case unsupportedUrl:
       case duplicatedUrl:
