@@ -1,6 +1,5 @@
 import { LoaderFunction, MetaFunction } from '@remix-run/cloudflare';
 import { Link, useLoaderData } from '@remix-run/react';
-import parse from 'html-react-parser'
 import { Margin } from '~/lib/utils/components/spacer';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 import { findUpdate } from '~/lib/updates/repository/read.server';
@@ -43,7 +42,7 @@ const AnUpdate: React.FC = () => {
       <section>
         <h2>{update.caption}</h2>
 
-        {parse(update.content)}
+        {update.content}
       </section>
       <Margin h={16} />
       <div>

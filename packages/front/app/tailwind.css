@@ -35,6 +35,9 @@
   hr {
     @apply border-gray-700 dark:border-inherit
   }
+  code {
+    @apply block bg-gray-100 text-gray-800 px-4 overflow-x-scroll text-nowrap rounded-md
+  }
 }
 
 @layer utilities {

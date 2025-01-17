@@ -2,6 +2,7 @@ import { format } from 'date-fns'
 import { ReadUpdate } from '~/lib/updates/entity.server'
 import { records, Update } from '~/lib/updates/repository/record.server'
 import { h } from '~/lib/utils/sanitize.server'
+import { parseHtml } from '~/lib/utils/html-parser'
 
 type PageUpdatesArgs = Readonly<{
   page: number
@@ -25,6 +26,6 @@ function transform(r: Update): ReadUpdate {
   return {
     ...r,
     caption: `${r.title} - ${format(r.createdAt, 'yyyy/MM/dd')}`,
-    content: h(r.content),
+    content: parseHtml(h(r.content)),
   }
 }
