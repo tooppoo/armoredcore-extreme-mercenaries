@@ -19,9 +19,9 @@ export function buildMeta(args: BuildMetaArgs): Meta {
       url,
     }),
     ...buildUrl(url),
-    { name: 'og:site_name', content: siteName },
-    { name: 'og:type', content: 'website' },
-    { name: 'og:image', content: `https://philomagi.dev/ogp-full.jpg?c=${cacheKey}` },
+    { property: 'og:site_name', content: siteName },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:image', content: `https://philomagi.dev/ogp-full.jpg?c=${cacheKey}` },
     { name: 'twitter:card', content: 'summary_large_image' },
     { name: 'twitter:creator', content: '@Philomagi' },
   ]
@@ -32,7 +32,7 @@ export const unofficialServer = `フロム・ソフトウェア開発のゲー�
 function title(s: string): Meta {
   return [
     { title: _title(s) },
-    { name: 'og:title', content: _title(s) },
+    { property: 'og:title', content: _title(s) },
   ]
 }
 function _title(s: string): string {
@@ -42,7 +42,7 @@ function _title(s: string): string {
 function description(text: string): Meta {
   return [
     { name: 'description', content: text },
-    { name: 'og:description', content: text },
+    { property: 'og:description', content: text },
   ]
 }
 
@@ -68,7 +68,7 @@ function jsonLd({ title, description, url }: JsonLdArgs): Meta {
 
 function buildUrl(url: string): Meta {
   return [
-    { name: 'og:url', content: url },
+    { property: 'og:url', content: url },
     { tagName: 'link', rel: 'canonical', href: url },
   ]
 }
