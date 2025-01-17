@@ -1,5 +1,5 @@
 import { MetaFunction } from '@remix-run/cloudflare';
-import { origin, siteName } from '~/lib/constants';
+import { cacheKey, origin, siteName } from '~/lib/constants';
 
 type Meta = ReturnType<MetaFunction>
 
@@ -21,6 +21,9 @@ export function buildMeta(args: BuildMetaArgs): Meta {
     ...buildUrl(url),
     { name: 'og:site_name', content: siteName },
     { name: 'og:type', content: 'website' },
+    { name: 'og:image', content: `https://philomagi.dev/ogp-full.jpg?c=${cacheKey}` },
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:creator', content: '@Philomagi' },
   ]
 }
 
