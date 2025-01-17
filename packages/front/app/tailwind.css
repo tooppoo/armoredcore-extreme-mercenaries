@@ -2,32 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  @apply bg-white dark:bg-gray-950;
+@layer base {
+  html,
+  body {
+    @apply bg-white dark:bg-gray-950;
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
+    @media (prefers-color-scheme: dark) {
+      color-scheme: dark;
+    }
+  }
+
+  a {
+    @apply underline text-blue-700 dark:text-amber-400
+  }
+
+  h1 {
+    @apply text-2xl my-1
+  }
+  h2 {
+    @apply text-xl my-1
+  }
+
+  ol, ul, li {
+    @apply my-1
+  }
+  ol {
+    @apply list-decimal list-inside ml-4
+  }
+  ul {
+    @apply list-disc list-inside ml-4
+  }
+  hr {
+    @apply border-gray-700 dark:border-inherit
   }
 }
 
-a {
-  @apply underline text-amber-400
-}
+@layer utilities {
+  .ac-border {
+    @apply border border-gray-700 dark:border-inherit
+  }
+  .ac-border-b {
+    @apply border-b border-gray-700 dark:border-inherit
+  }
 
-h1 {
-  @apply text-2xl my-1
-}
-h2 {
-  @apply text-xl my-1
-}
-
-ol, ul, li {
-  @apply my-1
-}
-ol {
-  @apply list-decimal list-inside ml-4
-}
-ul {
-  @apply list-disc list-inside ml-4
+  .ac-hover {
+    @apply hover:bg-gray-200 dark:hover:bg-gray-700
+  }
 }

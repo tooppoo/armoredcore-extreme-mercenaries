@@ -25,8 +25,8 @@ export default function Index() {
     <div className="flex flex-col items-begin justify-begin">
       {lists(discord).map(({ caption, hash, content }) => (
         <section className='mb-3' key={caption}>
-          <h2>
-            <Link to={{ hash }}>{caption}</Link>
+          <h2 id={hash}>
+            <a href={hash}>{caption}</a>
           </h2>
           <div>{content}</div>
         </section>
@@ -91,20 +91,20 @@ const lists = (discord: LoadDiscord['discord']) => [
       </>
     )
   },
-  // {
-  //   caption: 'アーカイブ',
-  //   hash: '#archives',
-  //   content: (
-  //     <>
-  //       <p>
-  //         アーマードコア攻略動画へのリンク一覧を、アーカイブとして公開しています。
-  //       </p>
-  //       <p>
-  //         アーカイブは<Link to="/archives">こちら</Link>からご確認いただけます。
-  //       </p>
-  //     </>
-  //   )
-  // },
+  {
+    caption: 'アーカイブ',
+    hash: '#archives',
+    content: (
+      <>
+        <p>
+          アーマードコア攻略動画へのリンク一覧を、アーカイブとして公開しています。
+        </p>
+        <p>
+          アーカイブは<Link to="/archives">こちら</Link>からご確認いただけます。
+        </p>
+      </>
+    )
+  },
   {
     caption: 'ライセンス',
     hash: '#license',
