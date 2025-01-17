@@ -27,7 +27,7 @@ export function buildMeta(args: BuildMetaArgs): Meta {
   ]
 }
 
-export const unofficialServer = `フロム・ソフトウェア開発のゲーム 「アーマードコア」シリーズの非公式discordサーバー「${siteName}」`
+export const unofficialServer = `アーマードコアのやりこみ攻略特化型discordサーバー「${siteName}」`
 
 function title(s: string): Meta {
   return [
