@@ -9,6 +9,7 @@ import {
 } from "@remix-run/react";
 
 import "./tailwind.css";
+import 'highlight.js/styles/github.min.css';
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
