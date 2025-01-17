@@ -232,7 +232,7 @@ export const Rule: React.FC = () => {
 }
 
 type RuleListProps = Readonly<{ children: ReactElement[] }>
-const RuleList: React.FC<RuleListProps> = ({ children }) => <ol className='ml-0'>{children}</ol>
+const RuleList: React.FC<RuleListProps> = ({ children }) => <ol className='ml-8'>{children}</ol>
 
 type RuleItemProps = Readonly<{
   caption: string

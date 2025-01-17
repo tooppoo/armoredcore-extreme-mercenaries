@@ -27,10 +27,10 @@
     @apply my-1
   }
   ol {
-    @apply list-decimal list-inside ml-4
+    @apply list-decimal list-outside ml-6
   }
   ul {
-    @apply list-disc list-inside ml-4
+    @apply list-disc list-outside ml-6
   }
   hr {
     @apply border-gray-700 dark:border-inherit
