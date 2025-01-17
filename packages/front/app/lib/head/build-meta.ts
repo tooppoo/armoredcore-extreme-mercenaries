@@ -22,7 +22,7 @@ export function buildMeta(args: BuildMetaArgs): Meta {
     { property: 'og:site_name', content: siteName },
     { property: 'og:type', content: 'website' },
     { property: 'og:image', content: `https://philomagi.dev/ogp-full.jpg?c=${cacheKey}` },
-    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:card', content: 'summary' },
     { name: 'twitter:creator', content: '@Philomagi' },
   ]
 }
