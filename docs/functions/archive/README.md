@@ -14,14 +14,21 @@ skinparam componentStyle rectangle
 skinparam maxMessageSize 80
 
 '--- コンポーネント定義 ---
-rectangle "Koyeb\n<img:https://lh3.googleusercontent.com/p/AF1QipPA3ov75cU1ue8kWgr0GCRTii37VBxj177TVvqT=s1360-w1360-h1020{scale=0.1}>" as koyeb {
-  [Discord Bot] as discordbot
+component "Koyeb\n<img:https://lh3.googleusercontent.com/p/AF1QipPA3ov75cU1ue8kWgr0GCRTii37VBxj177TVvqT=s1360-w1360-h1020{scale=0.1}>" as koyeb {
+  component "Hono\n<img:https://avatars.githubusercontent.com/u/98495527?s=200&v=4{scale=0.3}>" as hono {
+    [Discord Bot] as discordbot
+  }
 }
 
-rectangle "Cloudflare\n<img:https://cf-assets.www.cloudflare.com/slt3lc6tev37/fdh7MDcUlyADCr49kuUs2/5f780ced9677a05d52b05605be88bc6f/cf-logo-v-rgb.png{scale=0.1}>" as cloudflare {
-  [Archiveアプリ] as archive
+component "Cloudflare\n<img:https://cf-assets.www.cloudflare.com/slt3lc6tev37/fdh7MDcUlyADCr49kuUs2/5f780ced9677a05d52b05605be88bc6f/cf-logo-v-rgb.png{scale=0.1}>" as cloudflare {
+  component "Remix" as Remix {
+    [Archiveアプリ] as archive
+  }
   database "Cloudflare D1" as db
 }
+
+component "OGP Scanner" as ogpScanner
+component "YouTube Data API\n<img:https://developers.google.com/static/site-assets/logo-youtube.svg{scale=0.3}>" as youtubeAPI
 
 [Discord] as discord
 
@@ -39,6 +46,8 @@ discord -- discordbot : メッセージ監視
 discordbot -> webhook : 新規URL通知
 webhook -> archive : URL通知
 
+archive --> youtubeAPI : 情報取得
+archive --> ogpScanner : 情報取得
 archive -> db : OGP保存/取得
 
 discordbot -> discord : 保存完了通知
