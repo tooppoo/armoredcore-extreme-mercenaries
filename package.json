@@ -17,14 +17,18 @@
     "front": "npm run -w @ac-extreme-mercenaries/front",
     "front:install": "npm install -w @ac-extreme-mercenaries/front",
     "front:uninstall": "npm uninstall -w @ac-extreme-mercenaries/front",
-    "front:dev": "npm run front -- dev"
+    "front:dev": "npm run front -- dev",
+    "e2e": "npm run -w @ac-extreme-mercenaries/e2e",
+    "e2e:install": "npm install -w @ac-extreme-mercenaries/e2e",
+    "e2e:uninstall": "npm uninstall -w @ac-extreme-mercenaries/e2e"
   },
   "engines": {
     "node": ">=20.0.0"
   },
   "workspaces": [
     "packages/discord-bot",
-    "packages/front"
+    "packages/front",
+    "packages/e2e"
   ],
   "devDependencies": {
     "@ysk8hori/typescript-graph": "0.21.2"
