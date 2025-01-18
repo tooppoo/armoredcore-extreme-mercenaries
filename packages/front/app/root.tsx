@@ -1,12 +1,5 @@
-import type { LinksFunction } from "@remix-run/cloudflare";
-import {
-  Link,
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
+import type { LinksFunction } from "react-router";
+import { Link, Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 
 import "./tailwind.css";
 import 'highlight.js/styles/github.min.css';

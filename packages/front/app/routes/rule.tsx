@@ -1,5 +1,4 @@
-import { LoaderFunction, MetaFunction } from '@remix-run/cloudflare';
-import { Link, useLoaderData } from '@remix-run/react'
+import { type LoaderFunction, type MetaFunction, Link, useLoaderData } from 'react-router';
 import { ReactElement } from 'react'
 import { Margin } from '~/lib/utils/components/spacer'
 import { siteName } from '~/lib/constants'
@@ -7,13 +6,11 @@ import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 
 export const meta: MetaFunction = ({ location }) => {
-  return [
-    ...buildMeta({
-      title: '利用規約',
-      description: `${unofficialServer}の利用規約ページです`,
-      pathname: location.pathname,
-    })
-  ];
+  return buildMeta({
+    title: '利用規約',
+    description: `${unofficialServer}の利用規約ページです`,
+    pathname: location.pathname,
+  })
 };
 
 export const loader: LoaderFunction = async (args) => ({

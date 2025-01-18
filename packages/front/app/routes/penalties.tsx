@@ -1,5 +1,5 @@
-import { MetaFunction } from '@remix-run/cloudflare';
-import { Link } from '@remix-run/react';
+import { MetaFunction } from 'react-router';
+import { Link } from 'react-router';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 
 export const meta: MetaFunction = ({ location }) => {

@@ -1,4 +1,4 @@
-import { ActionFunction } from '@remix-run/cloudflare';
+import { ActionFunction } from 'react-router';
 import { SitemapFunction } from 'remix-sitemap';
 import { invalidToken, successWithoutToken, tokenRequired } from '~/lib/api/response/json/auth.server';
 import { badRequest, forbidden, internalServerError, unknownError } from '~/lib/api/response/json/error';

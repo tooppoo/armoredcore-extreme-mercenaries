@@ -1,13 +1,12 @@
-import { AppLoadContext } from '@remix-run/cloudflare';
-import { type PlatformProxy } from "wrangler";
-import { Database, getDB } from './app/db/driver.server';
+import { AppLoadContext } from 'react-router';
+import { getDB } from './app/db/driver.server';
+import { PlatformProxy } from 'wrangler';
 
 type Cloudflare = Omit<PlatformProxy<Env>, "dispose">;
 
-declare module "@remix-run/cloudflare" {
+declare module "react-router" {
   interface AppLoadContext {
-    cloudflare: Cloudflare;
-    db: Database
+    cloudflare: Cloudflare
   }
 }
 
@@ -20,4 +19,4 @@ type GetLoadContext = (args: {
 export const getLoadContext: GetLoadContext = ({ context }) => ({
   ...context,
   db: getDB(context.cloudflare.env),
-})
+} as AppLoadContext)
