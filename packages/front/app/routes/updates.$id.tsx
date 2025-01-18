@@ -1,5 +1,4 @@
-import { LoaderFunction, MetaFunction } from 'react-router';
-import { Link, useLoaderData } from 'react-router';
+import { LoaderFunction, MetaFunction , Link, useLoaderData } from 'react-router';
 import { Margin } from '~/lib/utils/components/spacer';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 import { findUpdate } from '~/lib/updates/repository/read.server';

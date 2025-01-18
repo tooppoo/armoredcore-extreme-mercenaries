@@ -1,5 +1,4 @@
-import { LoaderFunction, MetaFunction } from 'react-router';
-import { Link, useLoaderData } from 'react-router';
+import { LoaderFunction, MetaFunction , Link, useLoaderData } from 'react-router';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 import { ReadUpdate } from '~/lib/updates/entity.server';
 import { pageUpdates } from '~/lib/updates/repository/read.server';
