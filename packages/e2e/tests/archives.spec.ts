@@ -4,6 +4,6 @@ test('title', async ({ page }) => {
   await page.goto('/archives');
 
   await expect(page).toHaveTitle(/ARMORED CORE EXTREME MERCENARIES/, {
-    timeout: 10 * 1000, // 10s
+    timeout: process.env.TIMEOUT_SLOW_EXPECT ? parseInt(process.env.TIMEOUT_SLOW_EXPECT, 10) : undefined,
   });
 });

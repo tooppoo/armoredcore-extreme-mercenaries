@@ -29,6 +29,10 @@ export default defineConfig({
     process.env.CI ? ['github'] : ['list'],
     ['html'],
   ],
+  timeout: process.env.TIMEOUT ? parseInt(process.env.TIMEOUT, 10) : 30000,
+  expect: {
+    timeout: process.env.TIMEOUT_EXPECT ? parseInt(process.env.TIMEOUT_EXPECT, 10) : 5000,
+  },
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -78,7 +82,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: `npm run --prefix ../front dev -- --port ${port}`,
+    command: `npm run --prefix ../front start -- --local --port ${port}`,
     url: `http://localhost:${port}`,
     reuseExistingServer: !process.env.CI,
   },
