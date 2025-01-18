@@ -1,5 +1,5 @@
-import { LoaderFunction, MetaFunction } from '@remix-run/cloudflare';
-import { Link, useLoaderData } from '@remix-run/react';
+import { LoaderFunction, MetaFunction } from 'react-router';
+import { Link, useLoaderData } from 'react-router';
 import { Margin } from '~/lib/utils/components/spacer';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 import { findUpdate } from '~/lib/updates/repository/read.server';

@@ -1,5 +1,4 @@
-import type { LoaderFunction, MetaFunction } from "@remix-run/cloudflare";
-import { Link, useLoaderData } from '@remix-run/react';
+import { type LoaderFunction, type MetaFunction, Link, useLoaderData } from "react-router";
 import { siteName } from '~/lib/constants';
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';

@@ -5,12 +5,14 @@
     "**/.server/**/*.ts",
     "**/.server/**/*.tsx",
     "**/.client/**/*.ts",
-    "**/.client/**/*.tsx"
+    "**/.client/**/*.tsx",
+    ".react-router/types/**/*"
   ],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2023"],
     "types": [
-        "@remix-run/cloudflare",
+        "@react-router/cloudflare",
+        "@react-router/node",
         "vite/client",
         "@cloudflare/workers-types/2023-07-01"
     ],
@@ -29,6 +31,10 @@
     "paths": {
       "~/*": ["app/*"]
     },
+    "rootDirs": [
+      ".",
+      ".react-router/types"
+    ],
 
     // Vite takes care of building everything, not tsc.
     "noEmit": true

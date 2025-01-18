@@ -4,8 +4,7 @@
  * For more information, see https://remix.run/file-conventions/entry.server
  */
 
-import type { AppLoadContext, EntryContext } from "@remix-run/cloudflare";
-import { RemixServer } from "@remix-run/react";
+import { AppLoadContext, EntryContext, ServerRouter } from "react-router";
 import { isbot } from "isbot";
 import { renderToReadableStream } from "react-dom/server";
 import { createSitemapGenerator } from 'remix-sitemap';
@@ -29,25 +28,24 @@ export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  remixContext: EntryContext,
+  entryContext: EntryContext,
   // This is ignored so we can keep it in the template for visibility.  Feel
   // free to delete this parameter in your app if you're not using it!
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
   if (isSitemapUrl(request)) {
-    // @ts-expect-error workaround
-    return await sitemap(request, remixContext)
+    // @ts-expect-error ignore mismatch for react-router
+    return await sitemap(request, entryContext)
   }
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), ABORT_DELAY);
 
   const body = await renderToReadableStream(
-    <RemixServer
-      context={remixContext}
+    <ServerRouter
+      context={entryContext}
       url={request.url}
-      abortDelay={ABORT_DELAY}
     />,
     {
       signal: controller.signal,

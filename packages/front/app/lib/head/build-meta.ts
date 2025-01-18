@@ -1,7 +1,7 @@
-import { MetaFunction } from '@remix-run/cloudflare';
+import { MetaDescriptor } from 'react-router';
 import { cacheKey, origin, siteName } from '~/lib/constants';
 
-type Meta = ReturnType<MetaFunction>
+type Meta = MetaDescriptor[]
 
 export type BuildMetaArgs = Readonly<{
   title: string
