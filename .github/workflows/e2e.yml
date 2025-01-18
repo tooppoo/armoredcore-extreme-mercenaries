@@ -15,7 +15,7 @@ jobs:
     env:
       CI: true
     steps:
-      # setup
+      # setup runtime
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
       with:
@@ -23,6 +23,12 @@ jobs:
         cache: 'npm'
     - name: Install dependencies
       run: npm ci
+
+      # setup app
+    - name: Build Local App
+      run: |
+        npm run front -- build
+        npm run front -- migration
 
       # e2e
     - name: Install e2e Browsers
