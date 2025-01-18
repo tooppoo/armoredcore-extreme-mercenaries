@@ -49,6 +49,8 @@
     "@cloudflare/workers-types": "4.20250109.0",
     "@fast-check/vitest": "0.1.4",
     "@remix-run/dev": "2.15.2",
+    "@remix-run/fs-routes": "^2.15.2",
+    "@remix-run/route-config": "^2.15.2",
     "@types/jsdom": "21.1.7",
     "@types/react": "18.3.18",
     "@types/react-dom": "18.3.5",
