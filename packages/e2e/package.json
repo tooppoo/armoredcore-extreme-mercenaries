@@ -1,0 +1,17 @@
+{
+  "name": "@ac-extreme-mercenaries/e2e",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@types/node": "^22.10.7"
+  },
+  "scripts": {
+    "e2e": "playwright test",
+    "deps": "playwright install --with-deps",
+    "report": "playwright show-report"
+  },
+  "author": "",
+  "license": "MIT",
+  "description": ""
+}

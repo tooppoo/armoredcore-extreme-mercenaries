@@ -1,0 +1,53 @@
+name: E2E Tests
+on:
+  push:
+    branches: main
+  pull_request:
+    types: 
+      - opened
+      - synchronize
+      - reopened
+    paths:
+      - 'packages/e2e/**'
+      - 'packages/front/**'
+      - '.github/workflows/e2e.yml'
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+    steps:
+      # setup runtime
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version-file: '.node-version'
+        cache: 'npm'
+    - name: Install dependencies
+      run: npm ci
+
+      # setup app
+    - name: Build Local App
+      run: |
+        npm run front -- build
+        npm run front -- migration
+
+      # e2e
+    - name: Install e2e Browsers
+      run: npm run e2e -- deps
+
+    - name: Run e2e tests
+      run: npm run e2e -- e2e
+      env:
+        TIMEOUT: ${{ vars.TIMEOUT }}
+        TIMEOUT_EXPECT: ${{ vars.TIMEOUT_EXPECT }}
+        TIMEOUT_SLOW_EXPECT: ${{ vars.TIMEOUT_SLOW_EXPECT }}
+
+      # upload report
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: e2e-report
+        path: packages/e2e/playwright-report/
+        retention-days: 30
