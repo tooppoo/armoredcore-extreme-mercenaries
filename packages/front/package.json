@@ -67,7 +67,7 @@
     "eslint-plugin-react": "7.37.3",
     "eslint-plugin-react-hooks": "4.6.2",
     "fast-check": "3.23.2",
-    "npm-run-all2": "5.0.0",
+    "npm-run-all2": "5.0.2",
     "postcss": "8.5.1",
     "tailwindcss": "3.4.17",
     "typescript": "5.7.3",
