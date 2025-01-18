@@ -25,9 +25,9 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ['list'],
+    // https://playwright.dev/docs/test-reporters#github-actions-annotations
+    process.env.CI ? ['github'] : ['list'],
     ['html'],
-    ['json', { outputFile: 'playwright-report/test-results.json' }],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -78,7 +78,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: `npm run --prefix ../front start -- --port ${port}`,
+    command: `npm run --prefix ../front dev -- --port ${port}`,
     url: `http://localhost:${port}`,
     reuseExistingServer: !process.env.CI,
   },
