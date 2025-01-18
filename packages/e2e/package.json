@@ -6,7 +6,11 @@
     "@playwright/test": "^1.49.1",
     "@types/node": "^22.10.7"
   },
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test",
+    "deps": "playwright install --with-deps",
+    "report": "playwright show-report"
+  },
   "author": "",
   "license": "MIT",
   "description": ""
