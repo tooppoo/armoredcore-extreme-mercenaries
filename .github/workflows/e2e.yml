@@ -29,7 +29,7 @@ jobs:
       run: npm run e2e -- deps
 
     - name: Run e2e tests
-      run: npm run e2e -- test
+      run: npm run e2e -- e2e
 
       # upload report
     - uses: actions/upload-artifact@v4
