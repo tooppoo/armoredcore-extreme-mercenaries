@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "remix vite:build",
+    "build:ci": "run-s lint coverage typecheck build",
     "test": "vitest --run",
     "test:watch": "vitest",
     "coverage": "vitest --coverage --run",
@@ -66,6 +67,7 @@
     "eslint-plugin-react": "7.37.3",
     "eslint-plugin-react-hooks": "4.6.2",
     "fast-check": "3.23.2",
+    "npm-run-all": "4.1.5",
     "postcss": "8.4.49",
     "tailwindcss": "3.4.17",
     "typescript": "5.7.3",
