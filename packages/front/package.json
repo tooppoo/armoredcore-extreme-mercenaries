@@ -21,9 +21,9 @@
     "migration": "wrangler d1 migrations apply ac-extreme-mercenaries-db --local",
     "migration:prod": "wrangler d1 migrations apply ac-extreme-mercenaries-db --remote",
     "build:test": "react-router build --mode test",
-    "migration:test": "wrangler d1 migrations apply ac-extreme-mercenaries-db-test --local --env test",
+    "migration:test": "wrangler d1 migrations apply ac-extreme-mercenaries-db-test --local --env test --config wrangler.test.toml",
     "dev:test": "react-router dev --mode test",
-    "db-execute:test": "wrangler d1 execute ac-extreme-mercenaries-db-test --local --env test",
+    "db-execute:test": "wrangler d1 execute ac-extreme-mercenaries-db-test --local --env test --config wrangler.test.toml",
     "cf-typegen": "wrangler types",
     "secrets:gen": "openssl rand -base64 32"
   },

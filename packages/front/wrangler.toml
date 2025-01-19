@@ -94,9 +94,3 @@ migrations_dir = "./app/db/migrations"
 # [[env.production.kv_namespaces]]
 # binding = "MY_KV_NAMESPACE"
 # id = "<PRODUCTION_NAMESPACE_ID>"
-
-[[env.test.d1_databases]]
-binding = "DB"
-database_name = "ac-extreme-mercenaries-db-test"
-database_id = "test_db"
-migrations_dir = "./app/db/migrations"
