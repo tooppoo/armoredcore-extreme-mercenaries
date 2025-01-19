@@ -12,8 +12,8 @@ export type UnsupportedUrlError = ErrorData<typeof unsupportedUrl, {
 
 export const duplicatedUrl = 'duplicated-url'
 export type DuplicateUrlError = ErrorData<typeof duplicatedUrl, {
-  requested: URL
-  existing: URL
+  requested: string
+  existing: string
 }>
 
 export const failedGetOGP = 'failed-get-ogp'

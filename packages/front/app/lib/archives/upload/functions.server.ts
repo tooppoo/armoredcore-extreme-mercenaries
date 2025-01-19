@@ -40,8 +40,8 @@ export async function buildArchiveFromUrl(
     throw {
       code: duplicatedUrl,
       message: `${url.toString()} is already archived`,
-      requested: url,
-      existing: new URL(sameURLArchive.url),
+      requested: url.toString(),
+      existing: sameURLArchive.url.toString(),
     } satisfies DuplicateUrlError
   }
 
