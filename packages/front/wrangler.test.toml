@@ -1,0 +1,17 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "ac-extreme-mercenaries-test"
+compatibility_date = "2025-01-09"
+compatibility_flags = ["nodejs_compat_v2"]
+pages_build_output_dir = "./build/client"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ac-extreme-mercenaries-db-test"
+database_id = "test_db"
+migrations_dir = "./app/db/migrations"
+
+[[env.test.d1_databases]]
+binding = "DB"
+database_name = "ac-extreme-mercenaries-db-test"
+database_id = "test_db"
+migrations_dir = "./app/db/migrations"

@@ -1,0 +1,12 @@
+APP_ENV=test
+
+# auth
+AUTH_UPLOAD_ARCHIVE=test_upload_token
+
+# discordへのリンク
+DISCORD_LINK_INVITE = "https://example.com/invite"
+DISCORD_LINK_QUESTION = "https://example.com/question"
+DISCORD_LINK_SUGGESTION = "https://example.com/suggestion"
+
+# youtube
+YOUTUBE_PUBLIC_DATA_API_KEY = "test_youtube_token"

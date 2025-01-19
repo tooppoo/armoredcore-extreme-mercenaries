@@ -30,8 +30,7 @@ jobs:
       # setup app
     - name: Build Local App
       run: |
-        npm run front -- build
-        npm run front -- migration
+        npm run front -- build:test
 
       # e2e
     - name: Install e2e Browsers
@@ -42,7 +41,6 @@ jobs:
       env:
         TIMEOUT: ${{ vars.TIMEOUT }}
         TIMEOUT_EXPECT: ${{ vars.TIMEOUT_EXPECT }}
-        TIMEOUT_SLOW_EXPECT: ${{ vars.TIMEOUT_SLOW_EXPECT }}
 
       # upload report
     - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4

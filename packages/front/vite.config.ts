@@ -5,16 +5,18 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { getLoadContext } from './load-context';
 import { envOnlyMacros } from 'vite-env-only';
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   build: {
     target: 'es2023',
   },
   plugins: [
     cloudflareDevProxy({
       getLoadContext,
+      configPath: mode === 'test' ? 'wrangler.test.toml' : undefined,
+      environment: mode === 'test' ? 'test' : undefined,
     }),
     reactRouter(),
     tsconfigPaths(),
     envOnlyMacros(),
   ],
-});
+}));

@@ -27,30 +27,32 @@ export default defineConfig({
   reporter: [
     // https://playwright.dev/docs/test-reporters#github-actions-annotations
     process.env.CI ? ['github'] : ['list'],
-    ['html'],
   ],
   timeout: process.env.TIMEOUT ? parseInt(process.env.TIMEOUT, 10) : 30000,
   expect: {
     timeout: process.env.TIMEOUT_EXPECT ? parseInt(process.env.TIMEOUT_EXPECT, 10) : 5000,
   },
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-  use: {
-    /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: `http://localhost:${8788}`,
-
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
-  },
 
   /* Configure projects for major browsers */
   projects: [
     {
+      name: 'setup',
+      testMatch: /global\.setup\.ts/,
+      teardown: 'teardown',
+    },
+    {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      dependencies: ['setup'],
     },
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
+      dependencies: ['setup'],
+    },
+    {
+      name: 'teardown',
+      testMatch: /global\.teardown\.ts/,
     },
 
     // {
@@ -81,8 +83,16 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: `npm run --prefix ../front dev -- --port ${port}`,
+    command: `npm run --prefix ../front dev:test -- --port ${port}`,
     url: `http://localhost:${port}`,
     reuseExistingServer: !process.env.CI,
+  },
+  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+  use: {
+    /* Base URL to use in actions like `await page.goto('/')`. */
+    baseURL: `http://localhost:${8788}`,
+
+    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
+    trace: 'on-first-retry',
   },
 });
