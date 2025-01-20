@@ -8,6 +8,8 @@ import { getOGPStrategy } from '~/lib/archives/upload/ogp/ogp-strategy.server';
 import { saveArchive } from '~/lib/archives/upload/repository/save-archive.server';
 import { findByURL } from '~/lib/archives/upload/repository/find-by-url';
 import { makeCatchesSerializable } from '~/lib/error';
+import { postArchiveBody } from '~/lib/archives/upload/params.server';
+import { ZodError } from 'zod';
 
 export const action: ActionFunction = (args) => {
   const auth = args.request.headers.get('Authorization')
@@ -28,15 +30,23 @@ export const action: ActionFunction = (args) => {
   }
 }
 
-type PostArchivesBody = Readonly<{
-  url: string
-  discord_user: {
-    id: string
-    name: string
-  }
-}>
 const post: ActionFunction = async ({ request, context }) => {
-  const data = await request.json<PostArchivesBody>()
+  const json = await request.json().catch((e) => {
+    const error = makeCatchesSerializable(e)
+    console.error({ message: 'request is invalid format', error })
+
+    throw badRequest({ error })
+  })
+  const data = await postArchiveBody.parseAsync(json).catch((error: ZodError) => {
+    console.error({
+      message: 'request data is invalid',
+      error: error.errors,
+    })
+
+    throw badRequest({
+      error: error.errors,
+    })
+  })
 
   const archive = await buildArchiveFromUrl(
     new URL(data.url),

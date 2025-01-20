@@ -1,6 +1,7 @@
 import { Message, type OmitPartialGroupDMChannel } from 'discord.js';
 import { frontApi } from './front';
 import { makeCatchesSerializable } from './error';
+import { log } from './log';
 
 export type UploadResult = Readonly<{ message: string }>
 export async function uploadArchive(
@@ -22,28 +23,29 @@ export async function uploadArchive(
       'Authorization': `Bearer ${process.env.FRONT_AUTH_UPLOAD_ARCHIVE}`,
     },
   }).catch((error: unknown) => {
+    log('error', {
+      message: 'FailedToFetch',
+      detail: JSON.stringify(makeCatchesSerializable(error)),
+    })
     throw {
-      message: [
-        'エラーが発生しました',
-        JSON.stringify(makeCatchesSerializable(error)),
-      ].join('\n')
+      message: 'アーカイブ追加前にエラーが発生しました',
     }
   }).then(async (res) => {
     console.debug(`status = ${res.status}`)
 
     if (400 <= res.status) {
       const body = (await res.json().catch(async (error) => {
+        log('error', {
+          message: 'InvalidResponse',
+          detail: JSON.stringify(makeCatchesSerializable(error)),
+        })
         throw {
-          message: [
-            '不正な応答です',
-            JSON.stringify(makeCatchesSerializable(error)),
-          ].join('\n'),
+          message: 'アーカイブ追加中にエラーが発生しました',
         }
       })) as ErrorResponse
-      const message = errorMessageMap[body.code] || [
-        'アーカイブ追加に失敗しました',
-        `${res.status} ${res.statusText} ${JSON.stringify(body)}`,
-      ].join('\n')
+      const message = errorMessageMap[body.code] || 'アーカイブ追加に失敗しました'
+
+      log('error', { message, detail: body })
 
       throw { message }
     }

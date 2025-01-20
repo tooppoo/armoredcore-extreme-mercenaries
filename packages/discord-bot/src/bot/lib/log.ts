@@ -6,11 +6,16 @@ export function log(level: LogLevel, data: Loggable): void {
   if (isLowThanLogLevel(level)) {
     return
   }
+
+  console.log(m(level, data))
+}
+const m = toMessage
+function toMessage(level: string, data: Loggable): string {
   if (typeof data === 'string') {
-    console.log({ level, message: data })
+    return JSON.stringify({ level, message: data, time: new Date().toISOString() })
   }
   else {
-    console.log({ level, ...data })
+    return JSON.stringify({ level, ...data, time: new Date().toISOString() })
   }
 }
 function isLowThanLogLevel(level: LogLevel): boolean {
