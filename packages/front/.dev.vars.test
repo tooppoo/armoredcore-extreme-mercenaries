@@ -1,4 +1,5 @@
 APP_ENV=test
+TZ = "Asia/Tokyo"
 
 # auth
 AUTH_UPLOAD_ARCHIVE=test_upload_token
