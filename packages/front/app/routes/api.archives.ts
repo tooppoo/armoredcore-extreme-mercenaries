@@ -10,8 +10,9 @@ import { findByURL } from '~/lib/archives/upload/repository/find-by-url';
 import { makeCatchesSerializable } from '~/lib/error';
 import { postArchiveBody } from '~/lib/archives/upload/params.server';
 import { ZodError } from 'zod';
+import type { Route } from './+types/api.archives'
 
-export const action: ActionFunction = (args) => {
+export const action = (args: Route.ActionArgs) => {
   const auth = args.request.headers.get('Authorization')
   const token = auth?.replace('Bearer ', '')
 

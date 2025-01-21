@@ -1,17 +1,18 @@
-import { LoaderFunction, MetaFunction , Link, useLoaderData } from 'react-router';
+import { Link, useLoaderData } from 'react-router';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 import { ReadUpdate } from '~/lib/updates/entity.server';
 import { pageUpdates } from '~/lib/updates/repository/read.server';
+import type { Route } from './+types/updates._index';
 
 type UpdatesLoader = Readonly<{
   updates: readonly ReadUpdate[]
 }>
-export const loader: LoaderFunction = async (): Promise<UpdatesLoader> => {
+export const loader = async (): Promise<UpdatesLoader> => {
   return {
     updates: await pageUpdates({ page: 1 }),
   }
 }
-export const meta: MetaFunction = ({ location }) => [
+export const meta: Route.MetaFunction = ({ location }) => [
   ...buildMeta({
     title: '更新履歴',
     description: `${unofficialServer}の更新履歴です`,

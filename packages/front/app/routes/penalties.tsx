@@ -1,7 +1,8 @@
-import { MetaFunction , Link } from 'react-router';
+import { Link } from 'react-router';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
+import type { Route } from './+types/penalties';
 
-export const meta: MetaFunction = ({ location }) => {
+export const meta: Route.MetaFunction = ({ location }) => {
   return [
     ...buildMeta({
       title: '罰則規定',

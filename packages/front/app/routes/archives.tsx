@@ -1,4 +1,4 @@
-import { type LoaderFunction, type MetaFunction, Form, Link, useLoaderData } from 'react-router';
+import { type MetaFunction, Form, Link, useLoaderData } from 'react-router';
 import { type ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
 import { zx } from 'zodix'
@@ -9,6 +9,7 @@ import { pageArchives } from '~/lib/archives/list/repository/read.server'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import { Margin } from '~/lib/utils/components/spacer'
 import { serverOnly$ } from 'vite-env-only/macros'
+import type { Route } from './+types/archives'
 
 type LoadArchives = Readonly<{
   totalPage: number
@@ -17,7 +18,7 @@ type LoadArchives = Readonly<{
     o: QuerySchema['o']['key']
   }>
 }>
-export const loader: LoaderFunction = async ({ context, request }) => {
+export const loader = async ({ context, request }: Route.LoaderArgs) => {
   const query = zx.parseQuery(request, querySchema)
 
   const {

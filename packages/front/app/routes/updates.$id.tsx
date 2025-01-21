@@ -1,14 +1,15 @@
-import { LoaderFunction, MetaFunction , Link, useLoaderData } from 'react-router';
+import { Link, useLoaderData } from 'react-router';
 import { Margin } from '~/lib/utils/components/spacer';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 import { findUpdate } from '~/lib/updates/repository/read.server';
 import { ReadUpdate } from '~/lib/updates/entity.server';
+import type { Route } from './+types/updates.$id';
 
 type AnUpdateLoader = Readonly<{
   update: ReadUpdate
 }>
-export const loader: LoaderFunction = async ({ params }): Promise<AnUpdateLoader> => {
-  const update = await findUpdate({ externalId: params.id! })
+export const loader = async ({ params }: Route.LoaderArgs): Promise<AnUpdateLoader> => {
+  const update = await findUpdate({ externalId: params.id })
   
   if (!update) {
     throw new Response(null, {
@@ -19,11 +20,7 @@ export const loader: LoaderFunction = async ({ params }): Promise<AnUpdateLoader
   return { update }
 }
 
-export const meta: MetaFunction<() => Promise<AnUpdateLoader>> = ({ data, location }) => {
-  if (!data) {
-    return []
-  }
-
+export const meta: Route.MetaFunction = ({ data, location }) => {
   return [
     ...buildMeta({
       title: data.update.title,

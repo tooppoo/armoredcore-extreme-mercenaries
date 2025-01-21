@@ -1,9 +1,10 @@
-import { type LoaderFunction, type MetaFunction, Link, useLoaderData } from "react-router";
+import type { Route } from './+types/_index';
+import { Link, useLoaderData } from "react-router";
 import { siteName } from '~/lib/constants';
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 
-export const meta: MetaFunction = ({ location }) => {
+export const meta: Route.MetaFunction = ({ location }) => {
   return [
     ...buildMeta({
       title: 'TOP',
@@ -13,7 +14,7 @@ export const meta: MetaFunction = ({ location }) => {
   ];
 };
 
-export const loader: LoaderFunction = async (args): Promise<LoadDiscord> => ({
+export const loader = async (args: Route.LoaderArgs): Promise<LoadDiscord> => ({
   ...loadDiscord(args),
 })
 

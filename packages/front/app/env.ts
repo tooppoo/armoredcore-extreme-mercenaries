@@ -6,16 +6,6 @@ declare module "react-router" {
     whatever: string;
     db: Database;
   }
-
-  // TODO: ローダーの `Route.LoaderArgs` への移行が完了したら、これを削除する
-  interface LoaderFunctionArgs {
-    context: AppLoadContext;
-  }
-
-  // TODO: アクションの `Route.ActionArgs` への移行が完了したら、これを削除する
-  interface ActionFunctionArgs {
-    context: AppLoadContext;
-  }
 }
 
 export {}; // これをモジュールとして扱うために TS に必要

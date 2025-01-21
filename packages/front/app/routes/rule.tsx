@@ -1,11 +1,12 @@
-import { type LoaderFunction, type MetaFunction, Link, useLoaderData } from 'react-router';
+import { Link, useLoaderData } from 'react-router';
 import { ReactElement } from 'react'
 import { Margin } from '~/lib/utils/components/spacer'
 import { siteName } from '~/lib/constants'
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
+import type { Route } from './+types/rule';
 
-export const meta: MetaFunction = ({ location }) => {
+export const meta: Route.MetaFunction = ({ location }) => {
   return buildMeta({
     title: '利用規約',
     description: `${unofficialServer}の利用規約ページです`,
@@ -13,7 +14,7 @@ export const meta: MetaFunction = ({ location }) => {
   })
 };
 
-export const loader: LoaderFunction = async (args) => ({
+export const loader = async (args: Route.LoaderArgs) => ({
   ...loadDiscord(args),
 })
 
