@@ -8,7 +8,7 @@ export const discordMembers = sqliteTable('discord_members', {
   createdAt: integer('created_at', { mode: 'timestamp' }).$default(() => sql`CURRENT_TIMESTAMP`),
 });
 
-export const archives = sqliteTable('archives', {
+export const videoArchives = sqliteTable('video_archives', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   externalId: text('external_id').unique().notNull().$default(() => uuidv7()),
   url: text('url').notNull(),

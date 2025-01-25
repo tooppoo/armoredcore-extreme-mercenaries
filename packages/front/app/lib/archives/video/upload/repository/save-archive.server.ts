@@ -3,8 +3,8 @@
  */
 
 import { Database } from '~/db/driver.server';
-import { archives, discordMembers } from '~/db/schema.server';
-import { Archive } from '~/lib/archives/upload/entity.server';
+import { videoArchives, discordMembers } from '~/db/schema.server';
+import { Archive } from '~/lib/archives/video/upload/entity.server';
 import { normalizeUrl } from '../url/support-url.server'
 
 export const saveArchive = async (entity: Archive, db: Database): Promise<void> => {
@@ -16,7 +16,7 @@ export const saveArchive = async (entity: Archive, db: Database): Promise<void> 
       .values({ discordUserId: entity.uploader.id, discordUserName: entity.uploader.name })
       .onConflictDoNothing({ target: discordMembers.discordUserId }),
     db
-      .insert(archives)
+      .insert(videoArchives)
       .values({
         url: normalizeUrl(entity.contents.url).toString(),
         title: entity.contents.title,

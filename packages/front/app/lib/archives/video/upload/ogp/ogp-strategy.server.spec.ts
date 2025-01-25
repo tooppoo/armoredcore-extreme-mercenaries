@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getOGPStrategy, withOGPScanner, withYouTubeData } from '~/lib/archives/upload/ogp/ogp-strategy.server'
+import { getOGPStrategy, withOGPScanner, withYouTubeData } from '~/lib/archives/video/upload/ogp/ogp-strategy.server'
 
 describe('getOgpStrategy', () => {
   it('should return withYouTubeEmbed when url is youtube', () => {

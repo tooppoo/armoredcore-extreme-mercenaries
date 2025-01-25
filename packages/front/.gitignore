@@ -7,4 +7,5 @@ node_modules
 
 .wrangler
 
+# https://react-router-docs-ja.techtalk.jp/how-to/route-module-type-safety#1-react-router-%E3%82%92-gitignore-%E3%81%AB%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B
 .react-router/

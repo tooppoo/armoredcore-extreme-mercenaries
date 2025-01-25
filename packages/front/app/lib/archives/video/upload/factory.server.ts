@@ -1,4 +1,4 @@
-import type { ArchiveContents } from '~/lib/archives/upload/entity.server';
+import type { ArchiveContents } from '~/lib/archives/video/upload/entity.server';
 import { v7 as uuid7 } from 'uuid'
 
 type NewArchiveContents = Omit<ArchiveContents, 'externalId'>

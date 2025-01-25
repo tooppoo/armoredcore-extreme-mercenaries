@@ -15,7 +15,7 @@ export async function uploadArchive(
     }
   }
 
-  return fetch(frontApi('/api/archives'), {
+  return fetch(frontApi('/api/archives/video'), {
     method: 'POST',
     body: JSON.stringify(body),
     headers: {

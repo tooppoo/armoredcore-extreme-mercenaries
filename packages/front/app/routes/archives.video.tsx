@@ -2,14 +2,14 @@ import { type MetaFunction, Form, Link, useLoaderData } from 'react-router';
 import { type ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
 import { zx } from 'zodix'
-import { type ReadArchive } from '~/lib/archives/list/entity'
-import { orderQueryKeys, orderQueryMap } from '~/lib/archives/list/query'
-import { type QuerySchema, querySchema } from '~/lib/archives/list/query.server'
-import { pageArchives } from '~/lib/archives/list/repository/read.server'
+import { type ReadArchive } from '~/lib/archives/video/list/entity'
+import { orderQueryKeys, orderQueryMap } from '~/lib/archives/video/list/query'
+import { type QuerySchema, querySchema } from '~/lib/archives/video/list/query.server'
+import { pageArchives } from '~/lib/archives/video/list/repository/read.server'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import { Margin } from '~/lib/utils/components/spacer'
 import { serverOnly$ } from 'vite-env-only/macros'
-import type { Route } from './+types/archives'
+import type { Route } from './+types/archives.video'
 
 type LoadArchives = Readonly<{
   totalPage: number
@@ -171,7 +171,7 @@ const MovePage: React.FC<MovePageProps> = ({ page, totalPage, children, query })
         1 <= page && page <= totalPage
         ? <Link
             to={{
-              pathname: '/archives',
+              pathname: '/archives/video',
               search: new URLSearchParams({ ...query, p: `${page}` }).toString(),
             }}
           >
