@@ -28,7 +28,7 @@ export function startBot() {
     }
 
     switch (message.channelId) {
-      case process.env.DISCORD_ARCHIVE_CHANNEL:
+      case process.env.DISCORD_VIDEO_ARCHIVE_CHANNEL:
         await uploadArchive(message)
           .then((res: UploadResult) =>
             sendMessage(client, message.channelId, {
