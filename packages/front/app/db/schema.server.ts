@@ -18,6 +18,15 @@ export const videoArchives = sqliteTable('video_archives', {
   uploadMemberId: text('upload_member_id').notNull().references(() => discordMembers.discordUserId),
   createdAt: integer('created_at', { mode: 'timestamp' }).$default(() => sql`CURRENT_TIMESTAMP`),
 });
+export const challengeArchives = sqliteTable('challenge_archives', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  externalId: text('external_id').unique().notNull().$default(() => uuidv7()),
+  url: text('url').notNull(),
+  title: text('title').notNull(),
+  description: text('description').notNull(),
+  uploadMemberId: text('upload_member_id').notNull().references(() => discordMembers.discordUserId),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$default(() => sql`CURRENT_TIMESTAMP`),
+});
 
 export const deleteArchiveRequests = sqliteTable('delete_archive_requests', {
   id: integer('id').primaryKey({ autoIncrement: true }),
