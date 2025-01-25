@@ -1,7 +1,5 @@
-import { ActionFunction } from 'react-router';
 import { SitemapFunction } from 'remix-sitemap';
-import { ZodError } from 'zod';
-import { invalidToken, successWithoutToken, tokenRequired } from '~/lib/api/response/json/auth.server';
+import { successWithoutToken } from '~/lib/api/response/json/auth.server';
 import { badRequest, forbidden, internalServerError, unknownError } from '~/lib/api/response/json/error.server';
 import { ArchiveError, duplicatedUrl, failedGetOGP, unsupportedUrl } from '~/lib/archives/video/upload/errors.server';
 import { buildArchiveFromUrl } from '~/lib/archives/video/upload/functions.server';
@@ -11,17 +9,11 @@ import { findByURL } from '~/lib/archives/video/upload/repository/find-by-url';
 import { postArchiveBody } from '~/lib/archives/video/upload/params.server';
 import { makeCatchesSerializable } from '~/lib/error';
 import type { Route } from './+types/video'
+import { requireAuthToken } from '~/lib/api/request/require-auth-token.server';
+import { handleZodError, parseJson } from '~/lib/api/request/parser.server';
 
 export const action = (args: Route.ActionArgs) => {
-  const auth = args.request.headers.get('Authorization')
-  const token = auth?.replace('Bearer ', '')
-
-  if (!token) {
-    throw tokenRequired({ cause: 'token is required' })
-  }
-  if (token !== args.context.cloudflare.env.AUTH_UPLOAD_ARCHIVE) {
-    throw invalidToken({ cause: 'invalid token' })
-  }
+  requireAuthToken(args)
 
   switch (args.request.method.toUpperCase()) {
     case 'POST':
@@ -31,23 +23,9 @@ export const action = (args: Route.ActionArgs) => {
   }
 }
 
-const post: ActionFunction = async ({ request, context }) => {
-  const json = await request.json().catch((e) => {
-    const error = makeCatchesSerializable(e)
-    console.error({ message: 'request is invalid format', error })
-
-    throw badRequest({ error })
-  })
-  const data = await postArchiveBody.parseAsync(json).catch((error: ZodError) => {
-    console.error({
-      message: 'request data is invalid',
-      error: error.errors,
-    })
-
-    throw badRequest({
-      error: error.errors,
-    })
-  })
+const post = async ({ request, context }: Route.ActionArgs) => {
+  const json = await parseJson(request)
+  const data = await postArchiveBody.parseAsync(json).catch(handleZodError)
 
   const archive = await buildArchiveFromUrl(
     new URL(data.url),
