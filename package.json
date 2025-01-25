@@ -22,7 +22,7 @@
     "e2e:install": "npm install -w @ac-extreme-mercenaries/e2e",
     "e2e:uninstall": "npm uninstall -w @ac-extreme-mercenaries/e2e",
     "adr:new": "npx log4brains adr new",
-    "adr:preview": "npx log4brains adr preview"
+    "adr:preview": "npx log4brains preview"
   },
   "engines": {
     "node": ">=20.0.0"

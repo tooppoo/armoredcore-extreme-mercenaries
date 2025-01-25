@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, primaryKey } from 'drizzle-orm/sqlite-core';
 import { sql } from 'drizzle-orm';
 import { v7 as uuidv7 } from 'uuid'
 
@@ -31,7 +31,6 @@ export const challengeArchives = sqliteTable('challenge_archives', {
 export const deleteArchiveRequests = sqliteTable('delete_archive_requests', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   reason: text('reason').notNull(),
-  emailForNotice: text('email_for_notice'),
   statusId: integer('status_id').notNull().references(() => deleteArchiveRequestsStatus.id),
   createdAt: integer('created_at', { mode: 'timestamp' }).$default(() => sql`CURRENT_TIMESTAMP`),
 });
@@ -39,10 +38,52 @@ export const deleteArchiveRequestsStatus = sqliteTable('delete_archive_requests_
   id: integer('id').primaryKey({ autoIncrement: true }),
   value: text('value').notNull(),
 })
+/**
+ * 動画アーカイブと削除リクエストの中間テーブル
+ * 
+ * - 1つの削除リクエスト (deleteArchiveRequests.id) に対して
+ *   複数の動画アーカイブ (videoArchives.id) を紐づけ可能
+ * - 複合主キーを設定することで重複登録を防ぐ
+ */
+export const deleteArchiveRequestVideoRelations = sqliteTable(
+  'delete_archive_request_video_relations',
+  {
+    deleteRequestId: integer('delete_request_id')
+      .notNull()
+      .references(() => deleteArchiveRequests.id), // 外部キー
+    videoArchiveId: integer('video_archive_id')
+      .notNull()
+      .references(() => videoArchives.id),         // 外部キー
+  },
+  (table) => [
+    primaryKey({ columns: [table.deleteRequestId, table.videoArchiveId] }),
+  ]
+);
+
+/**
+ * チャレンジアーカイブと削除リクエストの中間テーブル
+ * 
+ * - 1つの削除リクエスト (deleteArchiveRequests.id) に対して
+ *   複数のチャレンジアーカイブ (challengeArchives.id) を紐づけ可能
+ */
+export const deleteArchiveRequestChallengeRelations = sqliteTable(
+  'delete_archive_request_challenge_relations',
+  {
+    deleteRequestId: integer('delete_request_id')
+      .notNull()
+      .references(() => deleteArchiveRequests.id), // 外部キー
+    challengeArchiveId: integer('challenge_archive_id')
+      .notNull()
+      .references(() => challengeArchives.id),     // 外部キー
+  },
+  (table) => [
+    primaryKey({ columns: [table.deleteRequestId, table.challengeArchiveId] }),
+  ]
+);
 
 export const deletedArchives = sqliteTable('deleted_archives', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  archiveUrl: text('archive_url').notNull(),
+  Url: text('original_url').notNull(),
   uploadMemberId: integer('upload_member_id').notNull().references(() => discordMembers.discordUserId),
   createdAt: integer('created_at', { mode: 'timestamp' }).$default(() => sql`CURRENT_TIMESTAMP`),
 });
