@@ -10,7 +10,7 @@ import { saveArchive } from '~/lib/archives/video/upload/repository/save-archive
 import { findByURL } from '~/lib/archives/video/upload/repository/find-by-url';
 import { postArchiveBody } from '~/lib/archives/video/upload/params.server';
 import { makeCatchesSerializable } from '~/lib/error';
-import type { Route } from './+types/api.archives.video'
+import type { Route } from '../../+types/api.archives.video'
 
 export const action = (args: Route.ActionArgs) => {
   const auth = args.request.headers.get('Authorization')
