@@ -31,7 +31,9 @@ export async function buildArchiveFromUrl(
     throw {
       code: unsupportedUrl,
       message: `${url.toString()} is not supported`,
-      url: url.toString(),
+      detail: {
+        url: url.toString(),
+      }
     } satisfies UnsupportedUrlError
   }
 
@@ -40,8 +42,10 @@ export async function buildArchiveFromUrl(
     throw {
       code: duplicatedUrl,
       message: `${url.toString()} is already archived`,
-      requested: url.toString(),
-      existing: sameURLArchive.url.toString(),
+      detail: {
+        requested: url.toString(),
+        existing: sameURLArchive.url.toString(),
+      }
     } satisfies DuplicateUrlError
   }
 

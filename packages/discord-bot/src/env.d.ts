@@ -9,6 +9,7 @@ declare module 'process' {
 
         DISCORD_TOKEN: string
         DISCORD_VIDEO_ARCHIVE_CHANNEL: string
+        DISCORD_CHALLENGE_ARCHIVE_CHANNEL: string
 
         FRONT_URL: string
         FRONT_AUTH_UPLOAD_ARCHIVE: string

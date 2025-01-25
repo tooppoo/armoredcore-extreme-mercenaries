@@ -13,6 +13,9 @@ export const action = (args: Route.ActionArgs) => {
   }
 }
 
+// const post = async ({ request, context }: Route.ActionArgs) => {
+// }
+
 export const sitemap = serverOnly$<SitemapFunction>(() => ({
   exclude: true
 }))

@@ -1,10 +1,17 @@
 import 'dotenv/config'
-import { Client, Events, GatewayIntentBits, type SendableChannels } from 'discord.js'
-import { uploadArchive, type UploadResult } from './lib/upload-archive';
+import { Client, Events, GatewayIntentBits } from 'discord.js'
+import { uploadVideoArchive } from './lib/handler/upload-video-archive';
 import { log } from './lib/log';
+import { setupMessageSender } from './lib/message';
 
 export function startBot() {
-  const client = new Client({
+  const client = setupClient();
+
+  client.login(process.env.DISCORD_TOKEN)
+}
+
+function setupClient() {
+  const c = new Client({
     intents: [
       GatewayIntentBits.Guilds,
       GatewayIntentBits.GuildMessages,
@@ -12,10 +19,12 @@ export function startBot() {
     ],
   });
 
-  client.once(Events.ClientReady, () => {
+  const sendMessageBuilder = setupMessageSender(c)
+
+  c.once(Events.ClientReady, () => {
     log('info', 'AC ARCHIVE BOT Ready')
   })
-  client.on(Events.MessageCreate, async (message) => {
+  c.on(Events.MessageCreate, async (message) => {
     log('debug', {
       event: Events.MessageCreate,
       message: message.content,
@@ -29,50 +38,12 @@ export function startBot() {
 
     switch (message.channelId) {
       case process.env.DISCORD_VIDEO_ARCHIVE_CHANNEL:
-        await uploadArchive(message)
-          .then((res: UploadResult) =>
-            sendMessage(client, message.channelId, {
-              content: res.message,
-              reply: {
-                messageReference: message,
-              }
-            })
-          )
-          .catch((e: UploadResult) =>
-            sendMessage(client, message.channelId, {
-              content: e.message,
-              reply: {
-                messageReference: message,
-              }
-            })
-          )
+        await uploadVideoArchive(message, sendMessageBuilder(message))
       default:
         log('debug', 'not handling')
         return
     }
   })
 
-  client.login(process.env.DISCORD_TOKEN)
-
-  async function sendMessage(
-    client: Client,
-    channelId: string,
-    message: Parameters<SendableChannels['send']>[0]
-  ) {
-    const channel = await client.channels.fetch(channelId)
-    if (channel === null) {
-      log('debug', 'channel not found')
-      return Promise.resolve()
-    }
-
-    if (channel.isSendable()) {
-      return channel.send(message).catch((error) => {
-        log('error', { message: 'failed to send message', detail: error })
-      })
-    }
-    else {
-      log('debug', 'not send message because the channel is not sendable')
-      return Promise.resolve()
-    }
-  }
+  return c
 }

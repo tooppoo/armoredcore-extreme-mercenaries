@@ -17,6 +17,4 @@ export type DuplicateUrlError = ErrorData<typeof duplicatedUrl, {
 }>
 
 export const failedGetOGP = 'failed-get-ogp'
-export type FailedGetOGPError = ErrorData<typeof failedGetOGP, {
-  detail: unknown
-}>
+export type FailedGetOGPError = ErrorData<typeof failedGetOGP, unknown>

@@ -7,7 +7,11 @@ export async function parseJson<R extends Request>(request: R): Promise<unknown>
     const error = makeCatchesSerializable(e)
     console.error({ message: 'request is invalid format', error })
 
-    throw badRequest({ error })
+    throw badRequest({
+      code: 'invalid-json',
+      message: 'Request body is not valid JSON',
+      detail: error,
+    })
   })
 }
 
@@ -18,6 +22,8 @@ export function handleZodError(error: ZodError): never {
   })
 
   throw badRequest({
-    error: error.errors,
+    code: 'invalid-body-scheme',
+    message: 'Request body does not match the expected scheme',
+    detail: error.errors,
   })
 }
