@@ -2,6 +2,7 @@
 
 interface Env {
 	APP_ENV: string;
+	TZ: string;
 	AUTH_UPLOAD_ARCHIVE: string;
 	DISCORD_LINK_INVITE: string;
 	DISCORD_LINK_QUESTION: string;
