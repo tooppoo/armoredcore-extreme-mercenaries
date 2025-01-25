@@ -3,7 +3,7 @@ import { Margin } from '~/lib/utils/components/spacer';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 import { findUpdate } from '~/lib/updates/repository/read.server';
 import { ReadUpdate } from '~/lib/updates/entity.server';
-import type { Route } from '../+types/updates.$id';
+import type { Route } from './+types/detail';
 
 type AnUpdateLoader = Readonly<{
   update: ReadUpdate

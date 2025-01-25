@@ -1,4 +1,4 @@
-import type { Route } from './+types/_index';
+import type { Route } from './+types/index';
 import { Link, useLoaderData } from "react-router";
 import { siteName } from '~/lib/constants';
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server';

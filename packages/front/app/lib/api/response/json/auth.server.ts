@@ -1,4 +1,4 @@
-import { unauthorized } from '~/lib/api/response/json/error'
+import { unauthorized } from '~/lib/api/response/json/error.server'
 
 export const successWithoutToken = <T extends object>(data: T | null) => Response.json(data, {
   status: 200,

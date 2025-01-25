@@ -2,7 +2,7 @@ import { Link, useLoaderData } from 'react-router';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 import { ReadUpdate } from '~/lib/updates/entity.server';
 import { pageUpdates } from '~/lib/updates/repository/read.server';
-import type { Route } from '../+types/updates._index';
+import type { Route } from './+types/index';
 
 type UpdatesLoader = Readonly<{
   updates: readonly ReadUpdate[]

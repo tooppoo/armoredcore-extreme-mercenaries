@@ -9,7 +9,7 @@ import { pageArchives } from '~/lib/archives/video/list/repository/read.server'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import { Margin } from '~/lib/utils/components/spacer'
 import { serverOnly$ } from 'vite-env-only/macros'
-import type { Route } from '../+types/archives.video'
+import type { Route } from './+types/video'
 
 type LoadArchives = Readonly<{
   totalPage: number

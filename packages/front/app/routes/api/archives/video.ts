@@ -2,7 +2,7 @@ import { ActionFunction } from 'react-router';
 import { SitemapFunction } from 'remix-sitemap';
 import { ZodError } from 'zod';
 import { invalidToken, successWithoutToken, tokenRequired } from '~/lib/api/response/json/auth.server';
-import { badRequest, forbidden, internalServerError, unknownError } from '~/lib/api/response/json/error';
+import { badRequest, forbidden, internalServerError, unknownError } from '~/lib/api/response/json/error.server';
 import { ArchiveError, duplicatedUrl, failedGetOGP, unsupportedUrl } from '~/lib/archives/video/upload/errors.server';
 import { buildArchiveFromUrl } from '~/lib/archives/video/upload/functions.server';
 import { getOGPStrategy } from '~/lib/archives/video/upload/ogp/ogp-strategy.server';
@@ -10,7 +10,7 @@ import { saveArchive } from '~/lib/archives/video/upload/repository/save-archive
 import { findByURL } from '~/lib/archives/video/upload/repository/find-by-url';
 import { postArchiveBody } from '~/lib/archives/video/upload/params.server';
 import { makeCatchesSerializable } from '~/lib/error';
-import type { Route } from '../../+types/api.archives.video'
+import type { Route } from './+types/video'
 
 export const action = (args: Route.ActionArgs) => {
   const auth = args.request.headers.get('Authorization')
