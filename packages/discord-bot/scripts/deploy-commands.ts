@@ -1,0 +1,40 @@
+import 'dotenv/config'
+import { REST, Routes } from 'discord.js';
+import { archiveCommand } from '../src/bot/lib/handler/upload-challenge-archive'
+import { log } from '../src/bot/lib/log';
+import { makeCatchesSerializable } from '../src/bot/lib/error';
+
+const commands = [
+  archiveCommand,
+].map(c => c.data.toJSON());
+
+async function main() {
+  const rest = new REST().setToken(process.env.DISCORD_TOKEN);
+
+  try {
+		log('info', {
+      message: `Started refreshing ${commands.length} application (/) commands.`
+    });
+
+		// The put method is used to fully refresh all commands in the guild with the current set
+		const data = await rest.put(
+			Routes.applicationGuildCommands(
+        process.env.DISCORD_CLIENT_ID,
+        process.env.DISCORD_GUILD_ID,
+      ),
+			{ body: commands },
+		);
+
+		log('info', {
+      message: `Successfully reloaded application (/) commands.`,
+      data: makeCatchesSerializable(data),
+    });
+	} catch (error) {
+    log('error', {
+      message: 'Failed to reload application (/) commands.',
+      error: makeCatchesSerializable(error),
+    })
+	}
+}
+
+main();

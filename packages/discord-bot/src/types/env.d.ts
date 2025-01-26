@@ -8,6 +8,9 @@ declare module 'process' {
         LOG_LEVEL?: 'debug' | 'info' | 'warn' | 'error'
 
         DISCORD_TOKEN: string
+        DISCORD_CLIENT_ID: string
+        DISCORD_GUILD_ID: string
+
         DISCORD_VIDEO_ARCHIVE_CHANNEL: string
         DISCORD_CHALLENGE_ARCHIVE_CHANNEL: string
 

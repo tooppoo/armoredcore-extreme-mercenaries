@@ -2,7 +2,7 @@ import type { CacheType, Client, Collection, Interaction, SlashCommandBuilder } 
 
 declare module 'discord.js' {
   export type Command = Readonly<{
-    data: Pick<SlashCommandBuilder, 'name' | 'description'>
+    data: Pick<SlashCommandBuilder, 'name' | 'description' | 'toJSON'>
     execute: (interaction: Interaction<CacheType>) => Promise<void>
   }>
 

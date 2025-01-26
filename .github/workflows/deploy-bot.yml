@@ -1,0 +1,32 @@
+name: deploy discord bots command
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "packages/discord-bot/**"
+
+jobs:
+  deploy-command:
+    runs-on: ubuntu-latest
+    environment:
+      name: discord-bot
+    steps:
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+    # setup runtime
+    - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
+      with:
+        node-version-file: '.node-version'
+        cache: 'npm'
+    - run: npm ci
+
+    - name: type check for bot
+      run: npm run bot -- typecheck
+
+    - name: deploy bot commands
+      run: npm run bot -- deploy:commands
+      env:
+        DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+        DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
+        DISCORD_GUILD_ID: ${{ secrets.DISCORD_GUILD_ID }}
