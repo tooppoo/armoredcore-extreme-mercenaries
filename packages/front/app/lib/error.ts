@@ -1,14 +1,11 @@
 
 export type ErrorData<
-  C extends string,
-  T extends object = object
-> = ErrorResponse<C, T>
-export type ErrorResponse<
-  C extends string,
-  T extends object = object
-> = Readonly<T & {
+  C extends string = string,
+  D = unknown
+> = Readonly<{
   code: C
   message: string
+  detail: D
 }>
 
 export function makeCatchesSerializable(e: unknown): unknown {

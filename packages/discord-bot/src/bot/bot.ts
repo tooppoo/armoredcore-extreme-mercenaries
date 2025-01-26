@@ -1,21 +1,39 @@
 import 'dotenv/config'
-import { Client, Events, GatewayIntentBits, type SendableChannels } from 'discord.js'
-import { uploadArchive, type UploadResult } from './lib/upload-archive';
+import { Client, Collection, Events, GatewayIntentBits, MessageFlags } from 'discord.js'
+import { uploadVideoArchive } from './messages/upload-video-archive';
 import { log } from './lib/log';
+import { setupMessageSender } from './lib/message';
+import { makeCatchesSerializable } from './lib/error';
+import { commands } from './commands';
+import { messageHandlers } from './messages';
 
 export function startBot() {
-  const client = new Client({
-    intents: [
-      GatewayIntentBits.Guilds,
-      GatewayIntentBits.GuildMessages,
-      GatewayIntentBits.MessageContent,
-    ],
-  });
+  const client = setupClient();
 
-  client.once(Events.ClientReady, () => {
+  client.login(process.env.DISCORD_TOKEN)
+}
+
+function setupClient() {
+  const c = applyClientSetup(
+    new Client({
+      intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+      ],
+    }),
+    [
+      setupCommands,
+      setupMessageHandler,
+    ]
+  );
+
+  const sendMessageBuilder = setupMessageSender(c)
+
+  c.once(Events.ClientReady, () => {
     log('info', 'AC ARCHIVE BOT Ready')
   })
-  client.on(Events.MessageCreate, async (message) => {
+  c.on(Events.MessageCreate, async (message) => {
     log('debug', {
       event: Events.MessageCreate,
       message: message.content,
@@ -23,56 +41,79 @@ export function startBot() {
     })
 
     if (message.author.bot) {
-      log('debug', 'ignore bot message')
+      log('debug', { message: 'ignore bot message' })
       return
     }
 
-    switch (message.channelId) {
-      case process.env.DISCORD_ARCHIVE_CHANNEL:
-        await uploadArchive(message)
-          .then((res: UploadResult) =>
-            sendMessage(client, message.channelId, {
-              content: res.message,
-              reply: {
-                messageReference: message,
-              }
-            })
-          )
-          .catch((e: UploadResult) =>
-            sendMessage(client, message.channelId, {
-              content: e.message,
-              reply: {
-                messageReference: message,
-              }
-            })
-          )
-      default:
-        log('debug', 'not handling')
-        return
+    const sendMessage = sendMessageBuilder(message)
+    c.messageHandlers.forEach((messageHandler) => {
+      messageHandler.handle(message, sendMessage)
+    })
+  })
+  c.on(Events.InteractionCreate, async (interaction) => {
+    if (!interaction.isChatInputCommand()) {
+      log('debug', 'ignore non chat input command')
+
+      return
+    };
+    const command = interaction.client.commands.get(interaction.commandName);
+    if (!command) {
+      console.error(`No command matching ${interaction.commandName} was found.`);
+
+      return;
+    }
+
+    log('debug', {
+      message: 'Events.InteractionCreate',
+      interaction: interaction.toJSON(),
+    })
+
+    try {
+      await command.execute(interaction);
+    } catch (error) {
+      log('error', {
+        message: `error while executing command ${interaction.commandName}`,
+        error: makeCatchesSerializable(error),
+      })
+
+      if (interaction.replied || interaction.deferred) {
+        await interaction.followUp({ content: 'コマンド実行中にエラーが発生しました', flags: MessageFlags.Ephemeral });
+      } else {
+        await interaction.reply({ content: 'コマンド実行中にエラーが発生しました', flags: MessageFlags.Ephemeral });
+      }
     }
   })
 
-  client.login(process.env.DISCORD_TOKEN)
+  return c
+}
 
-  async function sendMessage(
-    client: Client,
-    channelId: string,
-    message: Parameters<SendableChannels['send']>[0]
-  ) {
-    const channel = await client.channels.fetch(channelId)
-    if (channel === null) {
-      log('debug', 'channel not found')
-      return Promise.resolve()
-    }
+const applyClientSetup = (client: Client, functions: ClientSetupFunction[]) => {
+  return functions.reduce((acc, f) => f(acc), client)
+}
 
-    if (channel.isSendable()) {
-      return channel.send(message).catch((error) => {
-        log('error', { message: 'failed to send message', detail: error })
-      })
-    }
-    else {
-      log('debug', 'not send message because the channel is not sendable')
-      return Promise.resolve()
-    }
-  }
+type ClientSetupFunction = (client: Client) => Client
+const setupCommands: ClientSetupFunction = (client: Client): Client => {
+  client.commands = new Collection();
+
+  commands.forEach((command) => {
+    client.commands.set(command.data.name, command)
+    log('info', {
+      message: `register command: ${command.data.name}`,
+    })
+  })
+
+  return client
+}
+
+const setupMessageHandler: ClientSetupFunction = (client: Client): Client => {
+  client.messageHandlers = new Collection();
+
+  messageHandlers.forEach((messageHandler) => {
+    client.messageHandlers.set(messageHandler.name, messageHandler)
+    log('info', {
+      message: `register message handler: ${messageHandler.name}`,
+    })
+  })
+
+  return client
 }
