@@ -33,6 +33,6 @@
     "packages/e2e"
   ],
   "devDependencies": {
-    "@ysk8hori/typescript-graph": "0.23.0"
+    "@ysk8hori/typescript-graph": "0.24.0"
   }
 }
