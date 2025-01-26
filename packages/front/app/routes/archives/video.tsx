@@ -10,6 +10,7 @@ import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import { Margin } from '~/lib/utils/components/spacer'
 import { serverOnly$ } from 'vite-env-only/macros'
 import type { Route } from './+types/video'
+import { WithChildren } from '~/lib/utils/components/types';
 
 type LoadArchives = Readonly<{
   totalPage: number
@@ -206,22 +207,27 @@ export const ArchiveItem: React.FC<ArchiveItemProps> = ({
       className='archive-item min-h-64 sm:min-h-72 lg:min-h-80 flex flex-col justify-between p-2 ac-border-b ac-hover'
       aria-label={title}
     >
-      <div
-        className={`h-6 overflow-hidden whitespace-nowrap text-ellipsis`}
-      >
+      <ArchiveItemCaption>
         {title}
-      </div>
+      </ArchiveItemCaption>
+      <Margin h={8} />
       <img
         src={imageUrl} alt={title}
       />
-      <div
-        className={`h-6 overflow-hidden whitespace-nowrap text-ellipsis`}
-      >
+      <Margin h={8} />
+      <ArchiveItemCaption>
         {description}
-      </div>
+      </ArchiveItemCaption>
     </a>
   )
 }
+const ArchiveItemCaption: React.FC<WithChildren> = ({ children }) => (
+  <div
+    className={`h-12 line-clamp-2 overflow-hidden whitespace-normal text-ellipsis`}
+  >
+    {children}
+  </div>
+)
 
 export const meta = serverOnly$<MetaFunction>(({ location }) => {
   return [
