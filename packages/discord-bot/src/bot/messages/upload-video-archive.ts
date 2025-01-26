@@ -1,12 +1,14 @@
-import { frontApi, type FrontErrorResponseBody } from '../front';
-import { makeCatchesSerializable } from '../error';
-import { log } from '../log';
-import type { SendMessage, UserMessage } from '../message';
+import { frontApi, type FrontErrorResponseBody } from '../lib/front';
+import { makeCatchesSerializable } from '../lib/error';
+import { log } from '../lib/log';
+import type { MessageHandler, MessageHandlerFunction } from '.';
 
-export async function uploadVideoArchive(
-  userMessage: UserMessage,
-  sendMessage: SendMessage
-): Promise<void> {
+const name = 'upload-video-archive'
+const handle: MessageHandlerFunction = async (userMessage, sendMessage) => {
+  if (userMessage.channelId !== process.env.DISCORD_VIDEO_ARCHIVE_CHANNEL) {
+    return
+  }
+
   const body = {
     url: userMessage.content,
     discord_user: {
@@ -15,7 +17,7 @@ export async function uploadVideoArchive(
     }
   }
 
-  const result = fetch(frontApi('/api/archives/video'), {
+  return fetch(frontApi('/api/archives/video'), {
     method: 'POST',
     body: JSON.stringify(body),
     headers: {
@@ -61,4 +63,9 @@ const errorMessageMap: Record<string, string> = {
   'unsupported-url': 'サポート外のURLなのでスキップしました',
   'duplicated-url': '既にアーカイブ済みのURLなのでスキップしました',
   'failed-get-ogp': 'アーカイブの情報を取得できませんでした',
+}
+
+export const uploadVideoArchive: MessageHandler = {
+  name,
+  handle,
 }

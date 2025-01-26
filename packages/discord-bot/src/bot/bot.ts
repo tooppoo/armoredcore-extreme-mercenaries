@@ -1,10 +1,11 @@
 import 'dotenv/config'
 import { Client, Collection, Events, GatewayIntentBits, MessageFlags } from 'discord.js'
-import { uploadVideoArchive } from './lib/handler/upload-video-archive';
+import { uploadVideoArchive } from './messages/upload-video-archive';
 import { log } from './lib/log';
 import { setupMessageSender } from './lib/message';
 import { makeCatchesSerializable } from './lib/error';
 import { commands } from './commands';
+import { messageHandlers } from './messages';
 
 export function startBot() {
   const client = setupClient();
@@ -21,7 +22,10 @@ function setupClient() {
         GatewayIntentBits.MessageContent,
       ],
     }),
-    [setupCommands]
+    [
+      setupCommands,
+      setupMessageHandler,
+    ]
   );
 
   const sendMessageBuilder = setupMessageSender(c)
@@ -37,17 +41,14 @@ function setupClient() {
     })
 
     if (message.author.bot) {
-      log('debug', 'ignore bot message')
+      log('debug', { message: 'ignore bot message' })
       return
     }
 
-    switch (message.channelId) {
-      case process.env.DISCORD_VIDEO_ARCHIVE_CHANNEL:
-        await uploadVideoArchive(message, sendMessageBuilder(message))
-      default:
-        log('debug', 'not handling')
-        return
-    }
+    const sendMessage = sendMessageBuilder(message)
+    c.messageHandlers.forEach((messageHandler) => {
+      messageHandler.handle(message, sendMessage)
+    })
   })
   c.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isChatInputCommand()) {
@@ -98,6 +99,19 @@ const setupCommands: ClientSetupFunction = (client: Client): Client => {
     client.commands.set(command.data.name, command)
     log('info', {
       message: `register command: ${command.data.name}`,
+    })
+  })
+
+  return client
+}
+
+const setupMessageHandler: ClientSetupFunction = (client: Client): Client => {
+  client.messageHandlers = new Collection();
+
+  messageHandlers.forEach((messageHandler) => {
+    client.messageHandlers.set(messageHandler.name, messageHandler)
+    log('info', {
+      message: `register message handler: ${messageHandler.name}`,
     })
   })
 
