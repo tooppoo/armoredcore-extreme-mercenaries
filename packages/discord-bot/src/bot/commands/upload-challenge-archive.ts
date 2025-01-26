@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, type Command } from 'discord.js';
-import { log } from '../log';
+import { log } from '../lib/log';
 
 const commandName = 'archive';
 const archiveSlashCommand = new SlashCommandBuilder()

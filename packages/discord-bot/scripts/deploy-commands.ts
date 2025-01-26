@@ -1,12 +1,8 @@
 import 'dotenv/config'
 import { REST, Routes } from 'discord.js';
-import { archiveCommand } from '../src/bot/lib/handler/upload-challenge-archive'
 import { log } from '../src/bot/lib/log';
 import { makeCatchesSerializable } from '../src/bot/lib/error';
-
-const commands = [
-  archiveCommand,
-].map(c => c.data.toJSON());
+import { commands } from '../src/bot/commands';
 
 async function main() {
   const rest = new REST().setToken(process.env.DISCORD_TOKEN);
@@ -22,7 +18,7 @@ async function main() {
         process.env.DISCORD_CLIENT_ID,
         process.env.DISCORD_GUILD_ID,
       ),
-			{ body: commands },
+			{ body: commands.map(c => c.data.toJSON()) },
 		);
 
 		log('info', {

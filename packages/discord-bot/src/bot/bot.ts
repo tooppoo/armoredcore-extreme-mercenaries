@@ -3,8 +3,8 @@ import { Client, Collection, Events, GatewayIntentBits, MessageFlags } from 'dis
 import { uploadVideoArchive } from './lib/handler/upload-video-archive';
 import { log } from './lib/log';
 import { setupMessageSender } from './lib/message';
-import { archiveCommand } from './lib/handler/upload-challenge-archive';
 import { makeCatchesSerializable } from './lib/error';
+import { commands } from './commands';
 
 export function startBot() {
   const client = setupClient();
@@ -94,9 +94,7 @@ type ClientSetupFunction = (client: Client) => Client
 const setupCommands: ClientSetupFunction = (client: Client): Client => {
   client.commands = new Collection();
 
-  [
-    archiveCommand,
-  ].forEach((command) => {
+  commands.forEach((command) => {
     client.commands.set(command.data.name, command)
     log('info', {
       message: `register command: ${command.data.name}`,
