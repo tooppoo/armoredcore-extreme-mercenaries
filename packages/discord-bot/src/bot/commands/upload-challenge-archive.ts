@@ -1,5 +1,6 @@
-import { SlashCommandBuilder, type Command } from 'discord.js';
+import { SlashCommandBuilder } from 'discord.js';
 import { log } from '../lib/log';
+import type { Command } from '.';
 
 const commandName = 'archive';
 const archiveSlashCommand = new SlashCommandBuilder()
