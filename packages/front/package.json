@@ -32,7 +32,7 @@
     "@googleapis/youtube": "20.0.0",
     "@react-router/cloudflare": "^7.0.0",
     "date-fns": "4.1.0",
-    "drizzle-orm": "0.39.0",
+    "drizzle-orm": "0.39.1",
     "highlight.js": "11.11.1",
     "html-react-parser": "5.2.2",
     "isbot": "^5.0.0",
