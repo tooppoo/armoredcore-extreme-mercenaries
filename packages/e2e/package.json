@@ -4,7 +4,7 @@
   "main": "index.js",
   "devDependencies": {
     "@playwright/test": "1.50.1",
-    "@types/node": "22.13.0"
+    "@types/node": "22.13.1"
   },
   "scripts": {
     "e2e": "playwright test",
