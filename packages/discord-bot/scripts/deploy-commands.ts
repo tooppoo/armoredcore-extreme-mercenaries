@@ -5,6 +5,13 @@ import { makeCatchesSerializable } from '../src/bot/lib/error';
 import { commands } from '../src/bot/commands';
 
 async function main() {
+  if (commands.length === 0) {
+    log('info', {
+      message: 'Commands not exist, so skip command deploy.'
+    })
+    return
+  }
+
   const rest = new REST().setToken(process.env.DISCORD_TOKEN);
 
   try {
