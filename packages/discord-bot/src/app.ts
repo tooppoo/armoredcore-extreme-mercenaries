@@ -1,6 +1,7 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import { startBot } from './bot/bot'
+import { log } from './lib/log'
 
 const app = new Hono()
 
@@ -15,7 +16,8 @@ serve(
   },
   ({ port }) => {
     if (process.env.ENV === 'local') {
-      console.log(`Server is running on http://localhost:${port}`)
+      log('info', `Server is running on http://localhost:${port}`)
+      log('info', `LOG_LEVEL: ${process.env.LOG_LEVEL}`)
     }
 
     startBot()

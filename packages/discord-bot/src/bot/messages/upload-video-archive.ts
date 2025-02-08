@@ -1,11 +1,14 @@
 import { frontApi } from '../lib/front';
 import type { MessageHandler, MessageHandlerFunction } from '.';
+import { log } from '../../lib/log';
 
 const name = 'upload-video-archive'
 const handle: MessageHandlerFunction = async (userMessage, frontRequest) => {
   if (userMessage.channelId !== process.env.DISCORD_VIDEO_ARCHIVE_CHANNEL) {
+    log('debug', `skip: ${name}`)
     return
   }
+  log('debug', `start: ${name}`)
 
   const body = {
     url: userMessage.content,

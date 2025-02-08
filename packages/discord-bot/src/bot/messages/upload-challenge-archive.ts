@@ -1,14 +1,22 @@
 import { frontApi } from '../lib/front';
 import type { MessageHandler, MessageHandlerFunction } from '.';
 import type { UserMessage } from '../lib/message';
+import { log } from '../../lib/log';
 
 const name = 'upload-challenge-archive'
 const handle: MessageHandlerFunction = async (userMessage, frontRequest) => {
   if (userMessage.channelId !== process.env.DISCORD_CHALLENGE_ARCHIVE_CHANNEL) {
+    log('debug', `skip: ${name}`)
     return
   }
+  log('debug', `start: ${name}`)
 
   const body = parseMessage(userMessage);
+  log('debug', { message: 'parsed message', body })
+
+  if (body.type === 'parse-error') {
+    return
+  }
 
   return frontRequest({
     command: () => fetch(frontApi('/api/archives/challenge'), {
@@ -36,6 +44,7 @@ type BaseArchiveRequest = Readonly<{
 }>
 type ArchiveLinkRequest = BaseArchiveRequest & Readonly<{
   type: 'link'
+  title: string
   url: string
 }>
 type ArchiveTextRequest = BaseArchiveRequest & Readonly<{
@@ -50,14 +59,15 @@ type ParseError = Readonly<{
 }>
 
 function parseMessage(userMessage: UserMessage): ArchiveLinkRequest | ArchiveTextRequest | ParseError {
-  const asUrl = tryParseAsUrl(userMessage);
-  if (asUrl) {
-    return asUrl
-  }
-
-  const asText = tryParseAsText(userMessage);
-  if (asText) {
-    return asText
+  const parsers = [
+    tryParseAsUrl,
+    tryParseAsText,
+  ]
+  for (const parser of parsers) {
+    const result = parser(userMessage);
+    if (result) {
+      return result
+    }
   }
 
   return {
@@ -67,13 +77,25 @@ function parseMessage(userMessage: UserMessage): ArchiveLinkRequest | ArchiveTex
   } satisfies ParseError
 }
 
-function tryParseAsUrl(userMessage: UserMessage): ArchiveLinkRequest | null {
-  const trimmed = userMessage.content.trim();
+const block = '```'
 
-  if (isURL(trimmed)) {
+function tryParseAsUrl(userMessage: UserMessage): ArchiveLinkRequest | null {
+  const lines = userMessage.content.split(/\r?\n/);
+  if (lines.length !== 5) {
+    return null
+  }
+  if (!isBlock(lines)) {
+    // ブロックで囲まれていない場合
+    return null
+  }
+
+  const title = lines[1].trim();
+  const maybeUrl = lines[3].trim();
+  if (title && maybeUrl && isURL(maybeUrl)) {
     return {
       type: 'link',
-      url: trimmed,
+      title,
+      url: maybeUrl,
       discord_user: {
         id: userMessage.author.id,
         name: userMessage.author.username,
@@ -88,8 +110,7 @@ function tryParseAsText(userMessage: UserMessage): ArchiveTextRequest | null {
   if (lines.length < 5) {
     return null
   }
-  const block = '```'
-  if (lines[0].trim() !== block || lines[lines.length - 1].trim() !== block) {
+  if (!isBlock(lines)) {
     // ブロックで囲まれていない場合
     return null
   }
@@ -133,4 +154,7 @@ function isURL(str: string): boolean {
   } catch {
     return false;
   }
+}
+function isBlock(lines: string[]): boolean {
+  return lines[0].trim() === block && lines[lines.length - 1].trim() === block
 }

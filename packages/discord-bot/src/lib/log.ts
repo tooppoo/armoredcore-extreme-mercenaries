@@ -18,7 +18,11 @@ function toMessage(level: string, data: Loggable): string {
   }
 }
 function isLowThanLogLevel(level: LogLevel): boolean {
-  const currentLogLevel = logLevel[process.env.LOG_LEVEL || 'info'] || logLevel['info']
+  const currentLogLevel = (() => {
+    const lev = logLevel[process.env.LOG_LEVEL || 'info']
+    
+    return lev !== undefined ? lev : logLevel['info']
+  })()
 
   return logLevel[level] < currentLogLevel
 }
