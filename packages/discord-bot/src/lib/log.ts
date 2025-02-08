@@ -7,9 +7,8 @@ export function log(level: LogLevel, data: Loggable): void {
     return
   }
 
-  console.log(m(level, data))
+  console.log(toMessage(level, data))
 }
-const m = toMessage
 function toMessage(level: string, data: Loggable): string {
   if (typeof data === 'string') {
     return JSON.stringify({ level, message: data, time: new Date().toISOString() })
