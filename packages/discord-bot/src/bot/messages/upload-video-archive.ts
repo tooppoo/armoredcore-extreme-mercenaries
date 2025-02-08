@@ -1,6 +1,6 @@
 import { frontApi, type FrontErrorResponseBody } from '../lib/front';
-import { makeCatchesSerializable } from '../lib/error';
-import { log } from '../lib/log';
+import { makeCatchesSerializable } from '../../lib/error';
+import { log } from '../../lib/log';
 import type { MessageHandler, MessageHandlerFunction } from '.';
 
 const name = 'upload-video-archive'

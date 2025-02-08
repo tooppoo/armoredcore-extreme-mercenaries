@@ -1,5 +1,5 @@
 import type { Client, Message, OmitPartialGroupDMChannel, SendableChannels } from 'discord.js'
-import { log } from './log'
+import { log } from '../../lib/log'
 
 export type UserMessage = OmitPartialGroupDMChannel<Message<boolean>>
 

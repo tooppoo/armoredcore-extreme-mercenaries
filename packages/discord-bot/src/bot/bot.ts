@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js'
-import { log } from './lib/log';
+import { log } from '../lib/log';
 import { setupMessageSender } from './lib/message';
 import { messageHandlers } from './messages';
 
