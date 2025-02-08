@@ -1,7 +1,7 @@
 
 import { test, expect } from '@playwright/test';
 
-test('title', async ({ page, request }) => {
+test('upload', async ({ page, request }) => {
   test.slow()
 
   const res = await request.post('/api/archives/video', {
