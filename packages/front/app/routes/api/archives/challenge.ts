@@ -11,6 +11,7 @@ import { makeCatchesSerializable } from '~/lib/error'
 import { saveChallengeArchive } from '~/lib/archives/challenge/upload/repository/save-challenge-archive.server'
 import { getOGPStrategy } from '~/lib/archives/common/ogp/ogp-strategy.server'
 import { ArchiveError, duplicatedUrl, failedGetOGP, unsupportedUrl } from '~/lib/archives/common/errors.server'
+import { successWithoutToken } from '~/lib/api/response/json/auth.server'
 
 export const action = (args: Route.ActionArgs) => {
   requireAuthToken(args)
@@ -67,6 +68,8 @@ const post = async ({ request, context }: Route.ActionArgs) => {
     },
     context.db
   ).catch(unknownError)
+
+  return successWithoutToken(null)
 }
 
 export const sitemap = serverOnly$<SitemapFunction>(() => ({
