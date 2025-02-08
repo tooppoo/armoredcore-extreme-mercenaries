@@ -15,7 +15,9 @@ export default [
     route(':id', './routes/updates/detail.tsx'),
   ]),
   ...prefix('archives', [
+    index('./routes/archives/index.tsx'),
     route('video', './routes/archives/video.tsx'),
+    route('challenge', './routes/archives/challenge.tsx'),
   ]),
 
   ...prefix('api', [

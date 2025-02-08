@@ -1,8 +1,8 @@
 import type { Database } from '~/db/driver.server'
-import { videoArchives } from '~/db/schema.server'
+import { challengeArchives } from '~/db/schema.server'
 import { and, asc, count, desc, like, or } from 'drizzle-orm'
 import type { ReadArchive } from '../entity'
-import type { Order, OrderFunction } from '~/lib/archives/common/list/query.server'
+import type { OrderFunction, Order } from '~/lib/archives/common/list/query.server'
 
 type PageArchivesArgs = Readonly<{
   page: number
@@ -29,20 +29,20 @@ export async function pageArchives(
   const where = keyword.length > 0
     ? and(
         ...keyword.split(/\s+/).map((k) => or(
-          like(videoArchives.title, `%${k}%`),
-          like(videoArchives.description, `%${k}%`),
+          like(challengeArchives.title, `%${k}%`),
+          like(challengeArchives.description, `%${k}%`),
         ))
       )
     : undefined
 
   const list = await db
     .select()
-    .from(videoArchives)
+    .from(challengeArchives)
     .where(where)
     .orderBy(...order.order())
     .offset(cursor(page))
     .limit(countPerPage)
-  const [total] = await db.select({ count: count(videoArchives.id) }).from(videoArchives).where(where).all()
+  const [total] = await db.select({ count: count(challengeArchives.id) }).from(challengeArchives).where(where).all()
   const totalPage = Math.ceil(total.count / countPerPage)
 
   return { list, totalPage }
@@ -52,11 +52,11 @@ export const orderByCreated: OrderFunction = (o) => {
   switch (o) {
     case 'asc':
       return {
-        order: () => [asc(videoArchives.createdAt), asc(videoArchives.id)],
+        order: () => [asc(challengeArchives.createdAt), asc(challengeArchives.id)],
       }
     case 'desc':
       return {
-        order: () => [desc(videoArchives.createdAt), asc(videoArchives.id)],
+        order: () => [desc(challengeArchives.createdAt), asc(challengeArchives.id)],
       }
   }
 }

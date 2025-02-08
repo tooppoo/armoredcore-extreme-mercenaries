@@ -100,7 +100,7 @@ const lists = (discord: LoadDiscord['discord']) => [
           アーマードコア攻略動画へのリンク一覧を、アーカイブとして公開しています。
         </p>
         <p>
-          アーカイブは<Link to="/archives/video">こちら</Link>からご確認いただけます。
+          アーカイブは<Link to="/archives">こちら</Link>からご確認いただけます。
         </p>
         <ul>
           <li>アーカイブの閲覧はどなたでも行っていただけます。</li>

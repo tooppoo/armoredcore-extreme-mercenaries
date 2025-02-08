@@ -2,14 +2,14 @@ import { type MetaFunction, Form, Link, useLoaderData } from 'react-router';
 import { type ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
 import { zx } from 'zodix'
-import { type ReadArchive } from '~/lib/archives/video/list/entity'
+import { type ReadArchive } from '~/lib/archives/challenge/list/entity'
 import { orderQueryKeys, orderQueryMap } from '~/lib/archives/common/list/query'
 import { type QuerySchema, querySchema } from '~/lib/archives/common/list/query.server'
-import { orderByCreated, pageArchives } from '~/lib/archives/video/list/repository/read.server'
+import { orderByCreated, pageArchives } from '~/lib/archives/challenge/list/repository/read.server'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import { Margin } from '~/lib/utils/components/spacer'
 import { serverOnly$ } from 'vite-env-only/macros'
-import type { Route } from './+types/video'
+import type { Route } from './+types/challenge'
 import { WithChildren } from '~/lib/utils/components/types';
 
 type LoadArchives = Readonly<{
@@ -43,7 +43,7 @@ export const loader = async ({ context, request }: Route.LoaderArgs) => {
 }
 
 // クエリ用なので略記名
-const VideoArchives: React.FC = () => {
+const ChallengeArchives: React.FC = () => {
   const { archives, totalPage, query } = useLoaderData<LoadArchives>()
   const {
     register,
@@ -54,11 +54,11 @@ const VideoArchives: React.FC = () => {
 
   return (
     <>
-      <h2>攻略動画アーカイブ</h2>
+      <h2>チャレンジアーカイブ</h2>
 
       <Margin h={32} />
 
-      <Form action="/archives/video" method="GET">
+      <Form action="/archives/challenge" method="GET">
         <FormItem labelFor="keyword" label="キーワード検索">
           <input
             className="px-2 ac-border"
@@ -117,7 +117,6 @@ const VideoArchives: React.FC = () => {
             title={a.title}
             description={a.description}
             url={a.url}
-            imageUrl={a.imageUrl}
           />
         ))}
       </section>
@@ -172,7 +171,7 @@ const MovePage: React.FC<MovePageProps> = ({ page, totalPage, children, query })
         1 <= page && page <= totalPage
         ? <Link
             to={{
-              pathname: '/archives/video',
+              pathname: '/archives/challenge',
               search: new URLSearchParams({ ...query, p: `${page}` }).toString(),
             }}
           >
@@ -189,21 +188,15 @@ const MovePage: React.FC<MovePageProps> = ({ page, totalPage, children, query })
 export type ArchiveItemProps = Readonly<{
   title: string
   description: string
-  imageUrl: string
-  url: string
+  url: string | null
 }>
 export const ArchiveItem: React.FC<ArchiveItemProps> = ({
   title,
   description,
-  imageUrl,
   url,
 }) => {
   return (
-    <a
-      href={url}
-      title={title}
-      target='_blank'
-      rel='noopener noreferrer'
+    <div
       className='archive-item min-h-64 sm:min-h-72 lg:min-h-80 flex flex-col justify-between p-2 ac-border-b ac-hover'
       aria-label={title}
     >
@@ -211,14 +204,13 @@ export const ArchiveItem: React.FC<ArchiveItemProps> = ({
         {title}
       </ArchiveItemCaption>
       <Margin h={8} />
-      <img
-        src={imageUrl} alt={title}
-      />
-      <Margin h={8} />
       <ArchiveItemCaption>
         {description}
       </ArchiveItemCaption>
-    </a>
+      <ArchiveItemCaption>
+        {url}
+      </ArchiveItemCaption>
+    </div>
   )
 }
 const ArchiveItemCaption: React.FC<WithChildren> = ({ children }) => (
@@ -232,14 +224,14 @@ const ArchiveItemCaption: React.FC<WithChildren> = ({ children }) => (
 export const meta = serverOnly$<MetaFunction>(({ location }) => {
   return [
     ...buildMeta({
-      title: '攻略動画アーカイブ',
+      title: 'チャレンジアーカイブ',
       description: [
-        `${unofficialServer}で登録された、攻略動画のアーカイブです。`,
-        `各条件での縛り攻略・タイムアタック動画へのリンクを掲載しています。`,
+        `${unofficialServer}で登録された、各チャレンジ情報のアーカイブです。`,
+        `様々な縛り・条件のチャレンジ情報を掲載しています。`,
       ].join(''),
       pathname: location.pathname,
     })
   ];
 });
 
-export default VideoArchives
+export default ChallengeArchives
