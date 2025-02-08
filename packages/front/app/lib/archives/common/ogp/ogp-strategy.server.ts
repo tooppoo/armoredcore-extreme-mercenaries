@@ -1,5 +1,7 @@
 import { isSupported, youtubePattern, youtubeWithQueryPattern } from '~/lib/archives/common/url/support-url.server'
 import { youtube, youtube_v3 } from '@googleapis/youtube'
+import { failedGetOGP, FailedGetOGPError, unsupportedUrl, UnsupportedUrlError } from '~/lib/archives/common/errors.server'
+import { makeCatchesSerializable } from '~/lib/error'
 
 export type OGP = Readonly<{
   title: string
@@ -8,6 +10,29 @@ export type OGP = Readonly<{
 }>
 
 export type OGPStrategy = (url: URL, env: Env) => Promise<OGP>
+export type GetOGPStrategy = (url: URL) => OGPStrategy 
+export const getOGPStrategy: GetOGPStrategy = (url) => {
+  if (!isSupported(url)) {
+    throw {
+      code: unsupportedUrl,
+      message: `${url.toString()} is not supported`,
+      detail: {
+        url: url.toString(),
+      }
+    } satisfies UnsupportedUrlError
+  }
+
+  if (
+    youtubePattern.test(url.toString()) ||
+    youtubeWithQueryPattern.test(url.toString())
+  ) {
+    return withYouTubeData
+  }
+  else {
+    return withOGPScanner
+  }
+}
+
 type OGPScannerResponse = Readonly<{
   ogp: {
     'og:title': [string]
@@ -15,7 +40,7 @@ type OGPScannerResponse = Readonly<{
     'og:image': [string]
   }
 }>
-export const withOGPScanner: OGPStrategy = async (url) => {
+export const withOGPScanner: OGPStrategy = defineStrategy(async (url) => {
   const res = await fetch(`https://ogp-scanner.kunon.jp/v1/ogp_info?url=${encodeURI(url.toString())}`, {
     method: 'GET',
     headers: {
@@ -29,9 +54,9 @@ export const withOGPScanner: OGPStrategy = async (url) => {
     description: json.ogp['og:description'][0],
     image: json.ogp['og:image'][0],
   }
-}
+})
 
-export const withYouTubeData: OGPStrategy = (() => {
+export const withYouTubeData: OGPStrategy = defineStrategy((() => {
   let youtubeClient: youtube_v3.Youtube
 
   return async (url, env) => {
@@ -59,21 +84,16 @@ export const withYouTubeData: OGPStrategy = (() => {
       image: target.snippet?.thumbnails?.high?.url || '',
     }
   }
-})()
+})())
 
-export type GetOGPStrategy = (url: URL) => OGPStrategy | null
-export const getOGPStrategy: GetOGPStrategy = (url) => {
-  if (!isSupported(url)) {
-    return null
-  }
-
-  if (
-    youtubePattern.test(url.toString()) ||
-    youtubeWithQueryPattern.test(url.toString())
-  ) {
-    return withYouTubeData
-  }
-  else {
-    return withOGPScanner
-  }
+function defineStrategy(strategy: OGPStrategy): OGPStrategy {
+  return (url, env) => strategy(url, env).catch((error) => {
+    throw {
+      code: failedGetOGP,
+      message: error instanceof Error
+        ? error.message
+        : JSON.stringify(error),
+      detail: makeCatchesSerializable(error),
+    } satisfies FailedGetOGPError
+  })
 }

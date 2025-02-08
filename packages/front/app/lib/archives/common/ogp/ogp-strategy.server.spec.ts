@@ -22,4 +22,8 @@ describe('getOgpStrategy', () => {
     const url = new URL('https://x.com/user/status/1234567890')
     expect(getOGPStrategy(url)).toBe(withOGPScanner)
   })
+  it('should throw when url is not supported', () => {
+    const url = new URL('https://example.com/12345')
+    expect(() => getOGPStrategy(url)).toThrowError()
+  })
 })

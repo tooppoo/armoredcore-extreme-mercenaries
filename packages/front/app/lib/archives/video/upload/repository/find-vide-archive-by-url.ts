@@ -1,10 +1,10 @@
 import { Database } from '~/db/driver.server'
-import { SearchSameURLArchive } from '../functions.server'
 import { eq } from 'drizzle-orm'
 import { videoArchives } from '~/db/schema.server'
 import { normalizeUrl } from '~/lib/archives/common/url/support-url.server'
+import { FindArchiveByURL } from '~/lib/archives/common/url/find-archive-by-url'
 
-export const findByURL = (db: Database): SearchSameURLArchive =>
+export const findVideoArchiveByURL = (db: Database): FindArchiveByURL =>
   async (url: URL) => {
     const [result] = await db
       .select()

@@ -2,62 +2,35 @@
  * Archive機能のユースケースレベル処理を配置
  */
 
-import { ArchiveContents } from '~/lib/archives/video/upload/entity.server'
+import { type ArchiveContents } from '~/lib/archives/video/upload/entity.server'
 import { createNewArchiveContents } from '~/lib/archives/video/upload/factory.server'
 import { type GetOGPStrategy } from '~/lib/archives/common/ogp/ogp-strategy.server'
-import { duplicatedUrl, DuplicateUrlError, failedGetOGP, FailedGetOGPError, unsupportedUrl, type UnsupportedUrlError } from '~/lib/archives/common/errors.server'
-import { makeCatchesSerializable } from '~/lib/error'
-
-export type SearchSameURLArchive = (url: URL) => Promise<ArchiveContents | null>
+import { type FindArchiveByURL, throwAlreadyArchivedURL } from '~/lib/archives/common/url/find-archive-by-url'
 
 type IODeps = Readonly<{
   env: Env
   getOGPStrategy: GetOGPStrategy
-  findByURL: SearchSameURLArchive
+  findArchiveByURL: FindArchiveByURL
 }>
 /**
  * @throws {ArchiveError}
  */
-export async function buildArchiveFromUrl(
+export async function buildVideoArchiveFromUrl(
   url: URL,
   {
     env,
     getOGPStrategy,
-    findByURL,
+    findArchiveByURL,
   }: IODeps
 ): Promise<ArchiveContents> {
   const strategy = getOGPStrategy(url)
-  if (strategy === null) {
-    throw {
-      code: unsupportedUrl,
-      message: `${url.toString()} is not supported`,
-      detail: {
-        url: url.toString(),
-      }
-    } satisfies UnsupportedUrlError
-  }
 
-  const sameURLArchive = await findByURL(url)
+  const sameURLArchive = await findArchiveByURL(url)
   if (sameURLArchive !== null) {
-    throw {
-      code: duplicatedUrl,
-      message: `${url.toString()} is already archived`,
-      detail: {
-        requested: url.toString(),
-        existing: sameURLArchive.url.toString(),
-      }
-    } satisfies DuplicateUrlError
+    return throwAlreadyArchivedURL(url, sameURLArchive)
   }
 
-  const ogp = await strategy(url, env).catch((error) => {
-    throw {
-      code: failedGetOGP,
-      message: error instanceof Error
-        ? error.message
-        : JSON.stringify(error),
-      detail: makeCatchesSerializable(error),
-    } satisfies FailedGetOGPError
-  })
+  const ogp = await strategy(url, env)
 
   return createNewArchiveContents({
     title: ogp.title,
