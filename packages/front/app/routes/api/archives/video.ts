@@ -4,8 +4,8 @@ import { badRequest, forbidden, internalServerError, unknownError } from '~/lib/
 import { ArchiveError, duplicatedUrl, failedGetOGP, unsupportedUrl } from '~/lib/archives/common/errors.server';
 import { buildVideoArchiveFromUrl } from '~/lib/archives/video/upload/functions.server';
 import { getOGPStrategy } from '~/lib/archives/common/ogp/ogp-strategy.server';
-import { saveArchive } from '~/lib/archives/video/upload/repository/save-archive.server';
-import { findVideoArchiveByURL } from '~/lib/archives/video/upload/repository/find-vide-archive-by-url';
+import { saveVideoArchive } from '~/lib/archives/video/upload/repository/save-video-archive.server';
+import { findVideoArchiveByURL } from '~/lib/archives/video/upload/repository/find-video-archive-by-url';
 import { postArchiveBody } from '~/lib/archives/video/upload/params.server';
 import { makeCatchesSerializable } from '~/lib/error';
 import type { Route } from './+types/video'
@@ -48,7 +48,7 @@ const post = async ({ request, context }: Route.ActionArgs) => {
     }
   })
 
-  await saveArchive(
+  await saveVideoArchive(
     {
       contents: archive,
       uploader: {
