@@ -3,6 +3,7 @@ import { Client, Collection, Events, GatewayIntentBits } from 'discord.js'
 import { log } from '../lib/log';
 import { setupMessageSender } from './lib/message';
 import { messageHandlers } from './messages';
+import { frontRequestHandler } from './lib/front';
 
 export function startBot() {
   const client = setupClient();
@@ -24,7 +25,7 @@ function setupClient() {
     ]
   );
 
-  const sendMessageBuilder = setupMessageSender(c)
+  const buildMessageSender = setupMessageSender(c)
 
   c.once(Events.ClientReady, () => {
     log('info', 'AC ARCHIVE BOT Ready')
@@ -41,9 +42,9 @@ function setupClient() {
       return
     }
 
-    const sendMessage = sendMessageBuilder(message)
+    const messageSender = buildMessageSender(message)
     c.messageHandlers.forEach((messageHandler) => {
-      messageHandler.handle(message, sendMessage)
+      messageHandler.handle(message, frontRequestHandler(messageSender))
     })
   })
 
