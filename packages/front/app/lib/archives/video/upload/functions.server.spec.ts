@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { buildArchiveFromUrl } from './functions.server'
-import type { GetOGPStrategy, OGP } from './ogp/ogp-strategy.server'
+import type { GetOGPStrategy, OGP } from '../../common/ogp/ogp-strategy.server'
 import type { SearchSameURLArchive } from './functions.server'
-import { unsupportedUrl, duplicatedUrl, failedGetOGP } from '~/lib/archives/video/upload/errors.server'
+import { unsupportedUrl, duplicatedUrl, failedGetOGP } from '~/lib/archives/common/errors.server'
 
 describe('buildArchiveFromUrl', () => {
   const env: Env = {} as unknown as Env

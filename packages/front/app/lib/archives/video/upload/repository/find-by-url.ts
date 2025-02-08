@@ -2,7 +2,7 @@ import { Database } from '~/db/driver.server'
 import { SearchSameURLArchive } from '../functions.server'
 import { eq } from 'drizzle-orm'
 import { videoArchives } from '~/db/schema.server'
-import { normalizeUrl } from '~/lib/archives/video/upload/url/support-url.server'
+import { normalizeUrl } from '~/lib/archives/common/url/support-url.server'
 
 export const findByURL = (db: Database): SearchSameURLArchive =>
   async (url: URL) => {

@@ -5,7 +5,7 @@
 import { Database } from '~/db/driver.server';
 import { videoArchives, discordMembers } from '~/db/schema.server';
 import { Archive } from '~/lib/archives/video/upload/entity.server';
-import { normalizeUrl } from '../url/support-url.server'
+import { normalizeUrl } from '../../../common/url/support-url.server'
 
 export const saveArchive = async (entity: Archive, db: Database): Promise<void> => {
   // D1でトランザクションが使えないのでworkaround

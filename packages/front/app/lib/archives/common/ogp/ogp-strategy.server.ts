@@ -1,4 +1,4 @@
-import { isSupported, youtubePattern, youtubeWithQueryPattern } from '~/lib/archives/video/upload/url/support-url.server'
+import { isSupported, youtubePattern, youtubeWithQueryPattern } from '~/lib/archives/common/url/support-url.server'
 import { youtube, youtube_v3 } from '@googleapis/youtube'
 
 export type OGP = Readonly<{

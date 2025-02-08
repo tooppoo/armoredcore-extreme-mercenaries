@@ -4,8 +4,8 @@
 
 import { ArchiveContents } from '~/lib/archives/video/upload/entity.server'
 import { createNewArchiveContents } from '~/lib/archives/video/upload/factory.server'
-import { type GetOGPStrategy } from '~/lib/archives/video/upload/ogp/ogp-strategy.server'
-import { duplicatedUrl, DuplicateUrlError, failedGetOGP, FailedGetOGPError, unsupportedUrl, type UnsupportedUrlError } from '~/lib/archives/video/upload/errors.server'
+import { type GetOGPStrategy } from '~/lib/archives/common/ogp/ogp-strategy.server'
+import { duplicatedUrl, DuplicateUrlError, failedGetOGP, FailedGetOGPError, unsupportedUrl, type UnsupportedUrlError } from '~/lib/archives/common/errors.server'
 import { makeCatchesSerializable } from '~/lib/error'
 
 export type SearchSameURLArchive = (url: URL) => Promise<ArchiveContents | null>

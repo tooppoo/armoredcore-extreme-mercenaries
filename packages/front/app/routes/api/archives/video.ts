@@ -1,9 +1,9 @@
 import { SitemapFunction } from 'remix-sitemap';
 import { successWithoutToken } from '~/lib/api/response/json/auth.server';
 import { badRequest, forbidden, internalServerError, unknownError } from '~/lib/api/response/json/error.server';
-import { ArchiveError, duplicatedUrl, failedGetOGP, unsupportedUrl } from '~/lib/archives/video/upload/errors.server';
+import { ArchiveError, duplicatedUrl, failedGetOGP, unsupportedUrl } from '~/lib/archives/common/errors.server';
 import { buildArchiveFromUrl } from '~/lib/archives/video/upload/functions.server';
-import { getOGPStrategy } from '~/lib/archives/video/upload/ogp/ogp-strategy.server';
+import { getOGPStrategy } from '~/lib/archives/common/ogp/ogp-strategy.server';
 import { saveArchive } from '~/lib/archives/video/upload/repository/save-archive.server';
 import { findByURL } from '~/lib/archives/video/upload/repository/find-by-url';
 import { postArchiveBody } from '~/lib/archives/video/upload/params.server';
