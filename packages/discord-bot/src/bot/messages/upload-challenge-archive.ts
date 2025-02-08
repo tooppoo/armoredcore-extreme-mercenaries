@@ -10,24 +10,22 @@ const handle: MessageHandlerFunction = async (userMessage, frontRequest) => {
 
   const body = parseMessage(userMessage);
 
-  console.log(body);
-
-  // return frontRequest({
-  //   command: () => fetch(frontApi('/api/archives/challenge'), {
-  //     method: 'POST',
-  //     body: JSON.stringify(body),
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': `Bearer ${process.env.FRONT_AUTH_UPLOAD_ARCHIVE}`,
-  //     },
-  //   }),
-  //   messages: {
-  //     success: 'アーカイブに追加しました',
-  //     errorResponse: (errorCode) => errorMessageMap[errorCode] || 'アーカイブに追加されませんでした',
-  //     invalidResponse: 'アーカイブ追加中にエラーが発生しました',
-  //     commandFailure: 'アーカイブ追加に失敗しました',
-  //   },
-  // })
+  return frontRequest({
+    command: () => fetch(frontApi('/api/archives/challenge'), {
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.FRONT_AUTH_UPLOAD_ARCHIVE}`,
+      },
+    }),
+    messages: {
+      success: 'アーカイブに追加しました',
+      errorResponse: (errorCode) => errorMessageMap[errorCode] || 'アーカイブに追加されませんでした',
+      invalidResponse: 'アーカイブ追加中にエラーが発生しました',
+      commandFailure: 'アーカイブ追加に失敗しました',
+    },
+  })
 }
 
 type BaseArchiveRequest = Readonly<{

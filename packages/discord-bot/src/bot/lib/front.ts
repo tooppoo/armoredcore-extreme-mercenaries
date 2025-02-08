@@ -31,8 +31,8 @@ export const frontRequestHandler = (sendMessage: SendMessage): FrontRequestHandl
       log('debug', { message: `status = ${res.status}` })
 
       if (400 <= res.status) {
-        await res.json().then((body: FrontErrorResponseBody) => {
-          const message = messages.errorResponse(body.code)
+        await res.json().then((body: FrontErrorResponseBody | null) => {
+          const message = body ? messages.errorResponse(body.code) : messages.invalidResponse
 
           log('error', { message, body, status: res.status })
 
