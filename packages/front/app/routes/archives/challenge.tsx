@@ -10,7 +10,7 @@ import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import { Margin } from '~/lib/utils/components/spacer'
 import { serverOnly$ } from 'vite-env-only/macros'
 import type { Route } from './+types/challenge'
-import { WithChildren } from '~/lib/utils/components/types';
+import { WithChildren, WithClassName } from '~/lib/utils/components/types';
 import { Description } from '~/lib/archives/common/components/description';
 
 type LoadArchives = Readonly<{
@@ -103,7 +103,7 @@ const ChallengeArchives: React.FC = () => {
 
       <hr className='my-10' />
 
-      <ArchiveTable>
+      <ArchiveTable className='w-full'>
         {archives.map((a) => (
           <ArchiveRow
             key={a.externalId}
@@ -179,8 +179,8 @@ const MovePage: React.FC<MovePageProps> = ({ page, totalPage, children, query })
   )
 }
 
-const ArchiveTable: React.FC<WithChildren> = ({ children }) => (
-  <table className="table-fixed">
+const ArchiveTable: React.FC<WithChildren & WithClassName> = ({ children, className }) => (
+  <table className={"table-fixed " + className}>
     <thead className="h-20">
       <tr>
         <th className="w-3/12 border-b dark:border-b-gray-300">タイトル</th>
