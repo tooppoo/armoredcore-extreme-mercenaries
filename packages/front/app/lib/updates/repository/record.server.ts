@@ -49,6 +49,20 @@ export const records: readonly Update[][] = [
 + ・本サーバー内で上記コンテンツを繰り返し取り扱う場合、管理者・運営から罰則を与える場合があります。詳細は罰則規定を参照してください
 
 `).replaceAll('\n', '<br>') + '</code>',
-    }
+    },
+    {
+      externalId: '668e2da7-05fa-6cd5-a2c1-a5f3b9ebef5c',
+      title: 'チャレンジアーカイブ 追加',
+      createdAt: new TZDate(2025, 2, 9, 15, timezone),
+      content: `
+      <p>
+        ・<a href="/archives/challenge">チャレンジアーカイブ一覧ページ</a>を公開しました
+      </p>
+      <div style="margin-top: 5px; margin-bottom: 5px;" />
+      <p>
+        ・TOPページから<a href="/archives">アーカイブ一覧ページへのリンク</a>を変更しました
+      </p>
+      `,
+    },
   ],
 ]
