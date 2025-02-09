@@ -10,10 +10,13 @@ describe('buildArchiveFromUrl', () => {
   it('should use the correct strategy and return the resulting ArchiveContents', async () => {
     const mockUrl = new URL('https://www.youtube.com/watch?v=abc123')
     const mockStrategyResult: OGP = { title: 'video title', description: 'video description', image: 'https://example.com/video.jpg' }
+    const mockRun = vi.fn().mockImplementation(async () => mockStrategyResult)
 
-    const getOGPStrategyMock: GetOGPStrategy = vi.fn().mockImplementation(() =>
-      async () => mockStrategyResult
-    )
+    const getOGPStrategyMock: GetOGPStrategy = () => ({
+      name: 'mock',
+      condition: () => true,
+      run: mockRun
+    })
 
     const findByURLMock: FindArchiveByURL = vi.fn().mockResolvedValue(null)
 
@@ -23,7 +26,7 @@ describe('buildArchiveFromUrl', () => {
       findArchiveByURL: findByURLMock,
     })
 
-    expect(getOGPStrategyMock).toHaveBeenCalledWith(mockUrl)
+    expect(mockRun).toHaveBeenCalledWith(mockUrl, expect.anything())
     expect(findByURLMock).toHaveBeenCalledWith(mockUrl)
     expect(result).toMatchObject({
       url: mockUrl,
@@ -35,8 +38,13 @@ describe('buildArchiveFromUrl', () => {
 
   it('should throw if the same URL already exists in the archive', async () => {
     const mockUrl = new URL('https://www.youtube.com/watch?v=dup123')
-    const getOGPStrategyMock: GetOGPStrategy = vi.fn().mockImplementation(() => {
-      return async () => ({ title: 'video title', description: 'video description', image: 'https://example.com/video.jpg' })
+    const mockStrategyResult: OGP = { title: 'video title', description: 'video description', image: 'https://example.com/video.jpg' }
+    const mockRun = vi.fn().mockImplementation(async () => mockStrategyResult)
+
+    const getOGPStrategyMock: GetOGPStrategy = () => ({
+      name: 'mock',
+      condition: () => true,
+      run: mockRun
     })
 
     const findByURLMock: FindArchiveByURL = vi.fn().mockResolvedValue({
@@ -54,7 +62,7 @@ describe('buildArchiveFromUrl', () => {
     })
 
     await expect(action()).rejects.toMatchObject({ code: duplicatedUrl })
-    expect(getOGPStrategyMock).toHaveBeenCalledWith(mockUrl)
+    expect(mockRun).not.toHaveBeenCalled()
     expect(findByURLMock).toHaveBeenCalledWith(mockUrl)
   })
 })

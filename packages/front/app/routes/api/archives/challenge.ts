@@ -32,7 +32,7 @@ const post = async ({ request, context }: Route.ActionArgs) => {
     switch (data.type) {
       case 'link': {
         return buildChallengeArchiveFromUrl(
-          new URL(data.url),
+          data,
           {
             env: context.cloudflare.env,
             getOGPStrategy,

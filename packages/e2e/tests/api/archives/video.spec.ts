@@ -24,3 +24,24 @@ test('upload', async ({ page, request }) => {
   ).toHaveCount(1);
 });
 
+test('invalid url', async ({ page, request }) => {
+  test.slow()
+
+  await request.post('/api/archives/video', {
+    data: {
+      url: 'https://example.com',
+      discord_user: {
+        id: '1234',
+        name: 'test_user',
+      }
+    },
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer test_upload_token',
+    },
+  })
+  .then((res) => {
+    expect(res.status()).toBe(400)
+  })
+});
+

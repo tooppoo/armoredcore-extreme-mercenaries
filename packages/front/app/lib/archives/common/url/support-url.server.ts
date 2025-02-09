@@ -6,17 +6,6 @@ export const youtubeWithQueryPattern = /^https:\/\/((www|m)\.)?youtube.com\/watc
 export const niconicoPattern = /^https:\/\/(www\.)?nicovideo.jp\/[^\s]+$/
 export const twitterPattern = /^https:\/\/(www\.)?(x|twitter).com\/[^\s]+$/
 
-const patterns = [
-  youtubePattern,
-  youtubeWithQueryPattern,
-  niconicoPattern,
-  twitterPattern,
-]
-
-export function isSupported(url: URL): boolean {
-  return patterns.some(p => p.test(url.toString()))
-}
-
 export function normalizeUrl(url: URL): URL {
   if (youtubeWithQueryPattern.test(url.toString())) {
     const query = cloneURLSearchParams(url.searchParams)

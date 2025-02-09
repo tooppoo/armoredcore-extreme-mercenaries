@@ -11,6 +11,7 @@ import { Margin } from '~/lib/utils/components/spacer'
 import { serverOnly$ } from 'vite-env-only/macros'
 import type { Route } from './+types/video'
 import { WithChildren } from '~/lib/utils/components/types';
+import { Description } from '~/lib/archives/common/components/description';
 
 type LoadArchives = Readonly<{
   totalPage: number
@@ -216,7 +217,9 @@ export const ArchiveItem: React.FC<ArchiveItemProps> = ({
       />
       <Margin h={8} />
       <ArchiveItemCaption>
-        {description}
+        <Description
+          description={description}
+        />
       </ArchiveItemCaption>
     </a>
   )

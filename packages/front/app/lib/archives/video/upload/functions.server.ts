@@ -4,8 +4,9 @@
 
 import { type ArchiveContents } from '~/lib/archives/video/upload/entity.server'
 import { createNewArchiveContents } from '~/lib/archives/video/upload/factory.server'
-import { type GetOGPStrategy } from '~/lib/archives/common/ogp/ogp-strategy.server'
+import { withOGPScanner, withYouTubeData, type GetOGPStrategy } from '~/lib/archives/common/ogp/ogp-strategy.server'
 import { type FindArchiveByURL, throwAlreadyArchivedURL } from '~/lib/archives/common/url/find-archive-by-url'
+import { niconicoPattern, twitterPattern } from '~/lib/archives/common/url/support-url.server'
 
 type IODeps = Readonly<{
   env: Env
@@ -23,14 +24,19 @@ export async function buildVideoArchiveFromUrl(
     findArchiveByURL,
   }: IODeps
 ): Promise<ArchiveContents> {
-  const strategy = getOGPStrategy(url)
-
   const sameURLArchive = await findArchiveByURL(url)
   if (sameURLArchive !== null) {
     return throwAlreadyArchivedURL(url, sameURLArchive)
   }
 
-  const ogp = await strategy(url, env)
+  const strategy = getOGPStrategy(url, [
+    withYouTubeData(),
+    withOGPScanner((url) =>
+      niconicoPattern.test(url.toString())
+      || twitterPattern.test(url.toString())
+    ),
+  ])
+  const ogp = await strategy.run(url, env)
 
   return createNewArchiveContents({
     title: ogp.title,

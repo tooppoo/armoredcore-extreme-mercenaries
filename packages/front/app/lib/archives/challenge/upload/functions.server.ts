@@ -4,9 +4,10 @@
 
 import { type ArchiveContents } from './entity.server'
 import { createNewArchiveContents } from './factory.server'
-import { type GetOGPStrategy } from '~/lib/archives/common/ogp/ogp-strategy.server'
+import { withOGPScanner, type GetOGPStrategy } from '~/lib/archives/common/ogp/ogp-strategy.server'
 import { type FindArchiveByURL, throwAlreadyArchivedURL } from '~/lib/archives/common/url/find-archive-by-url'
-import { PostChallengeArchiveTextBody } from './params.server'
+import { PostChallengeArchiveLinkBody, PostChallengeArchiveTextBody } from './params.server'
+import { twitterPattern } from '~/lib/archives/common/url/support-url.server'
 
 type IODeps = Readonly<{
   env: Env
@@ -17,24 +18,25 @@ type IODeps = Readonly<{
  * @throws {ArchiveError}
  */
 export async function buildChallengeArchiveFromUrl(
-  url: URL,
+  data: Pick<PostChallengeArchiveLinkBody, 'url' | 'title'>,
   {
     env,
     getOGPStrategy,
     findArchiveByURL,
   }: IODeps
 ): Promise<ArchiveContents> {
-  const strategy = getOGPStrategy(url)
+  const url = new URL(data.url)
 
   const sameURLArchive = await findArchiveByURL(url)
   if (sameURLArchive !== null) {
     return throwAlreadyArchivedURL(url, sameURLArchive)
   }
 
-  const ogp = await strategy(url, env)
+  const strategy = getOGPStrategy(url, [withOGPScanner(url => twitterPattern.test(url.toString()))])
+  const ogp = await strategy.run(url, env)
 
   return createNewArchiveContents({
-    title: ogp.title,
+    title: data.title,
     description: ogp.description,
     url,
   })

@@ -1,24 +1,7 @@
 import { describe, it, expect } from 'vitest'
-import { isSupported, normalizeUrl } from './support-url.server'
+import { normalizeUrl } from './support-url.server'
 
 describe('support-url', () => {
-  describe.each([
-    ['https://www.youtube.com/watch?v=abc123', true],
-    ['https://m.youtube.com/watch?v=abc123', true],
-    ['https://youtube.com/watch?v=abc123', true],
-    ['https://youtu.be/123', true],
-    ['https://www.nicovideo.jp/watch/sm12345678', true],
-    ['https://nicovideo.jp/watch/sm99999999', true],
-    ['https://twitter.com/user/status/1234567890', true],
-    ['https://x.com/user/status/1234567890', true],
-    ['https://www.example.com', false],
-  ])('isSupported: %s -> %s', (urlString, expected) => {
-    it(`should return ${expected}`, () => {
-      const url = new URL(urlString)
-      expect(isSupported(url)).toBe(expected)
-    })
-  })
-
   describe('normalizeUrl', () => {
     describe.each([
       [

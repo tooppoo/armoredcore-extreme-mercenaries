@@ -1,16 +1,17 @@
 import { type MetaFunction, Form, Link, useLoaderData } from 'react-router';
-import { type ReactNode } from 'react'
+import React, { type ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
 import { zx } from 'zodix'
-import { type ReadArchive } from '~/lib/archives/challenge/list/entity'
+import { type ReadArchive } from '~/lib/archives/challenge/read/entity'
 import { orderQueryKeys, orderQueryMap } from '~/lib/archives/common/list/query'
 import { type QuerySchema, querySchema } from '~/lib/archives/common/list/query.server'
-import { orderByCreated, pageArchives } from '~/lib/archives/challenge/list/repository/read.server'
+import { orderByCreated, pageArchives } from '~/lib/archives/challenge/read/repository/read.server'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import { Margin } from '~/lib/utils/components/spacer'
 import { serverOnly$ } from 'vite-env-only/macros'
 import type { Route } from './+types/challenge'
 import { WithChildren } from '~/lib/utils/components/types';
+import { Description } from '~/lib/archives/common/components/description';
 
 type LoadArchives = Readonly<{
   totalPage: number
@@ -102,24 +103,17 @@ const ChallengeArchives: React.FC = () => {
 
       <hr className='my-10' />
 
-      <section
-        className={[
-          "grid",
-          "grid-cols-1 gap-1",
-          "sm:grid-cols-2 sm:gap-2",
-          "md:grid-cols-3 md:gap-3",
-          "lg:grid-cols-4 lg:gap-4",
-        ].join(' ')}
-      >
+      <ArchiveTable>
         {archives.map((a) => (
-          <ArchiveItem
+          <ArchiveRow
             key={a.externalId}
+            id={a.externalId}
             title={a.title}
             description={a.description}
             url={a.url}
           />
         ))}
-      </section>
+      </ArchiveTable>
       <Margin h={32} />
       <section className="flex justify-center items-center">
         <MovePage page={1} {...{ totalPage, query }}>
@@ -185,41 +179,74 @@ const MovePage: React.FC<MovePageProps> = ({ page, totalPage, children, query })
   )
 }
 
-export type ArchiveItemProps = Readonly<{
+const ArchiveTable: React.FC<WithChildren> = ({ children }) => (
+  <table className="table-fixed">
+    <thead className="h-20">
+      <tr>
+        <th className="w-3/12 border-b dark:border-b-gray-300">タイトル</th>
+        <th className="w-5/12 border-b dark:border-b-gray-300">説明</th>
+        <th className="w-2/12 border-b dark:border-b-gray-300">詳細</th>
+        <th className="w-2/12 border-b dark:border-b-gray-300">出典</th>
+      </tr>
+    </thead>
+    <tbody>
+      {children}
+    </tbody>
+  </table>
+)
+
+type ArchiveRowProps = Readonly<{
+  id: string
   title: string
   description: string
   url: string | null
 }>
-export const ArchiveItem: React.FC<ArchiveItemProps> = ({
+const ArchiveRow: React.FC<ArchiveRowProps> = ({
+  id,
   title,
   description,
   url,
 }) => {
   return (
-    <div
-      className='archive-item min-h-64 sm:min-h-72 lg:min-h-80 flex flex-col justify-between p-2 ac-border-b ac-hover'
-      aria-label={title}
-    >
-      <ArchiveItemCaption>
-        {title}
-      </ArchiveItemCaption>
-      <Margin h={8} />
-      <ArchiveItemCaption>
-        {description}
-      </ArchiveItemCaption>
-      <ArchiveItemCaption>
-        {url}
-      </ArchiveItemCaption>
-    </div>
+    <tr className='h-36 border-b dark:border-b-gray-300'>
+      <td className="text-center">
+        <div
+          className={`m-auto h-12 line-clamp-2 overflow-hidden whitespace-normal text-ellipsis`}
+        >
+          {title}
+        </div>
+      </td>
+      <td
+      >
+        <Description
+          description={description}
+          className={`m-auto h-24 w-11/12 line-clamp-4 overflow-hidden whitespace-normal text-ellipsis`}
+        />
+      </td>
+      <td className="text-center">
+        <Link to={`/archives/challenge/${id}`}>
+          詳細
+        </Link>
+      </td>
+      <td className="text-center">
+        {url
+          ? (
+            <a
+              href={url}
+              title={title}
+              target='_blank'
+              rel='noopener noreferrer'
+              className={`line-clamp-1 overflow-hidden whitespace-normal text-ellipsis`}
+            >
+              {url}
+            </a>
+          )
+          : '無し'
+        }
+      </td>
+    </tr>
   )
 }
-const ArchiveItemCaption: React.FC<WithChildren> = ({ children }) => (
-  <div
-    className={`h-12 line-clamp-2 overflow-hidden whitespace-normal text-ellipsis`}
-  >
-    {children}
-  </div>
-)
 
 export const meta = serverOnly$<MetaFunction>(({ location }) => {
   return [
