@@ -55,8 +55,9 @@ test('upload text', async ({ page, request }) => {
 test('(youtu.be) invalid url', async ({ page, request }) => {
   test.slow()
 
-  await request.post('/api/archives/video', {
+  await request.post('/api/archives/challenge', {
     data: {
+      type: 'link',
       url: 'https://youtu.be/0Zg7WS2Q0NU',
       discord_user: {
         id: '1234',
@@ -76,8 +77,9 @@ test('(youtu.be) invalid url', async ({ page, request }) => {
 test('(youtube) invalid url', async ({ page, request }) => {
   test.slow()
 
-  await request.post('/api/archives/video', {
+  await request.post('/api/archives/challenge', {
     data: {
+      type: 'link',
       url: 'https://www.youtube.com/watch?v=j--a4kMFQ-k',
       discord_user: {
         id: '1234',
@@ -97,8 +99,9 @@ test('(youtube) invalid url', async ({ page, request }) => {
 test('(example.com) invalid url', async ({ page, request }) => {
   test.slow()
 
-  await request.post('/api/archives/video', {
+  await request.post('/api/archives/challenge', {
     data: {
+      type: 'link',
       url: 'https://example.com',
       discord_user: {
         id: '1234',
