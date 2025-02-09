@@ -1,14 +1,14 @@
 import { describe, it, expect, vi } from 'vitest'
-import { buildVideoArchiveFromUrl } from './functions.server'
-import type { GetOGPStrategy, OGP } from '../../common/ogp/ogp-strategy.server'
+import { buildChallengeArchiveFromUrl } from './functions.server'
+import type { GetOGPStrategy, OGP } from '~/lib/archives/common/ogp/ogp-strategy.server'
 import { duplicatedUrl } from '~/lib/archives/common/errors.server'
-import { FindArchiveByURL } from '../../common/url/find-archive-by-url'
+import { FindArchiveByURL } from '~/lib/archives/common/url/find-archive-by-url'
 
 describe('buildArchiveFromUrl', () => {
   const env: Env = {} as unknown as Env
 
   it('should use the correct strategy and return the resulting ArchiveContents', async () => {
-    const mockUrl = new URL('https://www.youtube.com/watch?v=abc123')
+    const mockUrl = 'https://x.com/example/status/12345678'
     const mockStrategyResult: OGP = { title: 'video title', description: 'video description', image: 'https://example.com/video.jpg' }
     const mockRun = vi.fn().mockImplementation(async () => mockStrategyResult)
 
@@ -20,24 +20,23 @@ describe('buildArchiveFromUrl', () => {
 
     const findByURLMock: FindArchiveByURL = vi.fn().mockResolvedValue(null)
 
-    const result = await buildVideoArchiveFromUrl(mockUrl, {
+    const result = await buildChallengeArchiveFromUrl({ url: mockUrl, title: 'test' }, {
       env,
       getOGPStrategy: getOGPStrategyMock,
       findArchiveByURL: findByURLMock,
     })
 
-    expect(mockRun).toHaveBeenCalledWith(mockUrl, expect.anything())
-    expect(findByURLMock).toHaveBeenCalledWith(mockUrl)
+    expect(mockRun).toHaveBeenCalledWith(new URL(mockUrl), expect.anything())
+    expect(findByURLMock).toHaveBeenCalledWith(new URL(mockUrl))
     expect(result).toMatchObject({
-      url: mockUrl,
-      title: mockStrategyResult.title,
+      url: new URL(mockUrl),
+      title: 'test',
       description: mockStrategyResult.description,
-      imageUrl: new URL(mockStrategyResult.image)
     })
   })
 
   it('should throw if the same URL already exists in the archive', async () => {
-    const mockUrl = new URL('https://www.youtube.com/watch?v=dup123')
+    const mockUrl = 'https://x.com/example/status/12345678'
     const mockStrategyResult: OGP = { title: 'video title', description: 'video description', image: 'https://example.com/video.jpg' }
     const mockRun = vi.fn().mockImplementation(async () => mockStrategyResult)
 
@@ -55,7 +54,7 @@ describe('buildArchiveFromUrl', () => {
       title: 'title',
     })
 
-    const action = () => buildVideoArchiveFromUrl(mockUrl, {
+    const action = () => buildChallengeArchiveFromUrl({ url: mockUrl, title: 'test' }, {
       env,
       getOGPStrategy: getOGPStrategyMock,
       findArchiveByURL: findByURLMock,
@@ -63,6 +62,6 @@ describe('buildArchiveFromUrl', () => {
 
     await expect(action()).rejects.toMatchObject({ code: duplicatedUrl })
     expect(mockRun).not.toHaveBeenCalled()
-    expect(findByURLMock).toHaveBeenCalledWith(mockUrl)
+    expect(findByURLMock).toHaveBeenCalledWith(new URL(mockUrl))
   })
 })

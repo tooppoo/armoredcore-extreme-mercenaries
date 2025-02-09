@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import { zx } from 'zodix';
 import { orderQueryKeys } from './query';
-import { orderByCreated } from './repository/read.server';
+import { SQL } from 'drizzle-orm';
 
-export const querySchema = {
+export const querySchema = (orderByCreated: OrderFunction) => ({
   p: zx.IntAsString.optional().pipe(
     z.number().min(1).default(1).catch(1)
   ).catch(1),
@@ -23,9 +23,15 @@ export const querySchema = {
           }
       }
     }),
-}
+})
 export type QuerySchema = Readonly<z.infer<
   ReturnType<
-    typeof z.object<typeof querySchema>
+    typeof z.object<ReturnType<typeof querySchema>>
   >
 >>
+
+export type OrderFunction = (o: OrderDirection) => Order
+type OrderDirection = 'asc' | 'desc'
+export type Order = Readonly<{
+  order(): [SQL, SQL]
+}>

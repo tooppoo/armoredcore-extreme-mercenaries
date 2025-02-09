@@ -1,7 +1,9 @@
-import type { SendMessage, UserMessage } from '../lib/message'
+import type { FrontRequestHandler } from '../lib/front'
+import type { UserMessage } from '../lib/message'
+import { uploadChallengeArchive } from './upload-challenge-archive'
 import { uploadVideoArchive } from './upload-video-archive'
 
-export type MessageHandlerFunction = (userMessage: UserMessage, sendMessage: SendMessage) => Promise<void>
+export type MessageHandlerFunction = (userMessage: UserMessage, frontRequest: FrontRequestHandler) => Promise<void>
 export type MessageHandler = {
   name: string
   handle: MessageHandlerFunction
@@ -9,4 +11,5 @@ export type MessageHandler = {
 
 export const messageHandlers: readonly MessageHandler[] = [
   uploadVideoArchive,
+  uploadChallengeArchive,
 ]

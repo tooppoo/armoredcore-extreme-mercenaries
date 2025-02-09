@@ -1,10 +1,17 @@
 import 'dotenv/config'
 import { REST, Routes } from 'discord.js';
-import { log } from '../src/bot/lib/log';
-import { makeCatchesSerializable } from '../src/bot/lib/error';
+import { log } from '../src/lib/log';
+import { makeCatchesSerializable } from '../src/lib/error';
 import { commands } from '../src/bot/commands';
 
 async function main() {
+  if (commands.length === 0) {
+    log('info', {
+      message: 'Commands not exist, so skip command deploy.'
+    })
+    return
+  }
+
   const rest = new REST().setToken(process.env.DISCORD_TOKEN);
 
   try {

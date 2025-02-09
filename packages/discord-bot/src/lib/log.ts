@@ -7,9 +7,8 @@ export function log(level: LogLevel, data: Loggable): void {
     return
   }
 
-  console.log(m(level, data))
+  console.log(toMessage(level, data))
 }
-const m = toMessage
 function toMessage(level: string, data: Loggable): string {
   if (typeof data === 'string') {
     return JSON.stringify({ level, message: data, time: new Date().toISOString() })
@@ -19,7 +18,11 @@ function toMessage(level: string, data: Loggable): string {
   }
 }
 function isLowThanLogLevel(level: LogLevel): boolean {
-  const currentLogLevel = logLevel[process.env.LOG_LEVEL || 'info'] || logLevel['info']
+  const currentLogLevel = (() => {
+    const lev = logLevel[process.env.LOG_LEVEL || 'info']
+    
+    return lev !== undefined ? lev : logLevel['info']
+  })()
 
   return logLevel[level] < currentLogLevel
 }

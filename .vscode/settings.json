@@ -9,5 +9,7 @@
   "eslint.ignoreUntitled": true,
   "eslint.workingDirectories": [
     "packages/front", "packages/discord-bot"
-  ]
+  ],
+  "javascript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.importModuleSpecifier": "non-relative"
 }

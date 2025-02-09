@@ -21,7 +21,7 @@ export const videoArchives = sqliteTable('video_archives', {
 export const challengeArchives = sqliteTable('challenge_archives', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   externalId: text('external_id').unique().notNull().$default(() => uuidv7()),
-  url: text('url').notNull(),
+  url: text('url'),
   title: text('title').notNull(),
   description: text('description').notNull(),
   uploadMemberId: text('upload_member_id').notNull().references(() => discordMembers.discordUserId),

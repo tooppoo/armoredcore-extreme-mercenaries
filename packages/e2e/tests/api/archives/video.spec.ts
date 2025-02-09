@@ -1,7 +1,7 @@
 
 import { test, expect } from '@playwright/test';
 
-test('title', async ({ page, request }) => {
+test('upload', async ({ page, request }) => {
   test.slow()
 
   const res = await request.post('/api/archives/video', {
@@ -22,5 +22,26 @@ test('title', async ({ page, request }) => {
   await expect(
     page.locator('a[href="https://www.nicovideo.jp/watch/sm44501324"]')
   ).toHaveCount(1);
+});
+
+test('invalid url', async ({ page, request }) => {
+  test.slow()
+
+  await request.post('/api/archives/video', {
+    data: {
+      url: 'https://example.com',
+      discord_user: {
+        id: '1234',
+        name: 'test_user',
+      }
+    },
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer test_upload_token',
+    },
+  })
+  .then((res) => {
+    expect(res.status()).toBe(400)
+  })
 });
 
