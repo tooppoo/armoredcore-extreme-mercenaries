@@ -49,7 +49,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <div className="my-1"></div>
           <div className="flex items-end justify-end">
             maintained by&nbsp; 
-            <a href="https://x.com/Philomagi">Philomagi</a>
+            <Link to="https://x.com/Philomagi">Philomagi</Link>
           </div>
         </footer>
         <ScrollRestoration />

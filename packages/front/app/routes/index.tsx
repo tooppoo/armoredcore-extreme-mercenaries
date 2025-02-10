@@ -16,7 +16,7 @@ export default function Index() {
       {lists(discord).map(({ caption, hash, content }) => (
         <section className='mb-3' key={caption}>
           <h2 id={hash}>
-            <a href={hash}>{caption}</a>
+            <Link to={hash}>{caption}</Link>
           </h2>
           <div>{content}</div>
         </section>
@@ -114,11 +114,16 @@ const lists = (discord: LoadDiscord['discord']) => [
         によってライセンスされています。
 
         <p className="flex mt-1">
-          <a className="flex" href="https://creativecommons.org/licenses/by-nd/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer">
-            <img style={{ height: 22, marginLeft: 3, verticalAlign: 'text-bottom' }} src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt="" />
-            <img style={{ height: 22, marginLeft: 3, verticalAlign: 'text-bottom' }} src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt="" />
-            <img style={{ height: 22, marginLeft: 3, verticalAlign: 'text-bottom' }} src="https://mirrors.creativecommons.org/presskit/icons/nd.svg?ref=chooser-v1" alt="" />
-          </a>
+          <Link
+            className="flex"
+            to="https://creativecommons.org/licenses/by-nd/4.0/?ref=chooser-v1"
+            target="_blank"
+            rel="license noopener noreferrer"
+          >
+            <img height="22" width="22" style={{ marginLeft: 3, verticalAlign: 'text-bottom' }} src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt="Creative Commons CC icon" />
+            <img height="22" width="22" style={{ marginLeft: 3, verticalAlign: 'text-bottom' }} src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt="Creative Commons BY icon" />
+            <img height="22" width="22" style={{ marginLeft: 3, verticalAlign: 'text-bottom' }} src="https://mirrors.creativecommons.org/presskit/icons/nd.svg?ref=chooser-v1" alt="Creative Commons ND icon" />
+          </Link>
         </p> 
       </>
     )
