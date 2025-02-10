@@ -1,0 +1,30 @@
+name: Lighthouse
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    types: 
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    environment:
+      name: front
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+      - run: npm ci && npm install -g @lhci/cli@0.14.x
+      - run: |
+          npm run build
+          lhci autorun
+        working-directory: packages/front
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
