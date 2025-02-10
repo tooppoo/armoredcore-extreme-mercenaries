@@ -105,8 +105,8 @@ export const Rule: React.FC = () => {
 
           <Margin h={8} />
           <RuleItem caption="要望・不明点について" hash="questions">
-            <li>サーバー利用にあたって不明点がある場合は<a href={discord.question}>質問フォーラム</a>へ投稿してください</li>
-            <li>サーバー利用にあたって要望や提案がある場合は<a href={discord.suggestion}>提案フォーラム</a>へ投稿してください</li>
+            <li>サーバー利用にあたって不明点がある場合は<Link to={discord.question}>質問フォーラム</Link>へ投稿してください</li>
+            <li>サーバー利用にあたって要望や提案がある場合は<Link to={discord.suggestion}>提案フォーラム</Link>へ投稿してください</li>
           </RuleItem>
 
           <Margin h={8} />
