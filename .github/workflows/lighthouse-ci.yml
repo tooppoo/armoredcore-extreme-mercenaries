@@ -21,10 +21,7 @@ jobs:
           node-version-file: '.node-version'
           cache: 'npm'
       - run: npm ci && npm install -g @lhci/cli@0.14.x
-      - run: |
-          npm run build
-          lhci autorun
+      - run: lhci autorun
         working-directory: packages/front
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-

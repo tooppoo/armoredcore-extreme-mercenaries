@@ -12,6 +12,7 @@ module.exports = {
         'http://localhost:5173/archives/challenge',
       ],
       startServerCommand: 'npm run dev',
+      numberOfRuns: 1,
     },
     assertions: {
       preset: 'lighthouse:recommended'
