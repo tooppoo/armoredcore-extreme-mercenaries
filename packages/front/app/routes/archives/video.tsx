@@ -1,4 +1,4 @@
-import { type MetaFunction, Form, Link, useLoaderData } from 'react-router';
+import { Form, Link, useLoaderData } from 'react-router';
 import { type ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
 import { zx } from 'zodix'
@@ -8,7 +8,6 @@ import { type QuerySchema, querySchema } from '~/lib/archives/common/list/query.
 import { orderByCreated, pageArchives } from '~/lib/archives/video/list/repository/read.server'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import { Margin } from '~/lib/utils/components/spacer'
-import { serverOnly$ } from 'vite-env-only/macros'
 import type { Route } from './+types/video'
 import { WithChildren } from '~/lib/utils/components/types';
 import { Description } from '~/lib/archives/common/components/description';
@@ -232,7 +231,7 @@ const ArchiveItemCaption: React.FC<WithChildren> = ({ children }) => (
   </div>
 )
 
-export const meta = serverOnly$<MetaFunction>(({ location }) => {
+export const meta: Route.MetaFunction = ({ location }) => {
   return [
     ...buildMeta({
       title: '攻略動画アーカイブ',
@@ -243,6 +242,6 @@ export const meta = serverOnly$<MetaFunction>(({ location }) => {
       pathname: location.pathname,
     })
   ];
-});
+};
 
 export default VideoArchives

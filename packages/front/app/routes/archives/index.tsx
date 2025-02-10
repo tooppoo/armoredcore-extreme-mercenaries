@@ -1,5 +1,3 @@
-
-import { serverOnly$ } from 'vite-env-only/macros';
 import type { Route } from './+types/index';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 
@@ -27,7 +25,7 @@ const Archives: React.FC = () => {
 
 export default Archives
 
-export const meta = serverOnly$<Route.MetaFunction>(({ location }) => [
+export const meta: Route.MetaFunction = ({ location }) => [
   ...buildMeta({
     title: 'アーカイブ目次',
     description: [
@@ -35,5 +33,4 @@ export const meta = serverOnly$<Route.MetaFunction>(({ location }) => [
     ].join(''),
     pathname: location.pathname,
   }),
-])
-
+];

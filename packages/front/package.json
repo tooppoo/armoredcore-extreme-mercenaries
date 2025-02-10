@@ -44,7 +44,6 @@
     "remix-sitemap": "^3.2.0",
     "sanitize-html": "2.14.0",
     "uuid": "11.0.5",
-    "vite-env-only": "3.0.3",
     "zod": "3.24.1",
     "zodix": "0.4.4"
   },

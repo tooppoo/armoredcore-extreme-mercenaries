@@ -4,16 +4,6 @@ import { siteName } from '~/lib/constants';
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 
-export const meta: Route.MetaFunction = ({ location }) => {
-  return [
-    ...buildMeta({
-      title: 'TOP',
-      description: `${unofficialServer}の情報公開サイトです`,
-      pathname: location.pathname,
-    })
-  ];
-};
-
 export const loader = async (args: Route.LoaderArgs): Promise<LoadDiscord> => ({
   ...loadDiscord(args),
 })
@@ -134,3 +124,13 @@ const lists = (discord: LoadDiscord['discord']) => [
     )
   }
 ];
+
+export const meta: Route.MetaFunction = ({ location }) => {
+  return [
+    ...buildMeta({
+      title: 'TOP',
+      description: `${unofficialServer}の情報公開サイトです`,
+      pathname: location.pathname,
+    })
+  ];
+};

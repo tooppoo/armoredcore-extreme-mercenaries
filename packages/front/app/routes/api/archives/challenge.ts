@@ -2,7 +2,6 @@ import { badRequest, forbidden, internalServerError, unknownError } from '~/lib/
 import type { Route } from './+types/challenge'
 import { requireAuthToken } from '~/lib/api/request/require-auth-token.server'
 import { SitemapFunction } from 'remix-sitemap'
-import { serverOnly$ } from 'vite-env-only/macros'
 import { handleZodError, parseJson } from '~/lib/api/request/parser.server'
 import { postChallengeArchiveBody } from '~/lib/archives/challenge/upload/params.server'
 import { buildChallengeArchiveFromText, buildChallengeArchiveFromUrl } from '~/lib/archives/challenge/upload/functions.server'
@@ -72,6 +71,6 @@ const post = async ({ request, context }: Route.ActionArgs) => {
   return successWithoutToken(null)
 }
 
-export const sitemap = serverOnly$<SitemapFunction>(() => ({
+export const sitemap: SitemapFunction = () => ({
   exclude: true
-}))
+})

@@ -3,11 +3,12 @@ import { cloudflareDevProxy } from "@react-router/dev/vite/cloudflare"
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { getLoadContext } from './load-context';
-import { envOnlyMacros } from 'vite-env-only';
 
 export default defineConfig(({ mode }) => ({
   build: {
     target: 'es2023',
+    minify: true,
+    cssMinify: true,
   },
   plugins: [
     cloudflareDevProxy({
@@ -17,6 +18,5 @@ export default defineConfig(({ mode }) => ({
     }),
     reactRouter(),
     tsconfigPaths(),
-    envOnlyMacros(),
   ],
 }));

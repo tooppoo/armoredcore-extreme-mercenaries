@@ -3,7 +3,6 @@ import React from 'react'
 import { type ReadArchive } from '~/lib/archives/challenge/read/entity'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import { Margin } from '~/lib/utils/components/spacer'
-import { serverOnly$ } from 'vite-env-only/macros'
 import type { Route } from './+types/detail'
 import { findChallengeArchiveByExternalId } from '~/lib/archives/challenge/read/repository/find-challenge-by-external-id';
 import { notFound } from '~/lib/api/response/json/error.server';
@@ -57,17 +56,15 @@ const ChallengeArchives: React.FC = () => {
   )
 }
 
-export const meta = serverOnly$<Route.MetaFunction>(({ location }) => {
-  return [
-    ...buildMeta({
-      title: 'チャレンジアーカイブ',
-      description: [
-        `${unofficialServer}で登録された、各チャレンジ情報のアーカイブです。`,
-        `チャレンジの詳細情報を掲載しています。`,
-      ].join(''),
-      pathname: location.pathname,
-    })
-  ];
-});
+export const meta: Route.MetaFunction = ({ location }) => [
+  ...buildMeta({
+    title: 'チャレンジアーカイブ',
+    description: [
+      `${unofficialServer}で登録された、各チャレンジ情報のアーカイブです。`,
+      `チャレンジの詳細情報を掲載しています。`,
+    ].join(''),
+    pathname: location.pathname,
+  })
+];
 
 export default ChallengeArchives
