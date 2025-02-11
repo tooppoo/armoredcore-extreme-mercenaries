@@ -7,8 +7,7 @@ import { getLoadContext } from './load-context';
 export default defineConfig(({ mode }) => ({
   build: {
     target: 'es2023',
-    minify: true,
-    cssMinify: true,
+    minify: false,
   },
   plugins: [
     // dev専用プラグインなら、production では除外する
