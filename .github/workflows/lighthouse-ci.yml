@@ -21,9 +21,14 @@ jobs:
           node-version-file: '.node-version'
           cache: 'npm'
       - run: npm ci && npm install -g @lhci/cli@0.14.x
-      - run: |
-          npm run migration
-          lhci autorun
+
+      # DB構築
+      - run: npm run migration
+        working-directory: packages/front
+      - run: npm run seed
+        working-directory: packages/front
+
+      - run: lhci autorun
         working-directory: packages/front
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}

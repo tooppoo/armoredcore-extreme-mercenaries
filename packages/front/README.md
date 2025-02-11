@@ -1,47 +1,59 @@
-# Welcome to Remix + Cloudflare!
+# Front App
 
-- 📖 [Remix docs](https://remix.run/docs)
-- 📖 [Remix Cloudflare docs](https://remix.run/guides/vite#cloudflare)
+## 開発
 
-## Development
-
-Run the dev server:
+ローカル起動
 
 ```sh
 npm run dev
 ```
 
-To run Wrangler:
+Wrangler起動
 
 ```sh
 npm run build
 npm run start
 ```
 
-## Typegen
+## 型定義生成 (Typegen)
 
-Generate types for your Cloudflare bindings in `wrangler.toml`:
+`wrangler.toml` に記述されている Cloudflare バインディングの型を生成
 
 ```sh
 npm run typegen
 ```
 
-You will need to rerun typegen whenever you make changes to `wrangler.toml`.
+`wrangler.toml` を変更するたびに、型定義生成 (typegen) を再実行する必要があります。
 
-## Deployment
+## Migration
 
-First, build your app for production:
+### Migration追加
 
-```sh
-npm run build
-```
-
-Then, deploy your app to Cloudflare Pages:
+`app/db/schema.server.ts` を変更したら実行
 
 ```sh
-npm run deploy
+npm run migration:gen
 ```
 
-## Styling
+### ローカル
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.
+```sh
+npm run migration
+```
+
+### 本番
+
+```sh
+npm run migration:prod
+```
+
+## Seed
+
+```sh
+npm run seed
+```
+
+## スタイリング
+
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Vite の CSS に関するドキュメント](https://vitejs.dev/guide/features.html#css)
