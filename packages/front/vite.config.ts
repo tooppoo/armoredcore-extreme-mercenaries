@@ -21,7 +21,7 @@ export default defineConfig(({ mode }) => ({
           }),
           reactRouter(),
         ]
-      : []),
+      : [reactRouter()]),
     tsconfigPaths(),
   ],
 }));
