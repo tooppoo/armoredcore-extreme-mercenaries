@@ -1,5 +1,4 @@
-APP_ENV=
-TZ=
+TZ=Asia/Tokyo
 
 # auth
 AUTH_UPLOAD_ARCHIVE=
