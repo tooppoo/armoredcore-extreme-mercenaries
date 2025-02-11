@@ -16,8 +16,8 @@ pages_build_output_dir = "./build/client"
 # - https://developers.cloudflare.com/pages/functions/bindings/#environment-variables
 # Note: Use secrets to store sensitive data.
 # - https://developers.cloudflare.com/pages/functions/bindings/#secrets
-# [vars]
-# MY_VARIABLE = "production_value"
+[vars]
+TZ = "Asia/Tokyo"
 
 # Bind the Workers AI model catalog. Run machine learning models, powered by serverless GPUs, on Cloudflare’s global network
 # Docs: https://developers.cloudflare.com/pages/functions/bindings/#workers-ai
@@ -70,8 +70,17 @@ migrations_dir = "./app/db/migrations"
 
 ######## PREVIEW environment config ########
 
-# [env.preview.vars]
-# API_KEY = "xyz789"
+[env.preview.vars]
+TZ = "Asia/Tokyo"
+DISCORD_LINK_INVITE     = "https://discord.gg/F9HkPsQ37J"
+DISCORD_LINK_QUESTION   = "https://discord.com/channels/1240446809906610236/1240455428589223996"
+DISCORD_LINK_SUGGESTION = "https://discord.com/channels/1240446809906610236/1240455802272092211"
+
+[[env.preview.d1_databases]]
+binding = "DB"
+database_name = "ac-extreme-mercenaries-db"
+database_id = "dbadda99-8351-4150-a843-bb474d28ad4e"
+migrations_dir = "./app/db/migrations"
 
 # [[env.preview.kv_namespaces]]
 # binding = "MY_KV_NAMESPACE"
@@ -80,7 +89,6 @@ migrations_dir = "./app/db/migrations"
 ######## PRODUCTION environment config ########
 
 [env.production.vars]
-APP_ENV = "production"
 TZ = "Asia/Tokyo"
 DISCORD_LINK_INVITE     = "https://discord.gg/F9HkPsQ37J"
 DISCORD_LINK_QUESTION   = "https://discord.com/channels/1240446809906610236/1240455428589223996"
