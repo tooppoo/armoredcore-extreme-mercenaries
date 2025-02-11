@@ -11,12 +11,17 @@ export default defineConfig(({ mode }) => ({
     cssMinify: true,
   },
   plugins: [
-    cloudflareDevProxy({
-      getLoadContext,
-      configPath: mode === 'test' ? 'wrangler.test.toml' : undefined,
-      environment: mode === 'test' ? 'test' : undefined,
-    }),
-    reactRouter(),
+    // dev専用プラグインなら、production では除外する
+    ...(mode !== 'production'
+      ? [
+          cloudflareDevProxy({
+            getLoadContext,
+            configPath: mode === 'test' ? 'wrangler.test.toml' : undefined,
+            environment: mode === 'test' ? 'test' : undefined,
+          }),
+          reactRouter(),
+        ]
+      : []),
     tsconfigPaths(),
   ],
 }));
