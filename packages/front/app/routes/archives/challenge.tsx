@@ -183,9 +183,8 @@ const ArchiveTable: React.FC<WithChildren & WithClassName> = ({ children, classN
     <thead className="h-20">
       <tr>
         <th className="w-3/12 border-b dark:border-b-gray-300">タイトル</th>
-        <th className="w-5/12 border-b dark:border-b-gray-300">説明</th>
-        <th className="w-2/12 border-b dark:border-b-gray-300">詳細</th>
-        <th className="w-2/12 border-b dark:border-b-gray-300">出典</th>
+        <th className="w-6/12 border-b dark:border-b-gray-300">説明</th>
+        <th className="w-3/12 border-b dark:border-b-gray-300">出典</th>
       </tr>
     </thead>
     <tbody>
@@ -212,7 +211,9 @@ const ArchiveRow: React.FC<ArchiveRowProps> = ({
         <div
           className={`m-auto h-12 line-clamp-2 overflow-hidden whitespace-normal text-ellipsis`}
         >
-          {title}
+          <Link to={`/archives/challenge/${id}`}>
+            {title}
+          </Link>
         </div>
       </td>
       <td
@@ -221,11 +222,6 @@ const ArchiveRow: React.FC<ArchiveRowProps> = ({
           description={description}
           className={`m-auto h-24 w-11/12 line-clamp-4 overflow-hidden whitespace-normal text-ellipsis`}
         />
-      </td>
-      <td className="text-center">
-        <Link to={`/archives/challenge/${id}`}>
-          詳細
-        </Link>
       </td>
       <td className="text-center">
         {url
