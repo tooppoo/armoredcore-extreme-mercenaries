@@ -4,19 +4,16 @@ import { siteName } from '~/lib/constants';
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 
-type IndexLoader = Readonly<{
-  indexes: Array<{ caption: string, hash: string, content: React.ReactNode }>
-}>
-export const loader = async (args: Route.LoaderArgs): Promise<IndexLoader> => ({
-  indexes: getIndexes(loadDiscord(args).discord)
+export const loader = async (args: Route.LoaderArgs): Promise<LoadDiscord> => ({
+  ...loadDiscord(args),
 })
 
 export default function Index() {
-  const { indexes } = useLoaderData<IndexLoader>()
+  const { discord } = useLoaderData<LoadDiscord>()
 
   return (
     <div className="flex flex-col items-begin justify-begin">
-      {indexes.map(({ caption, hash, content }) => (
+      {lists(discord).map(({ caption, hash, content }) => (
         <section className='mb-3' key={caption}>
           <h2 id={hash}>
             <Link to={hash}>{caption}</Link>
@@ -28,7 +25,7 @@ export default function Index() {
   );
 }
 
-const getIndexes = (discord: LoadDiscord['discord']) => [
+const lists = (discord: LoadDiscord['discord']) => [
   {
     caption: 'このページについて',
     hash: '#about',
