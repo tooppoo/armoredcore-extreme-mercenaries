@@ -19,7 +19,7 @@ export default function Index() {
   return (
     <div className="flex flex-col items-begin justify-begin">
       {lists(indexLoaderData).map(({ caption, id, content }) => (
-        <section className='mb-7' key={caption}>
+        <section className='mb-10' key={caption}>
           <h2 id={id} className='underline'>
             {caption}
             <Link to={`#${id}`} className='inline-block ml-2'>

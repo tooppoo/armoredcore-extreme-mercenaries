@@ -1,7 +1,6 @@
 import { Link, useLoaderData } from 'react-router';
 import { ReactElement } from 'react'
 import { LinkIcon } from '@heroicons/react/16/solid';
-import { Margin } from '~/lib/utils/components/spacer'
 import { siteName } from '~/lib/constants'
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
@@ -76,14 +75,12 @@ export const Rule: React.FC = () => {
             </li>
           </RuleItem>
 
-          <Margin h={8} />
           <RuleItem caption="方針の決定権" id="right-to-decide">
             <li>本サーバーの方針について、最終的な決定権は管理者が持ちます</li>
             <li>運営方針について利用者の方々から意見を募る、利用者の方の意見を反映する場合があります</li>
             <li>複数の意見が出てまとまらない場合、最終的な決定は管理者が下します</li>
           </RuleItem>
 
-          <Margin h={8} />
           <RuleItem caption="管理者・運営の指示について" id="instructions-by-admin">
             <li>
               管理者・運営から利用者に対して、本サーバーの利用方法について何らか指示を行う場合があります。その場合は速やかに指示に従ってください。
@@ -96,7 +93,6 @@ export const Rule: React.FC = () => {
             <li>サーバーの利用方法に関する管理者・運営からの指示に従わない場合、管理者・運営から罰則を与える場合があります。詳細は<Link to="/penalties">罰則規定</Link>を参照してください</li>
           </RuleItem>
 
-          <Margin h={8} />
           <RuleItem caption="チャンネルの利用方法について" id="usage-of-channels">
             <li>チャンネルを利用する際は、必ずチャンネルトピックを確認してください</li>
             <li>チャンネルを利用する際は、チャンネルトピックに沿った内容を扱ってください</li>
@@ -104,19 +100,16 @@ export const Rule: React.FC = () => {
             <li>スレッドは各チャンネルで自由に作成してかまいません</li>
           </RuleItem>
 
-          <Margin h={8} />
           <RuleItem caption="要望・不明点について" id="questions">
             <li>サーバー利用にあたって不明点がある場合は<Link to={discord.question}>質問フォーラム</Link>へ投稿してください</li>
             <li>サーバー利用にあたって要望や提案がある場合は<Link to={discord.suggestion}>提案フォーラム</Link>へ投稿してください</li>
           </RuleItem>
 
-          <Margin h={8} />
           <RuleItem caption="トラブルや不適切行為の報告について" id="trouble-shooting">
             <li>サーバー利用者同士でトラブルが発生した場合は、管理者または運営へDMを送ってください</li>
             <li>サーバー利用者の不適切行為を目撃した場合は、管理者または運営へDMを送ってください</li>
           </RuleItem>
 
-          <Margin h={8} />
           <RuleItem caption="やりとりの外部共有について" id="sharing">
             <li>
               サーバー内のやりとりを外部共有する場合、管理者または運営の許可を取ってください
@@ -135,7 +128,6 @@ export const Rule: React.FC = () => {
             </li>
           </RuleItem>
 
-          <Margin h={8} />
           <RuleItem caption="プレイの比較について" id="not-compare-playing">
             <li>
               プレイ内容やプレイ結果に優劣をつける比較は禁止します
@@ -166,21 +158,18 @@ export const Rule: React.FC = () => {
             <li>当事者同士で合意があったとしても、サーバー内での比較行為はご遠慮ください。どうしても行いたい場合は本サーバー以外の、かつ比較行為がルール上許容された場所でお願いします</li>
           </RuleItem>
 
-          <Margin h={8} />
           <RuleItem caption="攻略方法のアドバイスについて" id="for-advise">
             <li>攻略方法・テクニックの共有・アドバイス・提案について、やりこみの情報共有という観点から、本サーバーでは一般に許可します</li>
             <li>ただし、アドバイスや提案を採用するかどうかの決定権は受け手が持っていることを留意してください。受け手にはそれらを採用しない権利があります</li>
             <li>アドバイス・提案が受け入れられなかったことを理由としての批判・非難はおやめください</li>
           </RuleItem>
 
-          <Margin h={8} />
           <RuleItem caption="ネタバレの取り扱いについて" id="spoiler">
             <li>本サーバーは「ストーリー・ミッション攻略のやりこみ」を主題とする性質上、各シリーズは一通りクリア済みであることを前提とします。したがって、ネタバレについては特に制限を設けません</li>
             <li>未クリアの状態で本サーバーに参加しても構いません。ただし、ネタバレについては各人で対策してください</li>
             <li>リーク情報やフラゲ情報など、非公式・非正式なルートでのネタバレはタイトル・内容を問わず一律禁止です</li>
           </RuleItem>
 
-          <Margin h={8} />
           <RuleItem caption="禁止コンテンツについて" id="denied-contents">
             <li>
               以下に該当するコンテンツについて、本サーバーでは取り扱いを禁止します
@@ -205,7 +194,6 @@ export const Rule: React.FC = () => {
             </li>
           </RuleItem>
 
-          <Margin h={8} />
           <RuleItem caption="他コミュニティの宣伝行為について" id="advertisement">
             <li>
               アーマードコア関連のコミュニティは自由に宣伝・共有いただいて問題ありません。事前の許可も不要です
@@ -219,13 +207,11 @@ export const Rule: React.FC = () => {
             </li>
           </RuleItem>
 
-          <Margin h={8} />
           <RuleItem caption="上記ルールに従わない場合について" id="penalties">
             <li>上記ルールに従わないことで発生したあらゆるトラブル・問題について、本サーバーの管理者・運営は一切の責任を負いかねます</li>
             <li>上記ルールに従わない場合、管理者・運営から罰則を与える場合があります。詳細は<Link to="/penalties">罰則規定</Link>を参照してください</li>
           </RuleItem>
 
-          <Margin h={8} />
           <RuleItem caption="ルールの変更について" id="changing-rules">
             <li>上記のルールは事前の告知なく変更される場合があります</li>
             <li>変更があった場合はサーバー内のチャンネルにてお知らせしますので、必ず内容をご確認ください</li>
@@ -245,8 +231,8 @@ type RuleItemProps = Readonly<{
   children: ReactElement[]
 }>
 const RuleItem: React.FC<RuleItemProps> = ({ caption, id, children }) => (
-  <li className='text-lg ml-0'>
-    <h3>
+  <li className='text-lg ml-0 mb-10'>
+    <h3 className='underline'>
       {caption}
       <Link to={{ hash: id }} id={id} className='inline-block ml-2'>
         <LinkIcon className='size-4' />
