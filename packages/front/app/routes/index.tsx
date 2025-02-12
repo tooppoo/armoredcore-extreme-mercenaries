@@ -44,7 +44,7 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
     id: 'about',
     content: (
       <>
-        フロム・ソフトウェア開発のゲーム「アーマードコア」シリーズの非公式discordサーバー<br />
+        「アーマードコア」シリーズ やりこみ攻略特化型の非公式discordサーバー<br />
         「{siteName}」に関する情報を公開するサイトです。
       </>
     ),
