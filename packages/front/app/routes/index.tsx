@@ -120,7 +120,7 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
     id: 'inquiry',
     content: (
       <>
-        本サイトに関するお問い合わせは
+        サーバー加入前に質問・確認したいことがある方は、
         <Link
           to={inquiryUrl}
           title='お問い合わせフォームへ'
@@ -128,7 +128,7 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
           target='_blank'
           rel="noopener noreferrer"
         >
-          こちら
+          こちらのフォーム
         </Link>
         からお願いいたします。
       </>

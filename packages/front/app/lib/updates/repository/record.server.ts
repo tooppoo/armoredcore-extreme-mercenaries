@@ -64,5 +64,15 @@ export const records: readonly Update[][] = [
       </p>
       `,
     },
+    {
+      externalId: 'd31ed353-4ed6-deb7-19d5-4b19d3813677',
+      title: 'お問い合わせフォーム 追加',
+      createdAt: new TZDate(2025, 2, 13, 0, timezone),
+      content: `
+      <p>
+        <a href="/#inquiry">外部向けお問い合わせフォームへのリンク</a>を、TOPページに追加しました
+      </p>
+      `
+    }
   ],
 ]
