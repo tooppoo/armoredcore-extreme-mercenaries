@@ -38,7 +38,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </h1>
         </header>
         <hr className="my-4" />
-        <article>
+        <article className='max-w-3xl mx-auto'>
           {children}
         </article>
         <hr className="my-4" />
