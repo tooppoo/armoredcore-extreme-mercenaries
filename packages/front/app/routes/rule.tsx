@@ -252,7 +252,7 @@ const RuleItem: React.FC<RuleItemProps> = ({ caption, id, children }) => (
         <LinkIcon className='size-4' />
       </Link>
     </h3>
-    <ol className='text-sm ml-0'>
+    <ol className='text-base ml-0'>
       {children}
     </ol>
   </li>
