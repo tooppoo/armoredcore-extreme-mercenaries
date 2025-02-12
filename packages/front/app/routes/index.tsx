@@ -5,16 +5,20 @@ import { siteName } from '~/lib/constants';
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 
-export const loader = async (args: Route.LoaderArgs): Promise<LoadDiscord> => ({
+type IndexLoaderData = Readonly<
+  LoadDiscord & { inquiryUrl: string }
+>
+export const loader = async (args: Route.LoaderArgs): Promise<IndexLoaderData> => ({
   ...loadDiscord(args),
+  inquiryUrl: args.context.cloudflare.env.GOOGLE_FORM_INQUIRY,
 })
 
 export default function Index() {
-  const { discord } = useLoaderData<LoadDiscord>()
+  const indexLoaderData = useLoaderData<IndexLoaderData>()
 
   return (
     <div className="flex flex-col items-begin justify-begin">
-      {lists(discord).map(({ caption, id, content }) => (
+      {lists(indexLoaderData).map(({ caption, id, content }) => (
         <section className='mb-7' key={caption}>
           <h2 id={id} className='underline'>
             {caption}
@@ -34,7 +38,7 @@ type IndexItem = Readonly<{
   id: string;
   content: React.ReactNode;
 }>
-const lists = (discord: LoadDiscord['discord']): IndexItem[] => [
+const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
   {
     caption: 'このページについて',
     id: 'about',
@@ -108,6 +112,25 @@ const lists = (discord: LoadDiscord['discord']): IndexItem[] => [
             詳細はサーバー内の該当チャンネルにてご確認ください。
           </li>
         </ul>
+      </>
+    )
+  },
+  {
+    caption: 'お問い合わせ',
+    id: 'inquiry',
+    content: (
+      <>
+        本サイトに関するお問い合わせは
+        <Link
+          to={inquiryUrl}
+          title='お問い合わせフォームへ'
+          aria-label='お問い合わせフォームへ'
+          target='_blank'
+          rel="noopener noreferrer"
+        >
+          こちら
+        </Link>
+        からお願いいたします。
       </>
     )
   },
