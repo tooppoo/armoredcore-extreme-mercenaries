@@ -5,21 +5,22 @@ import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 const Archives: React.FC = () => {
   return (
     <>
-      <h2>アーカイブ</h2>
-      <ul>
-        <li>
+      <h2 className='mb-4'>アーカイブ目次</h2>
+      <section className='ml-4'>
+        <h3>
           <Link to="/archives/video">攻略動画アーカイブ</Link>
-          <ul>
-            <li>様々な縛り・条件による攻略動画へのリンクを掲載しています</li>
-          </ul>
-        </li>
-        <li>
+        </h3>
+        様々な縛り・条件による攻略動画へのリンクを掲載しています
+      </section>
+
+      <div className='my-4' />
+
+      <section className='ml-4'>
+        <h3>
           <Link to="/archives/challenge">チャレンジアーカイブ</Link>
-          <ul>
-            <li>さまざまな縛り・条件のチャレンジ情報を閲覧できます</li>
-          </ul>
-        </li>
-      </ul>
+        </h3>
+        さまざまな縛り・条件のチャレンジ情報を掲載しています
+      </section>
     </>
   )
 }
