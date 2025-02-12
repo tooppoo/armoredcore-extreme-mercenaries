@@ -4,9 +4,12 @@ TZ=Asia/Tokyo
 AUTH_UPLOAD_ARCHIVE=test_upload_token
 
 # discordへのリンク
-DISCORD_LINK_INVITE = "https://example.com/invite"
-DISCORD_LINK_QUESTION = "https://example.com/question"
-DISCORD_LINK_SUGGESTION = "https://example.com/suggestion"
+DISCORD_LINK_INVITE="https://example.com/invite"
+DISCORD_LINK_QUESTION="https://example.com/question"
+DISCORD_LINK_SUGGESTION="https://example.com/suggestion"
+
+# Googleフォームへのリンク
+GOOGLE_FORM_INQUIRY="https://example.com/inquiry"
 
 # youtube
 YOUTUBE_PUBLIC_DATA_API_KEY = "test_youtube_token"

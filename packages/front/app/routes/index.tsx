@@ -1,22 +1,30 @@
 import type { Route } from './+types/index';
 import { Link, useLoaderData } from "react-router";
+import { LinkIcon } from '@heroicons/react/16/solid';
 import { siteName } from '~/lib/constants';
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server';
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
 
-export const loader = async (args: Route.LoaderArgs): Promise<LoadDiscord> => ({
+type IndexLoaderData = Readonly<
+  LoadDiscord & { inquiryUrl: string }
+>
+export const loader = async (args: Route.LoaderArgs): Promise<IndexLoaderData> => ({
   ...loadDiscord(args),
+  inquiryUrl: args.context.cloudflare.env.GOOGLE_FORM_INQUIRY,
 })
 
 export default function Index() {
-  const { discord } = useLoaderData<LoadDiscord>()
+  const indexLoaderData = useLoaderData<IndexLoaderData>()
 
   return (
     <div className="flex flex-col items-begin justify-begin">
-      {lists(discord).map(({ caption, hash, content }) => (
-        <section className='mb-3' key={caption}>
-          <h2 id={hash}>
-            <Link to={hash}>{caption}</Link>
+      {lists(indexLoaderData).map(({ caption, id, content }) => (
+        <section className='mb-10' key={caption}>
+          <h2 id={id} className='underline'>
+            {caption}
+            <Link to={`#${id}`} className='inline-block ml-2'>
+              <LinkIcon className='size-5' />
+            </Link>
           </h2>
           <div>{content}</div>
         </section>
@@ -25,20 +33,25 @@ export default function Index() {
   );
 }
 
-const lists = (discord: LoadDiscord['discord']) => [
+type IndexItem = Readonly<{
+  caption: string;
+  id: string;
+  content: React.ReactNode;
+}>
+const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
   {
     caption: 'このページについて',
-    hash: '#about',
+    id: 'about',
     content: (
       <>
-        フロム・ソフトウェア開発のゲーム「アーマードコア」シリーズの非公式discordサーバー<br />
+        「アーマードコア」シリーズ やりこみ攻略特化型の非公式discordサーバー<br />
         「{siteName}」に関する情報を公開するサイトです。
       </>
     ),
   },
   {
     caption: '利用規約',
-    hash: '#rule',
+    id: 'rule',
     content: (
       <>
         サーバーの利用規約は<Link to="/rule">こちら</Link>から確認できます。<br/>
@@ -48,7 +61,7 @@ const lists = (discord: LoadDiscord['discord']) => [
   },
   {
     caption: '罰則規定',
-    hash: '#penalties',
+    id: 'penalties',
     content: (
       <>
         サーバーの利用規約に違反した場合、管理者・運営から罰則を与える場合があります。<br/>
@@ -59,7 +72,7 @@ const lists = (discord: LoadDiscord['discord']) => [
   },
   {
     caption: 'Discordサーバー',
-    hash: '#server',
+    id: 'server',
     content: (
       <>
         以下の招待リンクからアクセスできます。<br/>
@@ -74,7 +87,7 @@ const lists = (discord: LoadDiscord['discord']) => [
   },
   {
     caption: '更新履歴',
-    hash: '#updates',
+    id: 'updates',
     content: (
       <>
         本文書の更新履歴は<Link to="/updates">こちら</Link>からご確認いただけます。
@@ -83,7 +96,7 @@ const lists = (discord: LoadDiscord['discord']) => [
   },
   {
     caption: 'アーカイブ',
-    hash: '#archives',
+    id: 'archives',
     content: (
       <>
         <p>
@@ -103,8 +116,27 @@ const lists = (discord: LoadDiscord['discord']) => [
     )
   },
   {
+    caption: 'お問い合わせ',
+    id: 'inquiry',
+    content: (
+      <>
+        サーバー加入前に質問・確認したいことがある方は、
+        <Link
+          to={inquiryUrl}
+          title='お問い合わせフォームへ'
+          aria-label='お問い合わせフォームへ'
+          target='_blank'
+          rel="noopener noreferrer"
+        >
+          こちらのフォーム
+        </Link>
+        からお願いいたします。
+      </>
+    )
+  },
+  {
     caption: 'ライセンス',
-    hash: '#license',
+    id: 'license',
     content: (
       <>
         本文書は
