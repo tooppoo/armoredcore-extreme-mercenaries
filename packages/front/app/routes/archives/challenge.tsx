@@ -52,10 +52,14 @@ export const loader = async ({ context, request }: Route.LoaderArgs) => {
     } satisfies LoadArchives,
     {
       headers: {
+        'Cache-Control': `public, max-age=${context.cloudflare.env.BASE_SHORT_CACHE_TIME}`,
         'ETag': `${revision}`,
       },
     }
   )
+}
+export function headers({ loaderHeaders }: Route.HeadersArgs) {
+  return loaderHeaders;
 }
 
 // クエリ用なので略記名

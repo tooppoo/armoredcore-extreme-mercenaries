@@ -1,4 +1,4 @@
-import { Link, useLoaderData } from 'react-router'
+import { data, Link, useLoaderData } from 'react-router'
 import { Margin } from '~/lib/utils/components/spacer'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import { findUpdate } from '~/lib/updates/repository/read.server'
@@ -10,7 +10,8 @@ type AnUpdateLoader = Readonly<{
 }>
 export const loader = async ({
   params,
-}: Route.LoaderArgs): Promise<AnUpdateLoader> => {
+  context,
+}: Route.LoaderArgs) => {
   const update = await findUpdate({ externalId: params.id })
 
   if (!update) {
@@ -19,7 +20,18 @@ export const loader = async ({
     })
   }
 
-  return { update }
+  return data(
+    { update },
+    {
+      headers: {
+        'Cache-Control': `public, max-age=${context.cloudflare.env.BASE_LONG_CACHE_TIME}`,
+        'ETag': update.createdAt.toISOString(),
+      },
+    },
+  )
+}
+export function headers({ loaderHeaders }: Route.HeadersArgs) {
+  return loaderHeaders;
 }
 
 export const meta: Route.MetaFunction = ({ data, location }) => {
