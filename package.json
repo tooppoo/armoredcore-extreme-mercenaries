@@ -13,7 +13,7 @@
     "discord-bot": "npm run -w @ac-extreme-mercenaries/discord-bot",
     "discord-bot:install": "npm install -w @ac-extreme-mercenaries/discord-bot",
     "discord-bot:uninstall": "npm uninstall -w @ac-extreme-mercenaries/discord-bot",
-    "discord-bot:dev": "npm run bot -- dev",
+    "discord-bot:dev": "npm run discord-bot -- dev",
     "front": "npm run -w @ac-extreme-mercenaries/front",
     "front:install": "npm install -w @ac-extreme-mercenaries/front",
     "front:uninstall": "npm uninstall -w @ac-extreme-mercenaries/front",
