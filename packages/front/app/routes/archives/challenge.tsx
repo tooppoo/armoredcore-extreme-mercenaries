@@ -1,35 +1,42 @@
-import { Form, Link, useLoaderData } from 'react-router';
+import { Form, Link, useLoaderData } from 'react-router'
 import React, { type ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
 import { zx } from 'zodix'
 import { type ReadArchive } from '~/lib/archives/challenge/read/entity'
 import { orderQueryKeys, orderQueryMap } from '~/lib/archives/common/list/query'
-import { type QuerySchema, querySchema } from '~/lib/archives/common/list/query.server'
-import { orderByCreated, pageArchives } from '~/lib/archives/challenge/read/repository/read.server'
+import {
+  type QuerySchema,
+  querySchema,
+} from '~/lib/archives/common/list/query.server'
+import {
+  orderByCreated,
+  pageArchives,
+} from '~/lib/archives/challenge/read/repository/read.server'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import { Margin } from '~/lib/utils/components/spacer'
 import type { Route } from './+types/challenge'
-import { WithChildren, WithClassName } from '~/lib/utils/components/types';
-import { Description } from '~/lib/archives/common/components/description';
+import { WithChildren, WithClassName } from '~/lib/utils/components/types'
+import { Description } from '~/lib/archives/common/components/description'
 
 type LoadArchives = Readonly<{
   totalPage: number
   archives: readonly ReadArchive[]
-  query: Omit<QuerySchema, 'o'> & Readonly<{
-    o: QuerySchema['o']['key']
-  }>
+  query: Omit<QuerySchema, 'o'> &
+    Readonly<{
+      o: QuerySchema['o']['key']
+    }>
 }>
 export const loader = async ({ context, request }: Route.LoaderArgs) => {
   const query = zx.parseQuery(request, querySchema(orderByCreated))
 
-  const {
-    list: archives,
-    totalPage,
-  } = await pageArchives({
-    page: query.p,
-    order: query.o.order,
-    keyword: query.k,
-  }, context.db)
+  const { list: archives, totalPage } = await pageArchives(
+    {
+      page: query.p,
+      order: query.o.order,
+      keyword: query.k,
+    },
+    context.db,
+  )
 
   // https://github.com/jacobparis/remix-cloudflare-drizzle
   return Response.json({
@@ -45,10 +52,7 @@ export const loader = async ({ context, request }: Route.LoaderArgs) => {
 // クエリ用なので略記名
 const ChallengeArchives: React.FC = () => {
   const { archives, totalPage, query } = useLoaderData<LoadArchives>()
-  const {
-    register,
-    setValue,
-  } = useForm<QuerySchema>()
+  const { register, setValue } = useForm<QuerySchema>()
 
   const page = query.p
 
@@ -62,7 +66,9 @@ const ChallengeArchives: React.FC = () => {
         <FormItem labelFor="keyword" label="キーワード検索">
           <input
             className="px-2 ac-border"
-            id="keyword" type="text" defaultValue={query.k}
+            id="keyword"
+            type="text"
+            defaultValue={query.k}
             {...register('k')}
           />
           <Margin w={16} />
@@ -92,17 +98,14 @@ const ChallengeArchives: React.FC = () => {
           </select>
         </FormItem>
         <Margin h={16} />
-        <button
-          type='submit'
-          className='ac-border rounded-md px-4 py-1'
-        >
+        <button type="submit" className="ac-border rounded-md px-4 py-1">
           適用
         </button>
       </Form>
 
-      <hr className='my-10' />
+      <hr className="my-10" />
 
-      <ArchiveTable className='w-full'>
+      <ArchiveTable className="w-full">
         {archives.map((a) => (
           <ArchiveRow
             key={a.externalId}
@@ -140,14 +143,16 @@ type FormItemProps = Readonly<{
   label: string
   children: ReactNode
 }>
-const FormItem: React.FC<FormItemProps> = ({ labelFor: id, label, children }) => (
-  <div className='block sm:flex'>
-    <label className='w-32' htmlFor={id}>
+const FormItem: React.FC<FormItemProps> = ({
+  labelFor: id,
+  label,
+  children,
+}) => (
+  <div className="block sm:flex">
+    <label className="w-32" htmlFor={id}>
       {label}
     </label>
-    <div className='flex'>
-      {children}
-    </div>
+    <div className="flex">{children}</div>
   </div>
 )
 
@@ -157,29 +162,35 @@ type MovePageProps = Readonly<{
   children: string
   query: Record<string, number | string>
 }>
-const MovePage: React.FC<MovePageProps> = ({ page, totalPage, children, query }) => {
+const MovePage: React.FC<MovePageProps> = ({
+  page,
+  totalPage,
+  children,
+  query,
+}) => {
   return (
     <div className="h-9 w-9 flex justify-center items-center">
-      {
-        1 <= page && page <= totalPage
-        ? <Link
-            to={{
-              pathname: '/archives/challenge',
-              search: new URLSearchParams({ ...query, p: `${page}` }).toString(),
-            }}
-          >
-            {children}
-          </Link>
-        : <span>
-            {children}
-          </span>
-      }
+      {1 <= page && page <= totalPage ? (
+        <Link
+          to={{
+            pathname: '/archives/challenge',
+            search: new URLSearchParams({ ...query, p: `${page}` }).toString(),
+          }}
+        >
+          {children}
+        </Link>
+      ) : (
+        <span>{children}</span>
+      )}
     </div>
   )
 }
 
-const ArchiveTable: React.FC<WithChildren & WithClassName> = ({ children, className }) => (
-  <table className={"table-fixed " + className}>
+const ArchiveTable: React.FC<WithChildren & WithClassName> = ({
+  children,
+  className,
+}) => (
+  <table className={'table-fixed ' + className}>
     <thead className="h-20">
       <tr>
         <th className="w-3/12 border-b dark:border-b-gray-300">タイトル</th>
@@ -187,9 +198,7 @@ const ArchiveTable: React.FC<WithChildren & WithClassName> = ({ children, classN
         <th className="w-3/12 border-b dark:border-b-gray-300">出典</th>
       </tr>
     </thead>
-    <tbody>
-      {children}
-    </tbody>
+    <tbody>{children}</tbody>
   </table>
 )
 
@@ -206,38 +215,34 @@ const ArchiveRow: React.FC<ArchiveRowProps> = ({
   url,
 }) => {
   return (
-    <tr className='h-36 border-b dark:border-b-gray-300'>
+    <tr className="h-36 border-b dark:border-b-gray-300">
       <td className="text-center">
         <div
           className={`m-auto h-12 line-clamp-2 overflow-hidden whitespace-normal text-ellipsis`}
         >
-          <Link to={`/archives/challenge/${id}`}>
-            {title}
-          </Link>
+          <Link to={`/archives/challenge/${id}`}>{title}</Link>
         </div>
       </td>
-      <td
-      >
+      <td>
         <Description
           description={description}
           className={`m-auto h-24 w-11/12 line-clamp-4 overflow-hidden whitespace-normal text-ellipsis`}
         />
       </td>
       <td className="text-center">
-        {url
-          ? (
-            <a
-              href={url}
-              title={title}
-              target='_blank'
-              rel='noopener noreferrer'
-              className={`line-clamp-1 overflow-hidden whitespace-normal text-ellipsis`}
-            >
-              {url}
-            </a>
-          )
-          : '無し'
-        }
+        {url ? (
+          <a
+            href={url}
+            title={title}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`line-clamp-1 overflow-hidden whitespace-normal text-ellipsis`}
+          >
+            {url}
+          </a>
+        ) : (
+          '無し'
+        )}
       </td>
     </tr>
   )
@@ -252,8 +257,8 @@ export const meta: Route.MetaFunction = ({ location }) => {
         `様々な縛り・条件のチャレンジ情報を掲載しています。`,
       ].join(''),
       pathname: location.pathname,
-    })
-  ];
-};
+    }),
+  ]
+}
 
 export default ChallengeArchives

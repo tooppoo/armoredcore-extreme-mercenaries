@@ -20,17 +20,28 @@ describe('buildMeta', () => {
         'script:ld+json': {
           '@context': 'https://schema.org',
           '@type': 'WebSite',
-          'name': siteName,
-          'headline': 'Test Title',
-          'description': 'Test Description',
-          'url': 'https://armoredcore-extreme-mercenaries.philomagi.dev/test-path'
+          name: siteName,
+          headline: 'Test Title',
+          description: 'Test Description',
+          url: 'https://armoredcore-extreme-mercenaries.philomagi.dev/test-path',
         },
       },
-      { property: 'og:url', content: 'https://armoredcore-extreme-mercenaries.philomagi.dev/test-path' },
-      { tagName: 'link', rel: 'canonical', href: 'https://armoredcore-extreme-mercenaries.philomagi.dev/test-path' },
+      {
+        property: 'og:url',
+        content:
+          'https://armoredcore-extreme-mercenaries.philomagi.dev/test-path',
+      },
+      {
+        tagName: 'link',
+        rel: 'canonical',
+        href: 'https://armoredcore-extreme-mercenaries.philomagi.dev/test-path',
+      },
       { property: 'og:site_name', content: siteName },
       { property: 'og:type', content: 'website' },
-      { property: 'og:image', content: `https://philomagi.dev/ogp-full.jpg?c=${cacheKey}` },
+      {
+        property: 'og:image',
+        content: `https://philomagi.dev/ogp-full.jpg?c=${cacheKey}`,
+      },
       { name: 'twitter:card', content: 'summary' },
       { name: 'twitter:creator', content: '@Philomagi' },
     ])

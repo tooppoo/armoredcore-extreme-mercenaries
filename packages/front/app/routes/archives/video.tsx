@@ -1,35 +1,42 @@
-import { Form, Link, useLoaderData } from 'react-router';
+import { Form, Link, useLoaderData } from 'react-router'
 import { type ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
 import { zx } from 'zodix'
 import { type ReadArchive } from '~/lib/archives/video/list/entity'
 import { orderQueryKeys, orderQueryMap } from '~/lib/archives/common/list/query'
-import { type QuerySchema, querySchema } from '~/lib/archives/common/list/query.server'
-import { orderByCreated, pageArchives } from '~/lib/archives/video/list/repository/read.server'
+import {
+  type QuerySchema,
+  querySchema,
+} from '~/lib/archives/common/list/query.server'
+import {
+  orderByCreated,
+  pageArchives,
+} from '~/lib/archives/video/list/repository/read.server'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import { Margin } from '~/lib/utils/components/spacer'
 import type { Route } from './+types/video'
-import { WithChildren } from '~/lib/utils/components/types';
-import { Description } from '~/lib/archives/common/components/description';
+import { WithChildren } from '~/lib/utils/components/types'
+import { Description } from '~/lib/archives/common/components/description'
 
 type LoadArchives = Readonly<{
   totalPage: number
   archives: readonly ReadArchive[]
-  query: Omit<QuerySchema, 'o'> & Readonly<{
-    o: QuerySchema['o']['key']
-  }>
+  query: Omit<QuerySchema, 'o'> &
+    Readonly<{
+      o: QuerySchema['o']['key']
+    }>
 }>
 export const loader = async ({ context, request }: Route.LoaderArgs) => {
   const query = zx.parseQuery(request, querySchema(orderByCreated))
 
-  const {
-    list: archives,
-    totalPage,
-  } = await pageArchives({
-    page: query.p,
-    order: query.o.order,
-    keyword: query.k,
-  }, context.db)
+  const { list: archives, totalPage } = await pageArchives(
+    {
+      page: query.p,
+      order: query.o.order,
+      keyword: query.k,
+    },
+    context.db,
+  )
 
   // https://github.com/jacobparis/remix-cloudflare-drizzle
   return Response.json({
@@ -45,10 +52,7 @@ export const loader = async ({ context, request }: Route.LoaderArgs) => {
 // クエリ用なので略記名
 const VideoArchives: React.FC = () => {
   const { archives, totalPage, query } = useLoaderData<LoadArchives>()
-  const {
-    register,
-    setValue,
-  } = useForm<QuerySchema>()
+  const { register, setValue } = useForm<QuerySchema>()
 
   const page = query.p
 
@@ -62,7 +66,9 @@ const VideoArchives: React.FC = () => {
         <FormItem labelFor="keyword" label="キーワード検索">
           <input
             className="px-2 ac-border"
-            id="keyword" type="text" defaultValue={query.k}
+            id="keyword"
+            type="text"
+            defaultValue={query.k}
             {...register('k')}
           />
           <Margin w={16} />
@@ -92,23 +98,20 @@ const VideoArchives: React.FC = () => {
           </select>
         </FormItem>
         <Margin h={16} />
-        <button
-          type='submit'
-          className='ac-border rounded-md px-4 py-1'
-        >
+        <button type="submit" className="ac-border rounded-md px-4 py-1">
           適用
         </button>
       </Form>
 
-      <hr className='my-10' />
+      <hr className="my-10" />
 
       <section
         className={[
-          "grid",
-          "grid-cols-1 gap-1",
-          "sm:grid-cols-2 sm:gap-2",
-          "md:grid-cols-3 md:gap-3",
-          "lg:grid-cols-4 lg:gap-4",
+          'grid',
+          'grid-cols-1 gap-1',
+          'sm:grid-cols-2 sm:gap-2',
+          'md:grid-cols-3 md:gap-3',
+          'lg:grid-cols-4 lg:gap-4',
         ].join(' ')}
       >
         {archives.map((a) => (
@@ -148,14 +151,16 @@ type FormItemProps = Readonly<{
   label: string
   children: ReactNode
 }>
-const FormItem: React.FC<FormItemProps> = ({ labelFor: id, label, children }) => (
-  <div className='block sm:flex'>
-    <label className='w-32' htmlFor={id}>
+const FormItem: React.FC<FormItemProps> = ({
+  labelFor: id,
+  label,
+  children,
+}) => (
+  <div className="block sm:flex">
+    <label className="w-32" htmlFor={id}>
       {label}
     </label>
-    <div className='flex'>
-      {children}
-    </div>
+    <div className="flex">{children}</div>
   </div>
 )
 
@@ -165,23 +170,26 @@ type MovePageProps = Readonly<{
   children: string
   query: Record<string, number | string>
 }>
-const MovePage: React.FC<MovePageProps> = ({ page, totalPage, children, query }) => {
+const MovePage: React.FC<MovePageProps> = ({
+  page,
+  totalPage,
+  children,
+  query,
+}) => {
   return (
     <div className="h-9 w-9 flex justify-center items-center">
-      {
-        1 <= page && page <= totalPage
-        ? <Link
-            to={{
-              pathname: '/archives/video',
-              search: new URLSearchParams({ ...query, p: `${page}` }).toString(),
-            }}
-          >
-            {children}
-          </Link>
-        : <span>
-            {children}
-          </span>
-      }
+      {1 <= page && page <= totalPage ? (
+        <Link
+          to={{
+            pathname: '/archives/video',
+            search: new URLSearchParams({ ...query, p: `${page}` }).toString(),
+          }}
+        >
+          {children}
+        </Link>
+      ) : (
+        <span>{children}</span>
+      )}
     </div>
   )
 }
@@ -202,23 +210,17 @@ export const ArchiveItem: React.FC<ArchiveItemProps> = ({
     <a
       href={url}
       title={title}
-      target='_blank'
-      rel='noopener noreferrer'
-      className='archive-item min-h-64 sm:min-h-72 lg:min-h-80 flex flex-col justify-between p-2 ac-border-b ac-hover'
+      target="_blank"
+      rel="noopener noreferrer"
+      className="archive-item min-h-64 sm:min-h-72 lg:min-h-80 flex flex-col justify-between p-2 ac-border-b ac-hover"
       aria-label={title}
     >
-      <ArchiveItemCaption>
-        {title}
-      </ArchiveItemCaption>
+      <ArchiveItemCaption>{title}</ArchiveItemCaption>
       <Margin h={8} />
-      <img
-        src={imageUrl} alt={title}
-      />
+      <img src={imageUrl} alt={title} />
       <Margin h={8} />
       <ArchiveItemCaption>
-        <Description
-          description={description}
-        />
+        <Description description={description} />
       </ArchiveItemCaption>
     </a>
   )
@@ -240,8 +242,8 @@ export const meta: Route.MetaFunction = ({ location }) => {
         `各条件での縛り攻略・タイムアタック動画へのリンクを掲載しています。`,
       ].join(''),
       pathname: location.pathname,
-    })
-  ];
-};
+    }),
+  ]
+}
 
 export default VideoArchives

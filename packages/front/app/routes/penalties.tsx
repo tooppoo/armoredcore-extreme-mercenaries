@@ -1,6 +1,6 @@
-import { Link } from 'react-router';
-import { buildMeta, unofficialServer } from '~/lib/head/build-meta';
-import type { Route } from './+types/penalties';
+import { Link } from 'react-router'
+import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
+import type { Route } from './+types/penalties'
 
 export const meta: Route.MetaFunction = ({ location }) => {
   return [
@@ -8,16 +8,17 @@ export const meta: Route.MetaFunction = ({ location }) => {
       title: '罰則規定',
       description: `${unofficialServer}の罰則規定ページです`,
       pathname: location.pathname,
-    })
-  ];
-};
+    }),
+  ]
+}
 export const Penalties: React.FC = () => {
   return (
     <>
       <section>
         <h2>罰則規定</h2>
         <p>
-          <Link to="/rule">利用規約</Link>に違反した場合、管理者・運営から該当ユーザーに対して以下の処分を加えることがあります。
+          <Link to="/rule">利用規約</Link>
+          に違反した場合、管理者・運営から該当ユーザーに対して以下の処分を加えることがあります。
         </p>
         <ul className="list-disc pl-6 mt-4">
           <li>投稿・スレッドの削除</li>
@@ -33,4 +34,4 @@ export const Penalties: React.FC = () => {
   )
 }
 
-export default Penalties;
+export default Penalties

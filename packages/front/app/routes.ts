@@ -3,7 +3,7 @@ import {
   route,
   index,
   prefix,
-} from "@react-router/dev/routes";
+} from '@react-router/dev/routes'
 
 export default [
   index('./routes/index.tsx'),
@@ -25,6 +25,6 @@ export default [
     ...prefix('archives', [
       route('video', './routes/api/archives/video.ts'),
       route('challenge', './routes/api/archives/challenge.ts'),
-    ])
-  ])
-] satisfies RouteConfig;
+    ]),
+  ]),
+] satisfies RouteConfig

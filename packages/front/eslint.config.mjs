@@ -29,16 +29,12 @@ const compat = new FlatCompat({
 export default [
   {
     ignores: [
-      '!**/.server',
-      '!**/.client',
-      '.gitignore',
+      '.react-router',
+      '.wrangler',
       'build',
+      'coverage',
       'dist',
       'node_modules',
-      'package-lock.json',
-      '.wrangler',
-      '.react-router',
-      'coverage',
     ],
   },
   ...compat.extends('eslint:recommended'),

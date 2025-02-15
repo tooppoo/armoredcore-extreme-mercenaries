@@ -11,10 +11,10 @@
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2023"],
     "types": [
-        "@react-router/cloudflare",
-        "@react-router/node",
-        "vite/client",
-        "@cloudflare/workers-types/2023-07-01"
+      "@react-router/cloudflare",
+      "@react-router/node",
+      "vite/client",
+      "@cloudflare/workers-types/2023-07-01"
     ],
     "isolatedModules": true,
     "esModuleInterop": true,
@@ -31,10 +31,7 @@
     "paths": {
       "~/*": ["app/*"]
     },
-    "rootDirs": [
-      ".",
-      ".react-router/types"
-    ],
+    "rootDirs": [".", ".react-router/types"],
     "plugins": [{ "name": "@react-router/dev" }],
 
     // Vite takes care of building everything, not tsc.

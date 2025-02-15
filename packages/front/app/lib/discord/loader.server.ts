@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs } from 'react-router';
+import { LoaderFunctionArgs } from 'react-router'
 
 export type LoadDiscord = Readonly<{
   discord: Readonly<{

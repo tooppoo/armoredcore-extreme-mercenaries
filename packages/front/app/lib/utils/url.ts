@@ -1,4 +1,3 @@
-
 export function cloneURLSearchParams(params: URLSearchParams): URLSearchParams {
   return new URLSearchParams(params.toString())
 }

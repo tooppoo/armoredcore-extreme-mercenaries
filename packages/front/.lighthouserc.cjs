@@ -15,10 +15,10 @@ module.exports = {
       numberOfRuns: 1,
     },
     assertions: {
-      preset: 'lighthouse:recommended'
+      preset: 'lighthouse:recommended',
     },
     upload: {
       target: 'temporary-public-storage',
     },
   },
-};
+}

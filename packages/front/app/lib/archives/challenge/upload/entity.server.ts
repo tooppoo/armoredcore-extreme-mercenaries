@@ -1,4 +1,3 @@
-
 export type Uploader = Readonly<{
   id: string
   name: string

@@ -1,25 +1,46 @@
-import type { LinksFunction } from "react-router";
-import { Link, Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
+import type { LinksFunction } from 'react-router'
+import {
+  Link,
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+} from 'react-router'
 
-import "./tailwind.css";
-import 'highlight.js/styles/github.min.css';
+import './tailwind.css'
+import 'highlight.js/styles/github.min.css'
 
 export const links: LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
+  { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
   {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
+    rel: 'preconnect',
+    href: 'https://fonts.gstatic.com',
+    crossOrigin: 'anonymous',
   },
   {
     rel: 'stylesheet',
     href: 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap',
   },
-  { rel: "apple-touch-icon", sizes: "180x180", href: "/favicon/apple-touch-icon.png" },
-  { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon/favicon-32x32.png" },
-  { rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon/favicon-16x16.png" },
-  { rel: "manifest", href: '/manifest.json' },
-];
+  {
+    rel: 'apple-touch-icon',
+    sizes: '180x180',
+    href: '/favicon/apple-touch-icon.png',
+  },
+  {
+    rel: 'icon',
+    type: 'image/png',
+    sizes: '32x32',
+    href: '/favicon/favicon-32x32.png',
+  },
+  {
+    rel: 'icon',
+    type: 'image/png',
+    sizes: '16x16',
+    href: '/favicon/favicon-16x16.png',
+  },
+  { rel: 'manifest', href: '/manifest.json' },
+]
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -33,22 +54,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body className="p-5">
         <header className="flex justify-center items-center">
           <h1 className="text-center">
-            ARMORED CORE<br/>
+            ARMORED CORE
+            <br />
             EXTREME MERCENARIES
           </h1>
         </header>
         <hr className="my-4" />
-        <article className='max-w-3xl mx-auto'>
-          {children}
-        </article>
+        <article className="max-w-3xl mx-auto">{children}</article>
         <hr className="my-4" />
         <footer>
           <div className="flex items-center justify-center text-lg">
-            <Link to='/'>TOP</Link>
+            <Link to="/">TOP</Link>
           </div>
           <div className="my-1"></div>
           <div className="flex items-end justify-end">
-            maintained by&nbsp; 
+            maintained by&nbsp;
             <Link to="https://x.com/Philomagi">Philomagi</Link>
           </div>
         </footer>
@@ -56,9 +76,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Scripts />
       </body>
     </html>
-  );
+  )
 }
 
 export default function App() {
-  return <Outlet />;
+  return <Outlet />
 }

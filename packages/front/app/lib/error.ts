@@ -1,8 +1,4 @@
-
-export type ErrorData<
-  C extends string = string,
-  D = unknown
-> = Readonly<{
+export type ErrorData<C extends string = string, D = unknown> = Readonly<{
   code: C
   message: string
   detail: D
@@ -16,8 +12,7 @@ export function makeCatchesSerializable(e: unknown): unknown {
       ...obj,
       stack: obj.stack?.split('\n'),
     }
-  }
-  else {
+  } else {
     return e
   }
 }
