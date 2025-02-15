@@ -1,6 +1,6 @@
-import { frontApi } from '../lib/front';
-import type { MessageHandler, MessageHandlerFunction } from '.';
-import { log } from '../../lib/log';
+import { frontApi } from '../lib/front'
+import type { MessageHandler, MessageHandlerFunction } from '.'
+import { log } from '../../lib/log'
 
 const name = 'upload-video-archive'
 const handle: MessageHandlerFunction = async (userMessage, frontRequest) => {
@@ -15,21 +15,23 @@ const handle: MessageHandlerFunction = async (userMessage, frontRequest) => {
     discord_user: {
       id: userMessage.author.id,
       name: userMessage.author.username,
-    }
+    },
   }
 
   return frontRequest({
-    command: () => fetch(frontApi('/api/archives/video'), {
-      method: 'POST',
-      body: JSON.stringify(body),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.FRONT_AUTH_UPLOAD_ARCHIVE}`,
-      },
-    }),
+    command: () =>
+      fetch(frontApi('/api/archives/video'), {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.FRONT_AUTH_UPLOAD_ARCHIVE}`,
+        },
+      }),
     messages: {
       success: 'アーカイブに追加しました',
-      errorResponse: (errorCode) => errorMessageMap[errorCode] || 'アーカイブに追加されませんでした',
+      errorResponse: (errorCode) =>
+        errorMessageMap[errorCode] || 'アーカイブに追加されませんでした',
       invalidResponse: 'アーカイブ追加中にエラーが発生しました',
       commandFailure: 'アーカイブ追加に失敗しました',
     },

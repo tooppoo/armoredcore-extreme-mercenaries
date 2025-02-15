@@ -1,8 +1,5 @@
 {
-  "include": [
-    "src",
-    "scripts"
-  ],
+  "include": ["src", "scripts"],
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
@@ -10,11 +7,7 @@
     "strict": true,
     "verbatimModuleSyntax": true,
     "skipLibCheck": true,
-    "types": [
-      "node"
-    ],
-    "outDir": "build",
-    "jsx": "react-jsx",
-    "jsxImportSource": "hono/jsx",
+    "types": ["node"],
+    "outDir": "build"
   }
 }

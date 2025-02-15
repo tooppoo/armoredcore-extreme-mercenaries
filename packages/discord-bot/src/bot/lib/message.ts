@@ -1,4 +1,9 @@
-import type { Client, Message, OmitPartialGroupDMChannel, SendableChannels } from 'discord.js'
+import type {
+  Client,
+  Message,
+  OmitPartialGroupDMChannel,
+  SendableChannels,
+} from 'discord.js'
 import { log } from '../../lib/log'
 
 export type UserMessage = OmitPartialGroupDMChannel<Message<boolean>>
@@ -8,7 +13,9 @@ export type BotMessageContent = Readonly<{
 }>
 type BotMessage = Parameters<SendableChannels['send']>[0]
 
-export type SendMessage = (botMessageContent: BotMessageContent) => Promise<void>
+export type SendMessage = (
+  botMessageContent: BotMessageContent,
+) => Promise<void>
 export type SendMessageBuilder = (userMessage: UserMessage) => SendMessage
 
 export function setupMessageSender(client: Client): SendMessageBuilder {
@@ -24,15 +31,17 @@ export function setupMessageSender(client: Client): SendMessageBuilder {
         content: botMessageContent.message,
         reply: {
           messageReference: userMessage,
-        }
+        },
       }
-      return channel.send(botMessage).catch((error) => {
-        log('error', { message: 'failed to send message', detail: error })
-      }).then(() => {
-        log('debug', 'sent message')
-      })
-    }
-    else {
+      return channel
+        .send(botMessage)
+        .catch((error) => {
+          log('error', { message: 'failed to send message', detail: error })
+        })
+        .then(() => {
+          log('debug', 'sent message')
+        })
+    } else {
       log('debug', 'not send message because the channel is not sendable')
       return Promise.resolve()
     }

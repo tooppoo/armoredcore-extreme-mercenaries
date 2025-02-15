@@ -12,7 +12,7 @@ app.get('/', (c) => {
 serve(
   {
     fetch: app.fetch,
-    port: parseInt(process.env.PORT || '3000', 10)
+    port: parseInt(process.env.PORT || '3000', 10),
   },
   ({ port }) => {
     if (process.env.ENV === 'local') {
@@ -21,5 +21,5 @@ serve(
     }
 
     startBot()
-  }
+  },
 )

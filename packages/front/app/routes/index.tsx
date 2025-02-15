@@ -22,7 +22,11 @@ export default function Index() {
         <section className="mb-10" key={caption}>
           <h2 id={id} className="underline">
             {caption}
-            <Link to={`#${id}`} className="inline-block ml-2" aria-label={`見出し「${caption}」へのアンカー`}>
+            <Link
+              to={`#${id}`}
+              className="inline-block ml-2"
+              aria-label={`見出し「${caption}」へのアンカー`}
+            >
               <LinkIcon className="size-5" />
             </Link>
           </h2>

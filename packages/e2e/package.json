@@ -3,13 +3,22 @@
   "version": "1.0.0",
   "main": "index.js",
   "devDependencies": {
+    "@eslint/compat": "1.2.6",
     "@playwright/test": "1.50.1",
-    "@types/node": "22.13.4"
+    "@types/node": "22.13.4",
+    "eslint": "9.20.1",
+    "eslint-import-resolver-typescript": "3.8.0",
+    "eslint-plugin-import": "2.31.0",
+    "npm-run-all2": "7.0.2",
+    "prettier": "3.5.0"
   },
   "scripts": {
     "e2e": "playwright test",
     "deps": "playwright install --with-deps",
-    "report": "playwright show-report"
+    "report": "playwright show-report",
+    "lint": "run-s run-eslint run-prettier",
+    "run-eslint": "eslint --cache --cache-location ./node_modules/.cache/eslint --fix .",
+    "run-prettier": "prettier --write ."
   },
   "author": "",
   "license": "MIT",

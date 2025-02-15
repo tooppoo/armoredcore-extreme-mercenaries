@@ -8,6 +8,9 @@
     "dev": "dotenvx run -f .env.local -f .env -- tsx watch src/app.ts",
     "deploy:commands": "tsx scripts/deploy-commands.ts",
     "build": "tsc",
+    "lint": "run-s run-eslint run-prettier",
+    "run-eslint": "eslint --cache --cache-location ./node_modules/.cache/eslint --fix .",
+    "run-prettier": "prettier --write .",
     "typecheck": "tsc --noEmit"
   },
   "author": "",
@@ -21,7 +24,13 @@
     "hono": "^4.6.16"
   },
   "devDependencies": {
+    "@eslint/compat": "1.2.6",
     "@types/node": "22.13.4",
-    "tsx": "4.19.2"
+    "tsx": "4.19.2",
+    "eslint": "9.20.1",
+    "eslint-import-resolver-typescript": "3.8.0",
+    "eslint-plugin-import": "2.31.0",
+    "npm-run-all2": "7.0.2",
+    "prettier": "3.5.0"
   }
 }

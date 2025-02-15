@@ -1,4 +1,3 @@
-
 type Loggable = string | ({ message: string } & { [key: string]: unknown })
 export type LogLevel = 'info' | 'debug' | 'error'
 
@@ -11,16 +10,19 @@ export function log(level: LogLevel, data: Loggable): void {
 }
 function toMessage(level: string, data: Loggable): string {
   if (typeof data === 'string') {
-    return JSON.stringify({ level, message: data, time: new Date().toISOString() })
-  }
-  else {
+    return JSON.stringify({
+      level,
+      message: data,
+      time: new Date().toISOString(),
+    })
+  } else {
     return JSON.stringify({ level, ...data, time: new Date().toISOString() })
   }
 }
 function isLowThanLogLevel(level: LogLevel): boolean {
   const currentLogLevel = (() => {
     const lev = logLevel[process.env.LOG_LEVEL || 'info']
-    
+
     return lev !== undefined ? lev : logLevel['info']
   })()
 
