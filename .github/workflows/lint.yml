@@ -1,0 +1,33 @@
+name: lint and format
+
+on:
+  pull_request:
+    branches-ignore:
+      - 'renovate/*'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      # setup runtime
+      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+      - run: npm ci
+
+      - name: lint
+        run: npm run lint
+
+      - name: auto commit
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Auto commit with fmt
+          branch: ${{ github.head_ref }}
+
+      - name: lint
+        uses: reviewdog/action-eslint@v1
+        with:
+          eslint_flags: '"packages/**/*.{ts,tsx,js,jsx}" --fix'
+          level: warning
