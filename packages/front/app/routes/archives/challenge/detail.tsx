@@ -18,9 +18,16 @@ export const loader = async ({ params, context }: Route.LoaderArgs) => {
         throw notFound(null)
       }
 
-      return Response.json({
-        archive,
-      })
+      return Response.json(
+        {
+          archive,
+        },
+        {
+          headers: {
+            'ETag': archive.createdAt.toISOString(),
+          },
+        }
+      )
     },
   )
 }

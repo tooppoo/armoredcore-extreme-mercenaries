@@ -5,7 +5,8 @@
 import { Database } from '~/db/driver.server'
 import { videoArchives, discordMembers } from '~/db/schema.server'
 import { Archive } from '~/lib/archives/video/upload/entity.server'
-import { normalizeUrl } from '../../../common/url/support-url.server'
+import { normalizeUrl } from '~/lib/archives/common/url/support-url.server'
+import { updateVideoArchiveListRevision } from '~/lib/archives/video/revision/repository'
 
 export const saveVideoArchive = async (
   entity: Archive,
@@ -28,5 +29,6 @@ export const saveVideoArchive = async (
       imageUrl: entity.contents.imageUrl.toString(),
       uploadMemberId: entity.uploader.id,
     }),
+    updateVideoArchiveListRevision(db),
   ])
 }

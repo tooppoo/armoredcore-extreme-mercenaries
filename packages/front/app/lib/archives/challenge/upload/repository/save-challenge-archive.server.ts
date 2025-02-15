@@ -4,6 +4,7 @@
 
 import { Database } from '~/db/driver.server'
 import { discordMembers, challengeArchives } from '~/db/schema.server'
+import { updateChallengeArchiveListRevision } from '~/lib/archives/challenge/revision/repository'
 import { Archive } from '~/lib/archives/challenge/upload/entity.server'
 import { normalizeUrl } from '~/lib/archives/common/url/support-url.server'
 
@@ -29,5 +30,6 @@ export const saveChallengeArchive = async (
       description: entity.contents.description,
       uploadMemberId: entity.uploader.id,
     }),
+    updateChallengeArchiveListRevision(db),
   ])
 }

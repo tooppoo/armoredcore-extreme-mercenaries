@@ -17,6 +17,7 @@ import { Margin } from '~/lib/utils/components/spacer'
 import type { Route } from './+types/challenge'
 import { WithChildren, WithClassName } from '~/lib/utils/components/types'
 import { Description } from '~/lib/archives/common/components/description'
+import { getChallengeArchiveListRevision } from '~/lib/archives/challenge/revision/repository'
 
 type LoadArchives = Readonly<{
   totalPage: number
@@ -37,16 +38,24 @@ export const loader = async ({ context, request }: Route.LoaderArgs) => {
     },
     context.db,
   )
+  const revision = await getChallengeArchiveListRevision(context.db)
 
   // https://github.com/jacobparis/remix-cloudflare-drizzle
-  return Response.json({
-    totalPage,
-    archives,
-    query: {
-      ...query,
-      o: query.o.key,
-    },
-  } satisfies LoadArchives)
+  return Response.json(
+    {
+      totalPage,
+      archives,
+      query: {
+        ...query,
+        o: query.o.key,
+      },
+    } satisfies LoadArchives,
+    {
+      headers: {
+        'ETag': `${revision}`,
+      },
+    }
+  )
 }
 
 // クエリ用なので略記名
