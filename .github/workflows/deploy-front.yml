@@ -51,7 +51,9 @@ jobs:
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
         with:
+          command: wrangler pages dev ./build/client
           apiToken: ${{ secrets.CLOUDFLARE_INTEGRATION }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           environment: production
+          workingDirectory: "packages/front"
