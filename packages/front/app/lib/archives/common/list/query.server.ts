@@ -1,12 +1,12 @@
 import { z } from 'zod'
-import { zx } from 'zodix'
 import { orderQueryKeys } from './query'
 import { SQL } from 'drizzle-orm'
 
-export const querySchema = (orderByCreated: OrderFunction) => ({
-  p: zx.IntAsString.optional()
-    .pipe(z.number().min(1).default(1).catch(1))
-    .catch(1),
+export const querySchema = (orderByCreated: OrderFunction) => z.object({
+  p: z
+    .string().default('1')
+    .transform(v => parseInt(v, 10))
+    .pipe(z.number().min(1)).catch(1),
   k: z.string().optional().default(''),
   o: z
     .enum(orderQueryKeys)
@@ -29,7 +29,7 @@ export const querySchema = (orderByCreated: OrderFunction) => ({
     }),
 })
 export type QuerySchema = Readonly<
-  z.infer<ReturnType<typeof z.object<ReturnType<typeof querySchema>>>>
+  z.infer<ReturnType<typeof querySchema>>
 >
 
 export type OrderFunction = (o: OrderDirection) => Order
