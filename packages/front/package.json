@@ -24,7 +24,8 @@
     "migration": "wrangler d1 migrations apply ac-extreme-mercenaries-db --local",
     "migration:gen": "drizzle-kit generate",
     "migration:test": "wrangler d1 migrations apply ac-extreme-mercenaries-db-test --local --env test --config wrangler.test.toml",
-    "seed": "tsx app/db/seeds/runner.ts",
+    "export-data:prod": "wrangler d1 export ac-extreme-mercenaries-db --remote --no-schema",
+    "seed:local": "tsx app/db/seeds/local/runner.ts",
     "db-execute": "wrangler d1 execute ac-extreme-mercenaries-db --local",
     "db-execute:test": "wrangler d1 execute ac-extreme-mercenaries-db-test --local --env test --config wrangler.test.toml",
     "secrets:gen": "openssl rand -base64 32"
