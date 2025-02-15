@@ -9,6 +9,6 @@ const __dirname = path.dirname(__filename)
 teardown('setup db', async () => {
   const frontCommand = 'npm run --prefix ../../ front'
   execSync(
-    `${frontCommand} -- db-execute:test -- --file ${__dirname}/global.setup.cleanup.sql`,
+    `${frontCommand} -- sql:test -- --file ${__dirname}/global.setup.cleanup.sql`,
   )
 })
