@@ -10,7 +10,7 @@
     "eslint-import-resolver-typescript": "3.8.0",
     "eslint-plugin-import": "2.31.0",
     "npm-run-all2": "7.0.2",
-    "prettier": "3.5.0"
+    "prettier": "3.5.1"
   },
   "scripts": {
     "e2e": "playwright test",
