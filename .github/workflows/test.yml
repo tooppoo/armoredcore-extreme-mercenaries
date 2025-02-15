@@ -3,6 +3,8 @@ name: test app
 
 on:
   pull_request:
+    branches:
+      - '*'
     types: 
       - opened
       - synchronize

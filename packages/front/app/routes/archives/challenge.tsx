@@ -1,7 +1,6 @@
 import { Form, Link, useLoaderData } from 'react-router'
 import React, { type ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
-import { zx } from 'zodix'
 import { type ReadArchive } from '~/lib/archives/challenge/read/entity'
 import { orderQueryKeys, orderQueryMap } from '~/lib/archives/common/list/query'
 import {
@@ -18,6 +17,7 @@ import type { Route } from './+types/challenge'
 import { WithChildren, WithClassName } from '~/lib/utils/components/types'
 import { Description } from '~/lib/archives/common/components/description'
 import { getChallengeArchiveListRevision } from '~/lib/archives/challenge/revision/repository'
+import { parseQuery } from '~/lib/http/request/parser.server'
 
 type LoadArchives = Readonly<{
   totalPage: number
@@ -28,7 +28,7 @@ type LoadArchives = Readonly<{
     }>
 }>
 export const loader = async ({ context, request }: Route.LoaderArgs) => {
-  const query = zx.parseQuery(request, querySchema(orderByCreated))
+  const query = parseQuery(request, querySchema(orderByCreated))
 
   const { list: archives, totalPage } = await pageArchives(
     {
