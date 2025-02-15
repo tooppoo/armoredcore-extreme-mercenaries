@@ -30,15 +30,12 @@ export function handleZodError(error: ZodError): never {
   })
 }
 
-export function parseQuery<
-  S extends ZodObject<ZRS>,
-  ZRS extends ZodRawShape
->(
+export function parseQuery<S extends ZodObject<ZRS>, ZRS extends ZodRawShape>(
   request: Request,
-  scheme: S
+  scheme: S,
 ): z.infer<S> {
-  const url = new URL(request.url);
-  const search = url.searchParams;
-  const query = Object.fromEntries(search.entries());
-  return scheme.parse(query);
+  const url = new URL(request.url)
+  const search = url.searchParams
+  const query = Object.fromEntries(search.entries())
+  return scheme.parse(query)
 }
