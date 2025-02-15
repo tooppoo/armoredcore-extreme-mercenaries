@@ -14,6 +14,8 @@
     "prettier": "3.5.0"
   },
   "scripts": {
+    "build": "echo skip",
+    "test": "echo skip",
     "e2e": "playwright test",
     "deps": "playwright install --with-deps",
     "report": "playwright show-report",

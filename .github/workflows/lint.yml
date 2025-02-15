@@ -6,7 +6,7 @@ on:
       - 'renovate/*'
 
 jobs:
-  lint:
+  lint-fix:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -26,9 +26,23 @@ jobs:
         with:
           commit_message: Auto commit with fmt
           branch: ${{ github.head_ref }}
-
-      - name: lint
+  reviewdog:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package: [front, bot, e2e]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      # setup runtime
+      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run ${{ matrix.package }} -- build
+      - name: reviewdog:${{ matrix.package }}
         uses: reviewdog/action-eslint@v1
         with:
-          eslint_flags: '"packages/**/*.{ts,tsx,js,jsx}" --fix'
+          eslint_flags: '"**/*.{ts,tsx,js,jsx}" --fix'
           level: warning
+          workdir: packages/${{ matrix.package }}
