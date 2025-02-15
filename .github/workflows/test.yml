@@ -23,5 +23,6 @@ jobs:
         cache: 'npm'
     # integration
     - run: npm ci
+    - run: npm run build
     - run: npm run typecheck
     - run: npm run test
