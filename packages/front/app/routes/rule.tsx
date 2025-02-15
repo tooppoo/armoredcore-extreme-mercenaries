@@ -15,19 +15,20 @@ export const meta: Route.MetaFunction = ({ location }) => {
   })
 }
 
-export const loader = async (args: Route.LoaderArgs) => data(
-  {
-    ...loadDiscord(args),
-  },
-  {
-    headers: {
-      'Cache-Control': `public, max-age=${args.context.cloudflare.env.BASE_LONG_CACHE_TIME}`,
-      'ETag': new TZDate(2025, 1, 15).toISOString(),
+export const loader = async (args: Route.LoaderArgs) =>
+  data(
+    {
+      ...loadDiscord(args),
     },
-  }
-)
+    {
+      headers: {
+        'Cache-Control': `public, max-age=${args.context.cloudflare.env.BASE_LONG_CACHE_TIME}`,
+        ETag: new TZDate(2025, 1, 15).toISOString(),
+      },
+    },
+  )
 export function headers({ loaderHeaders }: Route.HeadersArgs) {
-  return loaderHeaders;
+  return loaderHeaders
 }
 
 export const Rule: React.FC = () => {

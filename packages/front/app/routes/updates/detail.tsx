@@ -8,10 +8,7 @@ import type { Route } from './+types/detail'
 type AnUpdateLoader = Readonly<{
   update: ReadUpdate
 }>
-export const loader = async ({
-  params,
-  context,
-}: Route.LoaderArgs) => {
+export const loader = async ({ params, context }: Route.LoaderArgs) => {
   const update = await findUpdate({ externalId: params.id })
 
   if (!update) {
@@ -25,13 +22,13 @@ export const loader = async ({
     {
       headers: {
         'Cache-Control': `public, max-age=${context.cloudflare.env.BASE_LONG_CACHE_TIME}`,
-        'ETag': update.createdAt.toISOString(),
+        ETag: update.createdAt.toISOString(),
       },
     },
   )
 }
 export function headers({ loaderHeaders }: Route.HeadersArgs) {
-  return loaderHeaders;
+  return loaderHeaders
 }
 
 export const meta: Route.MetaFunction = ({ data, location }) => {

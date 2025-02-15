@@ -107,7 +107,9 @@ export const deletedArchives = sqliteTable('deleted_archives', {
 
 export const contentsRevisions = sqliteTable('contents_revisions', {
   contentKey: text('content_key').primaryKey(),
-  revision: integer('revision').notNull().$default(() => 1),
+  revision: integer('revision')
+    .notNull()
+    .$default(() => 1),
   createdAt: integer('created_at', { mode: 'timestamp' })
     .notNull()
     .default(sql`(unixepoch())`),

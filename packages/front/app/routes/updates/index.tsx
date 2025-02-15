@@ -8,19 +8,20 @@ import { TZDate } from '@date-fns/tz'
 type UpdatesLoader = Readonly<{
   updates: readonly ReadUpdate[]
 }>
-export const loader = async ({ context }: Route.LoaderArgs) => data(
-  {
-    updates: await pageUpdates({ page: 1 }),
-  },
-  {
-    headers: {
-      'Cache-Control': `public, max-age=${context.cloudflare.env.BASE_LONG_CACHE_TIME}`,
-      'ETag': new TZDate(2025, 1, 15).toISOString(),
-    }, 
-  }
-)
+export const loader = async ({ context }: Route.LoaderArgs) =>
+  data(
+    {
+      updates: await pageUpdates({ page: 1 }),
+    },
+    {
+      headers: {
+        'Cache-Control': `public, max-age=${context.cloudflare.env.BASE_LONG_CACHE_TIME}`,
+        ETag: new TZDate(2025, 1, 15).toISOString(),
+      },
+    },
+  )
 export function headers({ loaderHeaders }: Route.HeadersArgs) {
-  return loaderHeaders;
+  return loaderHeaders
 }
 
 export const meta: Route.MetaFunction = ({ location }) => [

@@ -25,15 +25,15 @@ export const loader = async ({ params, context }: Route.LoaderArgs) => {
         {
           headers: {
             'Cache-Control': `public, max-age=${context.cloudflare.env.BASE_LONG_CACHE_TIME}`,
-            'ETag': archive.createdAt.toISOString(),
+            ETag: archive.createdAt.toISOString(),
           },
-        }
+        },
       )
     },
   )
 }
 export function headers({ loaderHeaders }: Route.HeadersArgs) {
-  return loaderHeaders;
+  return loaderHeaders
 }
 
 // クエリ用なので略記名

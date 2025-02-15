@@ -3,17 +3,18 @@ import type { Route } from './+types/index'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import { TZDate } from '@date-fns/tz'
 
-export const loader = async ({ context }: Route.LoaderArgs) => Response.json(
-  {},
-  {
-    headers: {
-      'Cache-Control': `public, max-age=${context.cloudflare.env.BASE_LONG_CACHE_TIME}`,
-      'ETag': new TZDate(2025, 1, 15).toISOString(),
+export const loader = async ({ context }: Route.LoaderArgs) =>
+  Response.json(
+    {},
+    {
+      headers: {
+        'Cache-Control': `public, max-age=${context.cloudflare.env.BASE_LONG_CACHE_TIME}`,
+        ETag: new TZDate(2025, 1, 15).toISOString(),
+      },
     },
-  }
-)
+  )
 export function headers({ loaderHeaders }: Route.HeadersArgs) {
-  return loaderHeaders;
+  return loaderHeaders
 }
 
 const Archives: React.FC = () => {
