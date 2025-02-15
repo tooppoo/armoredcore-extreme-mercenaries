@@ -1,6 +1,8 @@
 name: Lighthouse
 on:
   pull_request:
+    branches:
+      - '*'
     types: 
       - opened
       - synchronize
