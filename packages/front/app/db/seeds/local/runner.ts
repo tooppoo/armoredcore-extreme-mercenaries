@@ -7,7 +7,7 @@ const seedFiles = fs
 
 seedFiles.forEach((file) => {
   const frontCommand = 'npm run --prefix ../../ front'
-  const cmd = `${frontCommand} -- db-execute -- --file=${resolve(file)}`
+  const cmd = `${frontCommand} -- sql -- --file=${resolve(file)}`
   console.log(`Run: ${file}`)
   execSync(cmd)
 })

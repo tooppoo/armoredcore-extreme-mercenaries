@@ -1,4 +1,4 @@
-import { useLoaderData } from 'react-router'
+import { data, useLoaderData } from 'react-router'
 import React from 'react'
 import { type ReadArchive } from '~/lib/archives/challenge/read/entity'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
@@ -18,11 +18,22 @@ export const loader = async ({ params, context }: Route.LoaderArgs) => {
         throw notFound(null)
       }
 
-      return Response.json({
-        archive,
-      })
+      return data(
+        {
+          archive,
+        },
+        {
+          headers: {
+            'Cache-Control': `public, max-age=${context.cloudflare.env.BASE_LONG_CACHE_TIME}`,
+            ETag: archive.createdAt.toISOString(),
+          },
+        },
+      )
     },
   )
+}
+export function headers({ loaderHeaders }: Route.HeadersArgs) {
+  return loaderHeaders
 }
 
 // クエリ用なので略記名

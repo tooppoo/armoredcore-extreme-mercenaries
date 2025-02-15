@@ -3,4 +3,5 @@ export type ReadArchive = Readonly<{
   title: string
   description: string
   url: string | null
+  createdAt: Date
 }>

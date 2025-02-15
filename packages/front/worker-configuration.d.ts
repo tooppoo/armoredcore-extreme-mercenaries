@@ -8,5 +8,7 @@ interface Env {
   DISCORD_LINK_SUGGESTION: string
   GOOGLE_FORM_INQUIRY: string
   YOUTUBE_PUBLIC_DATA_API_KEY: string
+  BASE_SHORT_CACHE_TIME: string
+  BASE_LONG_CACHE_TIME: string
   DB: D1Database
 }

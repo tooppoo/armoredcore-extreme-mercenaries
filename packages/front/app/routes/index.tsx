@@ -4,14 +4,25 @@ import { LinkIcon } from '@heroicons/react/16/solid'
 import { siteName } from '~/lib/constants'
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
+import { TZDate } from '@date-fns/tz'
 
 type IndexLoaderData = Readonly<LoadDiscord & { inquiryUrl: string }>
-export const loader = async (
-  args: Route.LoaderArgs,
-): Promise<IndexLoaderData> => ({
-  ...loadDiscord(args),
-  inquiryUrl: args.context.cloudflare.env.GOOGLE_FORM_INQUIRY,
-})
+export const loader = async (args: Route.LoaderArgs) =>
+  Response.json(
+    {
+      ...loadDiscord(args),
+      inquiryUrl: args.context.cloudflare.env.GOOGLE_FORM_INQUIRY,
+    },
+    {
+      headers: {
+        'Cache-Control': `public, max-age=${args.context.cloudflare.env.BASE_LONG_CACHE_TIME}`,
+        ETag: new TZDate(2025, 1, 15).toISOString(),
+      },
+    },
+  )
+export function headers({ loaderHeaders }: Route.HeadersArgs) {
+  return loaderHeaders
+}
 
 export default function Index() {
   const indexLoaderData = useLoaderData<IndexLoaderData>()

@@ -1,17 +1,29 @@
-import { Link, useLoaderData } from 'react-router'
+import { data, Link, useLoaderData } from 'react-router'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import { ReadUpdate } from '~/lib/updates/entity.server'
 import { pageUpdates } from '~/lib/updates/repository/read.server'
 import type { Route } from './+types/index'
+import { TZDate } from '@date-fns/tz'
 
 type UpdatesLoader = Readonly<{
   updates: readonly ReadUpdate[]
 }>
-export const loader = async (): Promise<UpdatesLoader> => {
-  return {
-    updates: await pageUpdates({ page: 1 }),
-  }
+export const loader = async ({ context }: Route.LoaderArgs) =>
+  data(
+    {
+      updates: await pageUpdates({ page: 1 }),
+    },
+    {
+      headers: {
+        'Cache-Control': `public, max-age=${context.cloudflare.env.BASE_LONG_CACHE_TIME}`,
+        ETag: new TZDate(2025, 1, 15).toISOString(),
+      },
+    },
+  )
+export function headers({ loaderHeaders }: Route.HeadersArgs) {
+  return loaderHeaders
 }
+
 export const meta: Route.MetaFunction = ({ location }) => [
   ...buildMeta({
     title: '更新履歴',

@@ -1,6 +1,21 @@
 import { Link } from 'react-router'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import type { Route } from './+types/penalties'
+import { TZDate } from '@date-fns/tz'
+
+export const loader = async ({ context }: Route.LoaderArgs) =>
+  Response.json(
+    {},
+    {
+      headers: {
+        'Cache-Control': `public, max-age=${context.cloudflare.env.BASE_LONG_CACHE_TIME}`,
+        ETag: new TZDate(2025, 1, 15).toISOString(),
+      },
+    },
+  )
+export function headers({ loaderHeaders }: Route.HeadersArgs) {
+  return loaderHeaders
+}
 
 export const meta: Route.MetaFunction = ({ location }) => {
   return [

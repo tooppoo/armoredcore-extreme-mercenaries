@@ -5,9 +5,9 @@ import { v7 as uuidv7 } from 'uuid'
 export const discordMembers = sqliteTable('discord_members', {
   discordUserId: text('discord_user_id').primaryKey(),
   discordUserName: text('discord_user_name').notNull(),
-  createdAt: integer('created_at', { mode: 'timestamp' }).$default(
-    () => sql`CURRENT_TIMESTAMP`,
-  ),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
 })
 
 export const videoArchives = sqliteTable('video_archives', {
@@ -23,10 +23,11 @@ export const videoArchives = sqliteTable('video_archives', {
   uploadMemberId: text('upload_member_id')
     .notNull()
     .references(() => discordMembers.discordUserId),
-  createdAt: integer('created_at', { mode: 'timestamp' }).$default(
-    () => sql`CURRENT_TIMESTAMP`,
-  ),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
 })
+
 export const challengeArchives = sqliteTable('challenge_archives', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   externalId: text('external_id')
@@ -39,9 +40,9 @@ export const challengeArchives = sqliteTable('challenge_archives', {
   uploadMemberId: text('upload_member_id')
     .notNull()
     .references(() => discordMembers.discordUserId),
-  createdAt: integer('created_at', { mode: 'timestamp' }).$default(
-    () => sql`CURRENT_TIMESTAMP`,
-  ),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
 })
 
 export const deleteArchiveRequests = sqliteTable('delete_archive_requests', {
@@ -50,10 +51,11 @@ export const deleteArchiveRequests = sqliteTable('delete_archive_requests', {
   statusId: integer('status_id')
     .notNull()
     .references(() => deleteArchiveRequestsStatus.id),
-  createdAt: integer('created_at', { mode: 'timestamp' }).$default(
-    () => sql`CURRENT_TIMESTAMP`,
-  ),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
 })
+
 export const deleteArchiveRequestsStatus = sqliteTable(
   'delete_archive_requests_status',
   {
@@ -61,13 +63,7 @@ export const deleteArchiveRequestsStatus = sqliteTable(
     value: text('value').notNull(),
   },
 )
-/**
- * 動画アーカイブと削除リクエストの中間テーブル
- *
- * - 1つの削除リクエスト (deleteArchiveRequests.id) に対して
- *   複数の動画アーカイブ (videoArchives.id) を紐づけ可能
- * - 複合主キーを設定することで重複登録を防ぐ
- */
+
 export const deleteArchiveRequestVideoRelations = sqliteTable(
   'delete_archive_request_video_relations',
   {
@@ -83,12 +79,6 @@ export const deleteArchiveRequestVideoRelations = sqliteTable(
   ],
 )
 
-/**
- * チャレンジアーカイブと削除リクエストの中間テーブル
- *
- * - 1つの削除リクエスト (deleteArchiveRequests.id) に対して
- *   複数のチャレンジアーカイブ (challengeArchives.id) を紐づけ可能
- */
 export const deleteArchiveRequestChallengeRelations = sqliteTable(
   'delete_archive_request_challenge_relations',
   {
@@ -110,7 +100,20 @@ export const deletedArchives = sqliteTable('deleted_archives', {
   uploadMemberId: integer('upload_member_id')
     .notNull()
     .references(() => discordMembers.discordUserId),
-  createdAt: integer('created_at', { mode: 'timestamp' }).$default(
-    () => sql`CURRENT_TIMESTAMP`,
-  ),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
+})
+
+export const contentsRevisions = sqliteTable('contents_revisions', {
+  contentKey: text('content_key').primaryKey(),
+  revision: integer('revision')
+    .notNull()
+    .$default(() => 1),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
 })

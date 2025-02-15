@@ -1,10 +1,11 @@
-import { Link, useLoaderData } from 'react-router'
+import { data, Link, useLoaderData } from 'react-router'
 import { ReactElement } from 'react'
 import { LinkIcon } from '@heroicons/react/16/solid'
 import { siteName } from '~/lib/constants'
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import type { Route } from './+types/rule'
+import { TZDate } from '@date-fns/tz'
 
 export const meta: Route.MetaFunction = ({ location }) => {
   return buildMeta({
@@ -14,9 +15,21 @@ export const meta: Route.MetaFunction = ({ location }) => {
   })
 }
 
-export const loader = async (args: Route.LoaderArgs) => ({
-  ...loadDiscord(args),
-})
+export const loader = async (args: Route.LoaderArgs) =>
+  data(
+    {
+      ...loadDiscord(args),
+    },
+    {
+      headers: {
+        'Cache-Control': `public, max-age=${args.context.cloudflare.env.BASE_LONG_CACHE_TIME}`,
+        ETag: new TZDate(2025, 1, 15).toISOString(),
+      },
+    },
+  )
+export function headers({ loaderHeaders }: Route.HeadersArgs) {
+  return loaderHeaders
+}
 
 export const Rule: React.FC = () => {
   const { discord } = useLoaderData<LoadDiscord>()

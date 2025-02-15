@@ -25,7 +25,7 @@ jobs:
       # DB構築
       - run: npm run migration
         working-directory: packages/front
-      - run: npm run seed
+      - run: npm run seed:local
         working-directory: packages/front
 
       - run: lhci autorun
