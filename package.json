@@ -7,7 +7,6 @@
     "test": "npm run run-all -- test",
     "coverage": "npm run run-all -- coverage",
     "lint": "npm run run-all -- lint",
-    "lint:fix": "npm run run-all -- lint:fix",
     "typecheck": "npm run run-all -- typecheck",
     "run-all": "npm run --workspaces --if-present",
     "bot": "npm run -w @ac-extreme-mercenaries/discord-bot",
