@@ -3,11 +3,11 @@ import {
   forbidden,
   internalServerError,
   unknownError,
-} from '~/lib/api/response/json/error.server'
+} from '~/lib/http/response/json/error.server'
 import type { Route } from './+types/challenge'
-import { requireAuthToken } from '~/lib/api/request/require-auth-token.server'
+import { requireAuthToken } from '~/lib/http/request/require-auth-token.server'
 import { SitemapFunction } from 'remix-sitemap'
-import { handleZodError, parseJson } from '~/lib/api/request/parser.server'
+import { handleZodError, parseJson } from '~/lib/http/request/parser.server'
 import { postChallengeArchiveBody } from '~/lib/archives/challenge/upload/params.server'
 import {
   buildChallengeArchiveFromText,
@@ -23,7 +23,7 @@ import {
   failedGetOGP,
   unsupportedUrl,
 } from '~/lib/archives/common/errors.server'
-import { successWithoutToken } from '~/lib/api/response/json/auth.server'
+import { successWithoutToken } from '~/lib/http/response/json/auth.server'
 
 export const action = (args: Route.ActionArgs) => {
   requireAuthToken(args)

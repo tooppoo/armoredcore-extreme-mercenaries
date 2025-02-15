@@ -17,7 +17,7 @@ import type { Route } from './+types/challenge'
 import { WithChildren, WithClassName } from '~/lib/utils/components/types'
 import { Description } from '~/lib/archives/common/components/description'
 import { getChallengeArchiveListRevision } from '~/lib/archives/challenge/revision/repository'
-import { parseQuery } from '~/lib/api/request/parser.server'
+import { parseQuery } from '~/lib/http/request/parser.server'
 
 type LoadArchives = Readonly<{
   totalPage: number

@@ -5,7 +5,7 @@ import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import { Margin } from '~/lib/utils/components/spacer'
 import type { Route } from './+types/detail'
 import { findChallengeArchiveByExternalId } from '~/lib/archives/challenge/read/repository/find-challenge-by-external-id'
-import { notFound } from '~/lib/api/response/json/error.server'
+import { notFound } from '~/lib/http/response/json/error.server'
 import { Description } from '~/lib/archives/common/components/description'
 
 type LoadDetail = Readonly<{

@@ -1,5 +1,5 @@
 import type { z, ZodError, ZodObject, ZodRawShape } from 'zod'
-import { badRequest } from '~/lib/api/response/json/error.server'
+import { badRequest } from '~/lib/http/response/json/error.server'
 import { makeCatchesSerializable } from '~/lib/error'
 
 export async function parseJson<R extends Request>(

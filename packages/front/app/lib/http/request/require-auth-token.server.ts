@@ -2,7 +2,7 @@ import { AppLoadContext } from 'react-router'
 import {
   invalidToken,
   tokenRequired,
-} from '~/lib/api/response/json/auth.server'
+} from '~/lib/http/response/json/auth.server'
 
 type RequireAuthTokenArgs<R extends Request> = Readonly<{
   request: R

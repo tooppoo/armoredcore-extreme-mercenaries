@@ -1,11 +1,11 @@
 import { SitemapFunction } from 'remix-sitemap'
-import { successWithoutToken } from '~/lib/api/response/json/auth.server'
+import { successWithoutToken } from '~/lib/http/response/json/auth.server'
 import {
   badRequest,
   forbidden,
   internalServerError,
   unknownError,
-} from '~/lib/api/response/json/error.server'
+} from '~/lib/http/response/json/error.server'
 import {
   ArchiveError,
   duplicatedUrl,
@@ -19,8 +19,8 @@ import { findVideoArchiveByURL } from '~/lib/archives/video/upload/repository/fi
 import { postArchiveBody } from '~/lib/archives/video/upload/params.server'
 import { makeCatchesSerializable } from '~/lib/error'
 import type { Route } from './+types/video'
-import { requireAuthToken } from '~/lib/api/request/require-auth-token.server'
-import { handleZodError, parseJson } from '~/lib/api/request/parser.server'
+import { requireAuthToken } from '~/lib/http/request/require-auth-token.server'
+import { handleZodError, parseJson } from '~/lib/http/request/parser.server'
 
 export const action = (args: Route.ActionArgs) => {
   requireAuthToken(args)

@@ -17,7 +17,7 @@ import type { Route } from './+types/video'
 import { WithChildren } from '~/lib/utils/components/types'
 import { Description } from '~/lib/archives/common/components/description'
 import { getVideoArchiveListRevision } from '~/lib/archives/video/revision/repository'
-import { parseQuery } from '~/lib/api/request/parser.server'
+import { parseQuery } from '~/lib/http/request/parser.server'
 
 type LoadArchives = Readonly<{
   totalPage: number
