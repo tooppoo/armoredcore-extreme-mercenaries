@@ -338,7 +338,7 @@ const RuleItem: React.FC<RuleItemProps> = ({ caption, id, children }) => (
   <li className="text-lg ml-0 mb-10">
     <h3 className="underline">
       {caption}
-      <Link to={{ hash: id }} id={id} className="inline-block ml-2">
+      <Link to={{ hash: id }} id={id} className="inline-block ml-2" aria-label={`見出し「${caption}」へのアンカー`}>
         <LinkIcon className="size-4" />
       </Link>
     </h3>
