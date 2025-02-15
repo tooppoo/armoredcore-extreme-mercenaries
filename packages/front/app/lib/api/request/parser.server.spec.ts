@@ -35,6 +35,9 @@ describe('handleZodError', () => {
       },
     ])
 
-    await expect(async () => handleZodError(zodError)).rejects.toHaveProperty('status', 400)
+    await expect(async () => handleZodError(zodError)).rejects.toHaveProperty(
+      'status',
+      400,
+    )
   })
 })

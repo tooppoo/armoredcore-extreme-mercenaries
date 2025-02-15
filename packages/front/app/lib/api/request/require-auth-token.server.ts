@@ -1,13 +1,16 @@
 import { AppLoadContext } from 'react-router'
-import { invalidToken, tokenRequired } from '~/lib/api/response/json/auth.server'
+import {
+  invalidToken,
+  tokenRequired,
+} from '~/lib/api/response/json/auth.server'
 
 type RequireAuthTokenArgs<R extends Request> = Readonly<{
-  request: R,
+  request: R
   context: AppLoadContext
 }>
 export function requireAuthToken<R extends Request>({
   request,
-  context
+  context,
 }: RequireAuthTokenArgs<R>): void {
   const auth = request.headers.get('Authorization')
   const token = auth?.replace('Bearer ', '')

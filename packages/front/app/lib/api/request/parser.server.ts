@@ -2,7 +2,9 @@ import { ZodError } from 'zod'
 import { badRequest } from '~/lib/api/response/json/error.server'
 import { makeCatchesSerializable } from '~/lib/error'
 
-export async function parseJson<R extends Request>(request: R): Promise<unknown> {
+export async function parseJson<R extends Request>(
+  request: R,
+): Promise<unknown> {
   return request.json().catch((e) => {
     const error = makeCatchesSerializable(e)
     console.error({ message: 'request is invalid format', error })

@@ -16,10 +16,12 @@ describe('requireAuthToken', () => {
       headers: {},
     })
 
-    await expect(async () => requireAuthToken({ request: mockRequest, context: mockContext }))
-      .rejects.toBeInstanceOf(Response)
-    await expect(async () => requireAuthToken({ request: mockRequest, context: mockContext }))
-      .rejects.toHaveProperty('status', 401)
+    await expect(async () =>
+      requireAuthToken({ request: mockRequest, context: mockContext }),
+    ).rejects.toBeInstanceOf(Response)
+    await expect(async () =>
+      requireAuthToken({ request: mockRequest, context: mockContext }),
+    ).rejects.toHaveProperty('status', 401)
   })
 
   it('should throw as unauthorized if incorrect token is provided', async () => {
@@ -29,10 +31,12 @@ describe('requireAuthToken', () => {
       },
     })
 
-    await expect(async () => requireAuthToken({ request: mockRequest, context: mockContext }))
-      .rejects.toBeInstanceOf(Response)
-    await expect(async () => requireAuthToken({ request: mockRequest, context: mockContext }))
-      .rejects.toHaveProperty('status', 401)
+    await expect(async () =>
+      requireAuthToken({ request: mockRequest, context: mockContext }),
+    ).rejects.toBeInstanceOf(Response)
+    await expect(async () =>
+      requireAuthToken({ request: mockRequest, context: mockContext }),
+    ).rejects.toHaveProperty('status', 401)
   })
 
   it('should not throw if correct token is provided', () => {
@@ -42,7 +46,8 @@ describe('requireAuthToken', () => {
       },
     })
 
-    expect(() => requireAuthToken({ request: mockRequest, context: mockContext }))
-      .not.toThrow()
+    expect(() =>
+      requireAuthToken({ request: mockRequest, context: mockContext }),
+    ).not.toThrow()
   })
 })

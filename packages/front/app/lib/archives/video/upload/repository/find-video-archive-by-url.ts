@@ -4,7 +4,8 @@ import { videoArchives } from '~/db/schema.server'
 import { normalizeUrl } from '~/lib/archives/common/url/support-url.server'
 import { FindArchiveByURL } from '~/lib/archives/common/url/find-archive-by-url'
 
-export const findVideoArchiveByURL = (db: Database): FindArchiveByURL =>
+export const findVideoArchiveByURL =
+  (db: Database): FindArchiveByURL =>
   async (url: URL) => {
     const [result] = await db
       .select()
@@ -14,7 +15,7 @@ export const findVideoArchiveByURL = (db: Database): FindArchiveByURL =>
     if (!result) {
       return null
     }
-    
+
     return {
       ...result,
       imageUrl: new URL(result.imageUrl),

@@ -13,45 +13,47 @@
   }
 
   a {
-    @apply underline text-blue-700 dark:text-amber-400
+    @apply underline text-blue-700 dark:text-amber-400;
   }
 
   h1 {
-    @apply text-3xl my-1
+    @apply text-3xl my-1;
   }
   h2 {
-    @apply text-2xl my-1
+    @apply text-2xl my-1;
   }
   h3 {
-    @apply text-xl my-1
+    @apply text-xl my-1;
   }
 
-  ol, ul, li {
-    @apply my-1
+  ol,
+  ul,
+  li {
+    @apply my-1;
   }
   ol {
-    @apply list-decimal list-outside ml-6
+    @apply list-decimal list-outside ml-6;
   }
   ul {
-    @apply list-disc list-outside ml-6
+    @apply list-disc list-outside ml-6;
   }
   hr {
-    @apply border-gray-700 dark:border-inherit
+    @apply border-gray-700 dark:border-inherit;
   }
   code {
-    @apply block bg-gray-100 text-gray-800 px-4 overflow-x-scroll text-nowrap rounded-md
+    @apply block bg-gray-100 text-gray-800 px-4 overflow-x-scroll text-nowrap rounded-md;
   }
 }
 
 @layer utilities {
   .ac-border {
-    @apply border border-gray-700 dark:border-inherit
+    @apply border border-gray-700 dark:border-inherit;
   }
   .ac-border-b {
-    @apply border-b border-gray-700 dark:border-inherit
+    @apply border-b border-gray-700 dark:border-inherit;
   }
 
   .ac-hover {
-    @apply hover:bg-gray-200 dark:hover:bg-gray-700
+    @apply hover:bg-gray-200 dark:hover:bg-gray-700;
   }
 }

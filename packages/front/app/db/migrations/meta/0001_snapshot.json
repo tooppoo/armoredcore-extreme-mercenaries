@@ -49,12 +49,8 @@
           "name": "delete_archive_requests_status_id_delete_archive_requests_status_id_fk",
           "tableFrom": "delete_archive_requests",
           "tableTo": "delete_archive_requests_status",
-          "columnsFrom": [
-            "status_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["status_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -125,12 +121,8 @@
           "name": "deleted_archives_upload_member_id_discord_members_discord_user_id_fk",
           "tableFrom": "deleted_archives",
           "tableTo": "discord_members",
-          "columnsFrom": [
-            "upload_member_id"
-          ],
-          "columnsTo": [
-            "discord_user_id"
-          ],
+          "columnsFrom": ["upload_member_id"],
+          "columnsTo": ["discord_user_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -233,9 +225,7 @@
       "indexes": {
         "video_archives_external_id_unique": {
           "name": "video_archives_external_id_unique",
-          "columns": [
-            "external_id"
-          ],
+          "columns": ["external_id"],
           "isUnique": true
         }
       },
@@ -244,12 +234,8 @@
           "name": "video_archives_upload_member_id_discord_members_discord_user_id_fk",
           "tableFrom": "video_archives",
           "tableTo": "discord_members",
-          "columnsFrom": [
-            "upload_member_id"
-          ],
-          "columnsTo": [
-            "discord_user_id"
-          ],
+          "columnsFrom": ["upload_member_id"],
+          "columnsTo": ["discord_user_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

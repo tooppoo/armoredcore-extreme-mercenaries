@@ -1,4 +1,3 @@
-
 export type ReadArchive = Readonly<{
   externalId: string
   title: string

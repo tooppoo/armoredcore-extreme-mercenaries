@@ -6,15 +6,21 @@ export type ArchiveError =
   | FailedGetOGPError
 
 export const unsupportedUrl = 'unsupported-url'
-export type UnsupportedUrlError = ErrorData<typeof unsupportedUrl, {
-  url: string
-}>
+export type UnsupportedUrlError = ErrorData<
+  typeof unsupportedUrl,
+  {
+    url: string
+  }
+>
 
 export const duplicatedUrl = 'duplicated-url'
-export type DuplicateUrlError = ErrorData<typeof duplicatedUrl, {
-  requested: string
-  existing: string
-}>
+export type DuplicateUrlError = ErrorData<
+  typeof duplicatedUrl,
+  {
+    requested: string
+    existing: string
+  }
+>
 
 export const failedGetOGP = 'failed-get-ogp'
 export type FailedGetOGPError = ErrorData<typeof failedGetOGP, unknown>

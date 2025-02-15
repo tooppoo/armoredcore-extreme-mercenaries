@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 const postChallengeArchiveLinkBody = z.object({
   type: z.literal('link'),
@@ -8,7 +8,7 @@ const postChallengeArchiveLinkBody = z.object({
     id: z.string().nonempty(),
     name: z.string().nonempty(),
   }),
-});
+})
 const postChallengeArchiveTextBody = z.object({
   type: z.literal('text'),
   title: z.string().nonempty(),
@@ -17,12 +17,16 @@ const postChallengeArchiveTextBody = z.object({
     id: z.string().nonempty(),
     name: z.string().nonempty(),
   }),
-});
+})
 export const postChallengeArchiveBody = z.union([
   postChallengeArchiveLinkBody,
   postChallengeArchiveTextBody,
 ])
 
-export type PostChallengeArchiveLinkBody = z.infer<typeof postChallengeArchiveLinkBody>
-export type PostChallengeArchiveTextBody = z.infer<typeof postChallengeArchiveTextBody>
+export type PostChallengeArchiveLinkBody = z.infer<
+  typeof postChallengeArchiveLinkBody
+>
+export type PostChallengeArchiveTextBody = z.infer<
+  typeof postChallengeArchiveTextBody
+>
 export type PostChallengeArchiveBody = z.infer<typeof postChallengeArchiveBody>

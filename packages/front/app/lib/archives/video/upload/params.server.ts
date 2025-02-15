@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const postArchiveBody = z.object({
   url: z.string().url().nonempty(),

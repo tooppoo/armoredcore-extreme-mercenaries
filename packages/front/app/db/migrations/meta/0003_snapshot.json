@@ -60,9 +60,7 @@
       "indexes": {
         "challenge_archives_external_id_unique": {
           "name": "challenge_archives_external_id_unique",
-          "columns": [
-            "external_id"
-          ],
+          "columns": ["external_id"],
           "isUnique": true
         }
       },
@@ -71,12 +69,8 @@
           "name": "challenge_archives_upload_member_id_discord_members_discord_user_id_fk",
           "tableFrom": "challenge_archives",
           "tableTo": "discord_members",
-          "columnsFrom": [
-            "upload_member_id"
-          ],
-          "columnsTo": [
-            "discord_user_id"
-          ],
+          "columnsFrom": ["upload_member_id"],
+          "columnsTo": ["discord_user_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -109,12 +103,8 @@
           "name": "delete_archive_request_challenge_relations_delete_request_id_delete_archive_requests_id_fk",
           "tableFrom": "delete_archive_request_challenge_relations",
           "tableTo": "delete_archive_requests",
-          "columnsFrom": [
-            "delete_request_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["delete_request_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -122,22 +112,15 @@
           "name": "delete_archive_request_challenge_relations_challenge_archive_id_challenge_archives_id_fk",
           "tableFrom": "delete_archive_request_challenge_relations",
           "tableTo": "challenge_archives",
-          "columnsFrom": [
-            "challenge_archive_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["challenge_archive_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
         "delete_archive_request_challenge_relations_delete_request_id_challenge_archive_id_pk": {
-          "columns": [
-            "delete_request_id",
-            "challenge_archive_id"
-          ],
+          "columns": ["delete_request_id", "challenge_archive_id"],
           "name": "delete_archive_request_challenge_relations_delete_request_id_challenge_archive_id_pk"
         }
       },
@@ -168,12 +151,8 @@
           "name": "delete_archive_request_video_relations_delete_request_id_delete_archive_requests_id_fk",
           "tableFrom": "delete_archive_request_video_relations",
           "tableTo": "delete_archive_requests",
-          "columnsFrom": [
-            "delete_request_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["delete_request_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -181,22 +160,15 @@
           "name": "delete_archive_request_video_relations_video_archive_id_video_archives_id_fk",
           "tableFrom": "delete_archive_request_video_relations",
           "tableTo": "video_archives",
-          "columnsFrom": [
-            "video_archive_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["video_archive_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
         "delete_archive_request_video_relations_delete_request_id_video_archive_id_pk": {
-          "columns": [
-            "delete_request_id",
-            "video_archive_id"
-          ],
+          "columns": ["delete_request_id", "video_archive_id"],
           "name": "delete_archive_request_video_relations_delete_request_id_video_archive_id_pk"
         }
       },
@@ -241,12 +213,8 @@
           "name": "delete_archive_requests_status_id_delete_archive_requests_status_id_fk",
           "tableFrom": "delete_archive_requests",
           "tableTo": "delete_archive_requests_status",
-          "columnsFrom": [
-            "status_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["status_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -317,12 +285,8 @@
           "name": "deleted_archives_upload_member_id_discord_members_discord_user_id_fk",
           "tableFrom": "deleted_archives",
           "tableTo": "discord_members",
-          "columnsFrom": [
-            "upload_member_id"
-          ],
-          "columnsTo": [
-            "discord_user_id"
-          ],
+          "columnsFrom": ["upload_member_id"],
+          "columnsTo": ["discord_user_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -425,9 +389,7 @@
       "indexes": {
         "video_archives_external_id_unique": {
           "name": "video_archives_external_id_unique",
-          "columns": [
-            "external_id"
-          ],
+          "columns": ["external_id"],
           "isUnique": true
         }
       },
@@ -436,12 +398,8 @@
           "name": "video_archives_upload_member_id_discord_members_discord_user_id_fk",
           "tableFrom": "video_archives",
           "tableTo": "discord_members",
-          "columnsFrom": [
-            "upload_member_id"
-          ],
-          "columnsTo": [
-            "discord_user_id"
-          ],
+          "columnsFrom": ["upload_member_id"],
+          "columnsTo": ["discord_user_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

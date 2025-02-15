@@ -1,16 +1,26 @@
-import { SitemapFunction } from 'remix-sitemap';
-import { successWithoutToken } from '~/lib/api/response/json/auth.server';
-import { badRequest, forbidden, internalServerError, unknownError } from '~/lib/api/response/json/error.server';
-import { ArchiveError, duplicatedUrl, failedGetOGP, unsupportedUrl } from '~/lib/archives/common/errors.server';
-import { buildVideoArchiveFromUrl } from '~/lib/archives/video/upload/functions.server';
-import { getOGPStrategy } from '~/lib/archives/common/ogp/ogp-strategy.server';
-import { saveVideoArchive } from '~/lib/archives/video/upload/repository/save-video-archive.server';
-import { findVideoArchiveByURL } from '~/lib/archives/video/upload/repository/find-video-archive-by-url';
-import { postArchiveBody } from '~/lib/archives/video/upload/params.server';
-import { makeCatchesSerializable } from '~/lib/error';
+import { SitemapFunction } from 'remix-sitemap'
+import { successWithoutToken } from '~/lib/api/response/json/auth.server'
+import {
+  badRequest,
+  forbidden,
+  internalServerError,
+  unknownError,
+} from '~/lib/api/response/json/error.server'
+import {
+  ArchiveError,
+  duplicatedUrl,
+  failedGetOGP,
+  unsupportedUrl,
+} from '~/lib/archives/common/errors.server'
+import { buildVideoArchiveFromUrl } from '~/lib/archives/video/upload/functions.server'
+import { getOGPStrategy } from '~/lib/archives/common/ogp/ogp-strategy.server'
+import { saveVideoArchive } from '~/lib/archives/video/upload/repository/save-video-archive.server'
+import { findVideoArchiveByURL } from '~/lib/archives/video/upload/repository/find-video-archive-by-url'
+import { postArchiveBody } from '~/lib/archives/video/upload/params.server'
+import { makeCatchesSerializable } from '~/lib/error'
 import type { Route } from './+types/video'
-import { requireAuthToken } from '~/lib/api/request/require-auth-token.server';
-import { handleZodError, parseJson } from '~/lib/api/request/parser.server';
+import { requireAuthToken } from '~/lib/api/request/require-auth-token.server'
+import { handleZodError, parseJson } from '~/lib/api/request/parser.server'
 
 export const action = (args: Route.ActionArgs) => {
   requireAuthToken(args)
@@ -27,14 +37,11 @@ const post = async ({ request, context }: Route.ActionArgs) => {
   const json = await parseJson(request)
   const data = await postArchiveBody.parseAsync(json).catch(handleZodError)
 
-  const archive = await buildVideoArchiveFromUrl(
-    new URL(data.url),
-    {
-      env: context.cloudflare.env,
-      getOGPStrategy,
-      findArchiveByURL: findVideoArchiveByURL(context.db),
-    }
-  ).catch((error: ArchiveError) => {
+  const archive = await buildVideoArchiveFromUrl(new URL(data.url), {
+    env: context.cloudflare.env,
+    getOGPStrategy,
+    findArchiveByURL: findVideoArchiveByURL(context.db),
+  }).catch((error: ArchiveError) => {
     console.error({ error: makeCatchesSerializable(error) })
 
     switch (error.code) {
@@ -54,14 +61,14 @@ const post = async ({ request, context }: Route.ActionArgs) => {
       uploader: {
         id: data.discord_user.id,
         name: data.discord_user.name,
-      }
+      },
     },
-    context.db
+    context.db,
   ).catch(unknownError)
 
   return successWithoutToken(null)
 }
 
 export const sitemap: SitemapFunction = () => ({
-  exclude: true
+  exclude: true,
 })

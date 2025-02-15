@@ -1,5 +1,5 @@
-import { MetaDescriptor } from 'react-router';
-import { cacheKey, origin, siteName } from '~/lib/constants';
+import { MetaDescriptor } from 'react-router'
+import { cacheKey, origin, siteName } from '~/lib/constants'
 
 type Meta = MetaDescriptor[]
 
@@ -21,7 +21,10 @@ export function buildMeta(args: BuildMetaArgs): Meta {
     ...buildUrl(url),
     { property: 'og:site_name', content: siteName },
     { property: 'og:type', content: 'website' },
-    { property: 'og:image', content: `https://philomagi.dev/ogp-full.jpg?c=${cacheKey}` },
+    {
+      property: 'og:image',
+      content: `https://philomagi.dev/ogp-full.jpg?c=${cacheKey}`,
+    },
     { name: 'twitter:card', content: 'summary' },
     { name: 'twitter:creator', content: '@Philomagi' },
   ]
@@ -30,10 +33,7 @@ export function buildMeta(args: BuildMetaArgs): Meta {
 export const unofficialServer = `アーマードコアのやりこみ攻略特化型discordサーバー「${siteName}」`
 
 function title(s: string): Meta {
-  return [
-    { title: _title(s) },
-    { property: 'og:title', content: _title(s) },
-  ]
+  return [{ title: _title(s) }, { property: 'og:title', content: _title(s) }]
 }
 function _title(s: string): string {
   return `${s} | ${siteName}`
@@ -54,12 +54,12 @@ type JsonLdArgs = Readonly<{
 function jsonLd({ title, description, url }: JsonLdArgs): Meta {
   return [
     {
-      "script:ld+json": {
-        "@context":"https://schema.org",
-        "@type":"WebSite",
+      'script:ld+json': {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
         description,
-        "headline": title,
-        "name": siteName,
+        headline: title,
+        name: siteName,
         url,
       },
     },
