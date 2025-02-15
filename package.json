@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "npm run run-all -- test",
+    "build": "npm run run-all -- build",
     "coverage": "npm run run-all -- coverage",
     "lint": "npm run run-all -- lint",
     "typecheck": "npm run run-all -- typecheck",
