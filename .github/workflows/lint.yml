@@ -2,8 +2,6 @@ name: lint and format
 
 on:
   pull_request:
-    branches:
-      - '*'
     branches-ignore:
       - 'renovate/*'
 
