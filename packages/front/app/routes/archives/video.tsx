@@ -1,7 +1,6 @@
 import { Form, Link, useLoaderData } from 'react-router'
 import { type ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
-import { zx } from 'zodix'
 import { type ReadArchive } from '~/lib/archives/video/list/entity'
 import { orderQueryKeys, orderQueryMap } from '~/lib/archives/common/list/query'
 import {
@@ -18,6 +17,7 @@ import type { Route } from './+types/video'
 import { WithChildren } from '~/lib/utils/components/types'
 import { Description } from '~/lib/archives/common/components/description'
 import { getVideoArchiveListRevision } from '~/lib/archives/video/revision/repository'
+import { parseQuery } from '~/lib/api/request/parser.server'
 
 type LoadArchives = Readonly<{
   totalPage: number
@@ -28,7 +28,7 @@ type LoadArchives = Readonly<{
     }>
 }>
 export const loader = async ({ context, request }: Route.LoaderArgs) => {
-  const query = zx.parseQuery(request, querySchema(orderByCreated))
+  const query = parseQuery(request, querySchema(orderByCreated))
 
   const { list: archives, totalPage } = await pageArchives(
     {

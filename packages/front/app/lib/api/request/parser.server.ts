@@ -1,4 +1,4 @@
-import { ZodError } from 'zod'
+import type { z, ZodError, ZodObject, ZodRawShape } from 'zod'
 import { badRequest } from '~/lib/api/response/json/error.server'
 import { makeCatchesSerializable } from '~/lib/error'
 
@@ -28,4 +28,17 @@ export function handleZodError(error: ZodError): never {
     message: 'Request body does not match the expected scheme',
     detail: error.errors,
   })
+}
+
+export function parseQuery<
+  S extends ZodObject<ZRS>,
+  ZRS extends ZodRawShape
+>(
+  request: Request,
+  scheme: S
+): z.infer<S> {
+  const url = new URL(request.url);
+  const search = url.searchParams;
+  const query = Object.fromEntries(search.entries());
+  return scheme.parse(query);
 }
