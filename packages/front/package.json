@@ -23,7 +23,6 @@
     "cf-typegen": "wrangler types",
     "migration": "wrangler d1 migrations apply ac-extreme-mercenaries-db --local",
     "migration:gen": "drizzle-kit generate",
-    "migration:prod": "wrangler d1 migrations apply ac-extreme-mercenaries-db --remote",
     "migration:test": "wrangler d1 migrations apply ac-extreme-mercenaries-db-test --local --env test --config wrangler.test.toml",
     "seed": "tsx app/db/seeds/runner.ts",
     "db-execute": "wrangler d1 execute ac-extreme-mercenaries-db --local",

@@ -1,0 +1,57 @@
+name: Deploy Front
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  deploy-front:
+    name: deploy front
+    runs-on: ubuntu-latest
+    environment:
+      name: front
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+
+      # setup
+      - run: npm ci
+      - run: npm run front -- build
+
+      # Migration
+      - name: Migration D1
+        id: migration-d1
+        uses: cloudflare/wrangler-action@392082e81ffbcb9ebdde27400634aa004b35ea37 # v3
+        continue-on-error: true
+        with:
+          command: "d1 migrations apply ac-extreme-mercenaries-db --remote"
+          apiToken: ${{ secrets.CLOUDFLARE_INTEGRATION }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: "packages/front"
+      - name: Upload Migration Error
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
+        if: ${{ steps.migration-d1.outcome == 'failure' }}
+        with:
+          name: migration-d1-error-log
+          path: ./.config/.wrangler/logs/*
+      - name: Migration Error
+        if: ${{ steps.migration-d1.outcome == 'failure' }}
+        run: |
+          echo "error on d1 migration"
+          exit 1
+
+      # Deploy
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_INTEGRATION }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          environment: production
