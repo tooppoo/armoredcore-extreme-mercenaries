@@ -114,3 +114,14 @@ export const deletedArchives = sqliteTable('deleted_archives', {
     () => sql`CURRENT_TIMESTAMP`,
   ),
 })
+
+export const contentsRevisions = sqliteTable('contents_revisions', {
+  contentKey: text('content_key').primaryKey(),
+  revision: integer('revision').notNull().$default(() => 1),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$default(
+    () => sql`CURRENT_TIMESTAMP`,
+  ),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).$default(
+    () => sql`CURRENT_TIMESTAMP`,
+  ),
+})
