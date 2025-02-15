@@ -76,8 +76,8 @@ DISCORD_LINK_INVITE     = "https://discord.gg/F9HkPsQ37J"
 DISCORD_LINK_QUESTION   = "https://discord.com/channels/1240446809906610236/1240455428589223996"
 DISCORD_LINK_SUGGESTION = "https://discord.com/channels/1240446809906610236/1240455802272092211"
 GOOGLE_FORM_INQUIRY = "https://docs.google.com/forms/d/e/1FAIpQLSe8_X61FVZSCNhirWqoAU3NYmr3SLjOyERG--h2kRyCcz8hzQ/viewform"
-BASE_SHORT_CACHE_TIME = 1800 # 30m
-BASE_LONG_CACHE_TIME = 86400 # 1d
+BASE_SHORT_CACHE_TIME = "1800" # 30m
+BASE_LONG_CACHE_TIME = "86400" # 1d
 
 [[env.preview.d1_databases]]
 binding = "DB"
@@ -97,8 +97,8 @@ DISCORD_LINK_INVITE     = "https://discord.gg/F9HkPsQ37J"
 DISCORD_LINK_QUESTION   = "https://discord.com/channels/1240446809906610236/1240455428589223996"
 DISCORD_LINK_SUGGESTION = "https://discord.com/channels/1240446809906610236/1240455802272092211"
 GOOGLE_FORM_INQUIRY = "https://docs.google.com/forms/d/e/1FAIpQLSe8_X61FVZSCNhirWqoAU3NYmr3SLjOyERG--h2kRyCcz8hzQ/viewform"
-BASE_SHORT_CACHE_TIME = 1800 # 30m
-BASE_LONG_CACHE_TIME = 86400 # 1d
+BASE_SHORT_CACHE_TIME = "1800" # 30m
+BASE_LONG_CACHE_TIME = "86400" # 1d
 
 [[env.production.d1_databases]]
 binding = "DB"
