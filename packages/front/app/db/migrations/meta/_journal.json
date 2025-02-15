@@ -43,6 +43,13 @@
       "when": 1739620566446,
       "tag": "0005_add_non_null",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1739630171218,
+      "tag": "0006_fix_default_value",
+      "breakpoints": true
     }
   ]
 }

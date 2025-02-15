@@ -7,7 +7,7 @@ export const discordMembers = sqliteTable('discord_members', {
   discordUserName: text('discord_user_name').notNull(),
   createdAt: integer('created_at', { mode: 'timestamp' })
     .notNull()
-    .$default(() => sql`CURRENT_TIMESTAMP`),
+    .default(sql`(unixepoch())`),
 })
 
 export const videoArchives = sqliteTable('video_archives', {
@@ -25,7 +25,7 @@ export const videoArchives = sqliteTable('video_archives', {
     .references(() => discordMembers.discordUserId),
   createdAt: integer('created_at', { mode: 'timestamp' })
     .notNull()
-    .$default(() => sql`CURRENT_TIMESTAMP`),
+    .default(sql`(unixepoch())`),
 })
 
 export const challengeArchives = sqliteTable('challenge_archives', {
@@ -42,7 +42,7 @@ export const challengeArchives = sqliteTable('challenge_archives', {
     .references(() => discordMembers.discordUserId),
   createdAt: integer('created_at', { mode: 'timestamp' })
     .notNull()
-    .$default(() => sql`CURRENT_TIMESTAMP`),
+    .default(sql`(unixepoch())`),
 })
 
 export const deleteArchiveRequests = sqliteTable('delete_archive_requests', {
@@ -53,7 +53,7 @@ export const deleteArchiveRequests = sqliteTable('delete_archive_requests', {
     .references(() => deleteArchiveRequestsStatus.id),
   createdAt: integer('created_at', { mode: 'timestamp' })
     .notNull()
-    .$default(() => sql`CURRENT_TIMESTAMP`),
+    .default(sql`(unixepoch())`),
 })
 
 export const deleteArchiveRequestsStatus = sqliteTable(
@@ -102,7 +102,7 @@ export const deletedArchives = sqliteTable('deleted_archives', {
     .references(() => discordMembers.discordUserId),
   createdAt: integer('created_at', { mode: 'timestamp' })
     .notNull()
-    .$default(() => sql`CURRENT_TIMESTAMP`),
+    .default(sql`(unixepoch())`),
 })
 
 export const contentsRevisions = sqliteTable('contents_revisions', {
@@ -110,8 +110,8 @@ export const contentsRevisions = sqliteTable('contents_revisions', {
   revision: integer('revision').notNull().$default(() => 1),
   createdAt: integer('created_at', { mode: 'timestamp' })
     .notNull()
-    .$default(() => sql`CURRENT_TIMESTAMP`),
+    .default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' })
     .notNull()
-    .$default(() => sql`CURRENT_TIMESTAMP`),
+    .default(sql`(unixepoch())`),
 })
