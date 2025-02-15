@@ -1,12 +1,12 @@
 import 'dotenv/config'
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js'
-import { log } from '../lib/log';
-import { setupMessageSender } from './lib/message';
-import { messageHandlers } from './messages';
-import { frontRequestHandler } from './lib/front';
+import { log } from '../lib/log'
+import { setupMessageSender } from './lib/message'
+import { messageHandlers } from './messages'
+import { frontRequestHandler } from './lib/front'
 
 export function startBot() {
-  const client = setupClient();
+  const client = setupClient()
 
   client.login(process.env.DISCORD_TOKEN)
 }
@@ -20,10 +20,8 @@ function setupClient() {
         GatewayIntentBits.MessageContent,
       ],
     }),
-    [
-      setupMessageHandler,
-    ]
-  );
+    [setupMessageHandler],
+  )
 
   const buildMessageSender = setupMessageSender(c)
 
@@ -34,7 +32,7 @@ function setupClient() {
     log('debug', {
       event: Events.MessageCreate,
       message: message.content,
-      author: message.author.username
+      author: message.author.username,
     })
 
     if (message.author.bot) {
@@ -58,7 +56,7 @@ const applyClientSetup = (client: Client, functions: ClientSetupFunction[]) => {
 type ClientSetupFunction = (client: Client) => Client
 
 const setupMessageHandler: ClientSetupFunction = (client: Client): Client => {
-  client.messageHandlers = new Collection();
+  client.messageHandlers = new Collection()
 
   messageHandlers.forEach((messageHandler) => {
     client.messageHandlers.set(messageHandler.name, messageHandler)

@@ -1,7 +1,7 @@
-import { frontApi } from '../lib/front';
-import type { MessageHandler, MessageHandlerFunction } from '.';
-import type { UserMessage } from '../lib/message';
-import { log } from '../../lib/log';
+import { frontApi } from '../lib/front'
+import type { MessageHandler, MessageHandlerFunction } from '.'
+import type { UserMessage } from '../lib/message'
+import { log } from '../../lib/log'
 
 const name = 'upload-challenge-archive'
 const handle: MessageHandlerFunction = async (userMessage, frontRequest) => {
@@ -11,7 +11,7 @@ const handle: MessageHandlerFunction = async (userMessage, frontRequest) => {
   }
   log('debug', `start: ${name}`)
 
-  const body = parseMessage(userMessage);
+  const body = parseMessage(userMessage)
   log('debug', { message: 'parsed message', body })
 
   if (body.type === 'parse-error') {
@@ -19,17 +19,19 @@ const handle: MessageHandlerFunction = async (userMessage, frontRequest) => {
   }
 
   return frontRequest({
-    command: () => fetch(frontApi('/api/archives/challenge'), {
-      method: 'POST',
-      body: JSON.stringify(body),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.FRONT_AUTH_UPLOAD_ARCHIVE}`,
-      },
-    }),
+    command: () =>
+      fetch(frontApi('/api/archives/challenge'), {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.FRONT_AUTH_UPLOAD_ARCHIVE}`,
+        },
+      }),
     messages: {
       success: 'アーカイブに追加しました',
-      errorResponse: (errorCode) => errorMessageMap[errorCode] || 'アーカイブに追加されませんでした',
+      errorResponse: (errorCode) =>
+        errorMessageMap[errorCode] || 'アーカイブに追加されませんでした',
       invalidResponse: 'アーカイブ追加中にエラーが発生しました',
       commandFailure: 'アーカイブ追加に失敗しました',
     },
@@ -42,29 +44,30 @@ type BaseArchiveRequest = Readonly<{
     name: string
   }
 }>
-type ArchiveLinkRequest = BaseArchiveRequest & Readonly<{
-  type: 'link'
-  title: string
-  url: string
-}>
-type ArchiveTextRequest = BaseArchiveRequest & Readonly<{
-  type: 'text'
-  title: string
-  text: string
-}>
+type ArchiveLinkRequest = BaseArchiveRequest &
+  Readonly<{
+    type: 'link'
+    title: string
+    url: string
+  }>
+type ArchiveTextRequest = BaseArchiveRequest &
+  Readonly<{
+    type: 'text'
+    title: string
+    text: string
+  }>
 type ParseError = Readonly<{
   type: 'parse-error'
   message: string
   source: string
 }>
 
-function parseMessage(userMessage: UserMessage): ArchiveLinkRequest | ArchiveTextRequest | ParseError {
-  const parsers = [
-    tryParseAsUrl,
-    tryParseAsText,
-  ]
+function parseMessage(
+  userMessage: UserMessage,
+): ArchiveLinkRequest | ArchiveTextRequest | ParseError {
+  const parsers = [tryParseAsUrl, tryParseAsText]
   for (const parser of parsers) {
-    const result = parser(userMessage);
+    const result = parser(userMessage)
     if (result) {
       return result
     }
@@ -80,7 +83,7 @@ function parseMessage(userMessage: UserMessage): ArchiveLinkRequest | ArchiveTex
 const block = '```'
 
 function tryParseAsUrl(userMessage: UserMessage): ArchiveLinkRequest | null {
-  const lines = userMessage.content.split(/\r?\n/);
+  const lines = userMessage.content.split(/\r?\n/)
   if (lines.length !== 5) {
     return null
   }
@@ -89,8 +92,8 @@ function tryParseAsUrl(userMessage: UserMessage): ArchiveLinkRequest | null {
     return null
   }
 
-  const title = lines[1].trim();
-  const maybeUrl = lines[3].trim();
+  const title = lines[1].trim()
+  const maybeUrl = lines[3].trim()
   if (title && maybeUrl && isURL(maybeUrl)) {
     return {
       type: 'link',
@@ -106,7 +109,7 @@ function tryParseAsUrl(userMessage: UserMessage): ArchiveLinkRequest | null {
   return null
 }
 function tryParseAsText(userMessage: UserMessage): ArchiveTextRequest | null {
-  const lines = userMessage.content.split(/\r?\n/);
+  const lines = userMessage.content.split(/\r?\n/)
   if (lines.length < 5) {
     return null
   }
@@ -119,8 +122,11 @@ function tryParseAsText(userMessage: UserMessage): ArchiveTextRequest | null {
     return null
   }
 
-  const title = lines[1].trim();
-  const text = lines.slice(3, lines.length - 1).join('\n').trim();
+  const title = lines[1].trim()
+  const text = lines
+    .slice(3, lines.length - 1)
+    .join('\n')
+    .trim()
   if (title && text) {
     return {
       type: 'text',
@@ -149,10 +155,10 @@ export const uploadChallengeArchive: MessageHandler = {
 
 function isURL(str: string): boolean {
   try {
-    new URL(str);
-    return true;
+    new URL(str)
+    return true
   } catch {
-    return false;
+    return false
   }
 }
 function isBlock(lines: string[]): boolean {

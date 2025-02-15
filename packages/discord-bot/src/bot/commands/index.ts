@@ -1,4 +1,4 @@
-import type { CacheType, Interaction, SlashCommandBuilder } from 'discord.js';
+import type { CacheType, Interaction, SlashCommandBuilder } from 'discord.js'
 
 export type Command = Readonly<{
   data: Pick<SlashCommandBuilder, 'name' | 'description' | 'toJSON'>
