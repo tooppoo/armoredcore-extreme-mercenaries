@@ -24,7 +24,7 @@ jobs:
         run: npm run lint
 
       - name: auto commit
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@e348103e9026cc0eee72ae06630dbe30c8bf7a79 # v5
         with:
           commit_message: Auto commit with fmt
           branch: ${{ github.head_ref }}
@@ -47,7 +47,7 @@ jobs:
       - run: npm ci
       - run: npm run ${{ matrix.package }} -- build
       - name: reviewdog:${{ matrix.package }}
-        uses: reviewdog/action-eslint@v1
+        uses: reviewdog/action-eslint@9b5b0150e399e1f007ee3c27bc156549810a64e3 # v1
         with:
           eslint_flags: '"**/*.{ts,tsx,js,jsx}" --fix'
           level: warning
