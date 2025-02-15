@@ -37,12 +37,6 @@ export default [
       sourceType: 'module',
     },
   },
-  ...fixupConfigRules(compat.extends('plugin:react/recommended')).map(
-    (config) => ({
-      ...config,
-      files: ['**/*.{js,jsx,ts,tsx}'],
-    }),
-  ),
   ...fixupConfigRules(
     compat.extends(
       'plugin:@typescript-eslint/recommended',

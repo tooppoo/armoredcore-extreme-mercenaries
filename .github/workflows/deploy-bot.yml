@@ -21,11 +21,11 @@ jobs:
         cache: 'npm'
     - run: npm ci
 
-    - name: type check for bot
-      run: npm run bot -- typecheck
+    - name: type check for discord bot
+      run: npm run discord-bot -- typecheck
 
-    - name: deploy bot commands
-      run: npm run bot -- deploy:commands
+    - name: deploy discord bot commands
+      run: npm run discord-bot -- deploy:commands
       env:
         DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
         DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}

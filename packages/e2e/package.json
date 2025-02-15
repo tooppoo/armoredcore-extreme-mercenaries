@@ -2,6 +2,7 @@
   "name": "@ac-extreme-mercenaries/e2e",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "devDependencies": {
     "@eslint/compat": "1.2.6",
     "@playwright/test": "1.50.1",
@@ -13,6 +14,8 @@
     "prettier": "3.5.1"
   },
   "scripts": {
+    "build": "echo skip",
+    "test": "echo skip",
     "e2e": "playwright test",
     "deps": "playwright install --with-deps",
     "report": "playwright show-report",
