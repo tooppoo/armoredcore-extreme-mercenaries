@@ -30,7 +30,7 @@ jobs:
       # Migration
       - name: Migration D1
         id: migration-d1
-        uses: cloudflare/wrangler-action@392082e81ffbcb9ebdde27400634aa004b35ea37 # v3
+        uses: cloudflare/wrangler-action@da0e0dfe58b7a431659754fdf3f186c529afbe65 # v3
         continue-on-error: true
         with:
           command: "d1 migrations apply ac-extreme-mercenaries-db --remote"
@@ -51,7 +51,7 @@ jobs:
 
       # Deploy
       - name: Deploy
-        uses: cloudflare/wrangler-action@392082e81ffbcb9ebdde27400634aa004b35ea37 # v3
+        uses: cloudflare/wrangler-action@da0e0dfe58b7a431659754fdf3f186c529afbe65 # v3
         with:
           command: pages deploy ./build/client
           apiToken: ${{ secrets.CLOUDFLARE_INTEGRATION }}
