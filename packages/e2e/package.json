@@ -5,7 +5,7 @@
   "type": "module",
   "devDependencies": {
     "@eslint/compat": "1.2.7",
-    "@playwright/test": "1.51.0",
+    "@playwright/test": "1.51.1",
     "@types/node": "22.13.10",
     "eslint": "9.22.0",
     "eslint-import-resolver-typescript": "3.9.1",
