@@ -1,0 +1,11 @@
+name: Ping Bot
+on:
+  schedule:
+    - cron: "*/30 * * * *"  # 30分ごとに実行
+
+jobs:
+  ping-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send GET request
+        run: curl -X GET ${{ env.DISCORD_BOT_URL }}
