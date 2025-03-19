@@ -6,6 +6,8 @@ on:
 jobs:
   ping-bot:
     runs-on: ubuntu-latest
+    environment:
+      name: discord-bot
     steps:
       - name: Send GET request
         run: curl -X GET ${{ env.DISCORD_BOT_URL }}
