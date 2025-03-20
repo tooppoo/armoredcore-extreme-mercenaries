@@ -10,4 +10,4 @@ jobs:
       name: discord-bot
     steps:
       - name: Send GET request
-        run: curl -X GET ${{ env.DISCORD_BOT_URL }}
+        run: curl -X GET ${{ vars.DISCORD_BOT_URL }}
