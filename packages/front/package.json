@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@date-fns/tz": "1.2.0",
-    "@googleapis/youtube": "20.0.0",
+    "@googleapis/youtube": "24.0.0",
     "@heroicons/react": "2.2.0",
     "@react-router/cloudflare": "^7.0.0",
     "date-fns": "4.1.0",
