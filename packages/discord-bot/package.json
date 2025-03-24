@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@eslint/compat": "1.2.7",
-    "@types/node": "22.13.12",
+    "@types/node": "22.13.13",
     "tsx": "4.19.3",
     "eslint": "9.23.0",
     "eslint-import-resolver-typescript": "4.2.2",
