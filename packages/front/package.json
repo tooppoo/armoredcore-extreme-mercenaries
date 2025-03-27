@@ -85,7 +85,7 @@
     "vite": "6.2.3",
     "vite-tsconfig-paths": "5.1.4",
     "vitest": "3.0.9",
-    "wrangler": "3.114.2"
+    "wrangler": "3.114.3"
   },
   "engines": {
     "node": ">=20.0.0"
