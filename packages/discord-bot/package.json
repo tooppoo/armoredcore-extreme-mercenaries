@@ -24,7 +24,7 @@
     "hono": "^4.6.16"
   },
   "devDependencies": {
-    "@eslint/compat": "1.2.7",
+    "@eslint/compat": "1.2.8",
     "@types/node": "22.13.14",
     "tsx": "4.19.3",
     "eslint": "9.23.0",
