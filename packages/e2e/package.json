@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "devDependencies": {
-    "@eslint/compat": "1.2.7",
+    "@eslint/compat": "1.2.8",
     "@playwright/test": "1.51.1",
     "@types/node": "22.13.14",
     "eslint": "9.23.0",
