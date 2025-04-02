@@ -42,7 +42,7 @@
     "date-fns": "4.1.0",
     "drizzle-orm": "0.41.0",
     "highlight.js": "11.11.1",
-    "html-react-parser": "5.2.2",
+    "html-react-parser": "5.2.3",
     "isbot": "^5.0.0",
     "jsdom": "26.0.0",
     "react": "^19.0.0",
