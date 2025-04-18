@@ -1,6 +1,6 @@
 import { data, Link, useLoaderData } from 'react-router'
 import { Margin } from '~/lib/utils/components/spacer'
-import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
+import { buildMeta } from '~/lib/head/build-meta'
 import { findUpdate } from '~/lib/updates/repository/read.server'
 import { ReadUpdate } from '~/lib/updates/entity.server'
 import type { Route } from './+types/detail'
@@ -35,7 +35,7 @@ export const meta: Route.MetaFunction = ({ data, location }) => {
   return [
     ...buildMeta({
       title: data.update.title,
-      description: `${unofficialServer} の更新履歴 ${data.update.caption}`,
+      description: data.update.caption,
       pathname: location.pathname,
     }),
   ]

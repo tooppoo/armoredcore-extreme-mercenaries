@@ -206,7 +206,7 @@ export const meta: Route.MetaFunction = ({ location }) => {
   return [
     ...buildMeta({
       title: 'TOP',
-      description: `${unofficialServer}の情報公開サイトです`,
+      description: `${unofficialServer}の情報公開サイトです。利用規約・罰則規定・更新履歴・アーカイブなどを公開しています。`,
       pathname: location.pathname,
     }),
   ]

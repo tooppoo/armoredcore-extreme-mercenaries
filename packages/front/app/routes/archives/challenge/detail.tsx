@@ -1,7 +1,7 @@
 import { data, useLoaderData } from 'react-router'
 import React from 'react'
 import { type ReadArchive } from '~/lib/archives/challenge/read/entity'
-import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
+import { buildMeta } from '~/lib/head/build-meta'
 import { Margin } from '~/lib/utils/components/spacer'
 import type { Route } from './+types/detail'
 import { findChallengeArchiveByExternalId } from '~/lib/archives/challenge/read/repository/find-challenge-by-external-id'
@@ -68,13 +68,10 @@ const ChallengeArchives: React.FC = () => {
   )
 }
 
-export const meta: Route.MetaFunction = ({ location }) => [
+export const meta: Route.MetaFunction = ({ location, data }) => [
   ...buildMeta({
-    title: 'チャレンジアーカイブ',
-    description: [
-      `${unofficialServer}で登録された、各チャレンジ情報のアーカイブです。`,
-      `チャレンジの詳細情報を掲載しています。`,
-    ].join(''),
+    title: data.archive.title,
+    description: [data.archive.description].join(''),
     pathname: location.pathname,
   }),
 ]

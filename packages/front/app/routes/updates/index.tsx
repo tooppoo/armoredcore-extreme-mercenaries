@@ -26,8 +26,8 @@ export function headers({ loaderHeaders }: Route.HeadersArgs) {
 
 export const meta: Route.MetaFunction = ({ location }) => [
   ...buildMeta({
-    title: '更新履歴',
-    description: `${unofficialServer}の更新履歴です`,
+    title: '更新履歴一覧',
+    description: `${unofficialServer}の更新履歴です。当サイトの更新情報へのリンクを記載しています`,
     pathname: location.pathname,
   }),
 ]

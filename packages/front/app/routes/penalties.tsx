@@ -21,7 +21,7 @@ export const meta: Route.MetaFunction = ({ location }) => {
   return [
     ...buildMeta({
       title: '罰則規定',
-      description: `${unofficialServer}の罰則規定ページです`,
+      description: `${unofficialServer}の罰則規定ページです。利用規約に違反した場合に適用されうる罰則を記載しています。`,
       pathname: location.pathname,
     }),
   ]
