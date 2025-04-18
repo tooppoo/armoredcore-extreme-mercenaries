@@ -10,7 +10,7 @@ import { TZDate } from '@date-fns/tz'
 export const meta: Route.MetaFunction = ({ location }) => {
   return buildMeta({
     title: '利用規約',
-    description: `${unofficialServer}の利用規約ページです`,
+    description: `${unofficialServer}の利用規約ページです。discordサーバーの利用にあたって守るべきルールを記載しています`,
     pathname: location.pathname,
   })
 }
