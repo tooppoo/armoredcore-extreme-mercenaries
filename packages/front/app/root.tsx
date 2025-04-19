@@ -69,11 +69,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <div className="my-3"></div>
           <div className="flex items-center justify-center">
             {footerLinks.map((link) => (
-              <Link
-                to={link.href}
-                key={link.href}
-                className='mx-2 text-md'
-              >
+              <Link to={link.href} key={link.href} className="mx-2 text-md">
                 {link.text}
               </Link>
             ))}
