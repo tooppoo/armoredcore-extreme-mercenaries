@@ -66,7 +66,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <div className="flex items-center justify-center text-lg">
             <Link to="/">TOP</Link>
           </div>
-          <div className="my-1"></div>
+          <div className="my-3"></div>
+          <div className="flex items-center justify-center">
+            {footerLinks.map((link) => (
+              <Link
+                to={link.href}
+                key={link.href}
+                className='mx-2 text-md'
+              >
+                {link.text}
+              </Link>
+            ))}
+          </div>
+          <div className="my-3"></div>
           <div className="flex items-end justify-end">
             maintained by&nbsp;
             <Link to="https://x.com/Philomagi">Philomagi</Link>
@@ -78,6 +90,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
     </html>
   )
 }
+
+const footerLinks = [
+  { href: '/rule', text: '利用規約' },
+  { href: '/penalties', text: '罰則規定' },
+  { href: '/updates', text: '更新履歴' },
+  { href: '/archives', text: 'アーカイブ' },
+]
 
 export default function App() {
   return <Outlet />
