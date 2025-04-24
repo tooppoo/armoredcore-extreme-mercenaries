@@ -48,7 +48,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "7.56.1",
-    "react-router": "^7.0.0",
+    "react-router": "^7.5.2",
     "remix-sitemap": "^3.2.0",
     "sanitize-html": "2.16.0",
     "uuid": "11.1.0",
