@@ -58,7 +58,7 @@
     "@cloudflare/workers-types": "4.20250424.0",
     "@eslint/compat": "1.2.8",
     "@fast-check/vitest": "0.2.1",
-    "@react-router/dev": "7.5.1",
+    "@react-router/dev": "7.5.2",
     "@tailwindcss/postcss": "4.1.4",
     "@types/jsdom": "21.1.7",
     "@types/react": "19.1.2",
