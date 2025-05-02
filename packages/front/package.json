@@ -56,7 +56,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "4.20250430.0",
-    "@eslint/compat": "1.2.8",
+    "@eslint/compat": "1.2.9",
     "@fast-check/vitest": "0.2.1",
     "@react-router/dev": "7.5.2",
     "@tailwindcss/postcss": "4.1.4",
