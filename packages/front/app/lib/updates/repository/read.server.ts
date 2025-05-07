@@ -26,6 +26,10 @@ export async function findUpdate({
   return r ? transform(r) : r
 }
 
+export async function allUpdates(): Promise<ReadUpdate[]> {
+  return records.flat().map(transform).toSorted((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
+}
+
 function transform(r: Update): ReadUpdate {
   return {
     ...r,

@@ -1,9 +1,10 @@
 import { data, Link, useLoaderData } from 'react-router'
 import { Margin } from '~/lib/utils/components/spacer'
 import { buildMeta } from '~/lib/head/build-meta'
-import { findUpdate } from '~/lib/updates/repository/read.server'
+import { allUpdates, findUpdate } from '~/lib/updates/repository/read.server'
 import { ReadUpdate } from '~/lib/updates/entity.server'
 import type { Route } from './+types/detail'
+import { SitemapFunction } from 'remix-sitemap'
 
 type AnUpdateLoader = Readonly<{
   update: ReadUpdate
@@ -59,4 +60,12 @@ const AnUpdate: React.FC = () => {
   )
 }
 
+export const sitemap: SitemapFunction = async () => {
+  const updates = await allUpdates()
+
+  return updates.map((update) => ({
+    loc: `/updates/${update.externalId}`,
+    lastmod: update.createdAt.toISOString(),
+  }))
+}
 export default AnUpdate
