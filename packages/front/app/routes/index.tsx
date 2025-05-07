@@ -59,8 +59,10 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
     id: 'about',
     content: (
       <p>
-        {siteName}は、『ARMORED CORE』シリーズのやりこみ攻略に特化した非公式コミュニティです。
-        このサイトでは、Discord サーバーの参加方法、ルール、罰則規定、各種チャレンジのアーカイブを公開し、
+        {siteName}は、『ARMORED
+        CORE』シリーズのやりこみ攻略に特化した非公式コミュニティです。
+        このサイトでは、Discord
+        サーバーの参加方法、ルール、罰則規定、各種チャレンジのアーカイブを公開し、
         プレイヤー同士の交流・チャレンジとその成果の記録をサポートしています。
       </p>
     ),
@@ -70,7 +72,8 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
     id: 'rule',
     content: (
       <>
-        当コミュニティdiscordサーバーの利用規約は<Link to="/rule">こちら</Link>から確認できます。
+        当コミュニティdiscordサーバーの利用規約は<Link to="/rule">こちら</Link>
+        から確認できます。
         <ul>
           一例として、以下のような内容が含まれています。
           <li>Discordサーバーの運営方針</li>
@@ -125,12 +128,11 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
     id: 'archives',
     content: (
       <>
-
         <p>
           アーマードコアの縛り攻略およびチャレンジ情報を、アーカイブとして公開しています。
           <br />
           アーカイブは<Link to="/archives">こちら</Link>からご確認いただけます。
-          <br/>
+          <br />
           例：
           <ul>
             <li>アーキバスバルテウスのノーダメージ撃破</li>
@@ -138,10 +140,8 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
             <li>マニュアルロックでアイビスを撃破</li>
           </ul>
         </p>
-        <br/>
-        <p>
-          アーカイブの閲覧はどなたでも行っていただけます。
-        </p>
+        <br />
+        <p>アーカイブの閲覧はどなたでも行っていただけます。</p>
         <p>
           アーカイブの登録はDiscordサーバー参加者にのみ開放しています。
           詳細はDiscordーバー内の該当チャンネルにてご確認ください。
