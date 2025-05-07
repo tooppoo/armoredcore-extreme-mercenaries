@@ -58,42 +58,52 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
     caption: 'このページについて',
     id: 'about',
     content: (
-      <>
-        「アーマードコア」シリーズ やりこみ攻略特化型の非公式discordサーバー
-        <br />「{siteName}」に関する情報を公開するサイトです。
-      </>
+      <p>
+        {siteName}は、『ARMORED
+        CORE』シリーズのやりこみ攻略に特化した非公式コミュニティです。
+        このサイトでは、Discord
+        サーバーの参加方法、ルール、罰則規定、各種チャレンジのアーカイブを公開し、
+        プレイヤー同士の交流・チャレンジとその成果の記録をサポートしています。
+      </p>
     ),
   },
   {
-    caption: '利用規約',
+    caption: 'コミュニティ用Discordサーバーの利用規約',
     id: 'rule',
     content: (
       <>
-        サーバーの利用規約は<Link to="/rule">こちら</Link>から確認できます。
+        当コミュニティdiscordサーバーの利用規約は<Link to="/rule">こちら</Link>
+        から確認できます。
+        <ul>
+          一例として、以下のような内容が含まれています。
+          <li>Discordサーバーの運営方針</li>
+          <li>Discordサーバーの利用方法</li>
+          <li>禁止行為</li>
+        </ul>
         <br />
-        サーバーの利用者は必ず目を通してください。
+        Discordサーバーの利用者は必ず目を通してください。
       </>
     ),
   },
   {
-    caption: '罰則規定',
+    caption: 'コミュニティ用Discordサーバー利用者への罰則規定',
     id: 'penalties',
     content: (
       <>
-        サーバーの利用規約に違反した場合、管理者・運営から罰則を与える場合があります。
+        当コミュニティdiscordサーバーの利用規約に違反した場合、管理者・運営から罰則を与える場合があります。
         <br />
         詳細は<Link to="/penalties">こちら</Link>からご確認ください。
         <br />
-        サーバーの利用者は必ず目を通してください。
+        Discordサーバーの利用者は必ず目を通してください。
       </>
     ),
   },
   {
-    caption: 'Discordサーバー',
+    caption: 'コミュニティ用Discordサーバーへの参加方法',
     id: 'server',
     content: (
       <>
-        以下の招待リンクからアクセスできます。
+        以下の招待リンクから、当コミュニテイのDiscordサーバーへ参加できます。
         <br />
         <div className="my-3">
           <Link to={discord.invite}>サーバーへ参加</Link>
@@ -104,42 +114,46 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
     ),
   },
   {
-    caption: '更新履歴',
+    caption: '当ページの更新履歴',
     id: 'updates',
     content: (
       <>
-        本文書の更新履歴は<Link to="/updates">こちら</Link>
+        当ページの更新履歴は<Link to="/updates">こちら</Link>
         からご確認いただけます。
       </>
     ),
   },
   {
-    caption: 'アーカイブ',
+    caption: '攻略・チャレンジアーカイブ',
     id: 'archives',
     content: (
       <>
         <p>
           アーマードコアの縛り攻略およびチャレンジ情報を、アーカイブとして公開しています。
-        </p>
-        <p>
+          <br />
           アーカイブは<Link to="/archives">こちら</Link>からご確認いただけます。
         </p>
         <ul>
-          <li>アーカイブの閲覧はどなたでも行っていただけます。</li>
-          <li>
-            アーカイブの登録は本サーバー参加者にのみ開放しています。
-            詳細はサーバー内の該当チャンネルにてご確認ください。
-          </li>
+          <li>アーキバスバルテウスのノーダメージ撃破</li>
+          <li>スタンニードルランチャー無しでアイスワームをSランク撃破</li>
+          <li>マニュアルロックでアイビスを撃破</li>
+          <li>他、多数の攻略・チャレンジ情報</li>
         </ul>
+        <br />
+        <p>アーカイブの閲覧はどなたでも行っていただけます。</p>
+        <p>
+          アーカイブの登録はDiscordサーバー参加者にのみ開放しています。
+          詳細はDiscordーバー内の該当チャンネルにてご確認ください。
+        </p>
       </>
     ),
   },
   {
-    caption: 'お問い合わせ',
+    caption: 'コミュニティへのお問い合わせ',
     id: 'inquiry',
     content: (
       <>
-        サーバー加入前に質問・確認したいことがある方は、
+        Discordサーバー加入前に質問・確認したいことがある方は、
         <Link
           to={inquiryUrl}
           title="お問い合わせフォームへ"
