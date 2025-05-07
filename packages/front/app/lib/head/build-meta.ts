@@ -30,7 +30,7 @@ export function buildMeta(args: BuildMetaArgs): Meta {
   ]
 }
 
-export const unofficialServer = `アーマードコアのやりこみ攻略特化型discordサーバー「${siteName}」`
+export const unofficialServer = `ARMORED CORE のやりこみ攻略に特化した非公式コミュニティ「${siteName}」`
 
 function title(s: string): Meta {
   return [{ title: _title(s) }, { property: 'og:title', content: _title(s) }]

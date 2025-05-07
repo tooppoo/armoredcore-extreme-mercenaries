@@ -74,3 +74,12 @@ export const orderByCreated: OrderFunction = (o) => {
       }
   }
 }
+
+export async function allArchives(
+  db: Database,
+): Promise<readonly ReadArchive[]> {
+  return db
+    .select()
+    .from(challengeArchives)
+    .orderBy(desc(challengeArchives.createdAt), asc(challengeArchives.id))
+}

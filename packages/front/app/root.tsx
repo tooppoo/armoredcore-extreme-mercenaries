@@ -57,6 +57,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
             ARMORED CORE
             <br />
             EXTREME MERCENARIES
+            <br />
+            <br />
+            アーマードコア やりこみ攻略コミュニティ
           </h1>
         </header>
         <hr className="my-4" />
