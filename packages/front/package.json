@@ -52,7 +52,7 @@
     "remix-sitemap": "^3.2.0",
     "sanitize-html": "2.17.0",
     "uuid": "11.1.0",
-    "zod": "3.24.4"
+    "zod": "3.25.7"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "4.20250520.0",
