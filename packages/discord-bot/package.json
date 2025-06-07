@@ -28,7 +28,7 @@
     "@types/node": "22.15.30",
     "tsx": "4.19.4",
     "eslint": "9.28.0",
-    "eslint-import-resolver-typescript": "4.4.2",
+    "eslint-import-resolver-typescript": "4.4.3",
     "eslint-plugin-import": "2.31.0",
     "npm-run-all2": "8.0.4",
     "prettier": "3.5.3"
