@@ -55,7 +55,7 @@
     "zod": "3.25.56"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20250607.0",
+    "@cloudflare/workers-types": "4.20250610.0",
     "@eslint/compat": "1.2.9",
     "@fast-check/vitest": "0.2.1",
     "@react-router/dev": "7.5.2",
