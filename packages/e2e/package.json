@@ -11,7 +11,7 @@
     "eslint-import-resolver-typescript": "4.4.4",
     "eslint-plugin-import": "2.32.0",
     "npm-run-all2": "8.0.4",
-    "prettier": "3.5.3"
+    "prettier": "3.6.2"
   },
   "scripts": {
     "build": "echo skip",
