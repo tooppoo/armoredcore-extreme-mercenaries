@@ -3,7 +3,7 @@ import { Link, useLoaderData } from 'react-router'
 import { LinkIcon } from '@heroicons/react/16/solid'
 import { siteName } from '~/lib/constants'
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server'
-import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
+import { buildMeta, } from '~/lib/head/build-meta'
 import { TZDate } from '@date-fns/tz'
 
 type IndexLoaderData = Readonly<LoadDiscord & { inquiryUrl: string }>
@@ -28,23 +28,25 @@ export default function Index() {
   const indexLoaderData = useLoaderData<IndexLoaderData>()
 
   return (
-    <div className="flex flex-col items-begin justify-begin">
-      {lists(indexLoaderData).map(({ caption, id, content }) => (
-        <section className="mb-10" key={caption}>
-          <h2 id={id} className="underline">
-            {caption}
-            <Link
-              to={`#${id}`}
-              className="inline-block ml-2"
-              aria-label={`見出し「${caption}」へのアンカー`}
-            >
-              <LinkIcon className="size-5" />
-            </Link>
-          </h2>
-          <div>{content}</div>
-        </section>
-      ))}
-    </div>
+    <>
+      <div className="flex flex-col items-begin justify-begin">
+        {lists(indexLoaderData).map(({ caption, id, content }) => (
+          <section className="mb-10" key={caption}>
+            <h2 id={id} className="underline">
+              {caption}
+              <Link
+                to={`#${id}`}
+                className="inline-block ml-2"
+                aria-label={`見出し「${caption}」へのアンカー`}
+              >
+                <LinkIcon className="size-5" />
+              </Link>
+            </h2>
+            <div>{content}</div>
+          </section>
+        ))}
+      </div>
+    </>
   )
 }
 
@@ -60,17 +62,67 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
     content: (
       <section>
         <p>
-          {siteName}は、ARMORED COREシリーズのやりこみ攻略・チャレンジに関する情報をまとめた非公式コミュニティです。経験者・初心者を問わず、全てのプレイヤーが交流や情報共有、独自チャレンジの記録・閲覧を行える場を提供しています。主に外部の有用な情報を収集・整理し、シリーズに関する知見を蓄積しています。
+          {siteName}は、ARMORED COREシリーズのやりこみ攻略・チャレンジに関する情報をまとめた非公式コミュニティです。<br/>
+          経験者・初心者を問わず、全てのプレイヤーが交流や情報共有、独自チャレンジの記録・閲覧を行える場を提供しています。
         </p>
         <br/>
         <p>
-          本コミュニティは有志メンバーによって運営されています。Discordサーバーではメンバー同士の情報共有や質問対応などが行われています。小規模ながらも、ルールや運営方針を明確にし、安心して利用できる環境づくりを心がけています。
+          本コミュニティは有志メンバーによって運営されています。<br/>
+          Discordサーバーではメンバー同士の情報共有や質問対応などが行われています。<br/>
+          小規模ながらも、ルールや運営方針を明確にし、安心して利用できる環境づくりを心がけています。
         </p>
         <br/>
         <p>
-          例えば、難関ボスの攻略法を調べたい方、独自ルールでのチャレンジに挑戦したい方、他のプレイヤーと成果を共有したい方にご活用いただけます。初心者の方も歓迎しています。
+          攻略・チャレンジのアーカイブやDiscord案内、ルール・罰則規定・更新履歴なども公開中です。シリーズ未経験者や復帰勢も歓迎していますので、ぜひご活用ください。
         </p>
       </section>
+    ),
+  },
+  {
+    caption: 'FAQ',
+    id: 'faq',
+    content: (
+      <section>
+        <ul>
+          <li>
+            <strong>Q. 初心者でも参加できますか？</strong><br />
+            A. はい、初心者の方も歓迎しています。Discord内で質問も受け付けています。
+          </li>
+          <li>
+            <strong>Q. アーカイブへ攻略・チャレンジを投稿する方法は？</strong><br />
+            A. Discordサーバーの専用チャンネルで受付中です。詳細は参加後にご確認いただけます。
+          </li>
+          <li>
+            <strong>Q. サイトの情報は誰がまとめていますか？</strong><br />
+            A. 運営メンバーの<Link to="https://x.com/Philomagi">Philomagi</Link>によって更新されています。
+          </li>
+        </ul>
+      </section>
+    ),
+  },
+  {
+    caption: '攻略・チャレンジアーカイブ',
+    id: 'archives',
+    content: (
+      <>
+        <p>
+          アーマードコアの縛り攻略およびチャレンジ情報を、アーカイブとして公開しています。
+          <br />
+          アーカイブは<Link to="/archives">こちら</Link>からご確認いただけます。
+        </p>
+        <ul>
+          <li>アーキバスバルテウスのノーダメージ撃破</li>
+          <li>スタンニードルランチャー無しでアイスワームをSランク撃破</li>
+          <li>マニュアルロックでアイビスを撃破</li>
+          <li>他、多数の攻略・チャレンジ情報</li>
+        </ul>
+        <br />
+        <p>アーカイブの閲覧はどなたでも行っていただけます。</p>
+        <p>
+          アーカイブの登録はDiscordサーバー参加者にのみ開放しています。
+          詳細はDiscordーバー内の該当チャンネルにてご確認ください。
+        </p>
+      </>
     ),
   },
   {
@@ -120,41 +172,6 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
     ),
   },
   {
-    caption: '当ページの更新履歴',
-    id: 'updates',
-    content: (
-      <>
-        当ページの更新履歴は<Link to="/updates">こちら</Link>
-        からご確認いただけます。
-      </>
-    ),
-  },
-  {
-    caption: '攻略・チャレンジアーカイブ',
-    id: 'archives',
-    content: (
-      <>
-        <p>
-          アーマードコアの縛り攻略およびチャレンジ情報を、アーカイブとして公開しています。
-          <br />
-          アーカイブは<Link to="/archives">こちら</Link>からご確認いただけます。
-        </p>
-        <ul>
-          <li>アーキバスバルテウスのノーダメージ撃破</li>
-          <li>スタンニードルランチャー無しでアイスワームをSランク撃破</li>
-          <li>マニュアルロックでアイビスを撃破</li>
-          <li>他、多数の攻略・チャレンジ情報</li>
-        </ul>
-        <br />
-        <p>アーカイブの閲覧はどなたでも行っていただけます。</p>
-        <p>
-          アーカイブの登録はDiscordサーバー参加者にのみ開放しています。
-          詳細はDiscordーバー内の該当チャンネルにてご確認ください。
-        </p>
-      </>
-    ),
-  },
-  {
     caption: 'コミュニティへのお問い合わせ',
     id: 'inquiry',
     content: (
@@ -170,6 +187,16 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
           こちらのフォーム
         </Link>
         からお願いいたします。
+      </>
+    ),
+  },
+  {
+    caption: '当ページの更新履歴',
+    id: 'updates',
+    content: (
+      <>
+        当ページの更新履歴は<Link to="/updates">こちら</Link>
+        からご確認いただけます。
       </>
     ),
   },
@@ -225,9 +252,43 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
 export const meta: Route.MetaFunction = ({ location }) => {
   return [
     ...buildMeta({
-      title: 'TOP',
-      description: `${unofficialServer}の情報公開サイトです。利用規約・罰則規定・更新履歴・アーカイブなどを公開しています。`,
+      title: 'ARMORED CORE EXTREME MERCENARIES 非公式コミュニティ',
+      description:
+        'ARMORED COREシリーズのやりこみ攻略・独自チャレンジ・縛りプレイの体験談やノウハウを集約した非公式コミュニティ。Discord案内・アーカイブ・ルール・FAQも掲載。初心者も歓迎。',
       pathname: location.pathname,
     }),
+    {
+      // FAQ構造化データ
+      'script:ld+json': {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "初心者でも参加できますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "はい、初心者の方も歓迎しています。Discord内で質問も受け付けています。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "攻略・チャレンジの投稿方法は？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Discordサーバーの専用チャンネルで受付中です。詳細は参加後にご案内します。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "サイトの情報は誰がまとめていますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "有志メンバーが実際のプレイ体験をもとにまとめています。"
+            },
+          },
+        ],
+      },
+    },
   ]
 }
