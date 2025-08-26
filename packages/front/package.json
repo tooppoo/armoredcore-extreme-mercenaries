@@ -5,7 +5,7 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "build": "react-router build",
+  "build": "VITE_GIT_HASH=$(git rev-parse --short HEAD) react-router build",
     "build:test": "react-router build --mode test",
     "dev": "react-router dev",
     "dev:test": "react-router dev --mode test",

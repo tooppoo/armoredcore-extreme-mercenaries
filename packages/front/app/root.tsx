@@ -78,9 +78,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
             ))}
           </div>
           <div className="my-3"></div>
-          <div className="flex items-end justify-end">
-            maintained by&nbsp;
-            <Link to="https://x.com/Philomagi">Philomagi</Link>
+          <div className="flex flex-col items-end justify-end text-xs text-gray-500">
+            <div>
+              version: {import.meta.env.VITE_GIT_HASH ?? '-'}
+            </div>
+            <div>
+              maintained by&nbsp;
+              <Link to="https://x.com/Philomagi">Philomagi</Link>
+            </div>
           </div>
         </footer>
         <ScrollRestoration />
