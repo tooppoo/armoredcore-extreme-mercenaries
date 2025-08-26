@@ -78,5 +78,11 @@ export const records: readonly Update[][] = [
       </p>
       `,
     },
+    {
+      externalId: 'ba53c467-9486-c62c-c132-9298745138d3',
+      title: 'TOPページ更新',
+      createdAt: new TZDate(2025, 7, 26, 20, timezone),
+      content: 'TOPページの内容を、より詳しく更新しました',
+    },
   ],
 ]
