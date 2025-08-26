@@ -3,7 +3,7 @@ import { Link, useLoaderData } from 'react-router'
 import { LinkIcon } from '@heroicons/react/16/solid'
 import { siteName } from '~/lib/constants'
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server'
-import { buildMeta, } from '~/lib/head/build-meta'
+import { buildMeta } from '~/lib/head/build-meta'
 import { TZDate } from '@date-fns/tz'
 
 type IndexLoaderData = Readonly<LoadDiscord & { inquiryUrl: string }>
@@ -62,16 +62,20 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
     content: (
       <section>
         <p>
-          {siteName}は、ARMORED COREシリーズのやりこみ攻略・チャレンジに関する情報をまとめた非公式コミュニティです。<br/>
+          {siteName}は、ARMORED
+          COREシリーズのやりこみ攻略・チャレンジに関する情報をまとめた非公式コミュニティです。
+          <br />
           経験者・初心者を問わず、全てのプレイヤーが交流や情報共有、独自チャレンジの記録・閲覧を行える場を提供しています。
         </p>
-        <br/>
+        <br />
         <p>
-          本コミュニティは有志メンバーによって運営されています。<br/>
-          Discordサーバーではメンバー同士の情報共有や質問対応などが行われています。<br/>
+          本コミュニティは有志メンバーによって運営されています。
+          <br />
+          Discordサーバーではメンバー同士の情報共有や質問対応などが行われています。
+          <br />
           小規模ながらも、ルールや運営方針を明確にし、安心して利用できる環境づくりを心がけています。
         </p>
-        <br/>
+        <br />
         <p>
           攻略・チャレンジのアーカイブやDiscord案内、ルール・罰則規定・更新履歴なども公開中です。シリーズ未経験者や復帰勢も歓迎していますので、ぜひご活用ください。
         </p>
@@ -85,16 +89,22 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
       <section>
         <ul>
           <li>
-            <strong>Q. 初心者でも参加できますか？</strong><br />
-            A. はい、初心者の方も歓迎しています。Discord内で質問も受け付けています。
+            <strong>Q. 初心者でも参加できますか？</strong>
+            <br />
+            A.
+            はい、初心者の方も歓迎しています。Discord内で質問も受け付けています。
           </li>
           <li>
-            <strong>Q. アーカイブへ攻略・チャレンジを投稿する方法は？</strong><br />
-            A. Discordサーバーの専用チャンネルで受付中です。詳細は参加後にご確認いただけます。
+            <strong>Q. アーカイブへ攻略・チャレンジを投稿する方法は？</strong>
+            <br />
+            A.
+            Discordサーバーの専用チャンネルで受付中です。詳細は参加後にご確認いただけます。
           </li>
           <li>
-            <strong>Q. サイトの情報は誰がまとめていますか？</strong><br />
-            A. 運営メンバーの<Link to="https://x.com/Philomagi">Philomagi</Link>によって更新されています。
+            <strong>Q. サイトの情報は誰がまとめていますか？</strong>
+            <br />
+            A. 運営メンバーの<Link to="https://x.com/Philomagi">Philomagi</Link>
+            によって更新されています。
           </li>
         </ul>
       </section>
@@ -260,31 +270,31 @@ export const meta: Route.MetaFunction = ({ location }) => {
     {
       // FAQ構造化データ
       'script:ld+json': {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: [
           {
-            "@type": "Question",
-            "name": "初心者でも参加できますか？",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "はい、初心者の方も歓迎しています。Discord内で質問も受け付けています。"
-            }
+            '@type': 'Question',
+            name: '初心者でも参加できますか？',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'はい、初心者の方も歓迎しています。Discord内で質問も受け付けています。',
+            },
           },
           {
-            "@type": "Question",
-            "name": "攻略・チャレンジの投稿方法は？",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Discordサーバーの専用チャンネルで受付中です。詳細は参加後にご案内します。"
-            }
+            '@type': 'Question',
+            name: '攻略・チャレンジの投稿方法は？',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'Discordサーバーの専用チャンネルで受付中です。詳細は参加後にご案内します。',
+            },
           },
           {
-            "@type": "Question",
-            "name": "サイトの情報は誰がまとめていますか？",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "有志メンバーが実際のプレイ体験をもとにまとめています。"
+            '@type': 'Question',
+            name: 'サイトの情報は誰がまとめていますか？',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: '有志メンバーが実際のプレイ体験をもとにまとめています。',
             },
           },
         ],
