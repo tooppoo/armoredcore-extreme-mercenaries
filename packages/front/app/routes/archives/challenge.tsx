@@ -86,9 +86,18 @@ const ChallengeArchives: React.FC = () => {
     return <Outlet />
   }
 
-  // If no loader data (shouldn't happen for listing route), return error
-  if (!loaderData) {
-    return <div>Error: No data available</div>
+    return (
+      <div style={{ color: 'red', padding: '1em', border: '1px solid #f00', borderRadius: '4px', background: '#fff0f0' }}>
+        <h3>Unable to load challenge archives</h3>
+        <p>
+          We couldn't retrieve the archive data. This may be due to a network issue, a server error, or an unexpected problem.
+        </p>
+        <p>
+          Please try refreshing the page. If the problem persists, contact support or try again later.
+        </p>
+        <Link to="/">Return to Home</Link>
+      </div>
+    )
   }
 
   const { archives, totalPage, query } = loaderData
