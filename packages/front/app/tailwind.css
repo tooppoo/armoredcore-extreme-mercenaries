@@ -54,4 +54,15 @@
   .ac-hover {
     @apply hover:bg-gray-200 dark:hover:bg-gray-700;
   }
+
+  .no-scrollbar {
+    /* Hide scrollbar for Webkit browsers */
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
