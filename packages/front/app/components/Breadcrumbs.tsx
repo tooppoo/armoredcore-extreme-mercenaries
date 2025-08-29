@@ -121,7 +121,7 @@ export function Breadcrumbs({
       {/* Tablet+ layout (≥ sm): Method B - Horizontal scroll with fade */}
       <div className="hidden sm:block relative">
         <div className="overflow-x-auto no-scrollbar">
-          <ol className="list-none p-0 m-0 flex items-center nowrap">
+          <ol className="list-none p-0 m-0 flex items-center whitespace-nowrap">
             {items.map((item, i) => (
               <React.Fragment key={item.url}>
                 <li className="shrink-0">
