@@ -124,39 +124,24 @@ export default function App() {
   const matches = useMatches() as RouteMatch[]
   const location = useLocation()
 
-  // Temporary debug logging
-  if (location.pathname.includes('/archives/challenge/') && location.pathname.length > '/archives/challenge/'.length) {
-    console.log('Debug breadcrumb matches for challenge detail:', {
-      pathname: location.pathname,
-      matches: matches.map(m => ({
-        id: m.id,
-        pathname: m.pathname,
-        params: m.params,
-        handle: m.handle,
-        hasData: !!m.data,
-        dataBreadcrumbTitle: m.data && typeof m.data === 'object' && 'breadcrumbTitle' in m.data ? m.data.breadcrumbTitle : undefined
-      }))
-    })
-  }
-
   const breadcrumbItems: BreadcrumbItem[] = matches
     .map((m) => {
       if (m.handle?.breadcrumb === 'hidden') return null
 
-      // Improve URL determination for nested routes
+      // Determine URL for each match
       let url = m.pathname
       if (!url) {
         url = fallbackPath(m, location.pathname)
       }
       
-      // Get breadcrumb name with better fallbacks
+      // Get breadcrumb name
       let name = ''
       
-      // First try loader data breadcrumbTitle
+      // First try loader data breadcrumbTitle (for dynamic content)
       if (m.data && typeof m.data === 'object' && 'breadcrumbTitle' in m.data && m.data.breadcrumbTitle) {
         name = m.data.breadcrumbTitle as string
       }
-      // Then try handle breadcrumb (static or function)
+      // Then try handle breadcrumb (for static routes)
       else if (m.handle?.breadcrumb) {
         if (typeof m.handle.breadcrumb === 'function') {
           name = m.handle.breadcrumb(m.params)
@@ -164,18 +149,22 @@ export default function App() {
           name = m.handle.breadcrumb
         }
       }
-      // Skip fallback to params to avoid showing external IDs
       
+      // Only include if we have both name and url
       if (!name || !url) return null
       return { name, url }
     })
     .filter((it): it is BreadcrumbItem => it !== null)
 
-  // Always add TOP/Home as first breadcrumb if we're not on the home page and don't already have it
+  // Build final breadcrumb trail starting with TOP
   const items: BreadcrumbItem[] = []
+  
+  // Add TOP if not on home page and not already included
   if (location.pathname !== '/' && !breadcrumbItems.some(item => item.url === '/')) {
     items.push({ name: 'TOP', url: '/' })
   }
+  
+  // Add all other breadcrumbs
   items.push(...breadcrumbItems)
 
   return (
@@ -192,31 +181,32 @@ function fallbackPath(match: RouteMatch, currentPathname: string): string {
     return '/'
   }
   
-  // Try to extract path from route ID for static routes
+  // Use existing pathname if available
+  if (match.pathname) {
+    return match.pathname
+  }
+  
+  // Try to construct path from route ID for known static routes
   if (match.id) {
-    // Handle specific known route patterns
-    if (match.id === 'routes/archives/index') {
-      return '/archives'
+    const routeId = match.id
+    
+    // Map known route IDs to their URLs
+    const routeMap: Record<string, string> = {
+      'routes/archives/index': '/archives',
+      'routes/archives/challenge': '/archives/challenge',
+      'routes/archives/video': '/archives/video',
+      'routes/updates/index': '/updates',
+      'routes/rule': '/rule',
+      'routes/penalties': '/penalties'
     }
-    if (match.id === 'routes/archives/challenge') {
-      return '/archives/challenge'  
-    }
-    if (match.id === 'routes/archives/video') {
-      return '/archives/video'
-    }
-    if (match.id === 'routes/updates/index') {
-      return '/updates'
-    }
-    if (match.id === 'routes/rule') {
-      return '/rule'
-    }
-    if (match.id === 'routes/penalties') {
-      return '/penalties'
+    
+    if (routeMap[routeId]) {
+      return routeMap[routeId]
     }
   }
   
-  // For other routes, use match pathname or current pathname
-  return match.pathname ?? currentPathname
+  // Final fallback to current pathname
+  return currentPathname
 }
 
 function fallbackLabel(params: Record<string, string>): string {
