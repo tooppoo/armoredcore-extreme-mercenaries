@@ -10,7 +10,7 @@ const DEFAULT_BASE_URL = 'https://example.com'
 
 export function Breadcrumbs({
   items,
-  baseUrl = process.env.SITE_BASE_URL ?? DEFAULT_BASE_URL,
+  baseUrl = import.meta.env.VITE_SITE_BASE_URL ?? DEFAULT_BASE_URL,
 }: Props) {
   if (!items || items.length <= 1) return null
 
