@@ -1,4 +1,4 @@
-import { Form, Link, useLoaderData } from 'react-router'
+import { Form, Link, useLoaderData, Outlet, useLocation } from 'react-router'
 import React, { type ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
 import { type ReadArchive } from '~/lib/archives/challenge/read/entity'
@@ -28,6 +28,17 @@ type LoadArchives = Readonly<{
     }>
 }>
 export const loader = async ({ context, request }: Route.LoaderArgs) => {
+  const url = new URL(request.url)
+  
+  // If this is a detail route (has an externalId parameter), don't load listing data
+  if (url.pathname !== '/archives/challenge') {
+    return Response.json(null, { 
+      headers: {
+        'Cache-Control': `public, max-age=${context.cloudflare.env.BASE_SHORT_CACHE_TIME}`,
+      }
+    })
+  }
+
   const query = parseQuery(request, querySchema(orderByCreated))
 
   const { list: archives, totalPage } = await pageArchives(
@@ -64,7 +75,23 @@ export function headers({ loaderHeaders }: Route.HeadersArgs) {
 
 // クエリ用なので略記名
 const ChallengeArchives: React.FC = () => {
-  const { archives, totalPage, query } = useLoaderData<LoadArchives>()
+  const location = useLocation()
+  const isListingRoute = location.pathname === '/archives/challenge'
+
+  // If we're on a detail route, render the outlet (detail page)
+  if (!isListingRoute) {
+    return <Outlet />
+  }
+
+  // Otherwise render the listing
+  const loaderData = useLoaderData<LoadArchives | null>()
+  
+  // If no loader data (shouldn't happen for listing route), return error
+  if (!loaderData) {
+    return <div>Error: No data available</div>
+  }
+
+  const { archives, totalPage, query } = loaderData
   const { register, setValue } = useForm<QuerySchema>()
 
   const page = query.p
