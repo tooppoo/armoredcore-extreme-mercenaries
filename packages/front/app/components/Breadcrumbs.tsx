@@ -13,9 +13,7 @@ export function Breadcrumbs({ items, baseUrl }: Props) {
 
   const effectiveBaseUrl = baseUrl ?? import.meta.env.VITE_SITE_BASE_URL
   if (!effectiveBaseUrl) {
-    throw new Error(
-      'パンくずリスト: baseUrlプロパティまたはVITE_SITE_BASE_URL環境変数を設定する必要があります。',
-    )
+    throw new Error('Breadcrumbs: Required data is insufficient.')
   }
 
   const itemList = items.map((it, idx) => ({
