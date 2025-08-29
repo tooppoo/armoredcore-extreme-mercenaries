@@ -124,7 +124,7 @@ export default function App() {
   const matches = useMatches() as RouteMatch[]
   const location = useLocation()
 
-  const items: BreadcrumbItem[] = matches
+  const breadcrumbItems: BreadcrumbItem[] = matches
     .map((m) => {
       if (m.handle?.breadcrumb === 'hidden') return null
 
@@ -141,6 +141,13 @@ export default function App() {
     })
     .filter((it): it is BreadcrumbItem => it !== null)
 
+  // Always add TOP/Home as first breadcrumb if we're not on the home page and don't already have it
+  const items: BreadcrumbItem[] = []
+  if (location.pathname !== '/' && !breadcrumbItems.some(item => item.url === '/')) {
+    items.push({ name: 'TOP', url: '/' })
+  }
+  items.push(...breadcrumbItems)
+
   return (
     <>
       <Breadcrumbs items={items} />
@@ -149,8 +156,13 @@ export default function App() {
   )
 }
 
-function fallbackPath(_match: RouteMatch, currentPathname: string): string {
-  return currentPathname
+function fallbackPath(match: RouteMatch, currentPathname: string): string {
+  // For root index route, return root path
+  if (match.id === 'routes/index') {
+    return '/'
+  }
+  // For other routes, use match pathname or current pathname
+  return match.pathname ?? currentPathname
 }
 
 function fallbackLabel(params: Record<string, string>): string {

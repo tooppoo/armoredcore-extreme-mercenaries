@@ -274,4 +274,8 @@ export const meta: Route.MetaFunction = ({ location }) => {
   ]
 }
 
+export const handle = {
+  breadcrumb: 'チャレンジ'
+}
+
 export default ChallengeArchives

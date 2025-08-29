@@ -40,6 +40,10 @@ const Archives: React.FC = () => {
   )
 }
 
+export const handle = {
+  breadcrumb: 'アーカイブ'
+}
+
 export default Archives
 
 export const meta: Route.MetaFunction = ({ location }) => [
