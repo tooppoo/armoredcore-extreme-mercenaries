@@ -124,11 +124,30 @@ export default function App() {
   const matches = useMatches() as RouteMatch[]
   const location = useLocation()
 
+  // Temporary debug logging
+  if (location.pathname.includes('/archives/challenge/') && location.pathname.length > '/archives/challenge/'.length) {
+    console.log('Debug breadcrumb matches for challenge detail:', {
+      pathname: location.pathname,
+      matches: matches.map(m => ({
+        id: m.id,
+        pathname: m.pathname,
+        params: m.params,
+        handle: m.handle,
+        hasData: !!m.data,
+        dataBreadcrumbTitle: m.data && typeof m.data === 'object' && 'breadcrumbTitle' in m.data ? m.data.breadcrumbTitle : undefined
+      }))
+    })
+  }
+
   const breadcrumbItems: BreadcrumbItem[] = matches
     .map((m) => {
       if (m.handle?.breadcrumb === 'hidden') return null
 
-      const url = m.pathname ?? fallbackPath(m, location.pathname)
+      // Improve URL determination for nested routes
+      let url = m.pathname
+      if (!url) {
+        url = fallbackPath(m, location.pathname)
+      }
       
       // Get breadcrumb name with better fallbacks
       let name = ''
@@ -145,11 +164,8 @@ export default function App() {
           name = m.handle.breadcrumb
         }
       }
-      // Finally fall back to params (this should show external IDs)
-      else {
-        name = fallbackLabel(m.params)
-      }
-
+      // Skip fallback to params to avoid showing external IDs
+      
       if (!name || !url) return null
       return { name, url }
     })
@@ -175,6 +191,30 @@ function fallbackPath(match: RouteMatch, currentPathname: string): string {
   if (match.id === 'routes/index') {
     return '/'
   }
+  
+  // Try to extract path from route ID for static routes
+  if (match.id) {
+    // Handle specific known route patterns
+    if (match.id === 'routes/archives/index') {
+      return '/archives'
+    }
+    if (match.id === 'routes/archives/challenge') {
+      return '/archives/challenge'  
+    }
+    if (match.id === 'routes/archives/video') {
+      return '/archives/video'
+    }
+    if (match.id === 'routes/updates/index') {
+      return '/updates'
+    }
+    if (match.id === 'routes/rule') {
+      return '/rule'
+    }
+    if (match.id === 'routes/penalties') {
+      return '/penalties'
+    }
+  }
+  
   // For other routes, use match pathname or current pathname
   return match.pathname ?? currentPathname
 }
