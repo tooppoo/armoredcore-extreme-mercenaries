@@ -10,6 +10,7 @@ import { Description } from '~/lib/archives/common/components/description'
 
 type LoadDetail = Readonly<{
   archive: ReadArchive
+  breadcrumbTitle?: string
 }>
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
   return findChallengeArchiveByExternalId(params.externalId, context.db).then(
@@ -21,6 +22,7 @@ export const loader = async ({ params, context }: Route.LoaderArgs) => {
       return data(
         {
           archive,
+          breadcrumbTitle: archive.title,
         },
         {
           headers: {

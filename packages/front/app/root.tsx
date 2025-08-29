@@ -6,7 +6,11 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useMatches,
+  useLocation,
 } from 'react-router'
+import type { BreadcrumbItem } from './types/breadcrumb'
+import { Breadcrumbs } from './components/Breadcrumbs'
 
 import './tailwind.css'
 import 'highlight.js/styles/github.min.css'
@@ -100,6 +104,57 @@ const footerLinks = [
   { href: '/archives', text: 'アーカイブ' },
 ]
 
+type MatchData = {
+  breadcrumbTitle?: string
+}
+
+type MatchHandle = {
+  breadcrumb?: string | ((params: Record<string, string>) => string) | 'hidden'
+}
+
+type RouteMatch = {
+  id: string
+  pathname?: string
+  params: Record<string, string>
+  data?: MatchData
+  handle?: MatchHandle
+}
+
 export default function App() {
-  return <Outlet />
+  const matches = useMatches() as RouteMatch[]
+  const location = useLocation()
+
+  const items: BreadcrumbItem[] = matches
+    .map((m) => {
+      if (m.handle?.breadcrumb === 'hidden') return null
+
+      const url = m.pathname ?? fallbackPath(m, location.pathname)
+      const name =
+        m.data?.breadcrumbTitle ??
+        (typeof m.handle?.breadcrumb === 'function'
+          ? m.handle.breadcrumb(m.params)
+          : m.handle?.breadcrumb) ??
+        fallbackLabel(m.params)
+
+      if (!name || !url) return null
+      return { name, url }
+    })
+    .filter((it): it is BreadcrumbItem => it !== null)
+
+  return (
+    <>
+      <Breadcrumbs items={items} />
+      <Outlet />
+    </>
+  )
+}
+
+function fallbackPath(_match: RouteMatch, currentPathname: string): string {
+  return currentPathname
+}
+
+function fallbackLabel(params: Record<string, string>): string {
+  const entries = Object.entries(params)
+  if (entries.length === 0) return ''
+  return entries.map(([, v]) => v).join(' / ')
 }
