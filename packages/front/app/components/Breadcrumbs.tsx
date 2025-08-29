@@ -7,20 +7,27 @@ type Props = {
   baseUrl?: string
 }
 
-const DEFAULT_BASE_URL = 'https://example.com'
+
 
 export function Breadcrumbs({
   items,
-  baseUrl = import.meta.env.VITE_SITE_BASE_URL ?? DEFAULT_BASE_URL,
+  baseUrl,
 }: Props) {
   // Show breadcrumbs if we have more than 1 item (proper navigation trail)
   if (!items || items.length <= 1) return null
+
+  const effectiveBaseUrl = baseUrl ?? import.meta.env.VITE_SITE_BASE_URL
+  if (!effectiveBaseUrl) {
+    throw new Error(
+      "Breadcrumbs: baseUrl prop or VITE_SITE_BASE_URL environment variable must be set."
+    )
+  }
 
   const itemList = items.map((it, idx) => ({
     '@type': 'ListItem',
     position: idx + 1,
     name: it.name,
-    item: new URL(it.url, baseUrl).toString(),
+    item: new URL(it.url, effectiveBaseUrl).toString(),
   }))
 
   const jsonLd = {
