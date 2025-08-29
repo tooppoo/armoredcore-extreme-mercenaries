@@ -164,6 +164,14 @@ export default function App() {
     items.push({ name: 'TOP', url: '/' })
   }
   
+  // For updates detail pages, ensure the updates index breadcrumb is included
+  if (location.pathname.startsWith('/updates/') && location.pathname !== '/updates') {
+    const hasUpdatesIndex = breadcrumbItems.some(item => item.url === '/updates')
+    if (!hasUpdatesIndex) {
+      items.push({ name: '更新履歴', url: '/updates' })
+    }
+  }
+  
   // Add all other breadcrumbs
   items.push(...breadcrumbItems)
 
