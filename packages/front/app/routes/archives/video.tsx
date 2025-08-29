@@ -259,4 +259,8 @@ export const meta: Route.MetaFunction = ({ location }) => {
   ]
 }
 
+export const handle = {
+  breadcrumb: 'ビデオ'
+}
+
 export default VideoArchives
