@@ -7,19 +7,14 @@ type Props = {
   baseUrl?: string
 }
 
-
-
-export function Breadcrumbs({
-  items,
-  baseUrl,
-}: Props) {
+export function Breadcrumbs({ items, baseUrl }: Props) {
   // Show breadcrumbs if we have more than 1 item (proper navigation trail)
   if (!items || items.length <= 1) return null
 
   const effectiveBaseUrl = baseUrl ?? import.meta.env.VITE_SITE_BASE_URL
   if (!effectiveBaseUrl) {
     throw new Error(
-      "Breadcrumbs: baseUrl prop or VITE_SITE_BASE_URL environment variable must be set."
+      'Breadcrumbs: baseUrl prop or VITE_SITE_BASE_URL environment variable must be set.',
     )
   }
 
