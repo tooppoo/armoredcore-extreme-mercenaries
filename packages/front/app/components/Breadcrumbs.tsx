@@ -1,3 +1,4 @@
+import React from 'react'
 import { Link } from 'react-router'
 import type { BreadcrumbItem } from '../types/breadcrumb'
 
@@ -38,30 +39,30 @@ export function Breadcrumbs({
     <nav aria-label="Breadcrumb">
       {/* Mobile layout (< sm): Method A - Collapsed middle items */}
       <div className="sm:hidden">
-        <ol className="list-none p-0 m-0 flex items-center gap-1 flex-wrap">
+        <ol className="list-none p-0 m-0 flex items-center">
           {/* First item */}
-          <li className="min-w-0 shrink-0">
-            <Link to={firstItem.url} className="whitespace-nowrap truncate block max-w-[8rem]">
+          <li className="shrink-0">
+            <Link to={firstItem.url} className="whitespace-nowrap truncate block max-w-[8rem] text-sm">
               {firstItem.name}
             </Link>
-            {items.length > 1 && (
-              <span className="mx-1 shrink-0" aria-hidden="true">/</span>
-            )}
           </li>
+
+          {items.length > 1 && (
+            <li className="shrink-0 mx-1" aria-hidden="true">/</li>
+          )}
 
           {/* Middle items - collapsed if more than 3 total items */}
           {shouldCollapse && middleItems.length > 0 ? (
-            <li className="min-w-0">
+            <li className="shrink-0 relative">
               <details className="inline">
-                <summary className="cursor-pointer list-none whitespace-nowrap">
+                <summary className="cursor-pointer list-none whitespace-nowrap text-sm">
                   …
-                  <span className="mx-1 shrink-0" aria-hidden="true">/</span>
                 </summary>
-                <div className="absolute bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg mt-1 p-2 z-10 min-w-[12rem]">
+                <div className="absolute top-full left-0 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg mt-1 p-2 z-10 min-w-[12rem]">
                   <ol className="list-none p-0 m-0 space-y-1">
                     {middleItems.map((item, idx) => (
                       <li key={item.url}>
-                        <Link to={item.url} className="block whitespace-nowrap truncate max-w-[10rem] hover:bg-gray-100 dark:hover:bg-gray-800 px-2 py-1 rounded">
+                        <Link to={item.url} className="block whitespace-nowrap truncate max-w-[10rem] hover:bg-gray-100 dark:hover:bg-gray-800 px-2 py-1 rounded text-sm">
                           {item.name}
                         </Link>
                       </li>
@@ -73,20 +74,26 @@ export function Breadcrumbs({
           ) : (
             /* Show middle items normally if 3 or fewer total items */
             middleItems.map((item, idx) => (
-              <li key={item.url} className="min-w-0 shrink-0">
-                <Link to={item.url} className="whitespace-nowrap truncate block max-w-[8rem]">
-                  {item.name}
-                </Link>
-                <span className="mx-1 shrink-0" aria-hidden="true">/</span>
-              </li>
+              <React.Fragment key={item.url}>
+                <li className="shrink-0">
+                  <Link to={item.url} className="whitespace-nowrap truncate block max-w-[8rem] text-sm">
+                    {item.name}
+                  </Link>
+                </li>
+                <li className="shrink-0 mx-1" aria-hidden="true">/</li>
+              </React.Fragment>
             ))
+          )}
+
+          {shouldCollapse && middleItems.length > 0 && (
+            <li className="shrink-0 mx-1" aria-hidden="true">/</li>
           )}
 
           {/* Last item (current page) */}
           {items.length > 1 && (
-            <li className="min-w-0 flex-1">
+            <li className="min-w-0 overflow-hidden">
               <span 
-                className="whitespace-nowrap truncate block font-medium"
+                className="whitespace-nowrap truncate block font-medium text-sm"
                 aria-current="page"
               >
                 {lastItem.name}
@@ -99,28 +106,30 @@ export function Breadcrumbs({
       {/* Tablet+ layout (≥ sm): Method B - Horizontal scroll with fade */}
       <div className="hidden sm:block relative">
         <div className="overflow-x-auto no-scrollbar">
-          <ol className="list-none p-0 m-0 flex items-center gap-1 min-w-max">
+          <ol className="list-none p-0 m-0 flex items-center nowrap">
             {items.map((item, i) => (
-              <li key={item.url} className="shrink-0 min-w-0 flex items-center">
-                {i === items.length - 1 ? (
-                  <span 
-                    className="whitespace-nowrap truncate block font-medium max-w-[16rem] md:max-w-[20rem]"
-                    aria-current="page"
-                  >
-                    {item.name}
-                  </span>
-                ) : (
-                  <Link 
-                    to={item.url} 
-                    className="whitespace-nowrap truncate block max-w-[16rem] md:max-w-[20rem]"
-                  >
-                    {item.name}
-                  </Link>
-                )}
+              <React.Fragment key={item.url}>
+                <li className="shrink-0">
+                  {i === items.length - 1 ? (
+                    <span 
+                      className="whitespace-nowrap truncate block font-medium max-w-[16rem] md:max-w-[20rem]"
+                      aria-current="page"
+                    >
+                      {item.name}
+                    </span>
+                  ) : (
+                    <Link 
+                      to={item.url} 
+                      className="whitespace-nowrap truncate block max-w-[16rem] md:max-w-[20rem]"
+                    >
+                      {item.name}
+                    </Link>
+                  )}
+                </li>
                 {i < items.length - 1 && (
-                  <span className="mx-1 shrink-0" aria-hidden="true">/</span>
+                  <li className="shrink-0 mx-1" aria-hidden="true">/</li>
                 )}
-              </li>
+              </React.Fragment>
             ))}
           </ol>
         </div>
