@@ -42,13 +42,18 @@ export function Breadcrumbs({
         <ol className="list-none p-0 m-0 flex items-center">
           {/* First item */}
           <li className="shrink-0">
-            <Link to={firstItem.url} className="whitespace-nowrap truncate block max-w-[8rem] text-sm">
+            <Link
+              to={firstItem.url}
+              className="whitespace-nowrap truncate block max-w-[8rem] text-sm"
+            >
               {firstItem.name}
             </Link>
           </li>
 
           {items.length > 1 && (
-            <li className="shrink-0 mx-1" aria-hidden="true">/</li>
+            <li className="shrink-0 mx-1" aria-hidden="true">
+              /
+            </li>
           )}
 
           {/* Middle items - collapsed if more than 3 total items */}
@@ -60,9 +65,12 @@ export function Breadcrumbs({
                 </summary>
                 <div className="absolute top-full left-0 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg mt-1 p-2 z-10 min-w-[12rem]">
                   <ol className="list-none p-0 m-0 space-y-1">
-                    {middleItems.map((item, idx) => (
+                    {middleItems.map((item) => (
                       <li key={item.url}>
-                        <Link to={item.url} className="block whitespace-nowrap truncate max-w-[10rem] hover:bg-gray-100 dark:hover:bg-gray-800 px-2 py-1 rounded text-sm">
+                        <Link
+                          to={item.url}
+                          className="block whitespace-nowrap truncate max-w-[10rem] hover:bg-gray-100 dark:hover:bg-gray-800 px-2 py-1 rounded text-sm"
+                        >
                           {item.name}
                         </Link>
                       </li>
@@ -73,26 +81,33 @@ export function Breadcrumbs({
             </li>
           ) : (
             /* Show middle items normally if 3 or fewer total items */
-            middleItems.map((item, idx) => (
+            middleItems.map((item) => (
               <React.Fragment key={item.url}>
                 <li className="shrink-0">
-                  <Link to={item.url} className="whitespace-nowrap truncate block max-w-[8rem] text-sm">
+                  <Link
+                    to={item.url}
+                    className="whitespace-nowrap truncate block max-w-[8rem] text-sm"
+                  >
                     {item.name}
                   </Link>
                 </li>
-                <li className="shrink-0 mx-1" aria-hidden="true">/</li>
+                <li className="shrink-0 mx-1" aria-hidden="true">
+                  /
+                </li>
               </React.Fragment>
             ))
           )}
 
           {shouldCollapse && middleItems.length > 0 && (
-            <li className="shrink-0 mx-1" aria-hidden="true">/</li>
+            <li className="shrink-0 mx-1" aria-hidden="true">
+              /
+            </li>
           )}
 
           {/* Last item (current page) */}
           {items.length > 1 && (
             <li className="min-w-0 overflow-hidden">
-              <span 
+              <span
                 className="whitespace-nowrap truncate block font-medium text-sm"
                 aria-current="page"
               >
@@ -111,15 +126,15 @@ export function Breadcrumbs({
               <React.Fragment key={item.url}>
                 <li className="shrink-0">
                   {i === items.length - 1 ? (
-                    <span 
+                    <span
                       className="whitespace-nowrap truncate block font-medium max-w-[16rem] md:max-w-[20rem]"
                       aria-current="page"
                     >
                       {item.name}
                     </span>
                   ) : (
-                    <Link 
-                      to={item.url} 
+                    <Link
+                      to={item.url}
                       className="whitespace-nowrap truncate block max-w-[16rem] md:max-w-[20rem]"
                     >
                       {item.name}
@@ -127,16 +142,18 @@ export function Breadcrumbs({
                   )}
                 </li>
                 {i < items.length - 1 && (
-                  <li className="shrink-0 mx-1" aria-hidden="true">/</li>
+                  <li className="shrink-0 mx-1" aria-hidden="true">
+                    /
+                  </li>
                 )}
               </React.Fragment>
             ))}
           </ol>
         </div>
-        
+
         {/* Left fade indicator */}
         <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-white dark:from-gray-950 to-transparent pointer-events-none" />
-        
+
         {/* Right fade indicator */}
         <div className="absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-white dark:from-gray-950 to-transparent pointer-events-none" />
       </div>

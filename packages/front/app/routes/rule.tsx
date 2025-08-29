@@ -32,7 +32,7 @@ export function headers({ loaderHeaders }: Route.HeadersArgs) {
 }
 
 export const handle = {
-  breadcrumb: '利用規約'
+  breadcrumb: '利用規約',
 }
 
 export const Rule: React.FC = () => {

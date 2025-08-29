@@ -133,12 +133,17 @@ export default function App() {
       if (!url) {
         url = fallbackPath(m, location.pathname)
       }
-      
+
       // Get breadcrumb name
       let name = ''
-      
+
       // First try loader data breadcrumbTitle (for dynamic content)
-      if (m.data && typeof m.data === 'object' && 'breadcrumbTitle' in m.data && m.data.breadcrumbTitle) {
+      if (
+        m.data &&
+        typeof m.data === 'object' &&
+        'breadcrumbTitle' in m.data &&
+        m.data.breadcrumbTitle
+      ) {
         name = m.data.breadcrumbTitle as string
       }
       // Then try handle breadcrumb (for static routes)
@@ -149,7 +154,7 @@ export default function App() {
           name = m.handle.breadcrumb
         }
       }
-      
+
       // Only include if we have both name and url
       if (!name || !url) return null
       return { name, url }
@@ -158,20 +163,28 @@ export default function App() {
 
   // Build final breadcrumb trail starting with TOP
   const items: BreadcrumbItem[] = []
-  
+
   // Add TOP if not on home page and not already included
-  if (location.pathname !== '/' && !breadcrumbItems.some(item => item.url === '/')) {
+  if (
+    location.pathname !== '/' &&
+    !breadcrumbItems.some((item) => item.url === '/')
+  ) {
     items.push({ name: 'TOP', url: '/' })
   }
-  
+
   // For updates detail pages, ensure the updates index breadcrumb is included
-  if (location.pathname.startsWith('/updates/') && location.pathname !== '/updates') {
-    const hasUpdatesIndex = breadcrumbItems.some(item => item.url === '/updates')
+  if (
+    location.pathname.startsWith('/updates/') &&
+    location.pathname !== '/updates'
+  ) {
+    const hasUpdatesIndex = breadcrumbItems.some(
+      (item) => item.url === '/updates',
+    )
     if (!hasUpdatesIndex) {
       items.push({ name: '更新履歴', url: '/updates' })
     }
   }
-  
+
   // Add all other breadcrumbs
   items.push(...breadcrumbItems)
 
@@ -188,16 +201,16 @@ function fallbackPath(match: RouteMatch, currentPathname: string): string {
   if (match.id === 'routes/index') {
     return '/'
   }
-  
+
   // Use existing pathname if available
   if (match.pathname) {
     return match.pathname
   }
-  
+
   // Try to construct path from route ID for known static routes
   if (match.id) {
     const routeId = match.id
-    
+
     // Map known route IDs to their URLs
     const routeMap: Record<string, string> = {
       'routes/archives/index': '/archives',
@@ -205,20 +218,14 @@ function fallbackPath(match: RouteMatch, currentPathname: string): string {
       'routes/archives/video': '/archives/video',
       'routes/updates/index': '/updates',
       'routes/rule': '/rule',
-      'routes/penalties': '/penalties'
+      'routes/penalties': '/penalties',
     }
-    
+
     if (routeMap[routeId]) {
       return routeMap[routeId]
     }
   }
-  
+
   // Final fallback to current pathname
   return currentPathname
-}
-
-function fallbackLabel(params: Record<string, string>): string {
-  const entries = Object.entries(params)
-  if (entries.length === 0) return ''
-  return entries.map(([, v]) => v).join(' / ')
 }

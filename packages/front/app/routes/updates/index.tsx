@@ -33,7 +33,7 @@ export const meta: Route.MetaFunction = ({ location }) => [
 ]
 
 export const handle = {
-  breadcrumb: '更新履歴'
+  breadcrumb: '更新履歴',
 }
 
 const Updates: React.FC = () => {

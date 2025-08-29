@@ -48,7 +48,7 @@ const Archives: React.FC = () => {
 }
 
 export const handle = {
-  breadcrumb: 'アーカイブ'
+  breadcrumb: 'アーカイブ',
 }
 
 export default Archives
