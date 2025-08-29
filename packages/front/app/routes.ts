@@ -14,11 +14,11 @@ export default [
     index('./routes/updates/index.tsx'),
     route(':id', './routes/updates/detail.tsx'),
   ]),
-  ...prefix('archives', [
-    index('./routes/archives/index.tsx'),
+  route('archives', './routes/archives/index.tsx', [
     route('video', './routes/archives/video.tsx'),
-    route('challenge', './routes/archives/challenge.tsx'),
-    route('challenge/:externalId', './routes/archives/challenge/detail.tsx'),
+    route('challenge', './routes/archives/challenge.tsx', [
+      route(':externalId', './routes/archives/challenge/detail.tsx'),
+    ]),
   ]),
 
   ...prefix('api', [
