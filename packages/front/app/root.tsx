@@ -129,12 +129,26 @@ export default function App() {
       if (m.handle?.breadcrumb === 'hidden') return null
 
       const url = m.pathname ?? fallbackPath(m, location.pathname)
-      const name =
-        m.data?.breadcrumbTitle ??
-        (typeof m.handle?.breadcrumb === 'function'
-          ? m.handle.breadcrumb(m.params)
-          : m.handle?.breadcrumb) ??
-        fallbackLabel(m.params)
+      
+      // Get breadcrumb name with better fallbacks
+      let name = ''
+      
+      // First try loader data breadcrumbTitle
+      if (m.data && typeof m.data === 'object' && 'breadcrumbTitle' in m.data && m.data.breadcrumbTitle) {
+        name = m.data.breadcrumbTitle as string
+      }
+      // Then try handle breadcrumb (static or function)
+      else if (m.handle?.breadcrumb) {
+        if (typeof m.handle.breadcrumb === 'function') {
+          name = m.handle.breadcrumb(m.params)
+        } else if (typeof m.handle.breadcrumb === 'string') {
+          name = m.handle.breadcrumb
+        }
+      }
+      // Finally fall back to params (this should show external IDs)
+      else {
+        name = fallbackLabel(m.params)
+      }
 
       if (!name || !url) return null
       return { name, url }

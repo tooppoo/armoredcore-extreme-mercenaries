@@ -19,7 +19,7 @@ export const loader = async ({ params, context }: Route.LoaderArgs) => {
   }
 
   return data(
-    { update, breadcrumbTitle: update.title },
+    { update, breadcrumbTitle: update.caption },
     {
       headers: {
         'Cache-Control': `public, max-age=${context.cloudflare.env.BASE_LONG_CACHE_TIME}`,
