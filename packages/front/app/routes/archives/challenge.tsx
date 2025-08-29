@@ -1,4 +1,4 @@
-import { Form, Link, useLoaderData, Outlet, useLocation } from 'react-router'
+import { Form, Link, useLoaderData, Outlet, useParams } from 'react-router'
 import React, { type ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
 import { type ReadArchive } from '~/lib/archives/challenge/read/entity'
@@ -27,11 +27,9 @@ type LoadArchives = Readonly<{
       o: QuerySchema['o']['key']
     }>
 }>
-export const loader = async ({ context, request }: Route.LoaderArgs) => {
-  const url = new URL(request.url)
-
+export const loader = async ({ context, request, params }: Route.LoaderArgs) => {
   // If this is a detail route (has an externalId parameter), don't load listing data
-  if (url.pathname !== '/archives/challenge') {
+  if (params.externalId) {
     return Response.json(null, {
       headers: {
         'Cache-Control': `public, max-age=${context.cloudflare.env.BASE_SHORT_CACHE_TIME}`,
@@ -75,14 +73,14 @@ export function headers({ loaderHeaders }: Route.HeadersArgs) {
 
 // クエリ用なので略記名
 const ChallengeArchives: React.FC = () => {
-  const location = useLocation()
+  const params = useParams()
   const loaderData = useLoaderData<LoadArchives | null>()
   const { register, setValue } = useForm<QuerySchema>()
 
-  const isListingRoute = location.pathname === '/archives/challenge'
+  const isDetailRoute = !!params.externalId
 
   // If we're on a detail route, render the outlet (detail page)
-  if (!isListingRoute) {
+  if (isDetailRoute) {
     return <Outlet />
   }
 

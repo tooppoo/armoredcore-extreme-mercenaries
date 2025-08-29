@@ -19,7 +19,8 @@ export function headers({ loaderHeaders }: Route.HeadersArgs) {
 
 const Archives: React.FC = () => {
   const location = useLocation()
-  const isIndexRoute = location.pathname === '/archives'
+  // Use regular expression to handle trailing slash cases
+  const isIndexRoute = /^\/archives\/?$/.test(location.pathname)
 
   if (isIndexRoute) {
     return (
