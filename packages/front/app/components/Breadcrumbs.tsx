@@ -14,7 +14,7 @@ export function Breadcrumbs({ items, baseUrl }: Props) {
   const effectiveBaseUrl = baseUrl ?? import.meta.env.VITE_SITE_BASE_URL
   if (!effectiveBaseUrl) {
     throw new Error(
-      'Breadcrumbs: baseUrl prop or VITE_SITE_BASE_URL environment variable must be set.',
+      'パンくずリスト: baseUrlプロパティまたはVITE_SITE_BASE_URL環境変数を設定する必要があります。',
     )
   }
 
