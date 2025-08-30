@@ -1,7 +1,8 @@
-import type { LinksFunction } from 'react-router'
 import {
   Link,
   Links,
+  LinksFunction,
+  type Location,
   Meta,
   Outlet,
   Scripts,
@@ -187,7 +188,7 @@ function buildBreadcrumbItems(
 
       // First try loader data breadcrumbTitle (for dynamic content)
       if (hasBreadcrumbTitle(m.data)) {
-        name = m.data.breadcrumbTitle
+        name = m.data.breadcrumbTitle ?? ''
       }
       // Then try handle breadcrumb (for static routes)
       else if (m.handle?.breadcrumb) {
