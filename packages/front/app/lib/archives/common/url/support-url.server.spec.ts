@@ -5,14 +5,39 @@ describe('support-url', () => {
   describe('normalizeUrl', () => {
     describe.each([
       [
-        'should remove query params and hash for standard YouTube URL',
+        'should normalize standard YouTube URL and remove extra params',
         'https://www.youtube.com/watch?v=abc123&foo=bar#myVideo',
         'https://www.youtube.com/watch?v=abc123',
       ],
       [
-        'should remove query params and hash for youtu.be URL',
-        'https://youtu.be/123?foo=bar&baz=123#embed',
-        'https://youtu.be/123',
+        'should normalize mobile YouTube URL and remove extra params',
+        'https://m.youtube.com/watch?v=abc123&foo=bar#myVideo',
+        'https://www.youtube.com/watch?v=abc123',
+      ],
+      [
+        'should normalize youtu.be URL to watch format',
+        'https://youtu.be/abc123?foo=bar&baz=123#embed',
+        'https://www.youtube.com/watch?v=abc123',
+      ],
+      [
+        'should normalize YouTube live URL to watch format',
+        'https://www.youtube.com/live/abc123?foo=bar#live',
+        'https://www.youtube.com/watch?v=abc123',
+      ],
+      [
+        'should normalize mobile YouTube live URL to watch format',
+        'https://m.youtube.com/live/abc123?foo=bar#live',
+        'https://www.youtube.com/watch?v=abc123',
+      ],
+      [
+        'should normalize YouTube shorts URL to watch format',
+        'https://www.youtube.com/shorts/abc123?foo=bar#shorts',
+        'https://www.youtube.com/watch?v=abc123',
+      ],
+      [
+        'should normalize mobile YouTube shorts URL to watch format',
+        'https://m.youtube.com/shorts/abc123?foo=bar#shorts',
+        'https://www.youtube.com/watch?v=abc123',
       ],
       [
         'should remove query params and hash for niconico URL',
