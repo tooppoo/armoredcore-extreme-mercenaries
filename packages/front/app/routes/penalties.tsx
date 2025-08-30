@@ -26,6 +26,10 @@ export const meta: Route.MetaFunction = ({ location }) => {
     }),
   ]
 }
+
+export const handle = {
+  breadcrumb: '罰則規定',
+}
 export const Penalties: React.FC = () => {
   return (
     <>

@@ -13,3 +13,6 @@ GOOGLE_FORM_INQUIRY="https://example.com/inquiry"
 
 # youtube
 YOUTUBE_PUBLIC_DATA_API_KEY = "test_youtube_token"
+
+# Base URL for local development
+VITE_LOCAL_BASE_URL="http://localhost:5173"

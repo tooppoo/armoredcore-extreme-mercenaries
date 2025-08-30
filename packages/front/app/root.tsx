@@ -1,12 +1,17 @@
-import type { LinksFunction } from 'react-router'
 import {
   Link,
   Links,
+  LinksFunction,
+  type Location,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useMatches,
+  useLocation,
 } from 'react-router'
+import type { BreadcrumbItem } from './types/breadcrumb'
+import { Breadcrumbs } from './components/Breadcrumbs'
 
 import './tailwind.css'
 import 'highlight.js/styles/github.min.css'
@@ -100,6 +105,119 @@ const footerLinks = [
   { href: '/archives', text: 'アーカイブ' },
 ]
 
+type MatchData = {
+  breadcrumbTitle?: string
+}
+
+type MatchHandle = {
+  breadcrumb?: string | ((params: Record<string, string>) => string) | 'hidden'
+}
+
+type RouteMatch = {
+  id: string
+  pathname?: string
+  params: Record<string, string>
+  data?: MatchData
+  handle?: MatchHandle
+}
+
+function hasBreadcrumbTitle(data: unknown): data is MatchData {
+  return (
+    data !== null &&
+    typeof data === 'object' &&
+    'breadcrumbTitle' in data &&
+    typeof (data as MatchData).breadcrumbTitle === 'string'
+  )
+}
+
 export default function App() {
-  return <Outlet />
+  const matches = useMatches() as RouteMatch[]
+  const location = useLocation()
+
+  const breadcrumbItems = buildBreadcrumbItems(matches, location)
+
+  return (
+    <>
+      <Breadcrumbs items={breadcrumbItems} />
+      <Outlet />
+    </>
+  )
+}
+
+function buildBreadcrumbItems(
+  matches: RouteMatch[],
+  location: Location,
+): BreadcrumbItem[] {
+  function fallbackPathForBreadcrumb(
+    match: RouteMatch,
+    currentPathname: string,
+  ): string {
+    // For root index route, return root path
+    if (match.id === 'routes/index') {
+      return '/'
+    }
+
+    // Use existing pathname if available
+    if (match.pathname) {
+      return match.pathname
+    }
+
+    // Extract from current pathname by route depth
+    const pathSegments = currentPathname.split('/').filter(Boolean)
+    const routeSegments = match.id.split('/').filter((s) => s !== 'index')
+
+    if (routeSegments.length <= pathSegments.length) {
+      return '/' + pathSegments.slice(0, routeSegments.length).join('/')
+    }
+
+    return currentPathname
+  }
+
+  const breadcrumbItems: BreadcrumbItem[] = matches
+    .map((m) => {
+      if (m.handle?.breadcrumb === 'hidden') return null
+
+      // Determine URL for each match
+      let url = m.pathname
+      if (!url) {
+        url = fallbackPathForBreadcrumb(m, location.pathname)
+      }
+
+      // Get breadcrumb name
+      let name = ''
+
+      // First try loader data breadcrumbTitle (for dynamic content)
+      if (hasBreadcrumbTitle(m.data)) {
+        name = m.data.breadcrumbTitle ?? ''
+      }
+      // Then try handle breadcrumb (for static routes)
+      else if (m.handle?.breadcrumb) {
+        if (typeof m.handle.breadcrumb === 'function') {
+          name = m.handle.breadcrumb(m.params)
+        } else if (typeof m.handle.breadcrumb === 'string') {
+          name = m.handle.breadcrumb
+        }
+      }
+
+      // Only include if we have both name and url
+      if (!name || !url) return null
+      return { name, url }
+    })
+    .filter((it): it is BreadcrumbItem => it !== null)
+
+  // Build final breadcrumb trail starting with TOP
+  const items: BreadcrumbItem[] = []
+
+  // Add TOP if not on home page and not already included
+  if (
+    location.pathname !== '/' &&
+    !breadcrumbItems.some((item) => item.url === '/')
+  ) {
+    items.push({ name: 'TOP', url: '/' })
+  }
+
+  // Add all other breadcrumbs
+  items.push(...breadcrumbItems)
+
+  return items
 }

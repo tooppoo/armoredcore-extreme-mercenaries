@@ -24,6 +24,10 @@ export function headers({ loaderHeaders }: Route.HeadersArgs) {
   return loaderHeaders
 }
 
+export const handle = {
+  breadcrumb: 'TOP',
+}
+
 export default function Index() {
   const indexLoaderData = useLoaderData<IndexLoaderData>()
 

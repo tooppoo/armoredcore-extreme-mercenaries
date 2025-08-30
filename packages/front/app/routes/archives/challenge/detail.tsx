@@ -10,6 +10,7 @@ import { Description } from '~/lib/archives/common/components/description'
 
 type LoadDetail = Readonly<{
   archive: ReadArchive
+  breadcrumbTitle?: string
 }>
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
   return findChallengeArchiveByExternalId(params.externalId, context.db).then(
@@ -21,6 +22,7 @@ export const loader = async ({ params, context }: Route.LoaderArgs) => {
       return data(
         {
           archive,
+          breadcrumbTitle: archive.title,
         },
         {
           headers: {
@@ -36,8 +38,7 @@ export function headers({ loaderHeaders }: Route.HeadersArgs) {
   return loaderHeaders
 }
 
-// クエリ用なので略記名
-const ChallengeArchives: React.FC = () => {
+const ChallengeArchiveDetail: React.FC = () => {
   const { archive } = useLoaderData<LoadDetail>()
 
   return (
@@ -76,4 +77,4 @@ export const meta: Route.MetaFunction = ({ location, data }) => [
   }),
 ]
 
-export default ChallengeArchives
+export default ChallengeArchiveDetail

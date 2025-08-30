@@ -7,6 +7,7 @@ import type { Route } from './+types/detail'
 
 type AnUpdateLoader = Readonly<{
   update: ReadUpdate
+  breadcrumbTitle?: string
 }>
 export const loader = async ({ params, context }: Route.LoaderArgs) => {
   const update = await findUpdate({ externalId: params.id })
@@ -18,7 +19,7 @@ export const loader = async ({ params, context }: Route.LoaderArgs) => {
   }
 
   return data(
-    { update },
+    { update, breadcrumbTitle: update.title },
     {
       headers: {
         'Cache-Control': `public, max-age=${context.cloudflare.env.BASE_LONG_CACHE_TIME}`,

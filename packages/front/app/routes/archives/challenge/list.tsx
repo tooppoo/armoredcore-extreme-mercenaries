@@ -13,7 +13,7 @@ import {
 } from '~/lib/archives/challenge/read/repository/read.server'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import { Margin } from '~/lib/utils/components/spacer'
-import type { Route } from './+types/challenge'
+import type { Route } from './+types/list'
 import { WithChildren, WithClassName } from '~/lib/utils/components/types'
 import { Description } from '~/lib/archives/common/components/description'
 import { getChallengeArchiveListRevision } from '~/lib/archives/challenge/revision/repository'
@@ -62,11 +62,11 @@ export function headers({ loaderHeaders }: Route.HeadersArgs) {
   return loaderHeaders
 }
 
-// クエリ用なので略記名
-const ChallengeArchives: React.FC = () => {
-  const { archives, totalPage, query } = useLoaderData<LoadArchives>()
+const ChallengeArchiveList: React.FC = () => {
+  const loaderData = useLoaderData<LoadArchives>()
   const { register, setValue } = useForm<QuerySchema>()
 
+  const { archives, totalPage, query } = loaderData
   const page = query.p
 
   return (
@@ -274,4 +274,4 @@ export const meta: Route.MetaFunction = ({ location }) => {
   ]
 }
 
-export default ChallengeArchives
+export default ChallengeArchiveList

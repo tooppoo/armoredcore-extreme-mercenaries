@@ -31,6 +31,10 @@ export function headers({ loaderHeaders }: Route.HeadersArgs) {
   return loaderHeaders
 }
 
+export const handle = {
+  breadcrumb: '利用規約',
+}
+
 export const Rule: React.FC = () => {
   const { discord } = useLoaderData<LoadDiscord>()
 

@@ -10,15 +10,17 @@ export default [
   route('rule', './routes/rule.tsx'),
   route('penalties', './routes/penalties.tsx'),
 
-  ...prefix('updates', [
-    index('./routes/updates/index.tsx'),
+  route('updates', './routes/updates/default.tsx', [
+    index('./routes/updates/list.tsx'),
     route(':id', './routes/updates/detail.tsx'),
   ]),
-  ...prefix('archives', [
+  route('archives', './routes/archives/default.tsx', [
     index('./routes/archives/index.tsx'),
     route('video', './routes/archives/video.tsx'),
-    route('challenge', './routes/archives/challenge.tsx'),
-    route('challenge/:externalId', './routes/archives/challenge/detail.tsx'),
+    route('challenge', './routes/archives/challenge/default.tsx', [
+      index('./routes/archives/challenge/list.tsx'),
+      route(':externalId', './routes/archives/challenge/detail.tsx'),
+    ]),
   ]),
 
   ...prefix('api', [
