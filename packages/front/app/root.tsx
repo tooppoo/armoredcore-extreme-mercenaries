@@ -129,9 +129,34 @@ function hasBreadcrumbTitle(data: unknown): data is MatchData {
   )
 }
 
-export default function App() {
-  const matches = useMatches() as RouteMatch[]
-  const location = useLocation()
+function buildBreadcrumbItems(
+  matches: RouteMatch[],
+  location: Location,
+): BreadcrumbItem[] {
+  function fallbackPathForBreadcrumb(
+    match: RouteMatch,
+    currentPathname: string,
+  ): string {
+    // For root index route, return root path
+    if (match.id === 'routes/index') {
+      return '/'
+    }
+
+    // Use existing pathname if available
+    if (match.pathname) {
+      return match.pathname
+    }
+
+    // Extract from current pathname by route depth
+    const pathSegments = currentPathname.split('/').filter(Boolean)
+    const routeSegments = match.id.split('/').filter((s) => s !== 'index')
+
+    if (routeSegments.length <= pathSegments.length) {
+      return '/' + pathSegments.slice(0, routeSegments.length).join('/')
+    }
+
+    return currentPathname
+  }
 
   const breadcrumbItems: BreadcrumbItem[] = matches
     .map((m) => {
@@ -140,7 +165,7 @@ export default function App() {
       // Determine URL for each match
       let url = m.pathname
       if (!url) {
-        url = fallbackPath(m, location.pathname)
+        url = fallbackPathForBreadcrumb(m, location.pathname)
       }
 
       // Get breadcrumb name
@@ -192,44 +217,19 @@ export default function App() {
   // Add all other breadcrumbs
   items.push(...breadcrumbItems)
 
+  return items
+}
+
+export default function App() {
+  const matches = useMatches() as RouteMatch[]
+  const location = useLocation()
+
+  const breadcrumbItems = buildBreadcrumbItems(matches, location)
+
   return (
     <>
-      <Breadcrumbs items={items} />
+      <Breadcrumbs items={breadcrumbItems} />
       <Outlet />
     </>
   )
-}
-
-function fallbackPath(match: RouteMatch, currentPathname: string): string {
-  // For root index route, return root path
-  if (match.id === 'routes/index') {
-    return '/'
-  }
-
-  // Use existing pathname if available
-  if (match.pathname) {
-    return match.pathname
-  }
-
-  // Try to construct path from route ID for known static routes
-  if (match.id) {
-    const routeId = match.id
-
-    // Map known route IDs to their URLs
-    const routeMap: Record<string, string> = {
-      'routes/archives/index': '/archives',
-      'routes/archives/challenge': '/archives/challenge',
-      'routes/archives/video': '/archives/video',
-      'routes/updates/index': '/updates',
-      'routes/rule': '/rule',
-      'routes/penalties': '/penalties',
-    }
-
-    if (routeMap[routeId]) {
-      return routeMap[routeId]
-    }
-  }
-
-  // Final fallback to current pathname
-  return currentPathname
 }
