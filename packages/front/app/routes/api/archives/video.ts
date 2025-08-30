@@ -21,7 +21,7 @@ import { makeCatchesSerializable } from '~/lib/error'
 import type { Route } from './+types/video'
 import { requireAuthToken } from '~/lib/http/request/require-auth-token.server'
 import { handleZodError, parseJson } from '~/lib/http/request/parser.server'
-import { normalizeYouTubeUrlForStorage } from '~/lib/archives/common/url/support-url.server'
+import { normalizeUrl } from '~/lib/archives/common/url/support-url.server'
 
 export const action = (args: Route.ActionArgs) => {
   requireAuthToken(args)
@@ -40,7 +40,7 @@ const post = async ({ request, context }: Route.ActionArgs) => {
 
   // Normalize the URL before processing to ensure consistent storage format
   const originalUrl = new URL(data.url)
-  const normalizedUrl = normalizeYouTubeUrlForStorage(originalUrl)
+  const normalizedUrl = normalizeUrl(originalUrl)
 
   const archive = await buildVideoArchiveFromUrl(normalizedUrl, {
     env: context.cloudflare.env,

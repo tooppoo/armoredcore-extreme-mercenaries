@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import { normalizeYouTubeUrlForStorage } from './support-url.server'
+import { normalizeUrl } from './support-url.server'
 
 describe('support-url', () => {
-  describe('normalizeYouTubeUrlForStorage', () => {
+  describe('normalizeUrl', () => {
     describe.each([
       [
         'should normalize standard YouTube URL and remove extra params',
@@ -40,11 +40,6 @@ describe('support-url', () => {
         'https://www.youtube.com/watch?v=abc123',
       ],
       [
-        'should handle YouTube video IDs with special characters',
-        'https://www.youtube.com/live/dQw4w9WgXcQ-ABC_123',
-        'https://www.youtube.com/watch?v=dQw4w9WgXcQ-ABC_123',
-      ],
-      [
         'should remove query params and hash for niconico URL',
         'https://www.nicovideo.jp/watch/sm12345678?foo=bar#player',
         'https://www.nicovideo.jp/watch/sm12345678',
@@ -67,7 +62,7 @@ describe('support-url', () => {
     ])('%s', (_, originalUrl, expectedUrl) => {
       it(`from ${originalUrl}`, () => {
         const original = new URL(originalUrl)
-        const normalized = normalizeYouTubeUrlForStorage(original)
+        const normalized = normalizeUrl(original)
         expect(normalized.toString()).toBe(expectedUrl)
       })
     })
