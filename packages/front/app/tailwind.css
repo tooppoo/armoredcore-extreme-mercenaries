@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import './styles/link-card.css';
 
 @layer base {
   html,

@@ -1,5 +1,6 @@
 import { Link } from 'react-router'
 import type { WithChildren } from './types'
+import '../../../styles/link-card.css'
 
 type LinkCardType = 'internal' | 'external'
 
