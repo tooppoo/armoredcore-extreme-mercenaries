@@ -13,7 +13,7 @@ import {
 } from '~/lib/archives/challenge/read/repository/read.server'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import { Margin } from '~/lib/utils/components/spacer'
-import type { Route } from '../+types/challenge'
+import type { Route } from './+types/list'
 import { WithChildren, WithClassName } from '~/lib/utils/components/types'
 import { Description } from '~/lib/archives/common/components/description'
 import { getChallengeArchiveListRevision } from '~/lib/archives/challenge/revision/repository'
