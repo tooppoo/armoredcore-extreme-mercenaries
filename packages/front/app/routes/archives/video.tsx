@@ -260,7 +260,7 @@ export const meta: Route.MetaFunction = ({ location }) => {
 }
 
 export const handle = {
-  breadcrumb: '動画',
+  breadcrumb: '動画アーカイブ',
 }
 
 export default VideoArchives

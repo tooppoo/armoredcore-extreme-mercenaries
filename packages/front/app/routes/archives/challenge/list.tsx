@@ -1,4 +1,4 @@
-import { Form, Link, useLoaderData, Outlet, useParams } from 'react-router'
+import { Form, Link, useLoaderData } from 'react-router'
 import React, { type ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
 import { type ReadArchive } from '~/lib/archives/challenge/read/entity'
@@ -13,7 +13,7 @@ import {
 } from '~/lib/archives/challenge/read/repository/read.server'
 import { buildMeta, unofficialServer } from '~/lib/head/build-meta'
 import { Margin } from '~/lib/utils/components/spacer'
-import type { Route } from './+types/challenge'
+import type { Route } from '../+types/challenge'
 import { WithChildren, WithClassName } from '~/lib/utils/components/types'
 import { Description } from '~/lib/archives/common/components/description'
 import { getChallengeArchiveListRevision } from '~/lib/archives/challenge/revision/repository'
@@ -30,17 +30,7 @@ type LoadArchives = Readonly<{
 export const loader = async ({
   context,
   request,
-  params,
 }: Route.LoaderArgs) => {
-  // If this is a detail route (has an externalId parameter), don't load listing data
-  if (params.externalId) {
-    return Response.json(null, {
-      headers: {
-        'Cache-Control': `public, max-age=${context.cloudflare.env.BASE_SHORT_CACHE_TIME}`,
-      },
-    })
-  }
-
   const query = parseQuery(request, querySchema(orderByCreated))
 
   const { list: archives, totalPage } = await pageArchives(
@@ -75,34 +65,9 @@ export function headers({ loaderHeaders }: Route.HeadersArgs) {
   return loaderHeaders
 }
 
-// クエリ用なので略記名
-const ChallengeArchives: React.FC = () => {
-  const params = useParams()
-  const loaderData = useLoaderData<LoadArchives | null>()
+const ChallengeArchiveList: React.FC = () => {
+  const loaderData = useLoaderData<LoadArchives>()
   const { register, setValue } = useForm<QuerySchema>()
-
-  const isDetailRoute = !!params.externalId
-
-  // If we're on a detail route, render the outlet (detail page)
-  if (isDetailRoute) {
-    return <Outlet />
-  }
-
-  // If no loader data (shouldn't happen for listing route), return error
-  if (!loaderData) {
-    return (
-      <div className="text-red-600 p-4 border border-red-500 rounded bg-red-50">
-        <h3>チャレンジアーカイブを読み込めません</h3>
-        <p>
-          アーカイブデータを取得できませんでした。ネットワークの問題、サーバーエラー、または予期しない問題が原因の可能性があります。
-        </p>
-        <p>
-          ページを更新してください。問題が解決しない場合は、サポートに連絡するか、しばらく時間をおいて再度お試しください。
-        </p>
-        <Link to="/">ホームに戻る</Link>
-      </div>
-    )
-  }
 
   const { archives, totalPage, query } = loaderData
   const page = query.p
@@ -312,8 +277,4 @@ export const meta: Route.MetaFunction = ({ location }) => {
   ]
 }
 
-export const handle = {
-  breadcrumb: 'チャレンジ',
-}
-
-export default ChallengeArchives
+export default ChallengeArchiveList
