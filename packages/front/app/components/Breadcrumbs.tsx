@@ -169,12 +169,9 @@ export function Breadcrumbs({ items, baseUrl }: Props) {
         <div className="absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-white dark:from-gray-950 to-transparent pointer-events-none" />
       </div>
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: isValidJsonLd(jsonLd) ? JSON.stringify(jsonLd) : '{}',
-        }}
-      />
+      <script type="application/ld+json">
+        {isValidJsonLd(jsonLd) ? JSON.stringify(jsonLd) : '{}'}
+      </script>
     </nav>
   )
 }
