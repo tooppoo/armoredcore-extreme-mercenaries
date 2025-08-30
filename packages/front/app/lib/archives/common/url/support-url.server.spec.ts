@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import { normalizeUrl } from './support-url.server'
+import { normalizeUrlForStorage } from './support-url.server'
 
 describe('support-url', () => {
-  describe('normalizeUrl', () => {
+  describe('normalizeUrlForStorage', () => {
     describe.each([
       [
         'should normalize standard YouTube URL and remove extra params',
@@ -67,7 +67,7 @@ describe('support-url', () => {
     ])('%s', (_, originalUrl, expectedUrl) => {
       it(`from ${originalUrl}`, () => {
         const original = new URL(originalUrl)
-        const normalized = normalizeUrl(original)
+        const normalized = normalizeUrlForStorage(original)
         expect(normalized.toString()).toBe(expectedUrl)
       })
     })

@@ -6,7 +6,7 @@ import { Database } from '~/db/driver.server'
 import { discordMembers, challengeArchives } from '~/db/schema.server'
 import { updateChallengeArchiveListRevision } from '~/lib/archives/challenge/revision/repository'
 import { Archive } from '~/lib/archives/challenge/upload/entity.server'
-import { normalizeUrl } from '~/lib/archives/common/url/support-url.server'
+import { normalizeUrlForStorage } from '~/lib/archives/common/url/support-url.server'
 
 export const saveChallengeArchive = async (
   entity: Archive,
@@ -24,7 +24,7 @@ export const saveChallengeArchive = async (
       .onConflictDoNothing({ target: discordMembers.discordUserId }),
     db.insert(challengeArchives).values({
       url: entity.contents.url
-        ? normalizeUrl(entity.contents.url).toString()
+        ? normalizeUrlForStorage(entity.contents.url).toString()
         : null,
       title: entity.contents.title,
       description: entity.contents.description,
