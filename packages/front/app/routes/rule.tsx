@@ -41,106 +41,16 @@ export const Rule: React.FC = () => {
   return (
     <>
       <style>{`
-        .terms-page {
-          max-width: 56rem;
-          margin-left: auto;
-          margin-right: auto;
-          padding-left: 1.5rem;
-          padding-right: 1.5rem;
-          padding-top: 2rem;
-          padding-bottom: 2rem;
-        }
-
-        .terms-header {
-          margin-bottom: 2rem;
-        }
-
-        .terms-title {
-          font-size: 1.875rem;
-          line-height: 2.25rem;
-          font-weight: 700;
-          color: rgb(17 24 39);
-          margin-bottom: 1.5rem;
-          border-bottom-width: 2px;
-          border-bottom-color: rgb(59 130 246);
-          padding-bottom: 0.75rem;
-        }
-
-        @media (prefers-color-scheme: dark) {
-          .terms-title {
-            color: rgb(243 244 246);
-          }
-        }
-
-        .terms-intro {
-          font-size: 1.125rem;
-          line-height: 1.75rem;
-          color: rgb(55 65 81);
-          line-height: 1.625;
-          margin-bottom: 1rem;
-        }
-
-        .terms-intro:last-child {
-          margin-bottom: 0;
-        }
-
-        @media (prefers-color-scheme: dark) {
-          .terms-intro {
-            color: rgb(209 213 219);
-          }
-        }
-
-        .terms-divider {
-          border-top-width: 1px;
-          border-top-color: rgb(209 213 219);
-          margin-top: 2rem;
-          margin-bottom: 2rem;
-          margin-left: auto;
-          margin-right: auto;
-          width: 75%;
-        }
-
-        @media (prefers-color-scheme: dark) {
-          .terms-divider {
-            border-top-color: rgb(75 85 99);
-          }
-        }
-
-        .terms-content {
-          display: flex;
-          flex-direction: column;
-          gap: 2rem;
-        }
-
         .rule-list {
-          display: flex;
-          flex-direction: column;
-          gap: 2rem;
           counter-reset: rule-counter;
         }
 
         .rule-item {
-          background-color: rgb(255 255 255);
-          border-radius: 0.5rem;
-          padding: 1.5rem;
-          border-width: 1px;
-          border-color: rgb(229 231 235);
-          box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-          transition-property: box-shadow;
-          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-          transition-duration: 200ms;
           counter-increment: rule-counter;
         }
 
-        .rule-item:hover {
-          box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        }
-
-        @media (prefers-color-scheme: dark) {
-          .rule-item {
-            background-color: rgb(31 41 55);
-            border-color: rgb(55 65 81);
-          }
+        .rule-number::before {
+          content: counter(rule-counter);
         }
 
         .rule-item:nth-child(odd) {
@@ -155,94 +65,13 @@ export const Rule: React.FC = () => {
           }
         }
 
-        .rule-header {
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-          margin-bottom: 1rem;
-        }
-
-        .rule-number {
-          background-color: rgb(59 130 246);
-          color: rgb(255 255 255);
-          border-radius: 9999px;
-          width: 2rem;
-          height: 2rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 0.875rem;
-          line-height: 1.25rem;
-          font-weight: 700;
-          flex-shrink: 0;
-        }
-
-        .rule-number::before {
-          content: counter(rule-counter);
-        }
-
-        .rule-title {
-          font-size: 1.25rem;
-          line-height: 1.75rem;
-          font-weight: 600;
-          color: rgb(17 24 39);
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          flex: 1;
-        }
-
-        @media (prefers-color-scheme: dark) {
-          .rule-title {
-            color: rgb(243 244 246);
-          }
-        }
-
-        .rule-anchor {
+        .rule-content ol li::marker {
           color: rgb(59 130 246);
-          transition-property: color;
-          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-          transition-duration: 200ms;
-        }
-
-        .rule-anchor:hover {
-          color: rgb(37 99 235);
-        }
-
-        @media (prefers-color-scheme: dark) {
-          .rule-anchor {
-            color: rgb(96 165 250);
-          }
-          .rule-anchor:hover {
-            color: rgb(147 197 253);
-          }
-        }
-
-        .rule-content {
-          color: rgb(55 65 81);
-          line-height: 1.625;
-        }
-
-        @media (prefers-color-scheme: dark) {
-          .rule-content {
-            color: rgb(209 213 219);
-          }
-        }
-
-        .rule-content ol {
-          display: flex;
-          flex-direction: column;
-          gap: 0.75rem;
-          margin-left: 1.5rem;
+          font-weight: 600;
         }
 
         .rule-content li {
           position: relative;
-        }
-
-        .rule-content li::marker {
-          color: rgb(59 130 246);
-          font-weight: 600;
         }
 
         .rule-content ul {
@@ -299,44 +128,21 @@ export const Rule: React.FC = () => {
             color: rgb(147 197 253);
           }
         }
-
-        @media (max-width: 768px) {
-          .terms-page {
-            padding-left: 1rem;
-            padding-right: 1rem;
-            padding-top: 1.5rem;
-            padding-bottom: 1.5rem;
-          }
-
-          .terms-title {
-            font-size: 1.5rem;
-            line-height: 2rem;
-          }
-
-          .rule-item {
-            padding: 1rem;
-          }
-
-          .rule-title {
-            font-size: 1.125rem;
-            line-height: 1.75rem;
-          }
-        }
       `}</style>
-      <div className="terms-page">
-        <header className="terms-header">
-          <h2 className="terms-title">利用規約</h2>
-          <p className="terms-intro">
+      <div className="max-w-4xl mx-auto px-6 py-8 md:px-4 md:py-6">
+        <header className="mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 border-b-2 border-blue-500 pb-3 md:text-2xl">利用規約</h2>
+          <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
             このページでは、ファンサーバー「{siteName}
             」（以下、本サーバー）の利用規約を記載しています
           </p>
-          <p className="terms-intro">本サーバーの利用者は、必ず以下の内容を一読してください</p>
-          <p className="terms-intro">
+          <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-4">本サーバーの利用者は、必ず以下の内容を一読してください</p>
+          <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
             また、本サーバーの加入者は全員以下の内容に同意しているものとみなします
           </p>
         </header>
-        <div className="terms-divider" />
-        <section className="terms-content">
+        <hr className="border-t border-gray-300 dark:border-gray-600 mt-8 mb-8 mx-auto w-3/4" />
+        <section className="flex flex-col gap-8">
         <RuleList>
           <RuleItem caption="サーバー方針" id="policy">
             <li>
@@ -628,7 +434,7 @@ export const Rule: React.FC = () => {
 
 type RuleListProps = Readonly<{ children: ReactElement[] }>
 const RuleList: React.FC<RuleListProps> = ({ children }) => (
-  <div className="rule-list">{children}</div>
+  <div className="flex flex-col gap-8 rule-list">{children}</div>
 )
 
 type RuleItemProps = Readonly<{
@@ -637,23 +443,23 @@ type RuleItemProps = Readonly<{
   children: ReactElement[]
 }>
 const RuleItem: React.FC<RuleItemProps> = ({ caption, id, children }) => (
-  <article className="rule-item">
-    <header className="rule-header">
-      <div className="rule-number" aria-hidden="true"></div>
-      <h3 className="rule-title">
+  <article className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-sm transition-shadow duration-200 hover:shadow-md rule-item md:p-4">
+    <header className="flex items-center gap-3 mb-4">
+      <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flex-shrink-0 rule-number" aria-hidden="true"></div>
+      <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2 flex-1 md:text-lg">
         {caption}
         <Link
           to={{ hash: id }}
           id={id}
-          className="rule-anchor"
+          className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200"
           aria-label={`見出し「${caption}」へのアンカー`}
         >
           <LinkIcon className="size-4" />
         </Link>
       </h3>
     </header>
-    <div className="rule-content">
-      <ol>{children}</ol>
+    <div className="text-gray-700 dark:text-gray-300 leading-relaxed rule-content">
+      <ol className="flex flex-col gap-3 ml-6">{children}</ol>
     </div>
   </article>
 )
