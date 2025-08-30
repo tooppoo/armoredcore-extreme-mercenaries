@@ -1,9 +1,7 @@
-import { Outlet } from 'react-router';
+import { Outlet } from 'react-router'
 
 export default function ArchivesDefault() {
-  return (
-    <Outlet />
-  )
+  return <Outlet />
 }
 
 export const handle = {

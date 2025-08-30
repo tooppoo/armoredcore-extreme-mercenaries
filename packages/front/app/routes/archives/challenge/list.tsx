@@ -27,10 +27,7 @@ type LoadArchives = Readonly<{
       o: QuerySchema['o']['key']
     }>
 }>
-export const loader = async ({
-  context,
-  request,
-}: Route.LoaderArgs) => {
+export const loader = async ({ context, request }: Route.LoaderArgs) => {
   const query = parseQuery(request, querySchema(orderByCreated))
 
   const { list: archives, totalPage } = await pageArchives(
