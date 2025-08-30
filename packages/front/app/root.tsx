@@ -11,7 +11,7 @@ import {
   useLocation,
 } from 'react-router'
 import type { BreadcrumbItem } from './types/breadcrumb'
-import { Breadcrumbs } from './components/Breadcrumbs'
+import { Breadcrumbs } from './lib/utils/components/Breadcrumbs'
 
 import './tailwind.css'
 import 'highlight.js/styles/github.min.css'

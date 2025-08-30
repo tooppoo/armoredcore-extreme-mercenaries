@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
-import type { BreadcrumbItem } from '../types/breadcrumb'
+import type { BreadcrumbItem } from '../../../types/breadcrumb'
 
 type Props = {
   items: BreadcrumbItem[]
