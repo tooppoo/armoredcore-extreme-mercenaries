@@ -10,7 +10,7 @@ export default [
   route('rule', './routes/rule.tsx'),
   route('penalties', './routes/penalties.tsx'),
 
-  ...prefix('updates', [
+  route('updates', './routes/updates/default.tsx', [
     index('./routes/updates/index.tsx'),
     route(':id', './routes/updates/detail.tsx'),
   ]),

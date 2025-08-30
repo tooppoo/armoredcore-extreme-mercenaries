@@ -32,10 +32,6 @@ export const meta: Route.MetaFunction = ({ location }) => [
   }),
 ]
 
-export const handle = {
-  breadcrumb: '更新履歴',
-}
-
 const Updates: React.FC = () => {
   const { updates: records } = useLoaderData<UpdatesLoader>()
   return (
