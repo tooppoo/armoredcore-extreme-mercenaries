@@ -131,8 +131,8 @@ export function Breadcrumbs({ items, baseUrl }: Props) {
         </ol>
       </div>
 
-      {/* Tablet+ layout (≥ sm): Method B - Horizontal scroll with fade */}
-      <div className="hidden sm:block relative">
+      {/* Tablet+ layout (≥ sm): Method B - Horizontal scroll */}
+      <div className="hidden sm:block">
         <div className="overflow-x-auto no-scrollbar">
           <ol className="list-none p-0 m-0 flex items-center whitespace-nowrap">
             {items.map((item, i) => (
@@ -163,12 +163,6 @@ export function Breadcrumbs({ items, baseUrl }: Props) {
             ))}
           </ol>
         </div>
-
-        {/* Left fade indicator */}
-        <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-white dark:from-gray-950 to-transparent pointer-events-none" />
-
-        {/* Right fade indicator */}
-        <div className="absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-white dark:from-gray-950 to-transparent pointer-events-none" />
       </div>
 
       <script type="application/ld+json">
