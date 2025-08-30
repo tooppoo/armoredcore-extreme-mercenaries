@@ -54,19 +54,19 @@ export const Rule: React.FC = () => {
         }
 
         .rule-item:nth-child(odd) {
-          background-color: rgb(239 246 255);
-          border-color: rgb(191 219 254);
+          background-color: rgb(248 250 252);
+          border-color: rgb(203 213 225);
         }
 
         @media (prefers-color-scheme: dark) {
           .rule-item:nth-child(odd) {
-            background-color: rgb(30 58 138 / 0.1);
-            border-color: rgb(30 64 175 / 0.5);
+            background-color: rgb(51 65 85 / 0.1);
+            border-color: rgb(71 85 105 / 0.5);
           }
         }
 
         .rule-content ol li::marker {
-          color: rgb(59 130 246);
+          color: rgb(71 85 105);
           font-weight: 600;
         }
 
@@ -88,7 +88,7 @@ export const Rule: React.FC = () => {
 
         .rule-content ul li::before {
           content: "•";
-          color: rgb(59 130 246);
+          color: rgb(71 85 105);
           font-weight: 700;
           position: absolute;
           left: -1rem;
@@ -106,7 +106,7 @@ export const Rule: React.FC = () => {
         }
 
         .rule-content a {
-          color: rgb(37 99 235);
+          color: rgb(71 85 105);
           text-decoration: underline;
           text-decoration-thickness: 2px;
           text-underline-offset: 2px;
@@ -116,22 +116,22 @@ export const Rule: React.FC = () => {
         }
 
         .rule-content a:hover {
-          color: rgb(29 78 216);
-          text-decoration-color: rgb(59 130 246);
+          color: rgb(51 65 85);
+          text-decoration-color: rgb(100 116 139);
         }
 
         @media (prefers-color-scheme: dark) {
           .rule-content a {
-            color: rgb(96 165 250);
+            color: rgb(148 163 184);
           }
           .rule-content a:hover {
-            color: rgb(147 197 253);
+            color: rgb(203 213 225);
           }
         }
       `}</style>
-      <div className="max-w-4xl mx-auto px-6 py-8 md:px-4 md:py-6">
+      <div className="max-w-4xl mx-auto px-4 py-8 md:px-6 md:py-6">
         <header className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 border-b-2 border-blue-500 pb-3 md:text-2xl">利用規約</h2>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 border-b-2 border-slate-500 pb-3 md:text-2xl">利用規約</h2>
           <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
             このページでは、ファンサーバー「{siteName}
             」（以下、本サーバー）の利用規約を記載しています
@@ -445,13 +445,13 @@ type RuleItemProps = Readonly<{
 const RuleItem: React.FC<RuleItemProps> = ({ caption, id, children }) => (
   <article className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-sm transition-shadow duration-200 hover:shadow-md rule-item md:p-4">
     <header className="flex items-center gap-3 mb-4">
-      <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flex-shrink-0 rule-number" aria-hidden="true"></div>
+      <div className="bg-slate-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flex-shrink-0 rule-number" aria-hidden="true"></div>
       <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2 flex-1 md:text-lg">
         {caption}
         <Link
           to={{ hash: id }}
           id={id}
-          className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200"
+          className="text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300 transition-colors duration-200"
           aria-label={`見出し「${caption}」へのアンカー`}
         >
           <LinkIcon className="size-4" />
