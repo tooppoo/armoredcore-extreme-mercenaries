@@ -31,26 +31,62 @@ export const LinkCard: React.FC<LinkCardProps> = ({
     <>
       <style>{`
         .link-card {
-          @apply inline-flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200;
-          @apply bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800;
-          @apply hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:border-blue-300 dark:hover:border-blue-700;
-          @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
-          @apply text-blue-700 dark:text-blue-300 no-underline;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding-left: 0.75rem;
+          padding-right: 0.75rem;
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+          border-radius: 0.5rem;
+          transition-property: all;
+          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+          transition-duration: 200ms;
+          background-color: rgb(239 246 255);
+          border-width: 1px;
+          border-color: rgb(191 219 254);
+          color: rgb(29 78 216);
+          text-decoration: none;
         }
 
         .link-card:hover {
-          @apply no-underline;
+          background-color: rgb(219 234 254);
+          border-color: rgb(147 197 253);
           text-decoration: none;
+        }
+
+        .link-card:focus {
+          outline: 2px solid transparent;
+          outline-offset: 2px;
+          box-shadow: 0 0 0 2px rgb(59 130 246);
+          box-shadow: 0 0 0 2px rgb(59 130 246), 0 0 0 4px rgb(59 130 246 / 0.2);
+        }
+
+        @media (prefers-color-scheme: dark) {
+          .link-card {
+            background-color: rgb(30 58 138 / 0.2);
+            border-color: rgb(30 64 175);
+            color: rgb(147 197 253);
+          }
+          
+          .link-card:hover {
+            background-color: rgb(30 58 138 / 0.3);
+            border-color: rgb(29 78 216);
+          }
         }
 
         .link-card--external::after {
           content: '↗';
-          @apply text-xs opacity-70;
+          font-size: 0.75rem;
+          line-height: 1rem;
+          opacity: 0.7;
         }
 
         .link-card--internal::after {
           content: '→';
-          @apply text-xs opacity-70;
+          font-size: 0.75rem;
+          line-height: 1rem;
+          opacity: 0.7;
         }
       `}</style>
       <Link

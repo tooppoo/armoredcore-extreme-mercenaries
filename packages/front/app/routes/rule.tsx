@@ -42,57 +42,139 @@ export const Rule: React.FC = () => {
     <>
       <style>{`
         .terms-page {
-          @apply max-w-4xl mx-auto px-6 py-8;
+          max-width: 56rem;
+          margin-left: auto;
+          margin-right: auto;
+          padding-left: 1.5rem;
+          padding-right: 1.5rem;
+          padding-top: 2rem;
+          padding-bottom: 2rem;
         }
 
         .terms-header {
-          @apply mb-8;
+          margin-bottom: 2rem;
         }
 
         .terms-title {
-          @apply text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6;
-          @apply border-b-2 border-blue-500 pb-3;
+          font-size: 1.875rem;
+          line-height: 2.25rem;
+          font-weight: 700;
+          color: rgb(17 24 39);
+          margin-bottom: 1.5rem;
+          border-bottom-width: 2px;
+          border-bottom-color: rgb(59 130 246);
+          padding-bottom: 0.75rem;
+        }
+
+        @media (prefers-color-scheme: dark) {
+          .terms-title {
+            color: rgb(243 244 246);
+          }
         }
 
         .terms-intro {
-          @apply text-lg text-gray-700 dark:text-gray-300 leading-relaxed;
-          @apply mb-4 last:mb-0;
+          font-size: 1.125rem;
+          line-height: 1.75rem;
+          color: rgb(55 65 81);
+          line-height: 1.625;
+          margin-bottom: 1rem;
+        }
+
+        .terms-intro:last-child {
+          margin-bottom: 0;
+        }
+
+        @media (prefers-color-scheme: dark) {
+          .terms-intro {
+            color: rgb(209 213 219);
+          }
         }
 
         .terms-divider {
-          @apply border-t border-gray-300 dark:border-gray-600;
-          @apply my-8 mx-auto w-3/4;
+          border-top-width: 1px;
+          border-top-color: rgb(209 213 219);
+          margin-top: 2rem;
+          margin-bottom: 2rem;
+          margin-left: auto;
+          margin-right: auto;
+          width: 75%;
+        }
+
+        @media (prefers-color-scheme: dark) {
+          .terms-divider {
+            border-top-color: rgb(75 85 99);
+          }
         }
 
         .terms-content {
-          @apply space-y-8;
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
         }
 
         .rule-list {
-          @apply space-y-8;
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
           counter-reset: rule-counter;
         }
 
         .rule-item {
-          @apply bg-white dark:bg-gray-800 rounded-lg p-6;
-          @apply border border-gray-200 dark:border-gray-700;
-          @apply shadow-sm hover:shadow-md transition-shadow duration-200;
+          background-color: rgb(255 255 255);
+          border-radius: 0.5rem;
+          padding: 1.5rem;
+          border-width: 1px;
+          border-color: rgb(229 231 235);
+          box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+          transition-property: box-shadow;
+          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+          transition-duration: 200ms;
           counter-increment: rule-counter;
         }
 
+        .rule-item:hover {
+          box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+          .rule-item {
+            background-color: rgb(31 41 55);
+            border-color: rgb(55 65 81);
+          }
+        }
+
         .rule-item:nth-child(odd) {
-          @apply bg-blue-50 dark:bg-blue-900/10;
-          @apply border-blue-200 dark:border-blue-800/50;
+          background-color: rgb(239 246 255);
+          border-color: rgb(191 219 254);
+        }
+
+        @media (prefers-color-scheme: dark) {
+          .rule-item:nth-child(odd) {
+            background-color: rgb(30 58 138 / 0.1);
+            border-color: rgb(30 64 175 / 0.5);
+          }
         }
 
         .rule-header {
-          @apply flex items-center gap-3 mb-4;
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          margin-bottom: 1rem;
         }
 
         .rule-number {
-          @apply bg-blue-500 text-white rounded-full;
-          @apply w-8 h-8 flex items-center justify-center;
-          @apply text-sm font-bold flex-shrink-0;
+          background-color: rgb(59 130 246);
+          color: rgb(255 255 255);
+          border-radius: 9999px;
+          width: 2rem;
+          height: 2rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.875rem;
+          line-height: 1.25rem;
+          font-weight: 700;
+          flex-shrink: 0;
         }
 
         .rule-number::before {
@@ -100,74 +182,144 @@ export const Rule: React.FC = () => {
         }
 
         .rule-title {
-          @apply text-xl font-semibold text-gray-900 dark:text-gray-100;
-          @apply flex items-center gap-2 flex-1;
+          font-size: 1.25rem;
+          line-height: 1.75rem;
+          font-weight: 600;
+          color: rgb(17 24 39);
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          flex: 1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+          .rule-title {
+            color: rgb(243 244 246);
+          }
         }
 
         .rule-anchor {
-          @apply text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300;
-          @apply transition-colors duration-200;
+          color: rgb(59 130 246);
+          transition-property: color;
+          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+          transition-duration: 200ms;
+        }
+
+        .rule-anchor:hover {
+          color: rgb(37 99 235);
+        }
+
+        @media (prefers-color-scheme: dark) {
+          .rule-anchor {
+            color: rgb(96 165 250);
+          }
+          .rule-anchor:hover {
+            color: rgb(147 197 253);
+          }
         }
 
         .rule-content {
-          @apply text-gray-700 dark:text-gray-300 leading-relaxed;
+          color: rgb(55 65 81);
+          line-height: 1.625;
+        }
+
+        @media (prefers-color-scheme: dark) {
+          .rule-content {
+            color: rgb(209 213 219);
+          }
         }
 
         .rule-content ol {
-          @apply space-y-3 ml-6;
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+          margin-left: 1.5rem;
         }
 
         .rule-content li {
-          @apply relative;
+          position: relative;
         }
 
         .rule-content li::marker {
-          @apply text-blue-500 font-semibold;
+          color: rgb(59 130 246);
+          font-weight: 600;
         }
 
         .rule-content ul {
-          @apply space-y-2 ml-6 mt-2;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          margin-left: 1.5rem;
+          margin-top: 0.5rem;
         }
 
         .rule-content ul li {
-          @apply relative;
+          position: relative;
         }
 
         .rule-content ul li::before {
           content: "•";
-          @apply text-blue-500 font-bold absolute;
+          color: rgb(59 130 246);
+          font-weight: 700;
+          position: absolute;
           left: -1rem;
         }
 
         .rule-content b {
-          @apply font-semibold text-gray-900 dark:text-gray-100;
+          font-weight: 600;
+          color: rgb(17 24 39);
+        }
+
+        @media (prefers-color-scheme: dark) {
+          .rule-content b {
+            color: rgb(243 244 246);
+          }
         }
 
         .rule-content a {
-          @apply text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300;
-          @apply underline decoration-2 underline-offset-2;
-          @apply transition-colors duration-200;
+          color: rgb(37 99 235);
+          text-decoration: underline;
+          text-decoration-thickness: 2px;
+          text-underline-offset: 2px;
+          transition-property: color;
+          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+          transition-duration: 200ms;
         }
 
         .rule-content a:hover {
-          @apply decoration-blue-500;
+          color: rgb(29 78 216);
+          text-decoration-color: rgb(59 130 246);
+        }
+
+        @media (prefers-color-scheme: dark) {
+          .rule-content a {
+            color: rgb(96 165 250);
+          }
+          .rule-content a:hover {
+            color: rgb(147 197 253);
+          }
         }
 
         @media (max-width: 768px) {
           .terms-page {
-            @apply px-4 py-6;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
           }
 
           .terms-title {
-            @apply text-2xl;
+            font-size: 1.5rem;
+            line-height: 2rem;
           }
 
           .rule-item {
-            @apply p-4;
+            padding: 1rem;
           }
 
           .rule-title {
-            @apply text-lg;
+            font-size: 1.125rem;
+            line-height: 1.75rem;
           }
         }
       `}</style>
