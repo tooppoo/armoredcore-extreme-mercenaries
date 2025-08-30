@@ -1,7 +1,7 @@
 import { Database } from '~/db/driver.server'
 import { eq } from 'drizzle-orm'
 import { videoArchives } from '~/db/schema.server'
-import { normalizeUrlForStorage } from '~/lib/archives/common/url/support-url.server'
+import { normalizeYouTubeUrlForStorage } from '~/lib/archives/common/url/support-url.server'
 import { FindArchiveByURL } from '~/lib/archives/common/url/find-archive-by-url'
 
 export const findVideoArchiveByURL =
@@ -10,7 +10,7 @@ export const findVideoArchiveByURL =
     const [result] = await db
       .select()
       .from(videoArchives)
-      .where(eq(videoArchives.url, normalizeUrlForStorage(url).toString()))
+      .where(eq(videoArchives.url, normalizeYouTubeUrlForStorage(url).toString()))
 
     if (!result) {
       return null

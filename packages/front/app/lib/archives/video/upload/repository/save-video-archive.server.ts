@@ -5,7 +5,7 @@
 import { Database } from '~/db/driver.server'
 import { videoArchives, discordMembers } from '~/db/schema.server'
 import { Archive } from '~/lib/archives/video/upload/entity.server'
-import { normalizeUrlForStorage } from '~/lib/archives/common/url/support-url.server'
+import { normalizeYouTubeUrlForStorage } from '~/lib/archives/common/url/support-url.server'
 import { updateVideoArchiveListRevision } from '~/lib/archives/video/revision/repository'
 
 export const saveVideoArchive = async (
@@ -23,7 +23,7 @@ export const saveVideoArchive = async (
       })
       .onConflictDoNothing({ target: discordMembers.discordUserId }),
     db.insert(videoArchives).values({
-      url: normalizeUrlForStorage(entity.contents.url).toString(),
+      url: normalizeYouTubeUrlForStorage(entity.contents.url).toString(),
       title: entity.contents.title,
       description: entity.contents.description,
       imageUrl: entity.contents.imageUrl.toString(),

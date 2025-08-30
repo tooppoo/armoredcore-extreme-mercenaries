@@ -3,7 +3,7 @@ import {
   youtubeWithQueryPattern,
   youtubeLivePattern,
   youtubeShortsPattern,
-  normalizeUrlForStorage,
+  normalizeYouTubeUrlForStorage,
 } from '~/lib/archives/common/url/support-url.server'
 import { youtube, youtube_v3 } from '@googleapis/youtube'
 import {
@@ -96,7 +96,7 @@ export const withYouTubeData = (): OGPStrategy =>
         }
         
         // Normalize URL to extract video ID consistently
-        const normalizedUrl = normalizeUrlForStorage(url)
+        const normalizedUrl = normalizeYouTubeUrlForStorage(url)
         const id = normalizedUrl.searchParams.get('v')
 
         if (!id) {

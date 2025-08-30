@@ -36,7 +36,7 @@ function extractYouTubeVideoId(url: URL): string | null {
 }
 
 /**
- * Normalizes URLs for consistent storage format.
+ * Normalizes URLs for storage with special YouTube URL handling.
  * 
  * For YouTube URLs (youtu.be, youtube.com/watch, /live, /shorts):
  * - Extracts video ID and converts to standard watch format: https://www.youtube.com/watch?v=<ID>
@@ -48,7 +48,7 @@ function extractYouTubeVideoId(url: URL): string | null {
  * @param url The URL to normalize
  * @returns Normalized URL for storage
  */
-export function normalizeUrlForStorage(url: URL): URL {
+export function normalizeYouTubeUrlForStorage(url: URL): URL {
   const videoId = extractYouTubeVideoId(url)
   
   if (videoId) {
