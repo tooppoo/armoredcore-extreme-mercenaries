@@ -40,19 +40,151 @@ export const Rule: React.FC = () => {
 
   return (
     <>
-      <section>
-        <h2>利用規約</h2>
-        <p>
-          このページでは、ファンサーバー「{siteName}
-          」（以下、本サーバー）の利用規約を記載しています
-        </p>
-        <p>本サーバーの利用者は、必ず以下の内容を一読してください</p>
-        <p>
-          また、本サーバーの加入者は全員以下の内容に同意しているものとみなします
-        </p>
-      </section>
-      <div className="border-b my-4" />
-      <section>
+      <style>{`
+        .terms-page {
+          @apply max-w-4xl mx-auto px-6 py-8;
+        }
+
+        .terms-header {
+          @apply mb-8;
+        }
+
+        .terms-title {
+          @apply text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6;
+          @apply border-b-2 border-blue-500 pb-3;
+        }
+
+        .terms-intro {
+          @apply text-lg text-gray-700 dark:text-gray-300 leading-relaxed;
+          @apply mb-4 last:mb-0;
+        }
+
+        .terms-divider {
+          @apply border-t border-gray-300 dark:border-gray-600;
+          @apply my-8 mx-auto w-3/4;
+        }
+
+        .terms-content {
+          @apply space-y-8;
+        }
+
+        .rule-list {
+          @apply space-y-8;
+          counter-reset: rule-counter;
+        }
+
+        .rule-item {
+          @apply bg-white dark:bg-gray-800 rounded-lg p-6;
+          @apply border border-gray-200 dark:border-gray-700;
+          @apply shadow-sm hover:shadow-md transition-shadow duration-200;
+          counter-increment: rule-counter;
+        }
+
+        .rule-item:nth-child(odd) {
+          @apply bg-blue-50 dark:bg-blue-900/10;
+          @apply border-blue-200 dark:border-blue-800/50;
+        }
+
+        .rule-header {
+          @apply flex items-center gap-3 mb-4;
+        }
+
+        .rule-number {
+          @apply bg-blue-500 text-white rounded-full;
+          @apply w-8 h-8 flex items-center justify-center;
+          @apply text-sm font-bold flex-shrink-0;
+        }
+
+        .rule-number::before {
+          content: counter(rule-counter);
+        }
+
+        .rule-title {
+          @apply text-xl font-semibold text-gray-900 dark:text-gray-100;
+          @apply flex items-center gap-2 flex-1;
+        }
+
+        .rule-anchor {
+          @apply text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300;
+          @apply transition-colors duration-200;
+        }
+
+        .rule-content {
+          @apply text-gray-700 dark:text-gray-300 leading-relaxed;
+        }
+
+        .rule-content ol {
+          @apply space-y-3 ml-6;
+        }
+
+        .rule-content li {
+          @apply relative;
+        }
+
+        .rule-content li::marker {
+          @apply text-blue-500 font-semibold;
+        }
+
+        .rule-content ul {
+          @apply space-y-2 ml-6 mt-2;
+        }
+
+        .rule-content ul li {
+          @apply relative;
+        }
+
+        .rule-content ul li::before {
+          content: "•";
+          @apply text-blue-500 font-bold absolute;
+          left: -1rem;
+        }
+
+        .rule-content b {
+          @apply font-semibold text-gray-900 dark:text-gray-100;
+        }
+
+        .rule-content a {
+          @apply text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300;
+          @apply underline decoration-2 underline-offset-2;
+          @apply transition-colors duration-200;
+        }
+
+        .rule-content a:hover {
+          @apply decoration-blue-500;
+        }
+
+        @media (max-width: 768px) {
+          .terms-page {
+            @apply px-4 py-6;
+          }
+
+          .terms-title {
+            @apply text-2xl;
+          }
+
+          .rule-item {
+            @apply p-4;
+          }
+
+          .rule-title {
+            @apply text-lg;
+          }
+        }
+      `}</style>
+      <div className="terms-page">
+        <header className="terms-header">
+          <h2 className="terms-title">利用規約</h2>
+          <p className="terms-intro">
+            このページでは、ファンサーバー「{siteName}
+            」（以下、本サーバー）の利用規約を記載しています
+          </p>
+          <p className="terms-intro">本サーバーの利用者は、必ず以下の内容を一読してください</p>
+          <p className="terms-intro">
+            また、本サーバーの加入者は全員以下の内容に同意しているものとみなします
+          </p>
+        </header>
+        <div className="terms-divider" />
+        <section className="terms-content">
         <RuleList>
           <RuleItem caption="サーバー方針" id="policy">
             <li>
@@ -336,14 +468,15 @@ export const Rule: React.FC = () => {
             </li>
           </RuleItem>
         </RuleList>
-      </section>
+        </section>
+      </div>
     </>
   )
 }
 
 type RuleListProps = Readonly<{ children: ReactElement[] }>
 const RuleList: React.FC<RuleListProps> = ({ children }) => (
-  <ol className="ml-5">{children}</ol>
+  <div className="rule-list">{children}</div>
 )
 
 type RuleItemProps = Readonly<{
@@ -352,20 +485,25 @@ type RuleItemProps = Readonly<{
   children: ReactElement[]
 }>
 const RuleItem: React.FC<RuleItemProps> = ({ caption, id, children }) => (
-  <li className="text-lg ml-0 mb-10">
-    <h3 className="underline">
-      {caption}
-      <Link
-        to={{ hash: id }}
-        id={id}
-        className="inline-block ml-2"
-        aria-label={`見出し「${caption}」へのアンカー`}
-      >
-        <LinkIcon className="size-4" />
-      </Link>
-    </h3>
-    <ol className="text-base ml-0">{children}</ol>
-  </li>
+  <article className="rule-item">
+    <header className="rule-header">
+      <div className="rule-number" aria-hidden="true"></div>
+      <h3 className="rule-title">
+        {caption}
+        <Link
+          to={{ hash: id }}
+          id={id}
+          className="rule-anchor"
+          aria-label={`見出し「${caption}」へのアンカー`}
+        >
+          <LinkIcon className="size-4" />
+        </Link>
+      </h3>
+    </header>
+    <div className="rule-content">
+      <ol>{children}</ol>
+    </div>
+  </article>
 )
 
 export default Rule
