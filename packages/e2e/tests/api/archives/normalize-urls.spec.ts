@@ -5,7 +5,7 @@ test('normalize existing URLs in database', async ({ request }) => {
 
   // First, add some test data with URLs that need normalization
   // Note: In a real scenario, there would already be data in the database
-  
+
   // Test the normalization endpoint
   const response = await request.post('/api/archives/normalize-urls', {
     headers: {
@@ -15,9 +15,9 @@ test('normalize existing URLs in database', async ({ request }) => {
   })
 
   expect(response.ok()).toBeTruthy()
-  
+
   const result = await response.json()
-  
+
   // Check that the response has the expected structure
   expect(result).toHaveProperty('totalArchives')
   expect(result).toHaveProperty('processedCount')
@@ -25,10 +25,10 @@ test('normalize existing URLs in database', async ({ request }) => {
   expect(typeof result.totalArchives).toBe('number')
   expect(typeof result.processedCount).toBe('number')
   expect(typeof result.updatedCount).toBe('number')
-  
+
   // processedCount should equal totalArchives
   expect(result.processedCount).toBe(result.totalArchives)
-  
+
   // updatedCount should be <= processedCount
   expect(result.updatedCount).toBeLessThanOrEqual(result.processedCount)
 })
@@ -41,7 +41,7 @@ test('normalize-urls requires authentication', async ({ request }) => {
   })
 
   expect(response.status()).toBe(400)
-  
+
   const result = await response.json()
   expect(result.error.code).toBe('token-required')
 })
@@ -55,7 +55,7 @@ test('normalize-urls rejects invalid token', async ({ request }) => {
   })
 
   expect(response.status()).toBe(400)
-  
+
   const result = await response.json()
   expect(result.error.code).toBe('invalid-token')
 })

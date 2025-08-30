@@ -52,12 +52,14 @@ const post = async ({ context }: Route.ActionArgs) => {
             .update(videoArchives)
             .set({ url: normalizedUrlString })
             .where(eq(videoArchives.id, archive.id))
-          
+
           updatedCount++
         }
       } catch (error) {
         console.error(`Error processing archive ${archive.id}:`, error)
-        errors.push(`Archive ID ${archive.id}: ${error instanceof Error ? error.message : 'Unknown error'}`)
+        errors.push(
+          `Archive ID ${archive.id}: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        )
       }
     }
 
