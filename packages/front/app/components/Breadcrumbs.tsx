@@ -11,7 +11,9 @@ export function Breadcrumbs({ items, baseUrl }: Props) {
   // Show breadcrumbs if we have more than 1 item (proper navigation trail)
   if (!items || items.length <= 1) return null
 
-    throw new Error('Base URL is required for breadcrumb generation.')
+  const effectiveBaseUrl = baseUrl ?? import.meta.env.VITE_SITE_BASE_URL
+  if (!effectiveBaseUrl) {
+    throw new Error('Breadcrumbs: BASE URL is required')
   }
 
   const itemList = items.map((it, idx) => ({
