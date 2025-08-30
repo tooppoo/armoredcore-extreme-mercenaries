@@ -4,6 +4,7 @@ import { LinkIcon } from '@heroicons/react/16/solid'
 import { siteName } from '~/lib/constants'
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server'
 import { buildMeta } from '~/lib/head/build-meta'
+import { LinkCard } from '~/lib/utils/components/LinkCard'
 import { TZDate } from '@date-fns/tz'
 
 type IndexLoaderData = Readonly<LoadDiscord & { inquiryUrl: string }>
@@ -125,16 +126,13 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
             </h3>
             <div className="faq-answer">
               A. 運営メンバーの
-              <Link
+              <LinkCard
                 to="https://x.com/Philomagi"
-                className="link-card link-card--external"
-                target="_blank"
-                rel="noopener noreferrer"
+                type="external"
                 aria-label="Philomagi氏のXプロフィール（新しいタブで開く）"
               >
                 Philomagi
-                <span className="sr-only">（外部サイト）</span>
-              </Link>
+              </LinkCard>
               によって更新されています。
             </div>
           </article>
@@ -151,14 +149,13 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
           アーマードコアの縛り攻略およびチャレンジ情報を、アーカイブとして公開しています。
         </p>
         <div className="highlight-box">
-          <Link
+          <LinkCard
             to="/archives"
-            className="link-card link-card--internal"
+            type="internal"
             aria-label="攻略・チャレンジアーカイブページへ移動"
           >
             攻略・チャレンジアーカイブを見る
-            <span className="sr-only">（サイト内ページ）</span>
-          </Link>
+          </LinkCard>
         </div>
         <h4 className="text-lg font-semibold mt-6 mb-3">アーカイブ掲載例</h4>
         <ul className="content-list">
@@ -186,14 +183,13 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
     content: (
       <>
         <div className="highlight-box">
-          <Link
+          <LinkCard
             to="/rule"
-            className="link-card link-card--internal"
+            type="internal"
             aria-label="Discordサーバー利用規約ページへ移動"
           >
             利用規約を確認する
-            <span className="sr-only">（サイト内ページ）</span>
-          </Link>
+          </LinkCard>
         </div>
         <h4 className="text-lg font-semibold mt-6 mb-3">
           規約に含まれる主な内容
@@ -218,14 +214,13 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
           当コミュニティDiscordサーバーの利用規約に違反した場合、管理者・運営から罰則を与える場合があります。
         </p>
         <div className="highlight-box">
-          <Link
+          <LinkCard
             to="/penalties"
-            className="link-card link-card--internal"
+            type="internal"
             aria-label="罰則規定ページへ移動"
           >
             罰則規定を確認する
-            <span className="sr-only">（サイト内ページ）</span>
-          </Link>
+          </LinkCard>
         </div>
         <p className="mt-4 font-semibold text-amber-700 dark:text-amber-300">
           ⚠️ Discordサーバーの利用者は必ず目を通してください。
@@ -242,16 +237,13 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
           以下の招待リンクから、当コミュニティのDiscordサーバーへ参加できます。
         </p>
         <div className="highlight-box">
-          <Link
+          <LinkCard
             to={discord.invite}
-            className="link-card link-card--external"
-            target="_blank"
-            rel="noopener noreferrer"
+            type="external"
             aria-label="Discordサーバーに参加（新しいタブで開く）"
           >
             Discordサーバーに参加する
-            <span className="sr-only">（外部サイト）</span>
-          </Link>
+          </LinkCard>
         </div>
         <p className="mt-4 font-semibold text-blue-700 dark:text-blue-300">
           💡 利用規約・罰則規定を確認・同意いただいた上でご参加ください。
@@ -268,16 +260,13 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
           Discordサーバー加入前に質問・確認したいことがある方は、お問い合わせフォームをご利用ください。
         </p>
         <div className="highlight-box">
-          <Link
+          <LinkCard
             to={inquiryUrl}
-            className="link-card link-card--external"
-            target="_blank"
-            rel="noopener noreferrer"
+            type="external"
             aria-label="お問い合わせフォームへ移動（新しいタブで開く）"
           >
             お問い合わせフォームを開く
-            <span className="sr-only">（外部サイト）</span>
-          </Link>
+          </LinkCard>
         </div>
       </>
     ),
@@ -289,14 +278,13 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
       <>
         <p>当サイトの変更履歴や新機能の追加情報をご確認いただけます。</p>
         <div className="highlight-box">
-          <Link
+          <LinkCard
             to="/updates"
-            className="link-card link-card--internal"
+            type="internal"
             aria-label="更新履歴ページへ移動"
           >
             更新履歴を見る
-            <span className="sr-only">（サイト内ページ）</span>
-          </Link>
+          </LinkCard>
         </div>
       </>
     ),
@@ -308,16 +296,13 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
       <>
         <p>
           本文書は
-          <Link
+          <LinkCard
             to="https://creativecommons.org/licenses/by-nd/4.0"
-            className="link-card link-card--external"
-            target="_blank"
-            rel="noopener noreferrer"
+            type="external"
             aria-label="Creative Commons BY-ND 4.0ライセンス詳細（新しいタブで開く）"
           >
             CC BY-ND 4.0
-            <span className="sr-only">（外部サイト）</span>
-          </Link>
+          </LinkCard>
           によってライセンスされています。
         </p>
         <div className="mt-4">
