@@ -23,7 +23,9 @@ test('upload', async ({ page, request }) => {
   ).toHaveCount(1)
 })
 
-test('upload YouTube live URL should normalize to watch format', async ({ request }) => {
+test('upload YouTube live URL should normalize to watch format', async ({
+  request,
+}) => {
   test.slow()
 
   const response = await request.post('/api/archives/video', {
@@ -44,7 +46,9 @@ test('upload YouTube live URL should normalize to watch format', async ({ reques
   expect(response.status()).toBe(200)
 })
 
-test('upload YouTube shorts URL should normalize to watch format', async ({ request }) => {
+test('upload YouTube shorts URL should normalize to watch format', async ({
+  request,
+}) => {
   test.slow()
 
   const response = await request.post('/api/archives/video', {

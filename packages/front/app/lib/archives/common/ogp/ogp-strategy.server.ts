@@ -94,19 +94,21 @@ export const withYouTubeData = (): OGPStrategy =>
             auth: env.YOUTUBE_PUBLIC_DATA_API_KEY,
           })
         }
-        
+
         // Normalize URL to extract video ID consistently
         const normalizedUrl = normalizeUrl(url)
         const id = normalizedUrl.searchParams.get('v')
 
         if (!id) {
-          throw new Error(`Unable to extract video ID from URL: ${url.toString()}`)
+          throw new Error(
+            `Unable to extract video ID from URL: ${url.toString()}`,
+          )
         }
 
-        const res = await youtubeClient.videos.list({
+        const res = (await youtubeClient.videos.list({
           id: [id],
           part: ['snippet'],
-        }) as { data: { items?: youtube_v3.Schema$Video[] } }
+        })) as { data: { items?: youtube_v3.Schema$Video[] } }
         const target = res.data.items?.[0]
 
         if (!target) {

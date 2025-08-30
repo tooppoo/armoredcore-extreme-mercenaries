@@ -16,28 +16,28 @@ function extractYouTubeVideoId(url: URL): string | null {
   if (youtubeWithQueryPattern.test(url.toString())) {
     return url.searchParams.get('v')
   }
-  
+
   // For youtu.be/<ID> URLs
   if (youtubePattern.test(url.toString())) {
     return url.pathname.replace('/', '')
   }
-  
+
   // For /live/<ID> URLs
   if (youtubeLivePattern.test(url.toString())) {
     return url.pathname.replace('/live/', '')
   }
-  
+
   // For /shorts/<ID> URLs
   if (youtubeShortsPattern.test(url.toString())) {
     return url.pathname.replace('/shorts/', '')
   }
-  
+
   return null
 }
 
 export function normalizeUrl(url: URL): URL {
   const videoId = extractYouTubeVideoId(url)
-  
+
   if (videoId) {
     // Normalize all YouTube URLs to standard watch format
     return new URL(`https://www.youtube.com/watch?v=${videoId}`)
