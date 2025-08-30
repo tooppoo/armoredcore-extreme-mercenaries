@@ -1,4 +1,4 @@
-import { clearParameters, cloneURLSearchParams } from '~/lib/utils/url'
+import { clearParameters } from '~/lib/utils/url'
 
 // 短縮URLにも対応
 export const youtubePattern = /^https:\/\/(www\.)?youtu.be\/[^\s]+$/

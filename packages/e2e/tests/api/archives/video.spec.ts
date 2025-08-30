@@ -28,7 +28,7 @@ test('upload YouTube live URL should normalize to watch format', async ({ reques
 
   const response = await request.post('/api/archives/video', {
     data: {
-      url: 'https://www.youtube.com/live/BgCM2dsB4gM',
+      url: 'https://www.youtube.com/live/dQw4w9WgXcQ',
       discord_user: {
         id: '1234',
         name: 'test_user',
@@ -49,7 +49,7 @@ test('upload YouTube shorts URL should normalize to watch format', async ({ requ
 
   const response = await request.post('/api/archives/video', {
     data: {
-      url: 'https://youtube.com/shorts/1RTf6Sj3u6U',
+      url: 'https://youtube.com/shorts/dQw4w9WgXcQ',
       discord_user: {
         id: '1235',
         name: 'test_user2',
