@@ -11,14 +11,12 @@ export function Breadcrumbs({ items, baseUrl }: Props) {
   // Show breadcrumbs if we have more than 1 item (proper navigation trail)
   if (!items || items.length <= 1) return null
 
-  // Use provided baseUrl, environment variable, CF_PAGES_URL, or fallback to current origin
+  // Use provided baseUrl, CF_PAGES_URL, local environment variable, or production URL
   const effectiveBaseUrl =
     baseUrl ??
-    import.meta.env.VITE_SITE_BASE_URL ??
     import.meta.env.CF_PAGES_URL ??
-    (typeof window !== 'undefined'
-      ? window.location.origin
-      : 'https://armoredcore-extreme-mercenaries.pages.dev')
+    import.meta.env.VITE_LOCAL_BASE_URL ??
+    'https://armoredcore-extreme-mercenaries.pages.dev'
 
   const itemList = items.map((it, idx) => ({
     '@type': 'ListItem',
