@@ -40,6 +40,11 @@ describe('support-url', () => {
         'https://www.youtube.com/watch?v=abc123',
       ],
       [
+        'should handle YouTube video IDs with special characters',
+        'https://www.youtube.com/live/dQw4w9WgXcQ-ABC_123',
+        'https://www.youtube.com/watch?v=dQw4w9WgXcQ-ABC_123',
+      ],
+      [
         'should remove query params and hash for niconico URL',
         'https://www.nicovideo.jp/watch/sm12345678?foo=bar#player',
         'https://www.nicovideo.jp/watch/sm12345678',
