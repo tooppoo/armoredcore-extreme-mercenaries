@@ -11,7 +11,7 @@ export default [
   route('penalties', './routes/penalties.tsx'),
 
   route('updates', './routes/updates/default.tsx', [
-    index('./routes/updates/index.tsx'),
+    index('./routes/updates/list.tsx'),
     route(':id', './routes/updates/detail.tsx'),
   ]),
   route('archives', './routes/archives/default.tsx', [
