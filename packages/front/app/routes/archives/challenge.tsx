@@ -1,4 +1,4 @@
-import { Form, Link, useLoaderData, Outlet, useParams } from 'react-router'
+import { Form, Link, useLoaderData } from 'react-router'
 import React, { type ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
 import { type ReadArchive } from '~/lib/archives/challenge/read/entity'
@@ -27,7 +27,7 @@ type LoadArchives = Readonly<{
       o: QuerySchema['o']['key']
     }>
 }>
-export const loader = async ({ context, request, params }: Route.LoaderArgs) => {
+export const loader = async ({ context, request }: Route.LoaderArgs) => {
   const query = parseQuery(request, querySchema(orderByCreated))
 
   const { list: archives, totalPage } = await pageArchives(
@@ -64,7 +64,6 @@ export function headers({ loaderHeaders }: Route.HeadersArgs) {
 
 // クエリ用なので略記名
 const ChallengeArchives: React.FC = () => {
-  const params = useParams()
   const loaderData = useLoaderData<LoadArchives>()
   const { register, setValue } = useForm<QuerySchema>()
 
