@@ -129,6 +129,20 @@ function hasBreadcrumbTitle(data: unknown): data is MatchData {
   )
 }
 
+export default function App() {
+  const matches = useMatches() as RouteMatch[]
+  const location = useLocation()
+
+  const breadcrumbItems = buildBreadcrumbItems(matches, location)
+
+  return (
+    <>
+      <Breadcrumbs items={breadcrumbItems} />
+      <Outlet />
+    </>
+  )
+}
+
 function buildBreadcrumbItems(
   matches: RouteMatch[],
   location: Location,
@@ -218,18 +232,4 @@ function buildBreadcrumbItems(
   items.push(...breadcrumbItems)
 
   return items
-}
-
-export default function App() {
-  const matches = useMatches() as RouteMatch[]
-  const location = useLocation()
-
-  const breadcrumbItems = buildBreadcrumbItems(matches, location)
-
-  return (
-    <>
-      <Breadcrumbs items={breadcrumbItems} />
-      <Outlet />
-    </>
-  )
 }
