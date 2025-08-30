@@ -23,6 +23,48 @@ test('upload', async ({ page, request }) => {
   ).toHaveCount(1)
 })
 
+test('upload YouTube live URL should normalize to watch format', async ({ request }) => {
+  test.slow()
+
+  const response = await request.post('/api/archives/video', {
+    data: {
+      url: 'https://www.youtube.com/live/dQw4w9WgXcQ',
+      discord_user: {
+        id: '1234',
+        name: 'test_user',
+      },
+    },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer test_upload_token',
+    },
+  })
+
+  // Should succeed (200) since it's a valid YouTube URL format
+  expect(response.status()).toBe(200)
+})
+
+test('upload YouTube shorts URL should normalize to watch format', async ({ request }) => {
+  test.slow()
+
+  const response = await request.post('/api/archives/video', {
+    data: {
+      url: 'https://www.youtube.com/shorts/dQw4w9WgXcQ',
+      discord_user: {
+        id: '1235',
+        name: 'test_user2',
+      },
+    },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer test_upload_token',
+    },
+  })
+
+  // Should succeed (200) since it's a valid YouTube URL format
+  expect(response.status()).toBe(200)
+})
+
 test('invalid url', async ({ request }) => {
   test.slow()
 

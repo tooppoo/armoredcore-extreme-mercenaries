@@ -1,6 +1,9 @@
 import {
   youtubePattern,
   youtubeWithQueryPattern,
+  youtubeLivePattern,
+  youtubeShortsPattern,
+  normalizeUrl,
 } from '~/lib/archives/common/url/support-url.server'
 import { youtube, youtube_v3 } from '@googleapis/youtube'
 import {
@@ -78,7 +81,9 @@ export const withYouTubeData = (): OGPStrategy =>
     'withYouTubeData',
     (url) =>
       youtubePattern.test(url.toString()) ||
-      youtubeWithQueryPattern.test(url.toString()),
+      youtubeWithQueryPattern.test(url.toString()) ||
+      youtubeLivePattern.test(url.toString()) ||
+      youtubeShortsPattern.test(url.toString()),
     (() => {
       let youtubeClient: youtube_v3.Youtube
 
@@ -89,12 +94,19 @@ export const withYouTubeData = (): OGPStrategy =>
             auth: env.YOUTUBE_PUBLIC_DATA_API_KEY,
           })
         }
-        const id = url.searchParams.get('v') || url.pathname.replace('/', '')
+        
+        // Normalize URL to extract video ID consistently
+        const normalizedUrl = normalizeUrl(url)
+        const id = normalizedUrl.searchParams.get('v')
+
+        if (!id) {
+          throw new Error(`Unable to extract video ID from URL: ${url.toString()}`)
+        }
 
         const res = await youtubeClient.videos.list({
           id: [id],
           part: ['snippet'],
-        })
+        }) as { data: { items?: youtube_v3.Schema$Video[] } }
         const target = res.data.items?.[0]
 
         if (!target) {
