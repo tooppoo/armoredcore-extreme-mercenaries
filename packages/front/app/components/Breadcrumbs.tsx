@@ -11,10 +11,11 @@ export function Breadcrumbs({ items, baseUrl }: Props) {
   // Show breadcrumbs if we have more than 1 item (proper navigation trail)
   if (!items || items.length <= 1) return null
 
-  // Use provided baseUrl, environment variable, or fallback to current origin
+  // Use provided baseUrl, environment variable, CF_PAGES_URL, or fallback to current origin
   const effectiveBaseUrl =
     baseUrl ??
     import.meta.env.VITE_SITE_BASE_URL ??
+    import.meta.env.CF_PAGES_URL ??
     (typeof window !== 'undefined'
       ? window.location.origin
       : 'https://armoredcore-extreme-mercenaries.pages.dev')
