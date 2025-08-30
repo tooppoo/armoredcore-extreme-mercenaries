@@ -120,6 +120,15 @@ type RouteMatch = {
   handle?: MatchHandle
 }
 
+function hasBreadcrumbTitle(data: unknown): data is MatchData {
+  return (
+    data !== null &&
+    typeof data === 'object' &&
+    'breadcrumbTitle' in data &&
+    typeof (data as MatchData).breadcrumbTitle === 'string'
+  )
+}
+
 export default function App() {
   const matches = useMatches() as RouteMatch[]
   const location = useLocation()
@@ -138,13 +147,8 @@ export default function App() {
       let name = ''
 
       // First try loader data breadcrumbTitle (for dynamic content)
-      if (
-        m.data &&
-        typeof m.data === 'object' &&
-        'breadcrumbTitle' in m.data &&
-        m.data.breadcrumbTitle
-      ) {
-        name = m.data.breadcrumbTitle as string
+      if (hasBreadcrumbTitle(m.data)) {
+        name = m.data.breadcrumbTitle
       }
       // Then try handle breadcrumb (for static routes)
       else if (m.handle?.breadcrumb) {

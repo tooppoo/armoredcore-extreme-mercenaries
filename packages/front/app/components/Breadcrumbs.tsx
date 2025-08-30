@@ -29,6 +29,17 @@ export function Breadcrumbs({ items, baseUrl }: Props) {
     itemListElement: itemList,
   }
 
+  // Basic validation for JSON-LD data before rendering
+  const isValidJsonLd = (data: unknown): boolean => {
+    if (!data || typeof data !== 'object') return false
+    const obj = data as Record<string, unknown>
+    return (
+      obj['@context'] === 'https://schema.org' &&
+      obj['@type'] === 'BreadcrumbList' &&
+      Array.isArray(obj.itemListElement)
+    )
+  }
+
   // For mobile: collapse middle items if we have more than 3 items
   const shouldCollapse = items.length > 3
   const firstItem = items[0]
@@ -160,7 +171,9 @@ export function Breadcrumbs({ items, baseUrl }: Props) {
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: isValidJsonLd(jsonLd) ? JSON.stringify(jsonLd) : '{}',
+        }}
       />
     </nav>
   )

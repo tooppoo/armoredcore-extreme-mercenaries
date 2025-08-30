@@ -87,15 +87,7 @@ const ChallengeArchives: React.FC = () => {
   // If no loader data (shouldn't happen for listing route), return error
   if (!loaderData) {
     return (
-      <div
-        style={{
-          color: 'red',
-          padding: '1em',
-          border: '1px solid #f00',
-          borderRadius: '4px',
-          background: '#fff0f0',
-        }}
-      >
+      <div className="text-red-600 p-4 border border-red-500 rounded bg-red-50">
         <h3>チャレンジアーカイブを読み込めません</h3>
         <p>
           アーカイブデータを取得できませんでした。ネットワークの問題、サーバーエラー、または予期しない問題が原因の可能性があります。
