@@ -27,6 +27,7 @@ export default [
     ...prefix('archives', [
       route('video', './routes/api/archives/video.ts'),
       route('challenge', './routes/api/archives/challenge.ts'),
+      route('normalize-url', './routes/api/archives/normalize-url.ts'),
     ]),
   ]),
 ] satisfies RouteConfig
