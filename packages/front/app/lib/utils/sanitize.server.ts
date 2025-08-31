@@ -9,14 +9,14 @@ type Sanitize = (s: string) => string
 
 export const htmlSanitize: Sanitize = (s) =>
   sanitizeHtml(s, {
-    // eslint-disable-next-line import/no-named-as-default-member
+     
     allowedAttributes: sanitizeHtml.defaults.allowedTags.reduce(
       (acc, tag) => ({
         ...acc,
         [tag]: [
           'class',
           'style',
-          // eslint-disable-next-line import/no-named-as-default-member
+           
           ...(sanitizeHtml.defaults.allowedAttributes[tag] || []).map((attr) =>
             attr.toString(),
           ),
