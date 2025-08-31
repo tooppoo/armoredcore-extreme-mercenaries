@@ -34,7 +34,7 @@ export default function Index() {
 
   return (
     <main className="content-group" role="main" aria-label="メインコンテンツ">
-      {lists(indexLoaderData).map(({ caption, id, content }, index) => (
+      {lists(indexLoaderData).map(({ caption, id, content }) => (
         <section
           className="content-section"
           key={caption}

@@ -22,7 +22,9 @@ export const LinkCard: React.FC<LinkCardProps> = ({
   className = '',
 }) => {
   const baseClassName = `inline-flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 bg-blue-50 border border-blue-200 text-blue-700 no-underline hover:bg-blue-100 hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-900/20 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-900/30 dark:hover:border-blue-600 link-card link-card--${type}`
-  const combinedClassName = className ? `${baseClassName} ${className}` : baseClassName
+  const combinedClassName = className
+    ? `${baseClassName} ${className}`
+    : baseClassName
 
   const isExternal = type === 'external'
   const screenReaderText = isExternal ? '（外部サイト）' : '（サイト内ページ）'
