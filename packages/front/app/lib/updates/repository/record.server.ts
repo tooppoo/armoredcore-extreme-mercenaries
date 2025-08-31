@@ -88,19 +88,7 @@ export const records: readonly Update[][] = [
       externalId: '7a943eab-5506-4e17-b132-6baba586089e',
       title: 'デザインの更新',
       createdAt: new TZDate(2025, 11, 26, 12, timezone),
-      content: `
-      <p>
-        ・LinkCardコンポーネントを再利用可能な形で分離し、React 19の&lt;style&gt;コンポーネントを採用
-      </p>
-      <div style="margin-top: 5px; margin-bottom: 5px;" />
-      <p>
-        ・<a href="/rule">利用規約ページ</a>のデザインを改善し、カード形式のレイアウトに変更
-      </p>
-      <div style="margin-top: 5px; margin-bottom: 5px;" />
-      <p>
-        ・モバイル端末での表示を改善し、落ち着いた配色に変更
-      </p>
-      `,
+      content: 'ページのデザインをより読みやすいように更新しました',
     },
   ],
 ]
