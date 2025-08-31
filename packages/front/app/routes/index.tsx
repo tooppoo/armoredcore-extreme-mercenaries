@@ -4,6 +4,7 @@ import { LinkIcon } from '@heroicons/react/16/solid'
 import { siteName } from '~/lib/constants'
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server'
 import { buildMeta } from '~/lib/head/build-meta'
+import { LinkCard } from '~/lib/utils/components/LinkCard'
 import { TZDate } from '@date-fns/tz'
 
 type IndexLoaderData = Readonly<LoadDiscord & { inquiryUrl: string }>
@@ -32,25 +33,28 @@ export default function Index() {
   const indexLoaderData = useLoaderData<IndexLoaderData>()
 
   return (
-    <>
-      <div className="flex flex-col items-begin justify-begin">
-        {lists(indexLoaderData).map(({ caption, id, content }) => (
-          <section className="mb-10" key={caption}>
-            <h2 id={id} className="underline">
-              {caption}
+    <main className="content-group" role="main" aria-label="メインコンテンツ">
+      {lists(indexLoaderData).map(({ caption, id, content }) => (
+        <section className="content-section" key={caption} aria-labelledby={id}>
+          <header>
+            <h2 id={id} className="section-heading">
+              <span>{caption}</span>
               <Link
                 to={`#${id}`}
-                className="inline-block ml-2"
-                aria-label={`見出し「${caption}」へのアンカー`}
+                className="anchor-link"
+                aria-label={`セクション「${caption}」へのアンカーリンク`}
+                title={`${caption}セクションへのリンク`}
               >
-                <LinkIcon className="size-5" />
+                <LinkIcon className="size-4" aria-hidden="true" />
               </Link>
             </h2>
-            <div>{content}</div>
-          </section>
-        ))}
-      </div>
-    </>
+          </header>
+          <div className="content-text" role="region" aria-labelledby={id}>
+            {content}
+          </div>
+        </section>
+      ))}
+    </main>
   )
 }
 
@@ -90,27 +94,41 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
     caption: 'FAQ',
     id: 'faq',
     content: (
-      <section>
-        <ul>
-          <li>
-            <strong>Q. 初心者でも参加できますか？</strong>
-            <br />
-            A.
-            はい、初心者の方も歓迎しています。Discord内で質問も受け付けています。
-          </li>
-          <li>
-            <strong>Q. アーカイブへ攻略・チャレンジを投稿する方法は？</strong>
-            <br />
-            A.
-            Discordサーバーの専用チャンネルで受付中です。詳細は参加後にご確認いただけます。
-          </li>
-          <li>
-            <strong>Q. サイトの情報は誰がまとめていますか？</strong>
-            <br />
-            A. 運営メンバーの<Link to="https://x.com/Philomagi">Philomagi</Link>
-            によって更新されています。
-          </li>
-        </ul>
+      <section aria-label="よくある質問">
+        <div className="content-list">
+          <article className="faq-item">
+            <h3 className="faq-question">Q. 初心者でも参加できますか？</h3>
+            <div className="faq-answer">
+              A.
+              はい、初心者の方も歓迎しています。Discord内で質問も受け付けています。
+            </div>
+          </article>
+          <article className="faq-item">
+            <h3 className="faq-question">
+              Q. アーカイブへ攻略・チャレンジを投稿する方法は？
+            </h3>
+            <div className="faq-answer">
+              A.
+              Discordサーバーの専用チャンネルで受付中です。詳細は参加後にご確認いただけます。
+            </div>
+          </article>
+          <article className="faq-item">
+            <h3 className="faq-question">
+              Q. サイトの情報は誰がまとめていますか？
+            </h3>
+            <div className="faq-answer">
+              A. 運営メンバーの
+              <LinkCard
+                to="https://x.com/Philomagi"
+                type="external"
+                aria-label="Philomagi氏のXプロフィール（新しいタブで開く）"
+              >
+                Philomagi
+              </LinkCard>
+              によって更新されています。
+            </div>
+          </article>
+        </div>
       </section>
     ),
   },
@@ -121,21 +139,33 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
       <>
         <p>
           アーマードコアの縛り攻略およびチャレンジ情報を、アーカイブとして公開しています。
-          <br />
-          アーカイブは<Link to="/archives">こちら</Link>からご確認いただけます。
         </p>
-        <ul>
+        <div className="highlight-box">
+          <LinkCard
+            to="/archives"
+            type="internal"
+            aria-label="攻略・チャレンジアーカイブページへ移動"
+          >
+            攻略・チャレンジアーカイブを見る
+          </LinkCard>
+        </div>
+        <h4 className="text-lg font-semibold mt-6 mb-3">アーカイブ掲載例</h4>
+        <ul className="content-list">
           <li>アーキバスバルテウスのノーダメージ撃破</li>
           <li>スタンニードルランチャー無しでアイスワームをSランク撃破</li>
           <li>マニュアルロックでアイビスを撃破</li>
           <li>他、多数の攻略・チャレンジ情報</li>
         </ul>
-        <br />
-        <p>アーカイブの閲覧はどなたでも行っていただけます。</p>
-        <p>
-          アーカイブの登録はDiscordサーバー参加者にのみ開放しています。
-          詳細はDiscordーバー内の該当チャンネルにてご確認ください。
-        </p>
+        <div className="mt-6 space-y-3">
+          <p>
+            <strong>閲覧について：</strong>
+            アーカイブの閲覧はどなたでも行っていただけます。
+          </p>
+          <p>
+            <strong>投稿について：</strong>
+            アーカイブの登録はDiscordサーバー参加者にのみ開放しています。詳細はDiscordサーバー内の該当チャンネルにてご確認ください。
+          </p>
+        </div>
       </>
     ),
   },
@@ -144,16 +174,26 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
     id: 'rule',
     content: (
       <>
-        当コミュニティdiscordサーバーの利用規約は<Link to="/rule">こちら</Link>
-        から確認できます。
-        <ul>
-          一例として、以下のような内容が含まれています。
+        <div className="highlight-box">
+          <LinkCard
+            to="/rule"
+            type="internal"
+            aria-label="Discordサーバー利用規約ページへ移動"
+          >
+            利用規約を確認する
+          </LinkCard>
+        </div>
+        <h4 className="text-lg font-semibold mt-6 mb-3">
+          規約に含まれる主な内容
+        </h4>
+        <ul className="content-list">
           <li>Discordサーバーの運営方針</li>
           <li>Discordサーバーの利用方法</li>
           <li>禁止行為</li>
         </ul>
-        <br />
-        Discordサーバーの利用者は必ず目を通してください。
+        <p className="mt-4 font-semibold text-amber-700 dark:text-amber-300">
+          ⚠️ Discordサーバーの利用者は必ず目を通してください。
+        </p>
       </>
     ),
   },
@@ -162,11 +202,21 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
     id: 'penalties',
     content: (
       <>
-        当コミュニティdiscordサーバーの利用規約に違反した場合、管理者・運営から罰則を与える場合があります。
-        <br />
-        詳細は<Link to="/penalties">こちら</Link>からご確認ください。
-        <br />
-        Discordサーバーの利用者は必ず目を通してください。
+        <p>
+          当コミュニティDiscordサーバーの利用規約に違反した場合、管理者・運営から罰則を与える場合があります。
+        </p>
+        <div className="highlight-box">
+          <LinkCard
+            to="/penalties"
+            type="internal"
+            aria-label="罰則規定ページへ移動"
+          >
+            罰則規定を確認する
+          </LinkCard>
+        </div>
+        <p className="mt-4 font-semibold text-amber-700 dark:text-amber-300">
+          ⚠️ Discordサーバーの利用者は必ず目を通してください。
+        </p>
       </>
     ),
   },
@@ -175,13 +225,21 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
     id: 'server',
     content: (
       <>
-        以下の招待リンクから、当コミュニテイのDiscordサーバーへ参加できます。
-        <br />
-        <div className="my-3">
-          <Link to={discord.invite}>サーバーへ参加</Link>
-          <br />
+        <p>
+          以下の招待リンクから、当コミュニティのDiscordサーバーへ参加できます。
+        </p>
+        <div className="highlight-box">
+          <LinkCard
+            to={discord.invite}
+            type="external"
+            aria-label="Discordサーバーに参加（新しいタブで開く）"
+          >
+            Discordサーバーに参加する
+          </LinkCard>
         </div>
-        利用規約・罰則規定を確認・同意いただいた上でご参加ください。
+        <p className="mt-4 font-semibold text-blue-700 dark:text-blue-300">
+          💡 利用規約・罰則規定を確認・同意いただいた上でご参加ください。
+        </p>
       </>
     ),
   },
@@ -190,17 +248,18 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
     id: 'inquiry',
     content: (
       <>
-        Discordサーバー加入前に質問・確認したいことがある方は、
-        <Link
-          to={inquiryUrl}
-          title="お問い合わせフォームへ"
-          aria-label="お問い合わせフォームへ"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          こちらのフォーム
-        </Link>
-        からお願いいたします。
+        <p>
+          Discordサーバー加入前に質問・確認したいことがある方は、お問い合わせフォームをご利用ください。
+        </p>
+        <div className="highlight-box">
+          <LinkCard
+            to={inquiryUrl}
+            type="external"
+            aria-label="お問い合わせフォームへ移動（新しいタブで開く）"
+          >
+            お問い合わせフォームを開く
+          </LinkCard>
+        </div>
       </>
     ),
   },
@@ -209,8 +268,16 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
     id: 'updates',
     content: (
       <>
-        当ページの更新履歴は<Link to="/updates">こちら</Link>
-        からご確認いただけます。
+        <p>当サイトの変更履歴や新機能の追加情報をご確認いただけます。</p>
+        <div className="highlight-box">
+          <LinkCard
+            to="/updates"
+            type="internal"
+            aria-label="更新履歴ページへ移動"
+          >
+            更新履歴を見る
+          </LinkCard>
+        </div>
       </>
     ),
   },
@@ -219,45 +286,54 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
     id: 'license',
     content: (
       <>
-        本文書は
-        <Link
-          to="https://creativecommons.org/licenses/by-nd/4.0"
-          target="_blank"
-          rel="noreferrer"
-        >
-          CC BY-ND 4.0
-        </Link>
-        によってライセンスされています。
-        <p className="flex mt-1">
+        <p>
+          本文書は
+          <LinkCard
+            to="https://creativecommons.org/licenses/by-nd/4.0"
+            type="external"
+            aria-label="Creative Commons BY-ND 4.0ライセンス詳細（新しいタブで開く）"
+          >
+            CC BY-ND 4.0
+          </LinkCard>
+          によってライセンスされています。
+        </p>
+        <div className="mt-4">
           <Link
-            className="flex"
+            className="link-card link-card--external"
             to="https://creativecommons.org/licenses/by-nd/4.0/?ref=chooser-v1"
             target="_blank"
             rel="license noopener noreferrer"
+            aria-label="Creative Commonsライセンス詳細ページ（新しいタブで開く）"
           >
-            <img
-              height="22"
-              width="22"
-              style={{ marginLeft: 3, verticalAlign: 'text-bottom' }}
-              src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"
-              alt="Creative Commons CC icon"
-            />
-            <img
-              height="22"
-              width="22"
-              style={{ marginLeft: 3, verticalAlign: 'text-bottom' }}
-              src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"
-              alt="Creative Commons BY icon"
-            />
-            <img
-              height="22"
-              width="22"
-              style={{ marginLeft: 3, verticalAlign: 'text-bottom' }}
-              src="https://mirrors.creativecommons.org/presskit/icons/nd.svg?ref=chooser-v1"
-              alt="Creative Commons ND icon"
-            />
+            <span className="flex items-center gap-2">
+              <span>ライセンス詳細を見る</span>
+              <div className="flex items-center">
+                <img
+                  height="22"
+                  width="22"
+                  src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"
+                  alt="Creative Commons CC icon"
+                  className="inline-block"
+                />
+                <img
+                  height="22"
+                  width="22"
+                  src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"
+                  alt="Creative Commons BY icon"
+                  className="inline-block ml-1"
+                />
+                <img
+                  height="22"
+                  width="22"
+                  src="https://mirrors.creativecommons.org/presskit/icons/nd.svg?ref=chooser-v1"
+                  alt="Creative Commons ND icon"
+                  className="inline-block ml-1"
+                />
+              </div>
+            </span>
+            <span className="sr-only">（外部サイト）</span>
           </Link>
-        </p>
+        </div>
       </>
     ),
   },
