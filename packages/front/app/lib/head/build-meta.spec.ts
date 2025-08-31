@@ -39,6 +39,7 @@ describe('buildMeta', () => {
               '@id': 'https://armoredcore-extreme-mercenaries.philomagi.dev/#webpage',
               url: 'https://armoredcore-extreme-mercenaries.philomagi.dev/test-path',
               name: siteName,
+              headline: 'Test Title',
               inLanguage: 'ja',
               description: 'Test Description',
               isPartOf: {

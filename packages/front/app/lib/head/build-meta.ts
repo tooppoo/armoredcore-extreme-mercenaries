@@ -80,6 +80,7 @@ function jsonLd({ title, description, url }: JsonLdArgs): Meta {
             '@id': webpageId,
             url,
             name: siteName,
+            headline: title,
             inLanguage: 'ja',
             description,
             isPartOf: { '@id': websiteId },
