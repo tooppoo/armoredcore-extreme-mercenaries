@@ -19,11 +19,48 @@ describe('buildMeta', () => {
       {
         'script:ld+json': {
           '@context': 'https://schema.org',
-          '@type': 'WebSite',
-          name: siteName,
-          headline: 'Test Title',
-          description: 'Test Description',
-          url: 'https://armoredcore-extreme-mercenaries.philomagi.dev/test-path',
+          '@graph': [
+            {
+              '@type': 'Organization',
+              '@id':
+                'https://armoredcore-extreme-mercenaries.philomagi.dev/#org',
+              name: siteName,
+              url: 'https://armoredcore-extreme-mercenaries.philomagi.dev/',
+              logo: {
+                '@type': 'ImageObject',
+                url: `https://philomagi.dev/ogp-full.jpg?c=${cacheKey}`,
+              },
+              sameAs: [
+                'https://x.com/Philomagi',
+                'https://github.com/tooppoo/armoredcore-extreme-mercenaries',
+              ],
+            },
+            {
+              '@type': 'WebPage',
+              '@id':
+                'https://armoredcore-extreme-mercenaries.philomagi.dev/#webpage',
+              url: 'https://armoredcore-extreme-mercenaries.philomagi.dev/test-path',
+              name: siteName,
+              headline: 'Test Title',
+              inLanguage: 'ja',
+              description: 'Test Description',
+              isPartOf: {
+                '@id':
+                  'https://armoredcore-extreme-mercenaries.philomagi.dev/#website',
+              },
+            },
+            {
+              '@type': 'WebSite',
+              '@id':
+                'https://armoredcore-extreme-mercenaries.philomagi.dev/#website',
+              url: 'https://armoredcore-extreme-mercenaries.philomagi.dev/',
+              name: siteName,
+              publisher: {
+                '@id':
+                  'https://armoredcore-extreme-mercenaries.philomagi.dev/#org',
+              },
+            },
+          ],
         },
       },
       {

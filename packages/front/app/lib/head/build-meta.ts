@@ -52,15 +52,47 @@ type JsonLdArgs = Readonly<{
   url: string
 }>
 function jsonLd({ title, description, url }: JsonLdArgs): Meta {
+  const orgId = `${origin}/#org`
+  const websiteId = `${origin}/#website`
+  const webpageId = `${origin}/#webpage`
+
   return [
     {
       'script:ld+json': {
         '@context': 'https://schema.org',
-        '@type': 'WebSite',
-        description,
-        headline: title,
-        name: siteName,
-        url,
+        '@graph': [
+          {
+            '@type': 'Organization',
+            '@id': orgId,
+            name: siteName,
+            url: origin + '/',
+            logo: {
+              '@type': 'ImageObject',
+              url: `https://philomagi.dev/ogp-full.jpg?c=${cacheKey}`,
+            },
+            sameAs: [
+              'https://x.com/Philomagi',
+              'https://github.com/tooppoo/armoredcore-extreme-mercenaries',
+            ],
+          },
+          {
+            '@type': 'WebPage',
+            '@id': webpageId,
+            url,
+            name: siteName,
+            headline: title,
+            inLanguage: 'ja',
+            description,
+            isPartOf: { '@id': websiteId },
+          },
+          {
+            '@type': 'WebSite',
+            '@id': websiteId,
+            url: origin + '/',
+            name: siteName,
+            publisher: { '@id': orgId },
+          },
+        ],
       },
     },
   ]
