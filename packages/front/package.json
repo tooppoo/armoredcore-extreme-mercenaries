@@ -88,6 +88,12 @@
     "vitest": "3.2.4",
     "wrangler": "4.28.1"
   },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.40.0",
+    "@rollup/rollup-linux-arm64-gnu": "4.40.0",
+    "@rollup/rollup-darwin-arm64": "4.40.0",
+    "@rollup/rollup-darwin-x64": "4.40.0"
+  },
   "engines": {
     "node": ">=20.0.0"
   }
