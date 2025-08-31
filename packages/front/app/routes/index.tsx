@@ -35,16 +35,12 @@ export default function Index() {
   return (
     <main className="content-group" role="main" aria-label="メインコンテンツ">
       {lists(indexLoaderData).map(({ caption, id, content }) => (
-        <section
-          className="content-section"
-          key={caption}
-          aria-labelledby={`heading-${id}`}
-        >
+        <section className="content-section" key={caption} aria-labelledby={id}>
           <header>
-            <h2 id={`heading-${id}`} className="section-heading">
+            <h2 id={id} className="section-heading">
               <span>{caption}</span>
               <Link
-                to={`#heading-${id}`}
+                to={`#${id}`}
                 className="anchor-link"
                 aria-label={`セクション「${caption}」へのアンカーリンク`}
                 title={`${caption}セクションへのリンク`}
@@ -53,11 +49,7 @@ export default function Index() {
               </Link>
             </h2>
           </header>
-          <div
-            className="content-text"
-            role="region"
-            aria-labelledby={`heading-${id}`}
-          >
+          <div className="content-text" role="region" aria-labelledby={id}>
             {content}
           </div>
         </section>
