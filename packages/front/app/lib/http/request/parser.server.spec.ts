@@ -29,9 +29,8 @@ describe('handleZodError', () => {
     const result = schema.safeParse({})
     if (result.success) throw new Error('Expected schema validation to fail')
 
-    await expect(async () => handleZodError(result.error)).rejects.toHaveProperty(
-      'status',
-      400,
-    )
+    await expect(async () =>
+      handleZodError(result.error),
+    ).rejects.toHaveProperty('status', 400)
   })
 })
