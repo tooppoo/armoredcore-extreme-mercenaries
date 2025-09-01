@@ -1,4 +1,4 @@
-import type { z, ZodError, ZodObject, ZodRawShape } from 'zod'
+import type { z, ZodError } from 'zod'
 import { badRequest } from '~/lib/http/response/json/error.server'
 import { makeCatchesSerializable } from '~/lib/error'
 
@@ -20,17 +20,17 @@ export async function parseJson<R extends Request>(
 export function handleZodError(error: ZodError): never {
   console.error({
     message: 'request data is invalid',
-    error: error.errors,
+    error: error.issues,
   })
 
   throw badRequest({
     code: 'invalid-body-scheme',
     message: 'Request body does not match the expected scheme',
-    detail: error.errors,
+    detail: error.issues,
   })
 }
 
-export function parseQuery<S extends ZodObject<ZRS>, ZRS extends ZodRawShape>(
+export function parseQuery<S extends z.ZodTypeAny>(
   request: Request,
   scheme: S,
 ): z.infer<S> {
