@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router'
 import type { BreadcrumbItem } from '../../../types/breadcrumb'
-import { origin } from '~/lib/constants'
+import { origin } from '../../constants'
 
 type Props = {
   items: BreadcrumbItem[]
