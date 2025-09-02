@@ -15,3 +15,9 @@ binding = "DB"
 database_name = "ac-extreme-mercenaries-db-test"
 database_id = "test_db"
 migrations_dir = "./app/db/migrations"
+
+[env.test.vars]
+# Token used by e2e tests to authorize archive uploads
+AUTH_UPLOAD_ARCHIVE = "test_upload_token"
+# Enable test-mode shortcuts (e.g. disable external OGP fetch)
+TEST_MODE = "true"
