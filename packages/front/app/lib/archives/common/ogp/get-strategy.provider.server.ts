@@ -12,7 +12,11 @@ export function getOgpStrategyProvider(env: Env): GetOGPStrategy {
     return () => ({
       name: 'mock-ogp-strategy',
       condition: () => true,
+<<<<<<< HEAD
       run: async () => ({
+=======
+      run: async (_url: URL) => ({
+>>>>>>> d3a74cd (Commit changes from coding agent for task attempt 0579d525-2144-48b9-b445-7e8e2289c9c0)
         title: '(test) title',
         description: '(test) description',
         image: 'https://example.com/test.png',
