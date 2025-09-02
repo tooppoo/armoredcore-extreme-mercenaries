@@ -2,6 +2,11 @@ import type { LoaderFunctionArgs } from 'react-router'
 import { origin } from '~/lib/constants'
 import { videoArchives } from '~/db/schema.server'
 
+/**
+ * 動画詳細の子sitemap
+ * - DBからexternalIdを列挙し、canonicalな絶対URLで出力
+ * - lastmodは作成日時（将来的に更新日時に拡張可）
+ */
 export async function loader({ context }: LoaderFunctionArgs) {
   // list all video archive detail pages
   const rows = await context.db
@@ -33,4 +38,3 @@ export async function loader({ context }: LoaderFunctionArgs) {
 }
 
 export const headers = () => ({ 'Content-Type': 'application/xml; charset=utf-8' })
-
