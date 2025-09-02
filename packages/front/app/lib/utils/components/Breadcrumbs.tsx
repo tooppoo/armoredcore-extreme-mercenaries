@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router'
 import type { BreadcrumbItem } from '../../../types/breadcrumb'
+import { origin } from '../../constants'
 
 type Props = {
   items: BreadcrumbItem[]
@@ -16,7 +17,7 @@ export function Breadcrumbs({ items, baseUrl }: Props) {
     baseUrl ??
     import.meta.env.CF_PAGES_URL ??
     import.meta.env.VITE_LOCAL_BASE_URL ??
-    'https://armoredcore-extreme-mercenaries.pages.dev'
+    origin
 
   const itemList = items.map((it, idx) => ({
     '@type': 'ListItem',
