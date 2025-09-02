@@ -37,18 +37,18 @@ export async function buildChallengeArchiveFromUrl(
     return throwAlreadyArchivedURL(url, sameURLArchive)
   }
 
+  // まず対応ストラテジーを選定（未対応URLはここで例外 = 400）
+  const strategy = getOGPStrategy(url, [
+    withOGPScanner((url) => twitterPattern.test(url.toString())),
+  ])
+
+  // e2eなどPages(dev:test)でのみ有効。ユニットテストでは env をモックするため既定は無効
   const isTestMode =
-    (typeof import.meta !== 'undefined' && import.meta.env?.MODE === 'test') ||
     (env as unknown as Record<string, string | undefined>)?.TEST_MODE === 'true'
 
   const ogp = isTestMode
     ? { title: data.title, description: '(test) description', image: '' }
-    : await (async () => {
-        const strategy = getOGPStrategy(url, [
-          withOGPScanner((url) => twitterPattern.test(url.toString())),
-        ])
-        return strategy.run(url, env)
-      })()
+    : await strategy.run(url, env)
 
   return createNewArchiveContents({
     title: data.title,
