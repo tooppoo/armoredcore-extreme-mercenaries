@@ -45,17 +45,8 @@ export async function buildVideoArchiveFromUrl(
     ),
   ])
 
-  // e2eなどPages(dev:test)でのみ有効。ユニットテストでは env をモックするため既定は無効
-  const isTestMode =
-    (env as unknown as Record<string, string | undefined>)?.TEST_MODE === 'true'
-
-  const ogp = isTestMode
-    ? {
-        title: '(test) title',
-        description: '(test) description',
-        image: 'https://example.com/test.png',
-      }
-    : await strategy.run(url, env)
+  // 本関数はテスト分岐を持たない。外部から渡された strategy をそのまま使用する。
+  const ogp = await strategy.run(url, env)
 
   return createNewArchiveContents({
     title: ogp.title,

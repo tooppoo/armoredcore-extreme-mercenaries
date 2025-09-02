@@ -42,13 +42,8 @@ export async function buildChallengeArchiveFromUrl(
     withOGPScanner((url) => twitterPattern.test(url.toString())),
   ])
 
-  // e2eなどPages(dev:test)でのみ有効。ユニットテストでは env をモックするため既定は無効
-  const isTestMode =
-    (env as unknown as Record<string, string | undefined>)?.TEST_MODE === 'true'
-
-  const ogp = isTestMode
-    ? { title: data.title, description: '(test) description', image: '' }
-    : await strategy.run(url, env)
+  // 本関数はテスト分岐を持たない。外部から渡された strategy をそのまま使用する。
+  const ogp = await strategy.run(url, env)
 
   return createNewArchiveContents({
     title: data.title,
