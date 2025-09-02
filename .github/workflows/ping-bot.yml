@@ -45,12 +45,12 @@ jobs:
       - name: Notify Slack on failure
         if: failure()
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_ALERT_WEBHOOK: ${{ secrets.SLACK_ALERT_WEBHOOK }}
           RESPONSE: ${{ steps.ping.outputs.response }}
         run: |
           set -euo pipefail
-          if [ -z "${SLACK_WEBHOOK_URL:-}" ]; then
-            echo "SLACK_WEBHOOK_URL secret is not set" >&2
+          if [ -z "${SLACK_ALERT_WEBHOOK:-}" ]; then
+            echo "SLACK_ALERT_WEBHOOK secret is not set" >&2
             exit 0
           fi
 
@@ -85,4 +85,4 @@ jobs:
             }
             ')
 
-          curl -sS -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "$SLACK_WEBHOOK_URL"
+          curl -sS -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "$SLACK_ALERT_WEBHOOK"
