@@ -10,7 +10,7 @@ export function getOgpStrategyProvider(env: Env): GetOGPStrategy {
     return () => ({
       name: 'mock-ogp-strategy',
       condition: () => true,
-      run: async (url: URL) => ({
+      run: async () => ({
         title: '(test) title',
         description: '(test) description',
         image: 'https://example.com/test.png',
