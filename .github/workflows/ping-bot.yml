@@ -54,16 +54,35 @@ jobs:
             exit 0
           fi
 
-          # Build JSON payload safely with jq
+          # Build JSON payload safely with jq (Slack blocks)
           PAYLOAD=$(jq -n \
             --arg time     "${{ steps.ping.outputs.timestamp }}" \
             --arg status   "${{ steps.ping.outputs.status }}" \
             --arg message  "${{ steps.ping.outputs.message }}" \
             --arg response "${RESPONSE}" \
-            '{text: ("[Ping Bot] failed\n" +
-                     "Time: " + $time + "\n" +
-                     "Status: " + $status + "\n" +
-                     "Message: " + $message + "\n" +
-                     "Response:\n" + $response)}')
+            '
+            def trunc(s): if (s|length) > 1800 then (s[0:1800] + "…(truncated)") else s end;
+            {
+              text: "[Ping Bot] failed",
+              blocks: [
+                {
+                  type: "header",
+                  text: { type: "plain_text", text: "Ping Bot Failed", emoji: true }
+                },
+                {
+                  type: "section",
+                  fields: [
+                    { type: "mrkdwn", text: ("*Time:*\n"   + $time) },
+                    { type: "mrkdwn", text: ("*Status:*\n" + $status) },
+                    { type: "mrkdwn", text: ("*Message:*\n"+ $message) }
+                  ]
+                },
+                {
+                  type: "section",
+                  text: { type: "mrkdwn", text: ("*Response:*\n```" + trunc($response) + "```") }
+                }
+              ]
+            }
+            ')
 
           curl -sS -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "$SLACK_WEBHOOK_URL"
