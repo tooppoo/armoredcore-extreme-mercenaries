@@ -35,15 +35,27 @@ export async function buildVideoArchiveFromUrl(
     return throwAlreadyArchivedURL(url, sameURLArchive)
   }
 
-  const strategy = getOGPStrategy(url, [
-    withYouTubeData(),
-    withOGPScanner(
-      (url) =>
-        niconicoPattern.test(url.toString()) ||
-        twitterPattern.test(url.toString()),
-    ),
-  ])
-  const ogp = await strategy.run(url, env)
+  const isTestMode =
+    (typeof import.meta !== 'undefined' && import.meta.env?.MODE === 'test') ||
+    (env as unknown as Record<string, string | undefined>)?.TEST_MODE === 'true'
+
+  const ogp = isTestMode
+    ? {
+        title: '(test) title',
+        description: '(test) description',
+        image: 'https://example.com/test.png',
+      }
+    : await (async () => {
+        const strategy = getOGPStrategy(url, [
+          withYouTubeData(),
+          withOGPScanner(
+            (url) =>
+              niconicoPattern.test(url.toString()) ||
+              twitterPattern.test(url.toString()),
+          ),
+        ])
+        return strategy.run(url, env)
+      })()
 
   return createNewArchiveContents({
     title: ogp.title,
