@@ -40,10 +40,12 @@ test('normalize-urls requires authentication', async ({ request }) => {
     },
   })
 
-  expect(response.status()).toBe(400)
+  // Server returns 401 Unauthorized with WWW-Authenticate header
+  expect(response.status()).toBe(401)
 
   const result = await response.json()
-  expect(result.error.code).toBe('token-required')
+  // APIは { code, message, detail } 形式で返す
+  expect(result.code).toBe('token-required')
 })
 
 test('normalize-urls rejects invalid token', async ({ request }) => {
@@ -54,8 +56,10 @@ test('normalize-urls rejects invalid token', async ({ request }) => {
     },
   })
 
-  expect(response.status()).toBe(400)
+  // Server returns 401 Unauthorized for invalid token
+  expect(response.status()).toBe(401)
 
   const result = await response.json()
-  expect(result.error.code).toBe('invalid-token')
+  // APIは { code, message, detail } 形式で返す
+  expect(result.code).toBe('invalid-token')
 })
