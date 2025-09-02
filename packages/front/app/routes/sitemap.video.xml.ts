@@ -10,7 +10,10 @@ import { videoArchives } from '~/db/schema.server'
 export async function loader({ context }: LoaderFunctionArgs) {
   // list all video archive detail pages
   const rows = await context.db
-    .select({ id: videoArchives.externalId, createdAt: videoArchives.createdAt })
+    .select({
+      id: videoArchives.externalId,
+      createdAt: videoArchives.createdAt,
+    })
     .from(videoArchives)
     .all()
 
@@ -22,8 +25,8 @@ export async function loader({ context }: LoaderFunctionArgs) {
     const loc = `${origin}/archives/video/${row.id}`
     const lastmod = new Date(row.createdAt).toISOString()
     parts.push('<url>')
-    parts.push(`<loc>${loc}</loc>`) 
-    parts.push(`<lastmod>${lastmod}</lastmod>`) 
+    parts.push(`<loc>${loc}</loc>`)
+    parts.push(`<lastmod>${lastmod}</lastmod>`)
     parts.push('</url>')
   }
 
@@ -37,4 +40,6 @@ export async function loader({ context }: LoaderFunctionArgs) {
   })
 }
 
-export const headers = () => ({ 'Content-Type': 'application/xml; charset=utf-8' })
+export const headers = () => ({
+  'Content-Type': 'application/xml; charset=utf-8',
+})
