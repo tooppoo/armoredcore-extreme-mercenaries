@@ -9,6 +9,10 @@ export default [
   index('./routes/index.tsx'),
   route('rule', './routes/rule.tsx'),
   route('penalties', './routes/penalties.tsx'),
+  // Sitemaps (index + children)
+  route('sitemap.xml', './routes/sitemap.xml.ts'),
+  route('sitemap.challenge.xml', './routes/sitemap.challenge.xml.ts'),
+  route('sitemap.video.xml', './routes/sitemap.video.xml.ts'),
 
   route('updates', './routes/updates/default.tsx', [
     index('./routes/updates/list.tsx'),
