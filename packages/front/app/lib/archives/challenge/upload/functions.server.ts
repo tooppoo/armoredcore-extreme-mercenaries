@@ -37,7 +37,6 @@ export async function buildChallengeArchiveFromUrl(
     return throwAlreadyArchivedURL(url, sameURLArchive)
   }
 
-
   // まず対応ストラテジーを選定（未対応URLはここで例外 = 400）
   const strategy = getOGPStrategy(url, [
     withOGPScanner((url) => twitterPattern.test(url.toString())),
