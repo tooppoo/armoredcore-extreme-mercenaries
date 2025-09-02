@@ -7,19 +7,9 @@
 import { AppLoadContext, EntryContext, ServerRouter } from 'react-router'
 import { isbot } from 'isbot'
 import { renderToReadableStream } from 'react-dom/server'
-import { createSitemapGenerator } from 'remix-sitemap'
-import { origin } from '~/lib/constants'
+// Removed remix-sitemap generator interception.
 
 const ABORT_DELAY = 5000
-
-const { isSitemapUrl, sitemap } = createSitemapGenerator({
-  siteUrl: origin,
-  generateRobotsTxt: true,
-  robotsTxtOptions: {
-    policies: [{ allow: '/', disallow: '/api', userAgent: '*' }],
-  },
-  // configure other things here
-})
 
 export default async function handleRequest(
   request: Request,
@@ -31,10 +21,7 @@ export default async function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext,
 ) {
-  if (isSitemapUrl(request)) {
-    // @ts-expect-error ignore mismatch for react-router
-    return await sitemap(request, entryContext)
-  }
+  // sitemap.xml や robots.txt は個別のルート/静的ファイルで提供
 
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), ABORT_DELAY)
