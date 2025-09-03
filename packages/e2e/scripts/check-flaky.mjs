@@ -9,7 +9,10 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 const POLICY = (process.env.FLAKY_POLICY || 'warn').toLowerCase()
-const BASE_DIR = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
+const BASE_DIR = path.resolve(
+  path.dirname(new URL(import.meta.url).pathname),
+  '..',
+)
 const CANDIDATES = [
   process.env.PLAYWRIGHT_JSON_PATH
     ? path.resolve(process.env.PLAYWRIGHT_JSON_PATH)
