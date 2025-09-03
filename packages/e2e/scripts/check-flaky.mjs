@@ -8,19 +8,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-<<<<<<< HEAD
 const POLICY = (process.env.FLAKY_POLICY || 'warn').toLowerCase()
-const DEFAULT_JSON = path.resolve(
-  path.dirname(new URL(import.meta.url).pathname),
-  '..',
-  'playwright-report',
-  'report.json',
-)
-const REPORT_PATH = process.env.PLAYWRIGHT_JSON_PATH
-  ? path.resolve(process.env.PLAYWRIGHT_JSON_PATH)
-  : DEFAULT_JSON
-=======
-const POLICY = (process.env.FLAKY_POLICY || 'fail').toLowerCase()
 const BASE_DIR = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
 const CANDIDATES = [
   process.env.PLAYWRIGHT_JSON_PATH
@@ -39,7 +27,6 @@ function chooseReportPath() {
   // Fallback to first candidate for messaging
   return CANDIDATES[0]
 }
->>>>>>> eb2b7c5 (e2e: separate JSON report from HTML folder to avoid cleanup; update flaky-check to locate JSON; include JSON in artifact upload)
 
 function readJsonSafe(p) {
   try {
