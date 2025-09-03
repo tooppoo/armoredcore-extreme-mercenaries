@@ -1,8 +1,8 @@
-# ドメインモデル（Ping Bot 通知）
+# ドメインモデル（Discord-Bot-Ping 通知）
 
 ```mermaid
 classDiagram
-  class PingCheck {
+  class DiscordBotPingCheck {
     +url: string
     +executedAt: ISO8601
   }
@@ -31,7 +31,7 @@ classDiagram
     +buildRunUrl(): string
   }
 
-  PingCheck --> PingResult : produces
+  DiscordBotPingCheck --> PingResult : produces
   PingResult --> NotificationPayload : maps (exclude responseBody)
   GitHubActionsRun --> NotificationPayload : enrich runUrl
   NotificationPayload --> SlackNotifier : deliver
@@ -39,4 +39,3 @@ classDiagram
 
 - ポリシー: `responseBody` は通知に含めない（内部ログ/アーティファクトでの追跡に留める）。
 - トレーサビリティ: `GitHubActionsRun` から生成される `runUrl` を必須で付与。
-

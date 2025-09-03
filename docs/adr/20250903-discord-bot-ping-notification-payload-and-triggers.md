@@ -1,4 +1,4 @@
-# ADR: Ping Bot 通知からレスポンス本文を除外し、実行URLを追加する
+# ADR: Discord-Bot-Ping 通知からレスポンス本文を除外し、実行URLを追加する
 
 Date: 2025-09-03
 
@@ -33,4 +33,3 @@ Accepted
 - Block Kit のフィールドに `Time/Status/Message/Run URL` を表示。
 - `Run URL`: `${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`
 - 将来的にリトライやタイムアウト設定、Webhook 未設定時の graceful スキップを維持。
-
