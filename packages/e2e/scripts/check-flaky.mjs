@@ -22,7 +22,9 @@ function chooseReportPath() {
   for (const p of CANDIDATES) {
     try {
       if (fs.existsSync(p)) return p
-    } catch {}
+    } catch {
+      // Intentionally ignore filesystem errors here; absence is non-fatal.
+    }
   }
   // Fallback to first candidate for messaging
   return CANDIDATES[0]
