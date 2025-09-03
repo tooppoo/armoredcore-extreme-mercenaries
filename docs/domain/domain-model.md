@@ -2,6 +2,10 @@
 
 ```mermaid
 classDiagram
+  class Trigger {
+    +type: string  // Schedule | Manual
+  }
+
   class DiscordBotPingCheck {
     +url: string
     +executedAt: ISO8601
@@ -31,6 +35,7 @@ classDiagram
     +buildRunUrl(): string
   }
 
+  Trigger --> DiscordBotPingCheck : initiates
   DiscordBotPingCheck --> PingResult : produces
   PingResult --> NotificationPayload : maps (exclude responseBody)
   GitHubActionsRun --> NotificationPayload : enrich runUrl

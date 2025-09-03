@@ -2,6 +2,7 @@ name: Discord-Bot-Ping
 on:
   schedule:
     - cron: "*/30 * * * *"  # 30分ごとに実行
+  workflow_dispatch: {}
 
 jobs:
   ping-bot:
