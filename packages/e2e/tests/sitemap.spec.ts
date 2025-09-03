@@ -15,3 +15,45 @@ test.describe('sitemap endpoints', () => {
     })
   }
 })
+
+test.describe('child sitemap has non-zero urls', () => {
+  test('GET /sitemap.challenge.xml has at least 1 url', async ({ request }) => {
+    // ensure at least one challenge archive exists (text upload avoids OGP)
+    await request.post('/api/archives/challenge', {
+      data: {
+        type: 'text',
+        title: `e2e-challenge-${Date.now()}`,
+        text: 'E2E sitemap seed',
+        discord_user: { id: 'e2e', name: 'e2e' },
+      },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer test_upload_token',
+      },
+    })
+
+    const res = await request.get('/sitemap.challenge.xml')
+    expect(res.status()).toBe(200)
+    const body = await res.text()
+    expect(body.includes('<url>')).toBeTruthy()
+  })
+
+  test('GET /sitemap.video.xml has at least 1 url', async ({ request }) => {
+    // ensure at least one video archive exists (mock OGP in test env)
+    await request.post('/api/archives/video', {
+      data: {
+        url: `https://example.com/e2e-video?ts=${Date.now()}`,
+        discord_user: { id: 'e2e', name: 'e2e' },
+      },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer test_upload_token',
+      },
+    })
+
+    const res = await request.get('/sitemap.video.xml')
+    expect(res.status()).toBe(200)
+    const body = await res.text()
+    expect(body.includes('<url>')).toBeTruthy()
+  })
+})
