@@ -5,7 +5,6 @@ import {
   youtubeShortsPattern,
   normalizeUrl,
 } from '~/lib/archives/common/url/support-url.server'
-import { youtube, youtube_v3 } from '@googleapis/youtube'
 import {
   failedGetOGP,
   FailedGetOGPError,
@@ -84,17 +83,8 @@ export const withYouTubeData = (): OGPStrategy =>
       youtubeWithQueryPattern.test(url.toString()) ||
       youtubeLivePattern.test(url.toString()) ||
       youtubeShortsPattern.test(url.toString()),
-    (() => {
-      let youtubeClient: youtube_v3.Youtube
-
+    ((): OGPStrategyFunction => {
       return async (url, env) => {
-        if (youtubeClient === undefined) {
-          youtubeClient = youtube({
-            version: 'v3',
-            auth: env.YOUTUBE_PUBLIC_DATA_API_KEY,
-          })
-        }
-
         // Normalize URL to extract video ID consistently
         const normalizedUrl = normalizeUrl(url)
         const id = normalizedUrl.searchParams.get('v')
@@ -105,20 +95,53 @@ export const withYouTubeData = (): OGPStrategy =>
           )
         }
 
-        const res = (await youtubeClient.videos.list({
-          id: [id],
-          part: ['snippet'],
-        })) as { data: { items?: youtube_v3.Schema$Video[] } }
-        const target = res.data.items?.[0]
+        // Call YouTube Data API v3 via fetch (Workers-safe)
+        const apiUrl = new URL('https://www.googleapis.com/youtube/v3/videos')
+        apiUrl.searchParams.set('part', 'snippet')
+        apiUrl.searchParams.set('id', id)
+        apiUrl.searchParams.set('key', env.YOUTUBE_PUBLIC_DATA_API_KEY)
 
-        if (!target) {
+        const res = await fetch(apiUrl.toString(), {
+          method: 'GET',
+          headers: { Accept: 'application/json' },
+        })
+
+        if (!res.ok) {
+          throw new Error(
+            `YouTube API request failed: ${res.status} ${res.statusText}`,
+          )
+        }
+
+        type YouTubeVideosResponse = {
+          items?: Array<{
+            snippet?: {
+              title?: string
+              description?: string
+              thumbnails?: {
+                high?: { url?: string }
+                standard?: { url?: string }
+                maxres?: { url?: string }
+              }
+            }
+          }>
+        }
+
+        const data = (await res.json()) as YouTubeVideosResponse
+        const target = data.items?.[0]
+        if (!target || !target.snippet) {
           throw new Error(`no video found by ${id}`)
         }
 
+        const imageUrl =
+          target.snippet.thumbnails?.high?.url ||
+          target.snippet.thumbnails?.standard?.url ||
+          target.snippet.thumbnails?.maxres?.url ||
+          ''
+
         return {
-          title: target.snippet?.title || '',
-          description: target.snippet?.description || '',
-          image: target.snippet?.thumbnails?.high?.url || '',
+          title: target.snippet.title || '',
+          description: target.snippet.description || '',
+          image: imageUrl,
         }
       }
     })(),
