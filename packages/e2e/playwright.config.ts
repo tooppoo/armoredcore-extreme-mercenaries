@@ -38,10 +38,7 @@ export default defineConfig({
         // Keep HTML report for artifact upload
         ['html', { outputFolder: reportDir, open: 'never' }],
       ]
-    : [
-        ['list'],
-        ['html', { outputFolder: reportDir, open: 'never' }],
-      ],
+    : [['list'], ['html', { outputFolder: reportDir, open: 'never' }]],
   timeout: process.env.TIMEOUT ? parseInt(process.env.TIMEOUT, 10) : 30000,
   expect: {
     timeout: process.env.TIMEOUT_EXPECT
