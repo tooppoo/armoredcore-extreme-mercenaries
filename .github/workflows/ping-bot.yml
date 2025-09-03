@@ -1,4 +1,4 @@
-name: Ping Bot
+name: Discord-Bot-Ping
 on:
   schedule:
     - cron: "*/30 * * * *"  # 30分ごとに実行
@@ -9,7 +9,7 @@ jobs:
     environment:
       name: discord-bot
     steps:
-      - name: Ping discord-bot
+      - name: Ping Discord-Bot endpoint
         id: ping
         shell: bash
         run: |
@@ -33,12 +33,6 @@ jobs:
           echo "timestamp=$TIMESTAMP" >> "$GITHUB_OUTPUT"
           echo "status=$STATUS" >> "$GITHUB_OUTPUT"
           echo "message=$ERROR_MESSAGE" >> "$GITHUB_OUTPUT"
-          # Write multiline response safely to $GITHUB_OUTPUT
-          # Use an uncommon delimiter and do not quote it
-          DELIM="GITHUB_OUTPUT_EOF"
-          echo "response<<$DELIM" >> "$GITHUB_OUTPUT"
-          cat "$BODY_FILE" >> "$GITHUB_OUTPUT"
-          echo "$DELIM" >> "$GITHUB_OUTPUT"
 
           # Fail step if not successful
           if [ "$ERROR_MESSAGE" != "ok" ]; then
@@ -46,10 +40,10 @@ jobs:
           fi
 
       - name: Notify Slack on failure
-        if: failure()
+        # 失敗時のみ、かつ ping ステップの評価に限定
+        if: ${{ failure() && steps.ping.outputs.message != 'ok' }}
         env:
           SLACK_ALERT_WEBHOOK: ${{ secrets.SLACK_ALERT_WEBHOOK }}
-          RESPONSE: ${{ steps.ping.outputs.response }}
         run: |
           set -euo pipefail
           if [ -z "${SLACK_ALERT_WEBHOOK:-}" ]; then
@@ -62,27 +56,23 @@ jobs:
             --arg time     "${{ steps.ping.outputs.timestamp }}" \
             --arg status   "${{ steps.ping.outputs.status }}" \
             --arg message  "${{ steps.ping.outputs.message }}" \
-            --arg response "${RESPONSE}" \
+            --arg runUrl   "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
             '
-            def trunc(s): if (s|length) > 1800 then (s[0:1800] + "…(truncated)") else s end;
             {
-              text: "[Ping Bot] failed",
+              text: "[Discord-Bot-Ping] failed",
               blocks: [
                 {
                   type: "header",
-                  text: { type: "plain_text", text: "Ping Bot Failed", emoji: true }
+                  text: { type: "plain_text", text: "Discord-Bot-Ping Failed", emoji: true }
                 },
                 {
                   type: "section",
                   fields: [
                     { type: "mrkdwn", text: ("*Time:*\n"   + $time) },
                     { type: "mrkdwn", text: ("*Status:*\n" + $status) },
-                    { type: "mrkdwn", text: ("*Message:*\n"+ $message) }
+                    { type: "mrkdwn", text: ("*Message:*\n"+ $message) },
+                    { type: "mrkdwn", text: ("*Run URL:*\n<" + $runUrl + "|Open Run>") }
                   ]
-                },
-                {
-                  type: "section",
-                  text: { type: "mrkdwn", text: ("*Response:*\n```" + trunc($response) + "```") }
                 }
               ]
             }
