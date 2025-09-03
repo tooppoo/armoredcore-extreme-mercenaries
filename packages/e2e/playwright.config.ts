@@ -14,6 +14,7 @@ const port = 8788
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const reportDir = path.resolve(__dirname, 'playwright-report')
+const jsonReportFile = path.resolve(__dirname, 'playwright-report.json')
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -31,14 +32,15 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: process.env.CI
     ? [
-        // GitHub annotations
         ['github'],
-        // JSON report for flaky analysis
-        ['json', { outputFile: path.join(reportDir, 'report.json') }],
-        // Keep HTML report for artifact upload
+        ['json', { outputFile: jsonReportFile }],
         ['html', { outputFolder: reportDir, open: 'never' }],
       ]
-    : [['list'], ['html', { outputFolder: reportDir, open: 'never' }]],
+    : [
+        ['list'],
+        ['json', { outputFile: jsonReportFile }],
+        ['html', { outputFolder: reportDir, open: 'never' }],
+      ],
   timeout: process.env.TIMEOUT ? parseInt(process.env.TIMEOUT, 10) : 30000,
   expect: {
     timeout: process.env.TIMEOUT_EXPECT

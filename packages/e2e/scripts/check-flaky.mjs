@@ -8,6 +8,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
+<<<<<<< HEAD
 const POLICY = (process.env.FLAKY_POLICY || 'warn').toLowerCase()
 const DEFAULT_JSON = path.resolve(
   path.dirname(new URL(import.meta.url).pathname),
@@ -18,6 +19,27 @@ const DEFAULT_JSON = path.resolve(
 const REPORT_PATH = process.env.PLAYWRIGHT_JSON_PATH
   ? path.resolve(process.env.PLAYWRIGHT_JSON_PATH)
   : DEFAULT_JSON
+=======
+const POLICY = (process.env.FLAKY_POLICY || 'fail').toLowerCase()
+const BASE_DIR = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
+const CANDIDATES = [
+  process.env.PLAYWRIGHT_JSON_PATH
+    ? path.resolve(process.env.PLAYWRIGHT_JSON_PATH)
+    : undefined,
+  path.join(BASE_DIR, 'playwright-report.json'),
+  path.join(BASE_DIR, 'playwright-report', 'report.json'),
+].filter(Boolean)
+
+function chooseReportPath() {
+  for (const p of CANDIDATES) {
+    try {
+      if (fs.existsSync(p)) return p
+    } catch {}
+  }
+  // Fallback to first candidate for messaging
+  return CANDIDATES[0]
+}
+>>>>>>> eb2b7c5 (e2e: separate JSON report from HTML folder to avoid cleanup; update flaky-check to locate JSON; include JSON in artifact upload)
 
 function readJsonSafe(p) {
   try {
@@ -107,6 +129,7 @@ function detectFlakyTest(test) {
 }
 
 function main() {
+  const REPORT_PATH = chooseReportPath()
   const report = readJsonSafe(REPORT_PATH)
   if (!report) {
     const lines = []
