@@ -24,9 +24,12 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
+  // JSON reporter writes a machine-readable summary for downstream steps.
+  // Reference: https://playwright.dev/docs/test-reporters#json-reporter
   reporter: [
-    // https://playwright.dev/docs/test-reporters#github-actions-annotations
+    // GitHub annotations on CI, list locally
     process.env.CI ? ['github'] : ['list'],
+    ['json', { outputFile: 'playwright-report/results.json' }],
   ],
   timeout: process.env.TIMEOUT ? parseInt(process.env.TIMEOUT, 10) : 30000,
   expect: {
