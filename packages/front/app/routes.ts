@@ -11,6 +11,7 @@ export default [
   route('penalties', './routes/penalties.tsx'),
   // Sitemaps (index + children)
   route('sitemap.xml', './routes/sitemap.xml.ts'),
+  route('sitemap.core.xml', './routes/sitemap.core.xml.ts'),
   route('sitemap.challenge.xml', './routes/sitemap.challenge.xml.ts'),
   route('sitemap.video.xml', './routes/sitemap.video.xml.ts'),
 
