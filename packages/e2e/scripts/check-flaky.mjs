@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-env node */
 // Detect flaky tests from Playwright JSON report and control exit code.
 // Policy:
 //  - FLAKY_POLICY=fail (default): exit 1 if any flaky tests found
@@ -36,7 +37,7 @@ function pushSummary(lines) {
     if (summaryPath) {
       fs.appendFileSync(summaryPath, lines.join('\n') + '\n')
     }
-  } catch (e) {
+  } catch {
     // Non-fatal
   }
 }
