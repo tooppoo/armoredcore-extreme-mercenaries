@@ -1,4 +1,6 @@
 import { defineConfig, devices } from '@playwright/test'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 /**
  * Read environment variables from file.
@@ -9,6 +11,9 @@ import { defineConfig, devices } from '@playwright/test'
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 const port = 8788
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const reportDir = path.resolve(__dirname, 'playwright-report')
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -29,13 +34,13 @@ export default defineConfig({
         // GitHub annotations
         ['github'],
         // JSON report for flaky analysis
-        ['json', { outputFile: 'playwright-report/report.json' }],
+        ['json', { outputFile: path.join(reportDir, 'report.json') }],
         // Keep HTML report for artifact upload
-        ['html', { outputFolder: 'playwright-report', open: 'never' }],
+        ['html', { outputFolder: reportDir, open: 'never' }],
       ]
     : [
         ['list'],
-        ['html', { outputFolder: 'playwright-report', open: 'never' }],
+        ['html', { outputFolder: reportDir, open: 'never' }],
       ],
   timeout: process.env.TIMEOUT ? parseInt(process.env.TIMEOUT, 10) : 30000,
   expect: {
