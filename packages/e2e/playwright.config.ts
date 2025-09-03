@@ -1,4 +1,6 @@
 import { defineConfig, devices } from '@playwright/test'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 /**
  * Read environment variables from file.
@@ -9,6 +11,10 @@ import { defineConfig, devices } from '@playwright/test'
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 const port = 8788
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const reportDir = path.resolve(__dirname, 'playwright-report')
+const jsonReportFile = path.resolve(__dirname, 'playwright-report.json')
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -24,10 +30,17 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [
-    // https://playwright.dev/docs/test-reporters#github-actions-annotations
-    process.env.CI ? ['github'] : ['list'],
-  ],
+  reporter: process.env.CI
+    ? [
+        ['github'],
+        ['json', { outputFile: jsonReportFile }],
+        ['html', { outputFolder: reportDir, open: 'never' }],
+      ]
+    : [
+        ['list'],
+        ['json', { outputFile: jsonReportFile }],
+        ['html', { outputFolder: reportDir, open: 'never' }],
+      ],
   timeout: process.env.TIMEOUT ? parseInt(process.env.TIMEOUT, 10) : 30000,
   expect: {
     timeout: process.env.TIMEOUT_EXPECT

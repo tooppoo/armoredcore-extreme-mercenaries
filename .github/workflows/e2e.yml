@@ -44,8 +44,15 @@ jobs:
 
       # upload report
     - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-      if: ${{ !cancelled() }}
+      if: ${{ always() }}
       with:
         name: e2e-report
-        path: packages/e2e/playwright-report/
+        path: |
+          packages/e2e/playwright-report/
+          packages/e2e/playwright-report.json
         retention-days: 30
+
+    - name: Analyze flaky tests
+      run: node packages/e2e/scripts/check-flaky.mjs
+      env:
+        FLAKY_POLICY: ${{ vars.FLAKY_POLICY || 'warn' }}
