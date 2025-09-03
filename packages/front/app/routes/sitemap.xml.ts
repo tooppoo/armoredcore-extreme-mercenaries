@@ -26,7 +26,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
 
   // Core (静的/一覧ページ) 用の子sitemap
   parts.push('<sitemap>')
-  parts.push(`<loc>${origin}/sitemap.core.xml</loc>`) 
+  parts.push(`<loc>${origin}/sitemap.core.xml</loc>`)
   const coreMs = [challengeUpdatedAt, videoUpdatedAt]
     .filter(Boolean)
     .map((d) => (d as Date).getTime())
@@ -37,13 +37,15 @@ export async function loader({ context }: LoaderFunctionArgs) {
   // Challenge 詳細の子sitemap
   parts.push('<sitemap>')
   parts.push(`<loc>${origin}/sitemap.challenge.xml</loc>`) // child sitemap for challenge details
-  if (fmt(challengeUpdatedAt)) parts.push(`<lastmod>${fmt(challengeUpdatedAt)}</lastmod>`)
+  if (fmt(challengeUpdatedAt))
+    parts.push(`<lastmod>${fmt(challengeUpdatedAt)}</lastmod>`)
   parts.push('</sitemap>')
 
   // Video 詳細の子sitemap
   parts.push('<sitemap>')
   parts.push(`<loc>${origin}/sitemap.video.xml</loc>`) // child sitemap for video details
-  if (fmt(videoUpdatedAt)) parts.push(`<lastmod>${fmt(videoUpdatedAt)}</lastmod>`)
+  if (fmt(videoUpdatedAt))
+    parts.push(`<lastmod>${fmt(videoUpdatedAt)}</lastmod>`)
   parts.push('</sitemap>')
 
   parts.push('</sitemapindex>')

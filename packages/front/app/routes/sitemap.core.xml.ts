@@ -16,7 +16,10 @@ export async function loader({ context }: LoaderFunctionArgs) {
 
   const fmt = (d: Date | null) => (d ? d.toISOString() : undefined)
   const max = (...ds: (Date | null | undefined)[]) =>
-    ds.filter(Boolean).map((d) => (d as Date).getTime()).reduce((a, b) => (a > b ? a : b), 0) || undefined
+    ds
+      .filter(Boolean)
+      .map((d) => (d as Date).getTime())
+      .reduce((a, b) => (a > b ? a : b), 0) || undefined
 
   const nowFor = (...ds: (Date | null | undefined)[]) => {
     const ms = max(...ds)
@@ -28,7 +31,10 @@ export async function loader({ context }: LoaderFunctionArgs) {
     { loc: `${origin}/rule` },
     { loc: `${origin}/penalties` },
     { loc: `${origin}/updates` },
-    { loc: `${origin}/archives`, lastmod: nowFor(challengeUpdatedAt, videoUpdatedAt) },
+    {
+      loc: `${origin}/archives`,
+      lastmod: nowFor(challengeUpdatedAt, videoUpdatedAt),
+    },
     { loc: `${origin}/archives/challenge`, lastmod: fmt(challengeUpdatedAt) },
     { loc: `${origin}/archives/video`, lastmod: fmt(videoUpdatedAt) },
   ]
@@ -39,8 +45,8 @@ export async function loader({ context }: LoaderFunctionArgs) {
 
   for (const u of urls) {
     parts.push('<url>')
-    parts.push(`<loc>${u.loc}</loc>`) 
-    if (u.lastmod) parts.push(`<lastmod>${u.lastmod}</lastmod>`) 
+    parts.push(`<loc>${u.loc}</loc>`)
+    if (u.lastmod) parts.push(`<lastmod>${u.lastmod}</lastmod>`)
     parts.push('</url>')
   }
 
@@ -54,5 +60,6 @@ export async function loader({ context }: LoaderFunctionArgs) {
   })
 }
 
-export const headers = () => ({ 'Content-Type': 'application/xml; charset=utf-8' })
-
+export const headers = () => ({
+  'Content-Type': 'application/xml; charset=utf-8',
+})
