@@ -1,4 +1,3 @@
-import { SitemapFunction } from 'remix-sitemap'
 import { successWithoutToken } from '~/lib/http/response/json/auth.server'
 import {
   forbidden,
@@ -82,6 +81,4 @@ const post = async ({ context }: Route.ActionArgs) => {
   }
 }
 
-export const sitemap: SitemapFunction = () => ({
-  exclude: true,
-})
+// API routes are not meant for indexing; excluded from any sitemap.

@@ -28,3 +28,13 @@ export const getRevision =
       .where(eq(contentsRevisions.contentKey, key))
       .get()
       .then((row) => row?.revision ?? 0)
+
+export const getRevisionUpdatedAt =
+  (key: string) =>
+  (db: Database): Promise<Date | null> =>
+    db
+      .select({ updatedAt: contentsRevisions.updatedAt })
+      .from(contentsRevisions)
+      .where(eq(contentsRevisions.contentKey, key))
+      .get()
+      .then((row) => (row?.updatedAt ? new Date(row.updatedAt) : null))
