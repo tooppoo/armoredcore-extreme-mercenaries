@@ -26,7 +26,7 @@ function readJsonSafe(p) {
   } catch (e) {
     console.error(`[flaky-check] Failed to read JSON report: ${p}`)
     console.error(e?.stack || e?.message || String(e))
-    process.exitCode = 1
+    // Return null; caller decides whether to fail based on policy
     return null
   }
 }
@@ -108,7 +108,19 @@ function detectFlakyTest(test) {
 
 function main() {
   const report = readJsonSafe(REPORT_PATH)
-  if (!report) return process.exit(1)
+  if (!report) {
+    const lines = []
+    lines.push('## Flaky Test Check')
+    lines.push(`- Policy: ${POLICY}`)
+    lines.push(`- Report: \`${REPORT_PATH}\``)
+    lines.push('- Note: JSON report not found. Skipping flaky analysis.')
+    console.log(lines.join('\n'))
+    pushSummary(lines)
+    if (POLICY !== 'warn') {
+      return process.exit(1)
+    }
+    return
+  }
 
   const findings = collectFlakyTests(report)
   const count = findings.length
