@@ -1,6 +1,4 @@
-export type LastmodResolver = (ctx: {
-  db: Database
-}) => Promise<Date | null>
+export type LastmodResolver = (ctx: { db: Database }) => Promise<Date | null>
 
 import type { Database } from '~/db/driver.server'
 import { getChallengeArchiveListUpdatedAt } from '~/lib/archives/challenge/revision/repository'
@@ -42,4 +40,3 @@ export async function resolveLastmod(
   if (!c && v) return v
   return (c!.getTime() > v!.getTime() ? c : v)!
 }
-
