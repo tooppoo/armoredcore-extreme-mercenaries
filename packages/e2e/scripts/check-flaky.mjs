@@ -76,7 +76,9 @@ function collectFlakyTests(report) {
 
   // Fallback: if stats.flaky indicates >0 but no tests collected, synthesize a note
   if (findings.length === 0 && stats && stats.flaky > 0) {
-    findings.push({ title: '(flaky tests detected; details unavailable in report version)' })
+    findings.push({
+      title: '(flaky tests detected; details unavailable in report version)',
+    })
   }
 
   return findings
@@ -126,7 +128,9 @@ function main() {
   pushSummary(lines)
 
   if (count > 0 && POLICY !== 'warn') {
-    console.error('[flaky-check] Flaky tests detected. Failing the job (policy=fail).')
+    console.error(
+      '[flaky-check] Flaky tests detected. Failing the job (policy=fail).',
+    )
     process.exit(1)
   }
 }
