@@ -6,7 +6,6 @@ import {
 } from '~/lib/http/response/json/error.server'
 import type { Route } from './+types/challenge'
 import { requireAuthToken } from '~/lib/http/request/require-auth-token.server'
-import { SitemapFunction } from 'remix-sitemap'
 import { handleZodError, parseJson } from '~/lib/http/request/parser.server'
 import { postChallengeArchiveBody } from '~/lib/archives/challenge/upload/params.server'
 import {
@@ -83,6 +82,4 @@ const post = async ({ request, context }: Route.ActionArgs) => {
   return successWithoutToken(null)
 }
 
-export const sitemap: SitemapFunction = () => ({
-  exclude: true,
-})
+// API routes are not meant for indexing; excluded from any sitemap.
