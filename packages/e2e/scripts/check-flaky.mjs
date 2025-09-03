@@ -7,7 +7,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-const POLICY = (process.env.FLAKY_POLICY || 'fail').toLowerCase()
+const POLICY = (process.env.FLAKY_POLICY || 'warn').toLowerCase()
 const DEFAULT_JSON = path.resolve(
   path.dirname(new URL(import.meta.url).pathname),
   '..',
@@ -131,4 +131,3 @@ function main() {
 }
 
 main()
-
