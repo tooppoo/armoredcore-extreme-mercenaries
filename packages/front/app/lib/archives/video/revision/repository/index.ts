@@ -1,6 +1,11 @@
-import { getRevision, updateRevision } from '~/lib/utils/revisions'
+import {
+  getRevision,
+  getRevisionUpdatedAt,
+  updateRevision,
+} from '~/lib/utils/revisions'
 
 const revisionKey = 'archive.video.list' as const
 
 export const updateVideoArchiveListRevision = updateRevision(revisionKey)
 export const getVideoArchiveListRevision = getRevision(revisionKey)
+export const getVideoArchiveListUpdatedAt = getRevisionUpdatedAt(revisionKey)

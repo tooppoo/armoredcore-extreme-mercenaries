@@ -34,8 +34,5 @@
   ],
   "devDependencies": {
     "@ysk8hori/typescript-graph": "0.26.4"
-  },
-  "dependencies": {
-    "@ac-extreme-mercenaries/front": "^1.0.1"
   }
 }
