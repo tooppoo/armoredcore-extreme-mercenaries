@@ -32,8 +32,11 @@ export default async function handleRequest(
   loadContext: AppLoadContext,
 ) {
   if (isSitemapUrl(request)) {
-    // @ts-expect-error ignore mismatch for react-router
-    return await sitemap(request, entryContext)
+    // Cast entryContext to the type expected by sitemap's second parameter
+    return await sitemap(
+      request,
+      entryContext as unknown as Parameters<typeof sitemap>[1],
+    )
   }
 
   const controller = new AbortController()

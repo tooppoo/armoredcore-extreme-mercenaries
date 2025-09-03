@@ -35,27 +35,18 @@ export async function buildVideoArchiveFromUrl(
     return throwAlreadyArchivedURL(url, sameURLArchive)
   }
 
-  const isTestMode =
-    (typeof import.meta !== 'undefined' && import.meta.env?.MODE === 'test') ||
-    (env as unknown as Record<string, string | undefined>)?.TEST_MODE === 'true'
+  // まず対応ストラテジーを選定（未対応URLはここで例外 = 400）
+  const strategy = getOGPStrategy(url, [
+    withYouTubeData(),
+    withOGPScanner(
+      (url) =>
+        niconicoPattern.test(url.toString()) ||
+        twitterPattern.test(url.toString()),
+    ),
+  ])
 
-  const ogp = isTestMode
-    ? {
-        title: '(test) title',
-        description: '(test) description',
-        image: 'https://example.com/test.png',
-      }
-    : await (async () => {
-        const strategy = getOGPStrategy(url, [
-          withYouTubeData(),
-          withOGPScanner(
-            (url) =>
-              niconicoPattern.test(url.toString()) ||
-              twitterPattern.test(url.toString()),
-          ),
-        ])
-        return strategy.run(url, env)
-      })()
+  // 本関数はテスト分岐を持たない。外部から渡された strategy をそのまま使用する。
+  const ogp = await strategy.run(url, env)
 
   return createNewArchiveContents({
     title: ogp.title,

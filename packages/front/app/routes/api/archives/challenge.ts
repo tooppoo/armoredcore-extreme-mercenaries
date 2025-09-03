@@ -16,7 +16,7 @@ import {
 import { findChallengeArchiveByURL } from '~/lib/archives/challenge/upload/repository/find-challenge-archive-by-url'
 import { makeCatchesSerializable } from '~/lib/error'
 import { saveChallengeArchive } from '~/lib/archives/challenge/upload/repository/save-challenge-archive.server'
-import { getOGPStrategy } from '~/lib/archives/common/ogp/ogp-strategy.server'
+import { getOgpStrategyProvider } from '~/lib/archives/common/ogp/get-strategy.provider.server'
 import {
   ArchiveError,
   duplicatedUrl,
@@ -47,7 +47,7 @@ const post = async ({ request, context }: Route.ActionArgs) => {
       case 'link': {
         return buildChallengeArchiveFromUrl(data, {
           env: context.cloudflare.env,
-          getOGPStrategy,
+          getOGPStrategy: getOgpStrategyProvider(context.cloudflare.env),
           findArchiveByURL: findChallengeArchiveByURL(context.db),
         }).catch((error: ArchiveError) => {
           console.error({ error: makeCatchesSerializable(error) })

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { handleZodError, parseJson } from './parser.server'
-import { ZodError } from 'zod'
+import { z } from 'zod'
 
 describe('parseJson', () => {
   it('should not throw valid json request', async () => {
@@ -25,19 +25,12 @@ describe('parseJson', () => {
 
 describe('handleZodError', () => {
   it('should throw as bad-request with the given error details', async () => {
-    const zodError = new ZodError([
-      {
-        code: 'invalid_type',
-        expected: 'string',
-        received: 'undefined',
-        path: ['field'],
-        message: 'field is required',
-      },
-    ])
+    const schema = z.object({ field: z.string() })
+    const result = schema.safeParse({})
+    if (result.success) throw new Error('Expected schema validation to fail')
 
-    await expect(async () => handleZodError(zodError)).rejects.toHaveProperty(
-      'status',
-      400,
-    )
+    await expect(async () =>
+      handleZodError(result.error),
+    ).rejects.toHaveProperty('status', 400)
   })
 })

@@ -9,5 +9,80 @@ jobs:
     environment:
       name: discord-bot
     steps:
-      - name: Send GET request
-        run: curl -X GET ${{ vars.DISCORD_BOT_URL }}
+      - name: Ping discord-bot
+        id: ping
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL="${{ vars.DISCORD_BOT_URL }}"
+          BODY_FILE="$(mktemp)"
+
+          # Do request and capture status (or CURL_FAILED on network error)
+          STATUS=$(curl -sS -o "$BODY_FILE" -w "%{http_code}" "$URL" || echo "CURL_FAILED")
+
+          # Prepare outputs
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          if [ "$STATUS" = "CURL_FAILED" ]; then
+            ERROR_MESSAGE="curl request failed"
+          elif [ "$STATUS" != "200" ]; then
+            ERROR_MESSAGE="non-200 response"
+          else
+            ERROR_MESSAGE="ok"
+          fi
+
+          echo "timestamp=$TIMESTAMP" >> "$GITHUB_OUTPUT"
+          echo "status=$STATUS" >> "$GITHUB_OUTPUT"
+          echo "message=$ERROR_MESSAGE" >> "$GITHUB_OUTPUT"
+          echo "response<<'EOF'" >> "$GITHUB_OUTPUT"
+          cat "$BODY_FILE" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+          # Fail step if not successful
+          if [ "$ERROR_MESSAGE" != "ok" ]; then
+            exit 1
+          fi
+
+      - name: Notify Slack on failure
+        if: failure()
+        env:
+          SLACK_ALERT_WEBHOOK: ${{ secrets.SLACK_ALERT_WEBHOOK }}
+          RESPONSE: ${{ steps.ping.outputs.response }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SLACK_ALERT_WEBHOOK:-}" ]; then
+            echo "SLACK_ALERT_WEBHOOK secret is not set" >&2
+            exit 0
+          fi
+
+          # Build JSON payload safely with jq (Slack blocks)
+          PAYLOAD=$(jq -n \
+            --arg time     "${{ steps.ping.outputs.timestamp }}" \
+            --arg status   "${{ steps.ping.outputs.status }}" \
+            --arg message  "${{ steps.ping.outputs.message }}" \
+            --arg response "${RESPONSE}" \
+            '
+            def trunc(s): if (s|length) > 1800 then (s[0:1800] + "…(truncated)") else s end;
+            {
+              text: "[Ping Bot] failed",
+              blocks: [
+                {
+                  type: "header",
+                  text: { type: "plain_text", text: "Ping Bot Failed", emoji: true }
+                },
+                {
+                  type: "section",
+                  fields: [
+                    { type: "mrkdwn", text: ("*Time:*\n"   + $time) },
+                    { type: "mrkdwn", text: ("*Status:*\n" + $status) },
+                    { type: "mrkdwn", text: ("*Message:*\n"+ $message) }
+                  ]
+                },
+                {
+                  type: "section",
+                  text: { type: "mrkdwn", text: ("*Response:*\n```" + trunc($response) + "```") }
+                }
+              ]
+            }
+            ')
+
+          curl -sS -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "$SLACK_ALERT_WEBHOOK"

@@ -13,7 +13,7 @@ import {
   unsupportedUrl,
 } from '~/lib/archives/common/errors.server'
 import { buildVideoArchiveFromUrl } from '~/lib/archives/video/upload/functions.server'
-import { getOGPStrategy } from '~/lib/archives/common/ogp/ogp-strategy.server'
+import { getOgpStrategyProvider } from '~/lib/archives/common/ogp/get-strategy.provider.server'
 import { saveVideoArchive } from '~/lib/archives/video/upload/repository/save-video-archive.server'
 import { findVideoArchiveByURL } from '~/lib/archives/video/upload/repository/find-video-archive-by-url'
 import { postArchiveBody } from '~/lib/archives/video/upload/params.server'
@@ -44,7 +44,7 @@ const post = async ({ request, context }: Route.ActionArgs) => {
 
   const archive = await buildVideoArchiveFromUrl(normalizedUrl, {
     env: context.cloudflare.env,
-    getOGPStrategy,
+    getOGPStrategy: getOgpStrategyProvider(context.cloudflare.env),
     findArchiveByURL: findVideoArchiveByURL(context.db),
   }).catch((error: ArchiveError) => {
     console.error({ error: makeCatchesSerializable(error) })
