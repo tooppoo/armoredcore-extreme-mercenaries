@@ -33,9 +33,12 @@ jobs:
           echo "timestamp=$TIMESTAMP" >> "$GITHUB_OUTPUT"
           echo "status=$STATUS" >> "$GITHUB_OUTPUT"
           echo "message=$ERROR_MESSAGE" >> "$GITHUB_OUTPUT"
-          echo "response<<'EOF'" >> "$GITHUB_OUTPUT"
+          # Write multiline response safely to $GITHUB_OUTPUT
+          # Use an uncommon delimiter and do not quote it
+          DELIM="GITHUB_OUTPUT_EOF"
+          echo "response<<$DELIM" >> "$GITHUB_OUTPUT"
           cat "$BODY_FILE" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
+          echo "$DELIM" >> "$GITHUB_OUTPUT"
 
           # Fail step if not successful
           if [ "$ERROR_MESSAGE" != "ok" ]; then
