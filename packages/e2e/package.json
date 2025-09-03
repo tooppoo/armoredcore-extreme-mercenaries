@@ -16,7 +16,7 @@
   "scripts": {
     "build": "echo skip",
     "test": "echo skip",
-    "e2e": "playwright test --reporter=github,json --reporter-options='json={\"outputFile\":\"playwright-report/report.json\"}'",
+    "e2e": "playwright test --reporter=github,json --reporter-options=json.outputFile=playwright-report/report.json",
     "deps": "playwright install --with-deps",
     "report": "playwright show-report",
     "lint": "run-s run-eslint run-prettier",

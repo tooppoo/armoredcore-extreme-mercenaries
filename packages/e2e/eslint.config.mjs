@@ -13,6 +13,7 @@ const fixedGlobals = Object.fromEntries(
   Object.entries({
     ...globals.browser,
     ...globals.commonjs,
+    ...globals.node,
   }).map(([key, value]) => [key.trim(), value]),
 )
 
