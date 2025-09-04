@@ -96,14 +96,14 @@
     "lightningcss-darwin-arm64": "1.30.1",
     "lightningcss-darwin-x64": "1.30.1",
     "@cloudflare/workerd-linux-64": "1.20250803.0",
-    "@cloudflare/workerd-darwin-64": "1.20250803.0",
+    "@cloudflare/workerd-darwin-64": "1.20250831.0",
     "@cloudflare/workerd-darwin-arm64": "1.20250831.0"
   },
   "overrides": {
     "workerd": {
       "optionalDependencies": {
         "@cloudflare/workerd-linux-64": "1.20250803.0",
-        "@cloudflare/workerd-darwin-64": "1.20250803.0",
+        "@cloudflare/workerd-darwin-64": "1.20250831.0",
         "@cloudflare/workerd-darwin-arm64": "1.20250831.0"
       }
     }
