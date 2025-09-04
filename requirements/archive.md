@@ -33,5 +33,5 @@
 
 ## 参考
 
-- データモデル/ER 図: [docs/data/README.md](../data/README.md)
-- 実装/構成メモ: [docs/functions/archive/README.md](../functions/archive/README.md)
+- データモデル/ER 図: [docs/data/README.md](../docs/data/README.md)
+- 実装/構成メモ: [docs/functions/archive/README.md](../docs/functions/archive/README.md)

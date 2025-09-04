@@ -2,10 +2,10 @@
 
 ## ドメイン
 
-- 要件: `docs/domain/{要件名}.md`
-  - [Discord Bot Ping 通知](./domain/discord-bot-ping.md)
-  - [CI における E2E フレーク検知](./domain/ci-flaky-detection.md)
-  - [アーカイブ機能（要件）](./domain/archive.md)
+- 要件: `requirements/{要件名}.md`
+  - [Discord Bot Ping 通知](../requirements/discord-bot-ping.md)
+  - [CI における E2E フレーク検知](../requirements/ci-flaky-detection.md)
+  - [アーカイブ機能（要件）](../requirements/archive.md)
 - ドメインモデル: [domain-model.md](./domain/domain-model.md)（Mermaid 記法）
 
 ## ADR（意思決定記録）
