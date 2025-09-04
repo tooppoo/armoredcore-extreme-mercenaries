@@ -111,3 +111,35 @@ sequenceDiagram
 ## データ
 
 [ER図](../../data/README.md)を参照
+
+## ローカルでの動作確認方法
+
+### 1. discord-bot の .env設定
+
+テスト対象のチャンネル用環境変数に、監視するテスト用チャンネルのIDを設定する
+
+- DISCORD_VIDEO_ARCHIVE_CHANNEL
+- DISCORD_CHALLENGE_ARCHIVE_CHANNEL
+
+### 2. ローカルDBの準備（必要な場合）
+
+```sh
+npm run front -- migration
+npm run front -- seed:local
+```
+
+### 3. Front起動
+
+```sh
+npm run front:dev
+```
+
+### 4. Bot起動
+
+```sh
+npm run discord-bot:dev
+```
+
+### 5. テスト
+
+テスト用のチャンネルに、実際にコンテンツを投稿する
