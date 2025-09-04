@@ -116,46 +116,39 @@ export const withYouTubeData = (): OGPStrategy =>
           )
         }
 
-        try {
-          // Call YouTube Data API v3 via fetch (Workers-safe)
-          const apiUrl = new URL(
-            'https://www.googleapis.com/youtube/v3/videos',
+        // Call YouTube Data API v3 via fetch (Workers-safe)
+        const apiUrl = new URL('https://www.googleapis.com/youtube/v3/videos')
+        apiUrl.searchParams.set('part', 'snippet')
+        apiUrl.searchParams.set('id', id)
+        apiUrl.searchParams.set('key', env.YOUTUBE_PUBLIC_DATA_API_KEY)
+
+        const res = await fetch(apiUrl.toString(), {
+          method: 'GET',
+          headers: { Accept: 'application/json' },
+        })
+
+        if (!res.ok) {
+          throw new Error(
+            `YouTube API request failed: ${res.status} ${res.statusText}`,
           )
-          apiUrl.searchParams.set('part', 'snippet')
-          apiUrl.searchParams.set('id', id)
-          apiUrl.searchParams.set('key', env.YOUTUBE_PUBLIC_DATA_API_KEY)
+        }
 
-          const res = await fetch(apiUrl.toString(), {
-            method: 'GET',
-            headers: { Accept: 'application/json' },
-          })
+        const data = (await res.json()) as YouTubeVideosResponse
+        const target = data.items?.[0]
+        if (!target || !target.snippet) {
+          throw new Error(`no video found by ${id}`)
+        }
 
-          if (!res.ok) {
-            throw new Error(
-              `YouTube API request failed: ${res.status} ${res.statusText}`,
-            )
-          }
+        const imageUrl =
+          target.snippet.thumbnails?.maxres?.url ||
+          target.snippet.thumbnails?.high?.url ||
+          target.snippet.thumbnails?.standard?.url ||
+          ''
 
-          const data = (await res.json()) as YouTubeVideosResponse
-          const target = data.items?.[0]
-          if (!target || !target.snippet) {
-            throw new Error(`no video found by ${id}`)
-          }
-
-          const imageUrl =
-            target.snippet.thumbnails?.maxres?.url ||
-            target.snippet.thumbnails?.high?.url ||
-            target.snippet.thumbnails?.standard?.url ||
-            ''
-
-          return {
-            title: target.snippet.title || '',
-            description: target.snippet.description || '',
-            image: imageUrl,
-          }
-        } catch (e) {
-          // Re-throw to be shaped by defineStrategy error wrapper
-          throw e
+        return {
+          title: target.snippet.title || '',
+          description: target.snippet.description || '',
+          image: imageUrl,
         }
       }
     })(),
