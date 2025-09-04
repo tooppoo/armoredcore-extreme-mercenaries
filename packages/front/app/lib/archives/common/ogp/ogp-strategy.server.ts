@@ -19,6 +19,21 @@ export type OGP = Readonly<{
   image: string
 }>
 
+// YouTube Data API v3 (subset of fields used)
+type YouTubeVideosResponse = {
+  items?: Array<{
+    snippet?: {
+      title?: string
+      description?: string
+      thumbnails?: {
+        high?: { url?: string }
+        standard?: { url?: string }
+        maxres?: { url?: string }
+      }
+    }
+  }>
+}
+
 type OGPStrategy = Readonly<{
   name: string
   condition: OGPStrategyCondition
@@ -95,53 +110,52 @@ export const withYouTubeData = (): OGPStrategy =>
           )
         }
 
-        // Call YouTube Data API v3 via fetch (Workers-safe)
-        const apiUrl = new URL('https://www.googleapis.com/youtube/v3/videos')
-        apiUrl.searchParams.set('part', 'snippet')
-        apiUrl.searchParams.set('id', id)
-        apiUrl.searchParams.set('key', env.YOUTUBE_PUBLIC_DATA_API_KEY)
-
-        const res = await fetch(apiUrl.toString(), {
-          method: 'GET',
-          headers: { Accept: 'application/json' },
-        })
-
-        if (!res.ok) {
+        if (!env.YOUTUBE_PUBLIC_DATA_API_KEY) {
           throw new Error(
-            `YouTube API request failed: ${res.status} ${res.statusText}`,
+            'YouTube API key is missing. Set YOUTUBE_PUBLIC_DATA_API_KEY in environment.',
           )
         }
 
-        type YouTubeVideosResponse = {
-          items?: Array<{
-            snippet?: {
-              title?: string
-              description?: string
-              thumbnails?: {
-                high?: { url?: string }
-                standard?: { url?: string }
-                maxres?: { url?: string }
-              }
-            }
-          }>
-        }
+        try {
+          // Call YouTube Data API v3 via fetch (Workers-safe)
+          const apiUrl = new URL(
+            'https://www.googleapis.com/youtube/v3/videos',
+          )
+          apiUrl.searchParams.set('part', 'snippet')
+          apiUrl.searchParams.set('id', id)
+          apiUrl.searchParams.set('key', env.YOUTUBE_PUBLIC_DATA_API_KEY)
 
-        const data = (await res.json()) as YouTubeVideosResponse
-        const target = data.items?.[0]
-        if (!target || !target.snippet) {
-          throw new Error(`no video found by ${id}`)
-        }
+          const res = await fetch(apiUrl.toString(), {
+            method: 'GET',
+            headers: { Accept: 'application/json' },
+          })
 
-        const imageUrl =
-          target.snippet.thumbnails?.high?.url ||
-          target.snippet.thumbnails?.standard?.url ||
-          target.snippet.thumbnails?.maxres?.url ||
-          ''
+          if (!res.ok) {
+            throw new Error(
+              `YouTube API request failed: ${res.status} ${res.statusText}`,
+            )
+          }
 
-        return {
-          title: target.snippet.title || '',
-          description: target.snippet.description || '',
-          image: imageUrl,
+          const data = (await res.json()) as YouTubeVideosResponse
+          const target = data.items?.[0]
+          if (!target || !target.snippet) {
+            throw new Error(`no video found by ${id}`)
+          }
+
+          const imageUrl =
+            target.snippet.thumbnails?.maxres?.url ||
+            target.snippet.thumbnails?.high?.url ||
+            target.snippet.thumbnails?.standard?.url ||
+            ''
+
+          return {
+            title: target.snippet.title || '',
+            description: target.snippet.description || '',
+            image: imageUrl,
+          }
+        } catch (e) {
+          // Re-throw to be shaped by defineStrategy error wrapper
+          throw e
         }
       }
     })(),
