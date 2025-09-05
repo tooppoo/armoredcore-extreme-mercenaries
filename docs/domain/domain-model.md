@@ -158,3 +158,82 @@ sequenceDiagram
     GA->>AR: Upload JSON/HTML reports as artifacts
     GA-->>GA: Set job conclusion (success/failure)
 ```
+
+---
+
+# ドメインモデル（アーカイブ）
+
+アーカイブ領域は、URL の受領から OGP 抽出、保存、参照、削除リクエスト管理までを対象とする。
+
+## クラス図
+
+```mermaid
+classDiagram
+  class UrlSubmission {
+    +source: string  // Discord|Webhook|Manual
+    +url: string
+    +receivedAt: ISO8601
+  }
+
+  class OGPScanner {
+    +fetch(url: string): OGP
+  }
+
+  class OGP {
+    +title: string
+    +description: string
+    +imageUrl: string?
+  }
+
+  class ArchiveRecord {
+    +id: number
+    +externalId: string
+    +url: string
+    +title: string
+    +description: string
+    +imageUrl: string?
+    +uploadedBy: string  // discord_user_id
+    +createdAt: ISO8601
+  }
+
+  class ArchiveService {
+    +ingest(submission: UrlSubmission): ArchiveRecord
+    +list(): ArchiveRecord[]
+    +get(id: number): ArchiveRecord
+  }
+
+  class DeleteArchiveRequest {
+    +id: number
+    +reason: string
+    +emailForNotice: string
+    +status: DeleteStatus
+    +createdAt: ISO8601
+  }
+
+  class DeleteStatus {
+    <<enumeration>>
+    requested
+    reviewing
+    approved
+    rejected
+    completed
+  }
+
+  class D1Database {
+    +saveArchive(record: ArchiveRecord)
+    +saveDeleteRequest(req: DeleteArchiveRequest)
+    +queryArchives(): ArchiveRecord[]
+  }
+
+  UrlSubmission --> OGPScanner : extract
+  OGPScanner --> OGP : returns
+  OGP --> ArchiveService : map to record
+  ArchiveService --> ArchiveRecord : create
+  ArchiveService --> D1Database : persist
+  DeleteArchiveRequest --> D1Database : persist
+```
+
+## ポリシーとトレーサビリティ
+
+- 外部取得した `responseBody` のような生データは外部通知に含めない。
+- 取得/保存時刻、実行元（例: ジョブ/ユーザー）、結果ステータスを記録して追跡可能性を担保。
