@@ -1,5 +1,13 @@
 # 開発ドキュメント
 
+## プロセス文書
+
+- 要求: `docs/requests/{タイトル}.md`（AGENTS.md に準拠）
+- シナリオ: `docs/scenario/{タイトル}.md`
+- 要件: `docs/requirements/{タイトル}.md`
+- ユースケース: `docs/usecases/{タイトル}.md`
+- 仕様: `docs/spec/{タイトル}.md`
+
 ## ドメイン
 
 - 要件: `docs/requirements/{要件名}.md`
