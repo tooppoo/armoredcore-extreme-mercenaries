@@ -25,4 +25,4 @@
 ## 実装変更
 - `.github/workflows/e2e.yml`: `FLAKY_POLICY: ${{ vars.FLAKY_POLICY || 'warn' }}` に更新
 - `packages/e2e/scripts/check-flaky.mjs`: 既定を `warn` に更新
-- `requirements/ci-flaky-detection.md`: 既定を `warn` に更新
+- `docs/requirements/ci-flaky-detection.md`: 既定を `warn` に更新

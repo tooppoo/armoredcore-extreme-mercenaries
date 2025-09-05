@@ -9,12 +9,12 @@
 
 ## 決定
 - 入口を `docs/README.md` に集約し、以下のリンク構造で統一。
-  - ドメイン要件: `requirements/*.md`
+  - ドメイン要件: `docs/requirements/*.md`
   - ドメインモデル: `docs/domain/domain-model.md`
   - ADR 一覧: `docs/adr/index.md`
   - データモデル: `docs/data/README.md`
   - 機能詳細メモ: `docs/functions/*`
-- 「アーカイブ機能」の要件定義を `requirements/archive.md` として作成し、既存の実装メモ/ER 図へ参照を付与。
+- 「アーカイブ機能」の要件定義を `docs/requirements/archive.md` として作成し、既存の実装メモ/ER 図へ参照を付与。
 
 ## 影響
 - 参照性/一覧性の向上、オンボーディング容易化。
@@ -33,9 +33,9 @@
 
 ## 実施項目
 1. `docs/README.md` を更新（Domain/ADR/Data/Functions/FAQ）。
-2. `requirements/archive.md` を作成し、実装メモ/ER 図へ参照を付与。
-3. 既存参照（`docs/domain/*.md`）を `requirements/*.md` に更新。
+2. `docs/requirements/archive.md` を作成し、実装メモ/ER 図へ参照を付与。
+3. 既存参照（`docs/domain/*.md`）を `docs/requirements/*.md` に更新。
 
 ## 追跡
-- 新機能はまず `requirements/{要件名}.md` と `docs/domain/domain-model.md` を更新。
+- 新機能はまず `docs/requirements/{要件名}.md` と `docs/domain/domain-model.md` を更新。
 - 設計上の決定や運用方針の変更は `docs/adr/{YYYYMMDD}-{title}.md` に記録。
