@@ -1,7 +1,14 @@
 import type { LoaderFunctionArgs } from 'react-router'
+import type { Database } from '~/db/driver.server'
 import { origin } from '~/lib/constants'
-import { getChallengeArchiveListUpdatedAt } from '~/lib/archives/challenge/revision/repository'
-import { getVideoArchiveListUpdatedAt } from '~/lib/archives/video/revision/repository'
+import {
+  getChallengeArchiveListUpdatedAt,
+  getChallengeArchiveListRevision,
+} from '~/lib/archives/challenge/revision/repository'
+import {
+  getVideoArchiveListUpdatedAt,
+  getVideoArchiveListRevision,
+} from '~/lib/archives/video/revision/repository'
 
 /**
  * なぜ子sitemapに分割するのか（方針3-1）
@@ -10,14 +17,39 @@ import { getVideoArchiveListUpdatedAt } from '~/lib/archives/video/revision/repo
  * - 回復性: 一部の生成失敗が全体に波及しない（フェイルソフト）
  * - 追従性: ライブラリに依存しない標準的な構成で保守が容易
  */
-export async function loader({ context }: LoaderFunctionArgs) {
-  const [challengeUpdatedAt, videoUpdatedAt] = await Promise.all([
-    getChallengeArchiveListUpdatedAt(context.db),
-    getVideoArchiveListUpdatedAt(context.db),
-  ])
+export async function loader({ request, context }: LoaderFunctionArgs) {
+  // 1) 最新の更新時刻（Last-Modified用）とリビジョン（ETag用）を取得
+  const [challengeUpdatedAt, videoUpdatedAt, challengeRev, videoRev] =
+    await fetchRevisions(context.db as Database)
 
+  // 2) Last-Modified は最大の更新時刻
+  const lastMs = [challengeUpdatedAt, videoUpdatedAt]
+    .filter((d): d is Date => Boolean(d))
+    .map((d) => d.getTime())
+    .reduce((a, b) => (a > b ? a : b), 0)
+  const lastModified = lastMs ? new Date(lastMs) : null
+
+  // 3) グローバルETag: 複数リビジョンを安定化して弱いETag化
+  const base = JSON.stringify({ c: challengeRev ?? 0, v: videoRev ?? 0 })
+  const hash = await stableHash(base)
+  const etag = `W/"${hash.substring(0, 32)}"` // 16bytes(32hex)に短縮
+  const cacheControl = computeCacheControl(lastModified)
+
+  // 4) 条件付きGET判定
+  const ifNoneMatch = request.headers.get('If-None-Match')
+  if (ifNoneMatch && weakMatch(ifNoneMatch, etag)) {
+    return new Response(null, {
+      status: 304,
+      headers: buildHeaders({
+        etag,
+        lastModified,
+        cacheControl,
+      }),
+    })
+  }
+
+  // 5) 本文生成（従来と同等）
   const fmt = (d: Date | null) => (d ? d.toISOString() : undefined)
-
   const parts: string[] = []
   parts.push('<?xml version="1.0" encoding="UTF-8"?>')
   parts.push(
@@ -27,11 +59,8 @@ export async function loader({ context }: LoaderFunctionArgs) {
   // Core (静的/一覧ページ) 用の子sitemap
   parts.push('<sitemap>')
   parts.push(`<loc>${origin}/sitemap.core.xml</loc>`)
-  const coreMs = [challengeUpdatedAt, videoUpdatedAt]
-    .filter(Boolean)
-    .map((d) => (d as Date).getTime())
-    .reduce((a, b) => (a > b ? a : b), 0)
-  if (coreMs) parts.push(`<lastmod>${new Date(coreMs).toISOString()}</lastmod>`)
+  if (lastModified)
+    parts.push(`<lastmod>${lastModified.toISOString()}</lastmod>`)
   parts.push('</sitemap>')
 
   // Challenge 詳細の子sitemap
@@ -50,14 +79,112 @@ export async function loader({ context }: LoaderFunctionArgs) {
 
   parts.push('</sitemapindex>')
 
+  // 6) 200応答（ETag/Last-Modified/TTL）
   return new Response(parts.join(''), {
     headers: {
       'Content-Type': 'application/xml; charset=utf-8',
-      'Cache-Control': 'public, max-age=1800',
+      ...buildHeaders({
+        etag,
+        lastModified,
+        cacheControl,
+      }),
     },
   })
 }
 
-export const headers = () => ({
-  'Content-Type': 'application/xml; charset=utf-8',
-})
+// ---- helpers ----
+type RevisionTuple = [Date | null, Date | null, number | null, number | null]
+
+async function fetchRevisions(db: Database): Promise<RevisionTuple> {
+  try {
+    return (await Promise.all([
+      getChallengeArchiveListUpdatedAt(db),
+      getVideoArchiveListUpdatedAt(db),
+      getChallengeArchiveListRevision(db),
+      getVideoArchiveListRevision(db),
+    ])) as RevisionTuple
+  } catch (e) {
+    console.error(e)
+    throw new Response(null, {
+      status: 503,
+      headers: {
+        'Cache-Control': 'no-store',
+      },
+    })
+  }
+}
+
+function buildHeaders(args: {
+  etag: string
+  lastModified: Date | null
+  cacheControl: string
+}): HeadersInit {
+  return {
+    ETag: args.etag,
+    ...(args.lastModified
+      ? { 'Last-Modified': args.lastModified.toUTCString() }
+      : {}),
+    'Cache-Control': args.cacheControl,
+  }
+}
+
+function computeCacheControl(lastModified: Date | null): string {
+  if (!lastModified)
+    return 'public, max-age=300, s-maxage=3600, stale-while-revalidate=60'
+
+  const TEN_MINUTES = 10 * 60
+  const ONE_DAY = 24 * 60 * 60
+  const ONE_WEEK = 7 * ONE_DAY
+
+  const ageSec = Math.max(
+    0,
+    Math.floor((Date.now() - lastModified.getTime()) / 1000),
+  )
+  let sMaxAge = 300 // <10m fallback
+  if (ageSec >= ONE_WEEK) sMaxAge = ONE_WEEK
+  else if (ageSec >= ONE_DAY) sMaxAge = ONE_DAY
+  else if (ageSec >= TEN_MINUTES) sMaxAge = 3600
+  const maxAge = Math.min(300, sMaxAge) // browsers: keep shorter
+  const swr = Math.min(600, Math.floor(sMaxAge / 5) || 60)
+  return `public, max-age=${maxAge}, s-maxage=${sMaxAge}, stale-while-revalidate=${swr}`
+}
+
+function weakMatch(ifNoneMatch: string, etag: string): boolean {
+  // Handle multiple ETags, wildcard, and weak/strong variations
+  const candidates = ifNoneMatch
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
+  if (candidates.includes('*')) return true
+  // accept both exact and without W/ prefix comparisons
+  const bare = etag.replace(/^W\//, '')
+  return candidates.some((c) => c === etag || c === bare)
+}
+
+async function stableHash(input: string): Promise<string> {
+  // Prefer Web Crypto (Workers), fallback to Node crypto for tests
+  try {
+    if (typeof crypto !== 'undefined' && 'subtle' in crypto) {
+      const data = new TextEncoder().encode(input)
+      const digest = await crypto.subtle.digest('SHA-256', data)
+      return [...new Uint8Array(digest)]
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join('')
+    }
+  } catch (e) {
+    console.error(e)
+  }
+  try {
+    const { createHash } = await import('node:crypto')
+    return createHash('sha256').update(input).digest('hex')
+  } catch (e) {
+    console.error(e)
+    // ultra-fallback (non-crypto): FNV-1a 32-bit
+    let h = 0x811c9dc5
+    for (let i = 0; i < input.length; i++) {
+      h ^= input.charCodeAt(i)
+      h = Math.imul(h, 0x01000193)
+    }
+    return (h >>> 0).toString(16).padStart(8, '0')
+  }
+}
