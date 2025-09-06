@@ -2,13 +2,13 @@
 
 ## 概要
 - `/sitemap.xml`（およびインデックス/子サイトマップ）で、`contents_revisions` に基づき ETag/Last-Modified を算出。
-- `If-None-Match` 受領時は弱いETag `W/\"<hash>\"` で比較し、一致なら 304 を返す。
+- `If-None-Match` 受領時は弱いETag `W/"<hash>"` で比較し、一致なら 304 を返す。
 - `Cache-Control` は更新頻度に応じて可変（動的TTL）。
 
 ## HTTP応答仕様
 - 200 OK（本文あり）
   - `Content-Type: application/xml; charset=utf-8`
-  - `ETag: W"<hash>"`
+  - `ETag: W/"<hash>"`
   - `Last-Modified: <updated_at in GMT RFC1123>`
   - `Cache-Control: public, max-age=<m>, s-maxage=<s>, stale-while-revalidate=<swr>`
 - 304 Not Modified（本文なし）
@@ -39,7 +39,7 @@ export async function handleSitemap(req: Request, env: Env): Promise<Response> {
     .first<{ latest_revision: string; updated_at: string }>();
   if (!rev) return new Response('Service Unavailable', { status: 503 });
 
-  const etag = `W/\"${stableHash(rev.latest_revision)}\"`;
+  const etag = `W/"${stableHash(rev.latest_revision)}"`;
   const lastModified = toRfc1123(new Date(rev.updated_at));
   const cacheControl = computeCacheControl(new Date(rev.updated_at));
 

@@ -1,4 +1,5 @@
 import type { LoaderFunctionArgs } from 'react-router'
+import type { D1Database } from '@cloudflare/workers-types'
 import { origin } from '~/lib/constants'
 import {
   getChallengeArchiveListUpdatedAt,
@@ -18,33 +19,14 @@ import {
  */
 export async function loader({ request, context }: LoaderFunctionArgs) {
   // 1) 最新の更新時刻（Last-Modified用）とリビジョン（ETag用）を取得
-  let challengeUpdatedAt: Date | null = null
-  let videoUpdatedAt: Date | null = null
-  let challengeRev: number | null = null
-  let videoRev: number | null = null
-  try {
-    ;[challengeUpdatedAt, videoUpdatedAt, challengeRev, videoRev] =
-      await Promise.all([
-        getChallengeArchiveListUpdatedAt(context.db),
-        getVideoArchiveListUpdatedAt(context.db),
-        getChallengeArchiveListRevision(context.db),
-        getVideoArchiveListRevision(context.db),
-      ])
-  } catch (e) {
-    // D1障害などの異常時は 503 を返す（本文なし）
-    return new Response(null, {
-      status: 503,
-      headers: {
-        'Content-Type': 'application/xml; charset=utf-8',
-        'Cache-Control': 'no-store',
-      },
-    })
-  }
+  const [revisions, errorRes] = await fetchRevisions(context.db as D1Database)
+  if (errorRes) return errorRes
+  const [challengeUpdatedAt, videoUpdatedAt, challengeRev, videoRev] = revisions
 
   // 2) Last-Modified は最大の更新時刻
   const lastMs = [challengeUpdatedAt, videoUpdatedAt]
-    .filter(Boolean)
-    .map((d) => (d as Date).getTime())
+    .filter((d): d is Date => Boolean(d))
+    .map((d) => d.getTime())
     .reduce((a, b) => (a > b ? a : b), 0)
   const lastModified = lastMs ? new Date(lastMs) : null
 
@@ -52,13 +34,18 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   const base = JSON.stringify({ c: challengeRev ?? 0, v: videoRev ?? 0 })
   const hash = await stableHash(base)
   const etag = `W/"${hash.substring(0, 32)}"` // 16bytes(32hex)に短縮
+  const cacheControl = computeCacheControl(lastModified)
 
   // 4) 条件付きGET判定
   const ifNoneMatch = request.headers.get('If-None-Match')
   if (ifNoneMatch && weakMatch(ifNoneMatch, etag)) {
     return new Response(null, {
       status: 304,
-      headers: buildHeaders({ etag, lastModified, cacheControl: computeCacheControl(lastModified) }),
+      headers: buildHeaders({
+        etag,
+        lastModified,
+        cacheControl,
+      }),
     })
   }
 
@@ -73,7 +60,8 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   // Core (静的/一覧ページ) 用の子sitemap
   parts.push('<sitemap>')
   parts.push(`<loc>${origin}/sitemap.core.xml</loc>`)
-  if (lastModified) parts.push(`<lastmod>${lastModified.toISOString()}</lastmod>`)
+  if (lastModified)
+    parts.push(`<lastmod>${lastModified.toISOString()}</lastmod>`)
   parts.push('</sitemap>')
 
   // Challenge 詳細の子sitemap
@@ -94,7 +82,11 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
 
   // 6) 200応答（ETag/Last-Modified/TTL）
   return new Response(parts.join(''), {
-    headers: buildHeaders({ etag, lastModified, cacheControl: computeCacheControl(lastModified) }),
+    headers: buildHeaders({
+      etag,
+      lastModified,
+      cacheControl,
+    }),
   })
 }
 
@@ -103,6 +95,34 @@ export const headers = () => ({
 })
 
 // ---- helpers ----
+type RevisionTuple = [Date | null, Date | null, number | null, number | null]
+
+async function fetchRevisions(
+  db: D1Database,
+): Promise<[RevisionTuple, null] | [null, Response]> {
+  try {
+    const result = (await Promise.all([
+      getChallengeArchiveListUpdatedAt(db),
+      getVideoArchiveListUpdatedAt(db),
+      getChallengeArchiveListRevision(db),
+      getVideoArchiveListRevision(db),
+    ])) as RevisionTuple
+    return [result, null]
+  } catch (e) {
+    console.error(e)
+    return [
+      null,
+      new Response(null, {
+        status: 503,
+        headers: {
+          'Content-Type': 'application/xml; charset=utf-8',
+          'Cache-Control': 'no-store',
+        },
+      }),
+    ]
+  }
+}
+
 function buildHeaders(args: {
   etag: string
   lastModified: Date | null
@@ -119,13 +139,25 @@ function buildHeaders(args: {
 }
 
 function computeCacheControl(lastModified: Date | null): string {
-  if (!lastModified) return 'public, max-age=300, s-maxage=3600, stale-while-revalidate=60'
-  const ageSec = Math.max(0, Math.floor((Date.now() - lastModified.getTime()) / 1000))
+  if (!lastModified)
+    return 'public, max-age=300, s-maxage=3600, stale-while-revalidate=60'
+
+  const TEN_MINUTES = 10 * 60
+  const ONE_DAY = 24 * 60 * 60
+  const ONE_WEEK = 7 * ONE_DAY
+
+  const ageSec = Math.max(
+    0,
+    Math.floor((Date.now() - lastModified.getTime()) / 1000),
+  )
   let sMaxAge = 300 // default 5m
-  if (ageSec < 10 * 60) sMaxAge = 300 // <10m
-  else if (ageSec < 24 * 60 * 60) sMaxAge = 3600 // <24h
-  else if (ageSec < 7 * 24 * 60 * 60) sMaxAge = 86400 // <7d
-  else sMaxAge = 604800 // 7d
+  if (ageSec < TEN_MINUTES)
+    sMaxAge = 300 // <10m
+  else if (ageSec < ONE_DAY)
+    sMaxAge = 3600 // <24h
+  else if (ageSec < ONE_WEEK)
+    sMaxAge = 86400 // <7d
+  else sMaxAge = ONE_WEEK // ≥7d
   const maxAge = Math.min(300, sMaxAge) // browsers: keep shorter
   const swr = Math.min(600, Math.floor(sMaxAge / 5) || 60)
   return `public, max-age=${maxAge}, s-maxage=${sMaxAge}, stale-while-revalidate=${swr}`
@@ -149,18 +181,23 @@ async function stableHash(input: string): Promise<string> {
     if (typeof crypto !== 'undefined' && 'subtle' in crypto) {
       const data = new TextEncoder().encode(input)
       const digest = await crypto.subtle.digest('SHA-256', data)
-      return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('')
+      return [...new Uint8Array(digest)]
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join('')
     }
-  } catch {}
+  } catch (e) {
+    console.error(e)
+  }
   try {
     const { createHash } = await import('node:crypto')
     return createHash('sha256').update(input).digest('hex')
-  } catch {
+  } catch (e) {
+    console.error(e)
     // ultra-fallback (non-crypto): FNV-1a 32-bit
     let h = 0x811c9dc5
     for (let i = 0; i < input.length; i++) {
       h ^= input.charCodeAt(i)
-      h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24)
+      h = Math.imul(h, 0x01000193)
     }
     return (h >>> 0).toString(16).padStart(8, '0')
   }
