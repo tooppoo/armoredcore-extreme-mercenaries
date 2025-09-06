@@ -82,17 +82,16 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
 
   // 6) 200応答（ETag/Last-Modified/TTL）
   return new Response(parts.join(''), {
-    headers: buildHeaders({
-      etag,
-      lastModified,
-      cacheControl,
-    }),
+    headers: {
+      'Content-Type': 'application/xml; charset=utf-8',
+      ...buildHeaders({
+        etag,
+        lastModified,
+        cacheControl,
+      }),
+    },
   })
 }
-
-export const headers = () => ({
-  'Content-Type': 'application/xml; charset=utf-8',
-})
 
 // ---- helpers ----
 type RevisionTuple = [Date | null, Date | null, number | null, number | null]
@@ -129,7 +128,6 @@ function buildHeaders(args: {
   cacheControl: string
 }): HeadersInit {
   return {
-    'Content-Type': 'application/xml; charset=utf-8',
     ETag: args.etag,
     ...(args.lastModified
       ? { 'Last-Modified': args.lastModified.toUTCString() }

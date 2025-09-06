@@ -53,6 +53,7 @@ describe('sitemap.xml loader', () => {
     const res = await loader(makeArgs({ 'If-None-Match': etag }))
     expect(res.status).toBe(304)
     expect(res.headers.get('ETag')).toBe(etag)
+    expect(res.headers.get('Content-Type')).toBeNull()
     // No body on 304
     const text = await res.text()
     expect(text).toBe('')

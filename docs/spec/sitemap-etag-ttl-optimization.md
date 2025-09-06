@@ -13,6 +13,7 @@
   - `Cache-Control: public, max-age=<m>, s-maxage=<s>, stale-while-revalidate=<swr>`
 - 304 Not Modified（本文なし）
   - `ETag` を再送
+  - `Last-Modified` を再送
   - `Cache-Control` を再送
 
 ## ETag/Last-Modified の算出
