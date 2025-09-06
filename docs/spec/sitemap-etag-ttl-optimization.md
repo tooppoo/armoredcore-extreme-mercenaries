@@ -51,7 +51,6 @@ export async function handleSitemap(req: Request, env: Env): Promise<Response> {
         ETag: etag,
         'Last-Modified': lastModified,
         'Cache-Control': cacheControl,
-        'Content-Type': 'application/xml; charset=utf-8',
       },
     });
   }
