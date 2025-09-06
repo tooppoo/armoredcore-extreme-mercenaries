@@ -1,13 +1,18 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import type { D1Database } from '@cloudflare/workers-types'
 import { loader } from './sitemap.xml'
 
 vi.mock('~/lib/archives/challenge/revision/repository', () => ({
-  getChallengeArchiveListUpdatedAt: vi.fn(async () => new Date('2025-01-01T00:00:00Z')),
+  getChallengeArchiveListUpdatedAt: vi.fn(
+    async () => new Date('2025-01-01T00:00:00Z'),
+  ),
   getChallengeArchiveListRevision: vi.fn(async () => 10),
 }))
 
 vi.mock('~/lib/archives/video/revision/repository', () => ({
-  getVideoArchiveListUpdatedAt: vi.fn(async () => new Date('2025-01-02T00:00:00Z')),
+  getVideoArchiveListUpdatedAt: vi.fn(
+    async () => new Date('2025-01-02T00:00:00Z'),
+  ),
   getVideoArchiveListRevision: vi.fn(async () => 20),
 }))
 
@@ -16,13 +21,17 @@ describe('sitemap.xml loader', () => {
     request: new Request('https://example.com/sitemap.xml', {
       headers,
     }),
-    context: { db: {} as any },
+    context: { db: {} as D1Database },
     params: {},
   })
 
   beforeEach(() => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2025-01-03T00:00:00Z'))
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
   })
 
   it('returns 200 with ETag and Last-Modified when no If-None-Match', async () => {
@@ -44,6 +53,7 @@ describe('sitemap.xml loader', () => {
     const res = await loader(makeArgs({ 'If-None-Match': etag }))
     expect(res.status).toBe(304)
     expect(res.headers.get('ETag')).toBe(etag)
+    expect(res.headers.get('Content-Type')).toBeNull()
     // No body on 304
     const text = await res.text()
     expect(text).toBe('')
@@ -52,11 +62,20 @@ describe('sitemap.xml loader', () => {
   it('returns 503 on D1 failure', async () => {
     const crepo = await import('~/lib/archives/challenge/revision/repository')
     // make next call fail
-    ;(crepo.getChallengeArchiveListUpdatedAt as unknown as ReturnType<
-      typeof vi.fn
-    >).mockRejectedValueOnce(new Error('D1 down'))
-    const res = await loader(makeArgs())
-    expect(res.status).toBe(503)
-    expect(res.headers.get('Cache-Control')).toBe('no-store')
+    ;(
+      crepo.getChallengeArchiveListUpdatedAt as unknown as ReturnType<
+        typeof vi.fn
+      >
+    ).mockRejectedValueOnce(new Error('D1 down'))
+    await loader(makeArgs()).then(
+      () => {
+        throw new Error('should throw')
+      },
+      (res) => {
+        expect(res.status).toBe(503)
+        expect(res.headers.get('Cache-Control')).toBe('no-store')
+        expect(res.headers.get('Content-Type')).toBeNull()
+      },
+    )
   })
 })
