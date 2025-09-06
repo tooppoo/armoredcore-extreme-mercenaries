@@ -67,8 +67,14 @@ describe('sitemap.xml loader', () => {
         typeof vi.fn
       >
     ).mockRejectedValueOnce(new Error('D1 down'))
-    const res = await loader(makeArgs())
-    expect(res.status).toBe(503)
-    expect(res.headers.get('Cache-Control')).toBe('no-store')
+    await loader(makeArgs()).then(
+      () => {
+        throw new Error('should throw')
+      },
+      (res) => {
+        expect(res.status).toBe(503)
+        expect(res.headers.get('Cache-Control')).toBe('no-store')
+      },
+    )
   })
 })

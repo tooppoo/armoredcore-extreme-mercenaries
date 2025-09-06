@@ -19,9 +19,8 @@ import {
  */
 export async function loader({ request, context }: LoaderFunctionArgs) {
   // 1) 最新の更新時刻（Last-Modified用）とリビジョン（ETag用）を取得
-  const [revisions, errorRes] = await fetchRevisions(context.db as Database)
-  if (errorRes) return errorRes
-  const [challengeUpdatedAt, videoUpdatedAt, challengeRev, videoRev] = revisions
+  const [challengeUpdatedAt, videoUpdatedAt, challengeRev, videoRev] =
+    await fetchRevisions(context.db as Database)
 
   // 2) Last-Modified は最大の更新時刻
   const lastMs = [challengeUpdatedAt, videoUpdatedAt]
@@ -96,29 +95,23 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
 // ---- helpers ----
 type RevisionTuple = [Date | null, Date | null, number | null, number | null]
 
-async function fetchRevisions(
-  db: Database,
-): Promise<[RevisionTuple, null] | [null, Response]> {
+async function fetchRevisions(db: Database): Promise<RevisionTuple> {
   try {
-    const result = (await Promise.all([
+    return (await Promise.all([
       getChallengeArchiveListUpdatedAt(db),
       getVideoArchiveListUpdatedAt(db),
       getChallengeArchiveListRevision(db),
       getVideoArchiveListRevision(db),
     ])) as RevisionTuple
-    return [result, null]
   } catch (e) {
     console.error(e)
-    return [
-      null,
-      new Response(null, {
-        status: 503,
-        headers: {
-          'Content-Type': 'application/xml; charset=utf-8',
-          'Cache-Control': 'no-store',
-        },
-      }),
-    ]
+    throw new Response(null, {
+      status: 503,
+      headers: {
+        'Content-Type': 'application/xml; charset=utf-8',
+        'Cache-Control': 'no-store',
+      },
+    })
   }
 }
 
