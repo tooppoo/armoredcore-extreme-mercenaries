@@ -108,7 +108,6 @@ async function fetchRevisions(db: Database): Promise<RevisionTuple> {
     throw new Response(null, {
       status: 503,
       headers: {
-        'Content-Type': 'application/xml; charset=utf-8',
         'Cache-Control': 'no-store',
       },
     })

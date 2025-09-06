@@ -74,6 +74,7 @@ describe('sitemap.xml loader', () => {
       (res) => {
         expect(res.status).toBe(503)
         expect(res.headers.get('Cache-Control')).toBe('no-store')
+        expect(res.headers.get('Content-Type')).toBeNull()
       },
     )
   })
