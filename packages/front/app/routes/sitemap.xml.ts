@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from 'react-router'
-import type { D1Database } from '@cloudflare/workers-types'
+import type { Database } from '~/db/driver.server'
 import { origin } from '~/lib/constants'
 import {
   getChallengeArchiveListUpdatedAt,
@@ -19,7 +19,7 @@ import {
  */
 export async function loader({ request, context }: LoaderFunctionArgs) {
   // 1) 最新の更新時刻（Last-Modified用）とリビジョン（ETag用）を取得
-  const [revisions, errorRes] = await fetchRevisions(context.db as D1Database)
+  const [revisions, errorRes] = await fetchRevisions(context.db as Database)
   if (errorRes) return errorRes
   const [challengeUpdatedAt, videoUpdatedAt, challengeRev, videoRev] = revisions
 
@@ -97,7 +97,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
 type RevisionTuple = [Date | null, Date | null, number | null, number | null]
 
 async function fetchRevisions(
-  db: D1Database,
+  db: Database,
 ): Promise<[RevisionTuple, null] | [null, Response]> {
   try {
     const result = (await Promise.all([
