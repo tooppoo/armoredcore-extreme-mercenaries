@@ -141,14 +141,10 @@ function computeCacheControl(lastModified: Date | null): string {
     0,
     Math.floor((Date.now() - lastModified.getTime()) / 1000),
   )
-  let sMaxAge = 300 // default 5m
-  if (ageSec < TEN_MINUTES)
-    sMaxAge = 300 // <10m
-  else if (ageSec < ONE_DAY)
-    sMaxAge = 3600 // <24h
-  else if (ageSec < ONE_WEEK)
-    sMaxAge = 86400 // <7d
-  else sMaxAge = ONE_WEEK // ≥7d
+  let sMaxAge = 300 // <10m fallback
+  if (ageSec >= ONE_WEEK) sMaxAge = ONE_WEEK
+  else if (ageSec >= ONE_DAY) sMaxAge = ONE_DAY
+  else if (ageSec >= TEN_MINUTES) sMaxAge = 3600
   const maxAge = Math.min(300, sMaxAge) // browsers: keep shorter
   const swr = Math.min(600, Math.floor(sMaxAge / 5) || 60)
   return `public, max-age=${maxAge}, s-maxage=${sMaxAge}, stale-while-revalidate=${swr}`
