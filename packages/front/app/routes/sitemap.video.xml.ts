@@ -19,21 +19,20 @@ export async function loader({ context }: LoaderFunctionArgs) {
     .limit(1)
     .get()
 
-  const parts: string[] = []
-  parts.push('<?xml version="1.0" encoding="UTF-8"?>')
-  parts.push('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
-
   const loc = `${origin}/archives/video`
   const lastmod = latestVideo
     ? new Date(latestVideo.createdAt).toISOString()
     : new Date().toISOString()
-  
-  parts.push('<url>')
-  parts.push(`<loc>${loc}</loc>`)
-  parts.push(`<lastmod>${lastmod}</lastmod>`)
-  parts.push('</url>')
 
-  parts.push('</urlset>')
+  const parts = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    '<url>',
+    `<loc>${loc}</loc>`,
+    `<lastmod>${lastmod}</lastmod>`,
+    '</url>',
+    '</urlset>',
+  ]
 
   return new Response(parts.join(''), {
     headers: {
