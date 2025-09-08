@@ -1,34 +1,37 @@
 import type { LoaderFunctionArgs } from 'react-router'
+import { desc } from 'drizzle-orm'
 import { origin } from '~/lib/constants'
 import { videoArchives } from '~/db/schema.server'
 
 /**
- * 動画詳細の子sitemap
- * - DBからexternalIdを列挙し、canonicalな絶対URLで出力
- * - lastmodは作成日時（将来的に更新日時に拡張可）
+ * 動画アーカイブの子sitemap
+ * - 動画アーカイブは個別ページが存在しないため、/archives/video のみを出力
+ * - lastmodは最新の動画作成日時
  */
 export async function loader({ context }: LoaderFunctionArgs) {
-  // list all video archive detail pages
-  const rows = await context.db
+  // Get the latest video creation date for lastmod
+  const latestVideo = await context.db
     .select({
-      id: videoArchives.externalId,
       createdAt: videoArchives.createdAt,
     })
     .from(videoArchives)
-    .all()
+    .orderBy(desc(videoArchives.createdAt))
+    .limit(1)
+    .get()
 
   const parts: string[] = []
   parts.push('<?xml version="1.0" encoding="UTF-8"?>')
   parts.push('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
 
-  for (const row of rows) {
-    const loc = `${origin}/archives/video/${row.id}`
-    const lastmod = new Date(row.createdAt).toISOString()
-    parts.push('<url>')
-    parts.push(`<loc>${loc}</loc>`)
-    parts.push(`<lastmod>${lastmod}</lastmod>`)
-    parts.push('</url>')
-  }
+  const loc = `${origin}/archives/video`
+  const lastmod = latestVideo
+    ? new Date(latestVideo.createdAt).toISOString()
+    : new Date().toISOString()
+  
+  parts.push('<url>')
+  parts.push(`<loc>${loc}</loc>`)
+  parts.push(`<lastmod>${lastmod}</lastmod>`)
+  parts.push('</url>')
 
   parts.push('</urlset>')
 
