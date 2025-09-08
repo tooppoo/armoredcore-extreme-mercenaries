@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('Navigation from corePages', () => {
-  const footerLinks = [
+  // Expected footer links based on corePages configuration
+  const expectedFooterLinks = [
     { path: '/', text: 'TOP' },
     { path: '/rule', text: '利用規約' },
     { path: '/penalties', text: '罰則規定' },
@@ -21,7 +22,7 @@ test.describe('Navigation from corePages', () => {
     await expect(topLink).toHaveAttribute('href', '/')
 
     // その他のフッターリンクを確認
-    for (const link of footerLinks.slice(1)) { // TOP以外
+    for (const link of expectedFooterLinks.slice(1)) { // TOP以外
       const linkElement = footer.getByRole('link', { name: link.text })
       await expect(linkElement).toBeVisible()
       await expect(linkElement).toHaveAttribute('href', link.path)
@@ -31,7 +32,7 @@ test.describe('Navigation from corePages', () => {
   test('footer links are clickable and navigate correctly', async ({ page }) => {
     await page.goto('/')
 
-    for (const link of footerLinks) {
+    for (const link of expectedFooterLinks) {
       const footer = page.locator('footer')
       const linkElement = footer.getByRole('link', { name: link.text })
       
@@ -78,7 +79,7 @@ test.describe('Navigation from corePages', () => {
       const footer = page.locator('footer')
       
       // Verify all footer links are present on every page
-      for (const link of footerLinks) {
+      for (const link of expectedFooterLinks) {
         const linkElement = footer.getByRole('link', { name: link.text })
         await expect(linkElement).toBeVisible()
         await expect(linkElement).toHaveAttribute('href', link.path)
@@ -95,9 +96,9 @@ test.describe('Navigation from corePages', () => {
     await page.keyboard.press('Tab')
     
     // Find all footer links
-    const footerLinksElements = await footer.getByRole('link').all()
+    const expectedFooterLinksElements = await footer.getByRole('link').all()
     
-    for (const linkElement of footerLinksElements) {
+    for (const linkElement of expectedFooterLinksElements) {
       // Skip external links (like Twitter)
       const href = await linkElement.getAttribute('href')
       if (href?.startsWith('http')) continue

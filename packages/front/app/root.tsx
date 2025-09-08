@@ -83,27 +83,33 @@ function Footer() {
   const location = useLocation()
   const footerLinks = generateFooterLinks(location.pathname)
 
+  // TOPリンクとその他のリンクを分離
+  const topLink = footerLinks.find((link) => link.href === '/')
+  const otherLinks = footerLinks.filter((link) => link.href !== '/')
+
   return (
     <footer>
-      <div className="flex items-center justify-center text-lg">
-        <Link to="/" aria-current={location.pathname === '/' ? 'page' : undefined}>
-          TOP
-        </Link>
-      </div>
-      <div className="my-3"></div>
-      <div className="flex items-center justify-center">
-        {footerLinks
-          .filter((link) => link.href !== '/') // TOPは上に表示済みのため除外
-          .map((link) => (
-            <Link 
-              to={link.href} 
-              key={link.href} 
-              className="mx-2 text-md"
-              aria-current={link.ariaCurrent}
-            >
-              {link.text}
+      {topLink && (
+        <>
+          <div className="flex items-center justify-center text-lg">
+            <Link to={topLink.href} aria-current={topLink.ariaCurrent}>
+              {topLink.text}
             </Link>
-          ))}
+          </div>
+          <div className="my-3"></div>
+        </>
+      )}
+      <div className="flex items-center justify-center">
+        {otherLinks.map((link) => (
+          <Link
+            to={link.href}
+            key={link.href}
+            className="mx-2 text-md"
+            aria-current={link.ariaCurrent}
+          >
+            {link.text}
+          </Link>
+        ))}
       </div>
       <div className="my-3"></div>
       <div className="flex flex-col items-end justify-end text-xs text-gray-500">
