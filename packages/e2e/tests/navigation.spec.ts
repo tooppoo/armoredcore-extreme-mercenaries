@@ -22,7 +22,8 @@ test.describe('Navigation from corePages', () => {
     await expect(topLink).toHaveAttribute('href', '/')
 
     // その他のフッターリンクを確認
-    for (const link of expectedFooterLinks.slice(1)) { // TOP以外
+    for (const link of expectedFooterLinks.slice(1)) {
+      // TOP以外
       const linkElement = footer.getByRole('link', { name: link.text })
       await expect(linkElement).toBeVisible()
       await expect(linkElement).toHaveAttribute('href', link.path)
@@ -30,16 +31,18 @@ test.describe('Navigation from corePages', () => {
   })
 
   // Use parametrized tests instead of for-loops in test bodies
-  expectedFooterLinks.forEach(link => {
-    test(`footer link "${link.text}" is clickable and navigates correctly`, async ({ page }) => {
+  expectedFooterLinks.forEach((link) => {
+    test(`footer link "${link.text}" is clickable and navigates correctly`, async ({
+      page,
+    }) => {
       await page.goto('/')
 
       const footer = page.locator('footer')
       const linkElement = footer.getByRole('link', { name: link.text })
-      
+
       await linkElement.click()
       await page.waitForURL(`**${link.path}`)
-      
+
       // Verify the page loaded correctly
       await expect(page).toHaveTitle(/ARMORED CORE EXTREME MERCENARIES/)
     })
@@ -47,30 +50,34 @@ test.describe('Navigation from corePages', () => {
 
   const testPages = [
     { path: '/rule', currentLinkName: '利用規約', otherLinkName: 'TOP' },
-    { path: '/', currentLinkName: 'TOP', otherLinkName: '利用規約' }
+    { path: '/', currentLinkName: 'TOP', otherLinkName: '利用規約' },
   ]
 
   testPages.forEach(({ path, currentLinkName, otherLinkName }) => {
-    test(`aria-current is set correctly for ${currentLinkName} page`, async ({ page }) => {
+    test(`aria-current is set correctly for ${currentLinkName} page`, async ({
+      page,
+    }) => {
       await page.goto(path)
-      
+
       const footer = page.locator('footer')
       const currentLink = footer.getByRole('link', { name: currentLinkName })
       const otherLink = footer.getByRole('link', { name: otherLinkName })
-      
+
       await expect(currentLink).toHaveAttribute('aria-current', 'page')
       await expect(otherLink).not.toHaveAttribute('aria-current', 'page')
     })
   })
 
   const pagesForConsistency = ['/rule', '/penalties', '/updates', '/archives']
-  
-  pagesForConsistency.forEach(currentPage => {
-    test(`navigation links maintain consistency on ${currentPage} page`, async ({ page }) => {
+
+  pagesForConsistency.forEach((currentPage) => {
+    test(`navigation links maintain consistency on ${currentPage} page`, async ({
+      page,
+    }) => {
       await page.goto(currentPage)
-      
+
       const footer = page.locator('footer')
-      
+
       // Verify all footer links are present on this page
       for (const link of expectedFooterLinks) {
         const linkElement = footer.getByRole('link', { name: link.text })
@@ -81,37 +88,25 @@ test.describe('Navigation from corePages', () => {
   })
 
   test('keyboard navigation works for footer links', async ({ page }) => {
-    await page.goto('/')
-    
-    const footer = page.locator('footer')
-    
-    // Get all internal footer links (excluding external links like Twitter)
-    const internalLinks = []
-    const allFooterLinks = await footer.getByRole('link').all()
-    
-    for (const linkElement of allFooterLinks) {
-      const href = await linkElement.getAttribute('href')
-      if (href && !href.startsWith('http')) {
-        internalLinks.push({ element: linkElement, href })
-      }
-    }
-    
-    // Test each link individually to avoid DOM detachment issues
-    for (const { href } of internalLinks) {
+    // Test keyboard navigation for each expected footer link
+    for (const link of expectedFooterLinks) {
       await page.goto('/')
       const footer = page.locator('footer')
-      // Re-query the element to avoid stale references
-      const linkElement = footer.getByRole('link').filter({ has: page.locator(`[href="${href}"]`) })
-      
+
+      // Find the link element by its text content
+      const linkElement = footer.getByRole('link', { name: link.text })
+
       await linkElement.focus()
       await expect(linkElement).toBeFocused()
-      
+
       // Test Enter key navigation
       await linkElement.press('Enter')
       await page.waitForLoadState('networkidle')
-      
+
       // Verify navigation worked
-      await expect(page).toHaveURL(new RegExp(`.*${href.replace('/', '\\/')}$`))
+      await expect(page).toHaveURL(
+        new RegExp(`.*${link.path.replace('/', '\\/')}$`),
+      )
     }
   })
 })

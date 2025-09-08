@@ -83,7 +83,10 @@ function generateNavigationLinks(
  * @param currentPath 現在のパス（aria-current設定用）
  */
 export function generateFooterLinks(currentPath?: string): NavLink[] {
-  return generateNavigationLinks((page) => Boolean(page.showInFooter), currentPath)
+  return generateNavigationLinks(
+    (page) => Boolean(page.showInFooter),
+    currentPath,
+  )
 }
 
 /**
@@ -91,7 +94,10 @@ export function generateFooterLinks(currentPath?: string): NavLink[] {
  * @param currentPath 現在のパス（aria-current設定用）
  */
 export function generateHeaderLinks(currentPath?: string): NavLink[] {
-  return generateNavigationLinks((page) => Boolean(page.showInHeader), currentPath)
+  return generateNavigationLinks(
+    (page) => Boolean(page.showInHeader),
+    currentPath,
+  )
 }
 
 /**
