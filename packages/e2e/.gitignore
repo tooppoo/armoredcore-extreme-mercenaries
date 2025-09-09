@@ -3,6 +3,7 @@
 node_modules/
 /test-results/
 /playwright-report/
+playwright-report.json
 !/playwright-report/.gitkeep
 /blob-report/
 /playwright/.cache/

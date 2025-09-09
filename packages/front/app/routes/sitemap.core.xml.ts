@@ -1,6 +1,7 @@
 import type { LoaderFunctionArgs } from 'react-router'
 import { origin } from '~/lib/constants'
-import { corePages, resolveLastmod } from '~/lib/site/core-pages'
+import { corePages } from '~/lib/site/core-pages'
+import { resolveLastmod } from '~/lib/site/core-pages.server'
 
 /**
  * コア（静的/一覧）ページ用の子sitemap

@@ -12,6 +12,7 @@ import {
 } from 'react-router'
 import type { BreadcrumbItem } from './types/breadcrumb'
 import { Breadcrumbs } from './lib/utils/components/Breadcrumbs'
+import { generateFooterLinks } from './lib/site/core-pages'
 
 import './tailwind.css'
 import 'highlight.js/styles/github.min.css'
@@ -70,27 +71,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <hr className="my-4" />
         <article className="max-w-3xl mx-auto">{children}</article>
         <hr className="my-4" />
-        <footer>
-          <div className="flex items-center justify-center text-lg">
-            <Link to="/">TOP</Link>
-          </div>
-          <div className="my-3"></div>
-          <div className="flex items-center justify-center">
-            {footerLinks.map((link) => (
-              <Link to={link.href} key={link.href} className="mx-2 text-md">
-                {link.text}
-              </Link>
-            ))}
-          </div>
-          <div className="my-3"></div>
-          <div className="flex flex-col items-end justify-end text-xs text-gray-500">
-            <div>version: {import.meta.env.VITE_GIT_HASH ?? '-'}</div>
-            <div>
-              maintained by&nbsp;
-              <Link to="https://x.com/Philomagi">Philomagi</Link>
-            </div>
-          </div>
-        </footer>
+        <Footer />
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -98,12 +79,49 @@ export function Layout({ children }: { children: React.ReactNode }) {
   )
 }
 
-const footerLinks = [
-  { href: '/rule', text: '利用規約' },
-  { href: '/penalties', text: '罰則規定' },
-  { href: '/updates', text: '更新履歴' },
-  { href: '/archives', text: 'アーカイブ' },
-]
+function Footer() {
+  const location = useLocation()
+  const footerLinks = generateFooterLinks(location.pathname)
+
+  // TOPリンクとその他のリンクを分離
+  const topLink = footerLinks.find((link) => link.href === '/')
+  const otherLinks = footerLinks.filter((link) => link.href !== '/')
+
+  return (
+    <footer>
+      {topLink && (
+        <>
+          <div className="flex items-center justify-center text-lg">
+            <Link to={topLink.href} aria-current={topLink.ariaCurrent}>
+              {topLink.text}
+            </Link>
+          </div>
+          <div className="my-3"></div>
+        </>
+      )}
+      <div className="flex items-center justify-center">
+        {otherLinks.map((link) => (
+          <Link
+            to={link.href}
+            key={link.href}
+            className="mx-2 text-md"
+            aria-current={link.ariaCurrent}
+          >
+            {link.text}
+          </Link>
+        ))}
+      </div>
+      <div className="my-3"></div>
+      <div className="flex flex-col items-end justify-end text-xs text-gray-500">
+        <div>version: {import.meta.env.VITE_GIT_HASH ?? '-'}</div>
+        <div>
+          maintained by&nbsp;
+          <Link to="https://x.com/Philomagi">Philomagi</Link>
+        </div>
+      </div>
+    </footer>
+  )
+}
 
 type MatchData = {
   breadcrumbTitle?: string
