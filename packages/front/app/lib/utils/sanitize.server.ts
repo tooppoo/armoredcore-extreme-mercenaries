@@ -1,4 +1,5 @@
-import sanitizeHtml, { defaults } from 'sanitize-html'
+import sanitizeHtml from 'sanitize-html'
+const { defaults } = sanitizeHtml
 
 type Sanitize = (s: string) => string
 
