@@ -15,10 +15,7 @@
     },
     "preserveOutput": "always",
     "reporter": [
-      [
-        "list",
-        null
-      ],
+      ["list", null],
       [
         "json",
         {
@@ -50,9 +47,7 @@
         "name": "setup",
         "testDir": "/private/var/folders/ct/vnshy2yj38n0b42hc5hby_cw0000gq/T/vibe-kanban/worktrees/vk-c75e-corepages/packages/e2e/tests",
         "testIgnore": [],
-        "testMatch": [
-          "/global\\.setup\\.ts/"
-        ],
+        "testMatch": ["/global\\.setup\\.ts/"],
         "timeout": 30000
       },
       {
@@ -66,9 +61,7 @@
         "name": "chromium",
         "testDir": "/private/var/folders/ct/vnshy2yj38n0b42hc5hby_cw0000gq/T/vibe-kanban/worktrees/vk-c75e-corepages/packages/e2e/tests",
         "testIgnore": [],
-        "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
-        ],
+        "testMatch": ["**/*.@(spec|test).?(c|m)[jt]s?(x)"],
         "timeout": 30000
       },
       {
@@ -82,9 +75,7 @@
         "name": "webkit",
         "testDir": "/private/var/folders/ct/vnshy2yj38n0b42hc5hby_cw0000gq/T/vibe-kanban/worktrees/vk-c75e-corepages/packages/e2e/tests",
         "testIgnore": [],
-        "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
-        ],
+        "testMatch": ["**/*.@(spec|test).?(c|m)[jt]s?(x)"],
         "timeout": 30000
       },
       {
@@ -98,9 +89,7 @@
         "name": "teardown",
         "testDir": "/private/var/folders/ct/vnshy2yj38n0b42hc5hby_cw0000gq/T/vibe-kanban/worktrees/vk-c75e-corepages/packages/e2e/tests",
         "testIgnore": [],
-        "testMatch": [
-          "/global\\.teardown\\.ts/"
-        ],
+        "testMatch": ["/global\\.teardown\\.ts/"],
         "timeout": 30000
       }
     ],
