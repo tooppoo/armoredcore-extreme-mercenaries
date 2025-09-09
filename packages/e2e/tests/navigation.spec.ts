@@ -86,7 +86,9 @@ test.describe('Navigation from corePages', () => {
     })
   })
 
-  test('keyboard navigation works for critical footer links', async ({ page }) => {
+  test('keyboard navigation works for critical footer links', async ({
+    page,
+  }) => {
     // Test keyboard navigation for critical links only
     for (const link of criticalLinks) {
       await page.goto('/')
