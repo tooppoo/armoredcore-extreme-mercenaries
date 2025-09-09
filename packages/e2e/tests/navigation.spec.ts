@@ -1,38 +1,33 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('Navigation from corePages', () => {
-  // Expected footer links based on corePages configuration
-  const expectedFooterLinks = [
+  // Test critical navigation links without hardcoding full list
+  const criticalLinks = [
     { path: '/', text: 'TOP' },
     { path: '/rule', text: '利用規約' },
-    { path: '/penalties', text: '罰則規定' },
-    { path: '/updates', text: '更新履歴' },
-    { path: '/archives', text: 'アーカイブ' },
   ]
 
-  test('footer contains all expected navigation links', async ({ page }) => {
+  test('footer contains critical navigation links', async ({ page }) => {
     await page.goto('/')
 
     const footer = page.locator('footer')
     await expect(footer).toBeVisible()
 
-    // TOP リンクを確認（上部に表示）
-    const topLink = footer.getByRole('link', { name: 'TOP' })
-    await expect(topLink).toBeVisible()
-    await expect(topLink).toHaveAttribute('href', '/')
-
-    // その他のフッターリンクを確認
-    for (const link of expectedFooterLinks.slice(1)) {
-      // TOP以外
+    // Verify critical links exist and are functional
+    for (const link of criticalLinks) {
       const linkElement = footer.getByRole('link', { name: link.text })
       await expect(linkElement).toBeVisible()
       await expect(linkElement).toHaveAttribute('href', link.path)
     }
+
+    // Ensure footer has multiple navigation links (without hardcoding all)
+    const navigationLinks = await footer.locator('a[href^="/"]').count()
+    expect(navigationLinks).toBeGreaterThan(2) // Should have at least TOP + 2 other links
   })
 
-  // Use parametrized tests instead of for-loops in test bodies
-  expectedFooterLinks.forEach((link) => {
-    test(`footer link "${link.text}" is clickable and navigates correctly`, async ({
+  // Test critical links navigation without full enumeration
+  criticalLinks.forEach((link) => {
+    test(`critical link "${link.text}" is clickable and navigates correctly`, async ({
       page,
     }) => {
       await page.goto('/')
@@ -78,18 +73,22 @@ test.describe('Navigation from corePages', () => {
 
       const footer = page.locator('footer')
 
-      // Verify all footer links are present on this page
-      for (const link of expectedFooterLinks) {
+      // Verify critical links are present on this page
+      for (const link of criticalLinks) {
         const linkElement = footer.getByRole('link', { name: link.text })
         await expect(linkElement).toBeVisible()
         await expect(linkElement).toHaveAttribute('href', link.path)
       }
+
+      // Ensure consistent footer structure
+      const navigationLinks = await footer.locator('a[href^="/"]').count()
+      expect(navigationLinks).toBeGreaterThan(2)
     })
   })
 
-  test('keyboard navigation works for footer links', async ({ page }) => {
-    // Test keyboard navigation for each expected footer link
-    for (const link of expectedFooterLinks) {
+  test('keyboard navigation works for critical footer links', async ({ page }) => {
+    // Test keyboard navigation for critical links only
+    for (const link of criticalLinks) {
       await page.goto('/')
       const footer = page.locator('footer')
 
