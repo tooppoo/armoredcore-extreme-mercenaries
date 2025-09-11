@@ -328,7 +328,7 @@ export const ArchiveItem: React.FC<ArchiveItemProps> = ({
       title={title}
       target="_blank"
       rel="noopener noreferrer"
-      className="archive-item rounded-md overflow-hidden flex flex-col ac-border ac-hover"
+      className="archive-item rounded-md overflow-hidden flex flex-col ac-border ac-hover no-underline"
       aria-label={title}
     >
       <div className="p-3 flex items-center justify-between text-xs">
@@ -388,7 +388,7 @@ const ArchiveListItem: React.FC<ArchiveListItemProps> = ({
       title={title}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex gap-3 items-start p-2 ac-border rounded-md ac-hover"
+      className="flex gap-3 items-start p-2 ac-border rounded-md ac-hover no-underline"
       aria-label={title}
     >
       <div className="w-28 shrink-0 aspect-video overflow-hidden rounded-sm bg-black/5 dark:bg-white/5">
