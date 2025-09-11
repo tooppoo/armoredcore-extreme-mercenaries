@@ -268,11 +268,11 @@ export type ArchiveItemProps = Readonly<{
   description: string
   imageUrl: string
   url: string
-  createdAt: number
+  createdAt: Date
 }>
 type SourceKey = 'yt' | 'x' | 'nico' | 'unknown'
 
-function getArchiveMeta(url: string, createdAt: number) {
+function getArchiveMeta(url: string, createdAt: Date) {
   const hostname = (() => {
     try {
       return new URL(url).hostname.replace(/^www\./, '')
