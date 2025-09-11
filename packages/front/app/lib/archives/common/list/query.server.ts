@@ -30,6 +30,13 @@ export const querySchema = (orderByCreated: OrderFunction) =>
             }
         }
       }),
+    // 動画ソースのフィルター（動画一覧のみで利用）
+    // all: すべて, yt: YouTube, x: X(Twitter), twitch: Twitch, nico: ニコニコ, other: 上記以外
+    s: z
+      .enum(['all', 'yt', 'x', 'twitch', 'nico', 'other'] as const)
+      .optional()
+      .default('all')
+      .catch('all'),
   })
 export type QuerySchema = Readonly<z.infer<ReturnType<typeof querySchema>>>
 

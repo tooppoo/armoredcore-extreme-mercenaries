@@ -1,6 +1,6 @@
 import type { Database } from '~/db/driver.server'
 import { videoArchives } from '~/db/schema.server'
-import { and, asc, count, desc, like, or } from 'drizzle-orm'
+import { and, asc, count, desc, like, not, or } from 'drizzle-orm'
 import type { ReadArchive } from '../entity'
 import type {
   Order,
@@ -11,6 +11,7 @@ type PageArchivesArgs = Readonly<{
   page: number
   order?: Order
   keyword?: string
+  source?: 'all' | 'yt' | 'x' | 'twitch' | 'nico' | 'other'
 }>
 
 // 1, 2, 3, 4列に対応
@@ -22,10 +23,15 @@ type PageArchivesResult = Readonly<{
   totalPage: number
 }>
 export async function pageArchives(
-  { page, order = orderByCreated('asc'), keyword = '' }: PageArchivesArgs,
+  {
+    page,
+    order = orderByCreated('asc'),
+    keyword = '',
+    source = 'all',
+  }: PageArchivesArgs,
   db: Database,
 ): Promise<PageArchivesResult> {
-  const where =
+  const keywordWhere =
     keyword.length > 0
       ? and(
           ...keyword
@@ -38,6 +44,42 @@ export async function pageArchives(
             ),
         )
       : undefined
+
+  const sourceWhere = (() => {
+    switch (source) {
+      case 'all':
+        return undefined
+      case 'yt':
+        return or(
+          like(videoArchives.url, '%youtube.com%'),
+          like(videoArchives.url, '%youtu.be%'),
+        )
+      case 'x':
+        return or(
+          like(videoArchives.url, '%x.com%'),
+          like(videoArchives.url, '%twitter.com%'),
+        )
+      case 'twitch':
+        return like(videoArchives.url, '%twitch.tv%')
+      case 'nico':
+        return or(
+          like(videoArchives.url, '%nicovideo.jp%'),
+          like(videoArchives.url, '%nico.ms%'),
+        )
+      case 'other':
+        return and(
+          not(like(videoArchives.url, '%youtube.com%')),
+          not(like(videoArchives.url, '%youtu.be%')),
+          not(like(videoArchives.url, '%x.com%')),
+          not(like(videoArchives.url, '%twitter.com%')),
+          not(like(videoArchives.url, '%twitch.tv%')),
+          not(like(videoArchives.url, '%nicovideo.jp%')),
+          not(like(videoArchives.url, '%nico.ms%')),
+        )
+    }
+  })()
+
+  const where = keywordWhere && sourceWhere ? and(keywordWhere, sourceWhere) : keywordWhere ?? sourceWhere
 
   const list = await db
     .select()

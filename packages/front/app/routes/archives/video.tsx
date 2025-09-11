@@ -35,6 +35,7 @@ export const loader = async ({ context, request }: Route.LoaderArgs) => {
       page: query.p,
       order: query.o.order,
       keyword: query.k,
+      source: query.s,
     },
     context.db,
   )
@@ -75,41 +76,62 @@ const VideoArchives: React.FC = () => {
 
       <Margin h={32} />
 
-      <Form action="/archives/video" method="GET">
-        <FormItem labelFor="keyword" label="キーワード検索">
-          <input
-            className="px-2 ac-border"
-            id="keyword"
-            type="text"
-            defaultValue={query.k}
-            {...register('k')}
-          />
-          <Margin w={16} />
-          <button
-            className="rounded-md px-2 ac-border"
-            type="button"
-            onClick={() => {
-              setValue('k', '')
-            }}
-          >
-            ✕
-          </button>
-        </FormItem>
-        <Margin h={16} />
-        <FormItem labelFor="order" label="並び替え">
-          <select
-            className="px-2 ac-border"
-            id="order"
-            defaultValue={query.o}
-            {...register('o')}
-          >
-            {orderQueryKeys.map((key) => (
-              <option value={key} key={key}>
-                {orderQueryMap[key].label}
-              </option>
-            ))}
-          </select>
-        </FormItem>
+      <Form action="/archives/video" method="GET" aria-label="動画アーカイブ検索フォーム">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <FormItem labelFor="keyword" label="キーワード検索">
+            <input
+              className="px-2 ac-border w-64"
+              id="keyword"
+              type="text"
+              placeholder="タイトル・説明で検索 (空白区切りAND)"
+              defaultValue={query.k}
+              {...register('k')}
+            />
+            <Margin w={12} />
+            <button
+              className="rounded-md px-2 ac-border"
+              type="button"
+              onClick={() => {
+                setValue('k', '')
+              }}
+              aria-label="キーワードをクリア"
+            >
+              ✕
+            </button>
+          </FormItem>
+
+          <FormItem labelFor="source" label="動画サイト">
+            <select
+              className="px-2 ac-border w-64"
+              id="source"
+              defaultValue={query.s}
+              {...register('s')}
+            >
+              <option value="all">すべて</option>
+              <option value="yt">YouTube</option>
+              <option value="x">X(Twitter)</option>
+              <option value="twitch">Twitch</option>
+              <option value="nico">ニコニコ</option>
+              <option value="other">その他</option>
+            </select>
+          </FormItem>
+
+          <FormItem labelFor="order" label="並び替え">
+            <select
+              className="px-2 ac-border w-64"
+              id="order"
+              defaultValue={query.o}
+              {...register('o')}
+            >
+              {orderQueryKeys.map((key) => (
+                <option value={key} key={key}>
+                  {orderQueryMap[key].label}
+                </option>
+              ))}
+            </select>
+          </FormItem>
+        </div>
+
         <Margin h={16} />
         <button type="submit" className="ac-border rounded-md px-4 py-1">
           適用
@@ -121,11 +143,12 @@ const VideoArchives: React.FC = () => {
       <section
         className={[
           'grid',
-          'grid-cols-1 gap-1',
-          'sm:grid-cols-2 sm:gap-2',
-          'md:grid-cols-3 md:gap-3',
-          'lg:grid-cols-4 lg:gap-4',
+          'grid-cols-1 gap-4',
+          'sm:grid-cols-2 sm:gap-4',
+          'md:grid-cols-3 md:gap-4',
+          'lg:grid-cols-4 lg:gap-6',
         ].join(' ')}
+        aria-label="動画アーカイブ一覧"
       >
         {archives.map((a) => (
           <ArchiveItem
@@ -134,6 +157,7 @@ const VideoArchives: React.FC = () => {
             description={a.description}
             url={a.url}
             imageUrl={a.imageUrl}
+            createdAt={a.createdAt}
           />
         ))}
       </section>
@@ -212,38 +236,76 @@ export type ArchiveItemProps = Readonly<{
   description: string
   imageUrl: string
   url: string
+  createdAt: unknown
 }>
 export const ArchiveItem: React.FC<ArchiveItemProps> = ({
   title,
   description,
   imageUrl,
   url,
+  createdAt,
 }) => {
+  const hostname = (() => {
+    try {
+      return new URL(url).hostname.replace(/^www\./, '')
+    } catch {
+      return ''
+    }
+  })()
+  const sourceLabel = (() => {
+    if (hostname.includes('youtube') || hostname.includes('youtu.be'))
+      return 'YouTube'
+    if (hostname.includes('x.com') || hostname.includes('twitter')) return 'X'
+    if (hostname.includes('twitch')) return 'Twitch'
+    if (hostname.includes('nico')) return 'ニコニコ'
+    return 'その他'
+  })()
+  const created = (() => {
+    try {
+      const d = new Date(createdAt as any)
+      return d.toLocaleDateString('ja-JP')
+    } catch {
+      return ''
+    }
+  })()
   return (
     <a
       href={url}
       title={title}
       target="_blank"
       rel="noopener noreferrer"
-      className="archive-item min-h-64 sm:min-h-72 lg:min-h-80 flex flex-col justify-between p-2 ac-border-b ac-hover"
+      className="archive-item rounded-md overflow-hidden flex flex-col ac-border ac-hover"
       aria-label={title}
     >
-      <ArchiveItemCaption>{title}</ArchiveItemCaption>
-      <Margin h={8} />
-      <img src={imageUrl} alt={title} />
-      <Margin h={8} />
-      <ArchiveItemCaption>
-        <Description description={description} />
-      </ArchiveItemCaption>
+      <div className="p-3 flex items-center justify-between text-xs">
+        <span className="rounded-sm px-2 py-0.5 ac-border text-gray-700 dark:text-gray-200">
+          {sourceLabel}
+        </span>
+        <span aria-label="登録日" className="text-gray-500">
+          {created}
+        </span>
+      </div>
+      <div className="bg-black/5 dark:bg-white/5 aspect-video w-full overflow-hidden">
+        <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
+      </div>
+      <div className="p-3 flex flex-col gap-2">
+        <ArchiveItemCaption>{title}</ArchiveItemCaption>
+        <ArchiveItemDescription>
+          <Description description={description} />
+        </ArchiveItemDescription>
+      </div>
     </a>
   )
 }
 const ArchiveItemCaption: React.FC<WithChildren> = ({ children }) => (
   <div
-    className={`h-12 line-clamp-2 overflow-hidden whitespace-normal text-ellipsis`}
+    className={`min-h-12 line-clamp-2 overflow-hidden whitespace-normal text-ellipsis font-medium`}
   >
     {children}
   </div>
+)
+const ArchiveItemDescription: React.FC<WithChildren> = ({ children }) => (
+  <div className={`min-h-16 line-clamp-3 overflow-hidden whitespace-normal text-ellipsis text-sm`}>{children}</div>
 )
 
 export const meta: Route.MetaFunction = ({ location }) => {
