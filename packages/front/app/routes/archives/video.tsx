@@ -394,11 +394,27 @@ const ArchiveListItem: React.FC<ArchiveListItemProps> = ({
 }
 
 const SourceBadge: React.FC<{ source: SourceKey }> = ({ source }) => {
-  const label = source === 'yt' ? 'YouTube' : source === 'x' ? 'X' : source === 'nico' ? 'ニコニコ' : ''
+  const label =
+    source === 'yt'
+      ? 'YouTube'
+      : source === 'x'
+        ? 'X'
+        : source === 'nico'
+          ? 'ニコニコ'
+          : ''
   if (!label) return <span />
-  const src = source === 'yt' ? '/brand/youtube.svg' : source === 'x' ? '/brand/x.svg' : '/brand/niconico.svg'
+  const src =
+    source === 'yt'
+      ? '/brand/youtube.svg'
+      : source === 'x'
+        ? '/brand/x.svg'
+        : '/brand/niconico.svg'
   return (
-    <span className="inline-flex items-center gap-1" aria-label={label} title={label}>
+    <span
+      className="inline-flex items-center gap-1"
+      aria-label={label}
+      title={label}
+    >
       <img src={src} alt="" width={16} height={16} />
       <span className="sr-only">{label}</span>
     </span>
