@@ -173,6 +173,8 @@ const VideoArchives: React.FC = () => {
             'sm:grid-cols-2 sm:gap-4',
             'md:grid-cols-3 md:gap-4',
             'lg:grid-cols-4 lg:gap-6',
+            'xl:grid-cols-5',
+            '2xl:grid-cols-6',
           ].join(' ')}
           aria-label="動画アーカイブ一覧（カード）"
         >
@@ -407,6 +409,7 @@ export const meta: Route.MetaFunction = ({ location }) => {
 
 export const handle = {
   breadcrumb: '動画アーカイブ',
+  layout: 'wide',
 }
 
 export default VideoArchives
