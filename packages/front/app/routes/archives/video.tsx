@@ -268,8 +268,10 @@ export type ArchiveItemProps = Readonly<{
   description: string
   imageUrl: string
   url: string
-  createdAt: unknown
+  createdAt: number
 }>
+type SourceKey = 'yt' | 'x' | 'nico' | 'unknown'
+
 function getArchiveMeta(url: string, createdAt: number) {
   const hostname = (() => {
     try {
@@ -278,14 +280,14 @@ function getArchiveMeta(url: string, createdAt: number) {
       return ''
     }
   })()
-  const sourceLabel = (() => {
+  const source: SourceKey = (() => {
     if (hostname.includes('youtube.com') || hostname.includes('youtu.be'))
-      return 'YouTube'
+      return 'yt'
     if (hostname.includes('x.com') || hostname.includes('twitter.com'))
-      return 'X'
+      return 'x'
     if (hostname.includes('nicovideo.jp') || hostname.includes('nico.ms'))
-      return 'ニコニコ'
-    return 'その他'
+      return 'nico'
+    return 'unknown'
   })()
   const created = (() => {
     try {
@@ -295,7 +297,7 @@ function getArchiveMeta(url: string, createdAt: number) {
       return ''
     }
   })()
-  return { hostname, sourceLabel, created }
+  return { hostname, source, created }
 }
 
 export const ArchiveItem: React.FC<ArchiveItemProps> = ({
@@ -305,7 +307,7 @@ export const ArchiveItem: React.FC<ArchiveItemProps> = ({
   url,
   createdAt,
 }) => {
-  const { sourceLabel, created } = getArchiveMeta(url, createdAt)
+  const { source, created } = getArchiveMeta(url, createdAt)
   return (
     <a
       href={url}
@@ -316,9 +318,7 @@ export const ArchiveItem: React.FC<ArchiveItemProps> = ({
       aria-label={title}
     >
       <div className="p-3 flex items-center justify-between text-xs">
-        <span className="rounded-sm px-2 py-0.5 ac-border text-gray-700 dark:text-gray-200">
-          {sourceLabel}
-        </span>
+        <SourceBadge source={source} />
         <span aria-label="登録日" className="text-gray-500">
           {created}
         </span>
@@ -362,7 +362,7 @@ const ArchiveListItem: React.FC<ArchiveListItemProps> = ({
   url,
   createdAt,
 }) => {
-  const { sourceLabel, created } = getArchiveMeta(url, createdAt)
+  const { source, created } = getArchiveMeta(url, createdAt)
   return (
     <a
       href={url}
@@ -381,9 +381,7 @@ const ArchiveListItem: React.FC<ArchiveListItemProps> = ({
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 text-xs mb-1">
-          <span className="rounded-sm px-2 py-0.5 ac-border text-gray-700 dark:text-gray-200">
-            {sourceLabel}
-          </span>
+          <SourceBadge source={source} />
           <span className="text-gray-500">{created}</span>
         </div>
         <div className="font-medium line-clamp-2">{title}</div>
@@ -392,6 +390,18 @@ const ArchiveListItem: React.FC<ArchiveListItemProps> = ({
         </div>
       </div>
     </a>
+  )
+}
+
+const SourceBadge: React.FC<{ source: SourceKey }> = ({ source }) => {
+  const label = source === 'yt' ? 'YouTube' : source === 'x' ? 'X' : source === 'nico' ? 'ニコニコ' : ''
+  if (!label) return <span />
+  const src = source === 'yt' ? '/brand/youtube.svg' : source === 'x' ? '/brand/x.svg' : '/brand/niconico.svg'
+  return (
+    <span className="inline-flex items-center gap-1" aria-label={label} title={label}>
+      <img src={src} alt="" width={16} height={16} />
+      <span className="sr-only">{label}</span>
+    </span>
   )
 }
 
