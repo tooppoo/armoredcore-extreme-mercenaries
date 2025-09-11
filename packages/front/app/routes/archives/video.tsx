@@ -115,7 +115,6 @@ const VideoArchives: React.FC = () => {
               <option value="yt">YouTube</option>
               <option value="x">X(Twitter)</option>
               <option value="nico">ニコニコ</option>
-              <option value="other">その他</option>
             </select>
           </FormItem>
 

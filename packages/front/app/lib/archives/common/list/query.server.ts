@@ -31,9 +31,9 @@ export const querySchema = (orderByCreated: OrderFunction) =>
         }
       }),
     // 動画ソースのフィルター（動画一覧のみで利用）
-    // all: すべて, yt: YouTube, x: X(Twitter), nico: ニコニコ, other: 上記以外
+    // all: すべて, yt: YouTube, x: X(Twitter), nico: ニコニコ
     s: z
-      .enum(['all', 'yt', 'x', 'nico', 'other'] as const)
+      .enum(['all', 'yt', 'x', 'nico'] as const)
       .optional()
       .default('all')
       .catch('all'),

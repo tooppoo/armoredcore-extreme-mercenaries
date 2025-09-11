@@ -1,6 +1,6 @@
 import type { Database } from '~/db/driver.server'
 import { videoArchives } from '~/db/schema.server'
-import { and, asc, count, desc, like, not, or } from 'drizzle-orm'
+import { and, asc, count, desc, like, or } from 'drizzle-orm'
 import type { ReadArchive } from '../entity'
 import type {
   Order,
@@ -11,7 +11,7 @@ type PageArchivesArgs = Readonly<{
   page: number
   order?: Order
   keyword?: string
-  source?: 'all' | 'yt' | 'x' | 'nico' | 'other'
+  source?: 'all' | 'yt' | 'x' | 'nico'
 }>
 
 // 1, 2, 3, 4列に対応
@@ -63,17 +63,6 @@ export async function pageArchives(
         return or(
           like(videoArchives.url, '%nicovideo.jp%'),
           like(videoArchives.url, '%nico.ms%'),
-        )
-      case 'other':
-        return and(
-          ...[
-            '%youtube.com%',
-            '%youtu.be%',
-            '%x.com%',
-            '%twitter.com%',
-            '%nicovideo.jp%',
-            '%nico.ms%',
-          ].map((domain) => not(like(videoArchives.url, domain))),
         )
     }
   })()
