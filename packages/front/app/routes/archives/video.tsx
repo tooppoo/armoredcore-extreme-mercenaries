@@ -130,6 +130,18 @@ const VideoArchives: React.FC = () => {
               ))}
             </select>
           </FormItem>
+
+          <FormItem labelFor="view" label="表示モード">
+            <select
+              className="px-2 ac-border w-64"
+              id="view"
+              defaultValue={(query as any).v}
+              {...register('v')}
+            >
+              <option value="card">カード</option>
+              <option value="list">リスト</option>
+            </select>
+          </FormItem>
         </div>
 
         <Margin h={16} />
@@ -140,27 +152,42 @@ const VideoArchives: React.FC = () => {
 
       <hr className="my-10" />
 
-      <section
-        className={[
-          'grid',
-          'grid-cols-1 gap-4',
-          'sm:grid-cols-2 sm:gap-4',
-          'md:grid-cols-3 md:gap-4',
-          'lg:grid-cols-4 lg:gap-6',
-        ].join(' ')}
-        aria-label="動画アーカイブ一覧"
-      >
-        {archives.map((a) => (
-          <ArchiveItem
-            key={a.externalId}
-            title={a.title}
-            description={a.description}
-            url={a.url}
-            imageUrl={a.imageUrl}
-            createdAt={a.createdAt}
-          />
-        ))}
-      </section>
+      {(query as any).v === 'list' ? (
+        <section aria-label="動画アーカイブ一覧（リスト）" className="space-y-3">
+          {archives.map((a) => (
+            <ArchiveListItem
+              key={a.externalId}
+              title={a.title}
+              description={a.description}
+              url={a.url}
+              imageUrl={a.imageUrl}
+              createdAt={a.createdAt}
+            />
+          ))}
+        </section>
+      ) : (
+        <section
+          className={[
+            'grid',
+            'grid-cols-1 gap-4',
+            'sm:grid-cols-2 sm:gap-4',
+            'md:grid-cols-3 md:gap-4',
+            'lg:grid-cols-4 lg:gap-6',
+          ].join(' ')}
+          aria-label="動画アーカイブ一覧（カード）"
+        >
+          {archives.map((a) => (
+            <ArchiveItem
+              key={a.externalId}
+              title={a.title}
+              description={a.description}
+              url={a.url}
+              imageUrl={a.imageUrl}
+              createdAt={a.createdAt}
+            />
+          ))}
+        </section>
+      )}
       <Margin h={32} />
       <section className="flex justify-center items-center">
         <MovePage page={1} {...{ totalPage, query }}>
@@ -307,6 +334,63 @@ const ArchiveItemCaption: React.FC<WithChildren> = ({ children }) => (
 const ArchiveItemDescription: React.FC<WithChildren> = ({ children }) => (
   <div className={`min-h-16 line-clamp-3 overflow-hidden whitespace-normal text-ellipsis text-sm`}>{children}</div>
 )
+
+type ArchiveListItemProps = ArchiveItemProps
+const ArchiveListItem: React.FC<ArchiveListItemProps> = ({
+  title,
+  description,
+  imageUrl,
+  url,
+  createdAt,
+}) => {
+  const hostname = (() => {
+    try {
+      return new URL(url).hostname.replace(/^www\./, '')
+    } catch {
+      return ''
+    }
+  })()
+  const sourceLabel = (() => {
+    if (hostname.includes('youtube') || hostname.includes('youtu.be'))
+      return 'YouTube'
+    if (hostname.includes('x.com') || hostname.includes('twitter')) return 'X'
+    if (hostname.includes('twitch')) return 'Twitch'
+    if (hostname.includes('nico')) return 'ニコニコ'
+    return 'その他'
+  })()
+  const created = (() => {
+    try {
+      const d = new Date(createdAt as any)
+      return d.toLocaleDateString('ja-JP')
+    } catch {
+      return ''
+    }
+  })()
+  return (
+    <a
+      href={url}
+      title={title}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex gap-3 items-start p-2 ac-border rounded-md ac-hover"
+      aria-label={title}
+    >
+      <div className="w-28 shrink-0 aspect-video overflow-hidden rounded-sm bg-black/5 dark:bg-white/5">
+        <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 text-xs mb-1">
+          <span className="rounded-sm px-2 py-0.5 ac-border text-gray-700 dark:text-gray-200">{sourceLabel}</span>
+          <span className="text-gray-500">{created}</span>
+        </div>
+        <div className="font-medium line-clamp-2">{title}</div>
+        <div className="text-sm line-clamp-2 text-gray-700 dark:text-gray-200">
+          <Description description={description} />
+        </div>
+      </div>
+    </a>
+  )
+}
 
 export const meta: Route.MetaFunction = ({ location }) => {
   return [

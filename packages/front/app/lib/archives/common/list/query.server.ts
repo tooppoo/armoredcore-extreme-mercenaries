@@ -37,6 +37,12 @@ export const querySchema = (orderByCreated: OrderFunction) =>
       .optional()
       .default('all')
       .catch('all'),
+    // 表示モード（動画一覧のみで利用）
+    v: z
+      .enum(['card', 'list'] as const)
+      .optional()
+      .default('card')
+      .catch('card'),
   })
 export type QuerySchema = Readonly<z.infer<ReturnType<typeof querySchema>>>
 

@@ -12,6 +12,7 @@ describe('querySchema (video/challenge common)', () => {
     expect(parsed.p).toBe(1)
     expect(parsed.k).toBe('')
     expect(parsed.s).toBe('all')
+    expect(parsed.v).toBe('card')
     expect(parsed.o.key).toBe('created.desc')
   })
 
@@ -23,5 +24,10 @@ describe('querySchema (video/challenge common)', () => {
     expect(parsed.k).toBe('test')
     expect(parsed.o.key).toBe('created.asc')
   })
-})
 
+  it('parses view mode', () => {
+    const schema = querySchema(dummyOrderByCreated)
+    const parsed = schema.parse({ v: 'list' })
+    expect(parsed.v).toBe('list')
+  })
+})
