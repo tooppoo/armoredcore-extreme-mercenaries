@@ -76,7 +76,11 @@ const VideoArchives: React.FC = () => {
 
       <Margin h={32} />
 
-      <Form action="/archives/video" method="GET" aria-label="動画アーカイブ検索フォーム">
+      <Form
+        action="/archives/video"
+        method="GET"
+        aria-label="動画アーカイブ検索フォーム"
+      >
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <FormItem labelFor="keyword" label="キーワード検索">
             <input
@@ -110,7 +114,6 @@ const VideoArchives: React.FC = () => {
               <option value="all">すべて</option>
               <option value="yt">YouTube</option>
               <option value="x">X(Twitter)</option>
-              <option value="twitch">Twitch</option>
               <option value="nico">ニコニコ</option>
               <option value="other">その他</option>
             </select>
@@ -135,7 +138,7 @@ const VideoArchives: React.FC = () => {
             <select
               className="px-2 ac-border w-64"
               id="view"
-              defaultValue={(query as any).v}
+              defaultValue={query.v}
               {...register('v')}
             >
               <option value="card">カード</option>
@@ -152,8 +155,11 @@ const VideoArchives: React.FC = () => {
 
       <hr className="my-10" />
 
-      {(query as any).v === 'list' ? (
-        <section aria-label="動画アーカイブ一覧（リスト）" className="space-y-3">
+      {query.v === 'list' ? (
+        <section
+          aria-label="動画アーカイブ一覧（リスト）"
+          className="space-y-3"
+        >
           {archives.map((a) => (
             <ArchiveListItem
               key={a.externalId}
@@ -265,13 +271,7 @@ export type ArchiveItemProps = Readonly<{
   url: string
   createdAt: unknown
 }>
-export const ArchiveItem: React.FC<ArchiveItemProps> = ({
-  title,
-  description,
-  imageUrl,
-  url,
-  createdAt,
-}) => {
+function getArchiveMeta(url: string, createdAt: number) {
   const hostname = (() => {
     try {
       return new URL(url).hostname.replace(/^www\./, '')
@@ -280,21 +280,33 @@ export const ArchiveItem: React.FC<ArchiveItemProps> = ({
     }
   })()
   const sourceLabel = (() => {
-    if (hostname.includes('youtube') || hostname.includes('youtu.be'))
+    if (hostname.includes('youtube.com') || hostname.includes('youtu.be'))
       return 'YouTube'
-    if (hostname.includes('x.com') || hostname.includes('twitter')) return 'X'
-    if (hostname.includes('twitch')) return 'Twitch'
-    if (hostname.includes('nico')) return 'ニコニコ'
+    if (hostname.includes('x.com') || hostname.includes('twitter.com'))
+      return 'X'
+    if (hostname.includes('nicovideo.jp') || hostname.includes('nico.ms'))
+      return 'ニコニコ'
     return 'その他'
   })()
   const created = (() => {
     try {
-      const d = new Date(createdAt as any)
+      const d = new Date(createdAt)
       return d.toLocaleDateString('ja-JP')
     } catch {
       return ''
     }
   })()
+  return { hostname, sourceLabel, created }
+}
+
+export const ArchiveItem: React.FC<ArchiveItemProps> = ({
+  title,
+  description,
+  imageUrl,
+  url,
+  createdAt,
+}) => {
+  const { sourceLabel, created } = getArchiveMeta(url, createdAt)
   return (
     <a
       href={url}
@@ -313,7 +325,11 @@ export const ArchiveItem: React.FC<ArchiveItemProps> = ({
         </span>
       </div>
       <div className="bg-black/5 dark:bg-white/5 aspect-video w-full overflow-hidden">
-        <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
+        <img
+          src={imageUrl}
+          alt={title}
+          className="w-full h-full object-cover"
+        />
       </div>
       <div className="p-3 flex flex-col gap-2">
         <ArchiveItemCaption>{title}</ArchiveItemCaption>
@@ -332,7 +348,11 @@ const ArchiveItemCaption: React.FC<WithChildren> = ({ children }) => (
   </div>
 )
 const ArchiveItemDescription: React.FC<WithChildren> = ({ children }) => (
-  <div className={`min-h-16 line-clamp-3 overflow-hidden whitespace-normal text-ellipsis text-sm`}>{children}</div>
+  <div
+    className={`min-h-16 line-clamp-3 overflow-hidden whitespace-normal text-ellipsis text-sm`}
+  >
+    {children}
+  </div>
 )
 
 type ArchiveListItemProps = ArchiveItemProps
@@ -343,29 +363,7 @@ const ArchiveListItem: React.FC<ArchiveListItemProps> = ({
   url,
   createdAt,
 }) => {
-  const hostname = (() => {
-    try {
-      return new URL(url).hostname.replace(/^www\./, '')
-    } catch {
-      return ''
-    }
-  })()
-  const sourceLabel = (() => {
-    if (hostname.includes('youtube') || hostname.includes('youtu.be'))
-      return 'YouTube'
-    if (hostname.includes('x.com') || hostname.includes('twitter')) return 'X'
-    if (hostname.includes('twitch')) return 'Twitch'
-    if (hostname.includes('nico')) return 'ニコニコ'
-    return 'その他'
-  })()
-  const created = (() => {
-    try {
-      const d = new Date(createdAt as any)
-      return d.toLocaleDateString('ja-JP')
-    } catch {
-      return ''
-    }
-  })()
+  const { sourceLabel, created } = getArchiveMeta(url, createdAt)
   return (
     <a
       href={url}
@@ -376,11 +374,17 @@ const ArchiveListItem: React.FC<ArchiveListItemProps> = ({
       aria-label={title}
     >
       <div className="w-28 shrink-0 aspect-video overflow-hidden rounded-sm bg-black/5 dark:bg-white/5">
-        <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
+        <img
+          src={imageUrl}
+          alt={title}
+          className="w-full h-full object-cover"
+        />
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 text-xs mb-1">
-          <span className="rounded-sm px-2 py-0.5 ac-border text-gray-700 dark:text-gray-200">{sourceLabel}</span>
+          <span className="rounded-sm px-2 py-0.5 ac-border text-gray-700 dark:text-gray-200">
+            {sourceLabel}
+          </span>
           <span className="text-gray-500">{created}</span>
         </div>
         <div className="font-medium line-clamp-2">{title}</div>

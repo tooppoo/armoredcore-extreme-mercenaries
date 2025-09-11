@@ -11,7 +11,7 @@ type PageArchivesArgs = Readonly<{
   page: number
   order?: Order
   keyword?: string
-  source?: 'all' | 'yt' | 'x' | 'twitch' | 'nico' | 'other'
+  source?: 'all' | 'yt' | 'x' | 'nico' | 'other'
 }>
 
 // 1, 2, 3, 4列に対応
@@ -59,8 +59,6 @@ export async function pageArchives(
           like(videoArchives.url, '%x.com%'),
           like(videoArchives.url, '%twitter.com%'),
         )
-      case 'twitch':
-        return like(videoArchives.url, '%twitch.tv%')
       case 'nico':
         return or(
           like(videoArchives.url, '%nicovideo.jp%'),
@@ -68,18 +66,22 @@ export async function pageArchives(
         )
       case 'other':
         return and(
-          not(like(videoArchives.url, '%youtube.com%')),
-          not(like(videoArchives.url, '%youtu.be%')),
-          not(like(videoArchives.url, '%x.com%')),
-          not(like(videoArchives.url, '%twitter.com%')),
-          not(like(videoArchives.url, '%twitch.tv%')),
-          not(like(videoArchives.url, '%nicovideo.jp%')),
-          not(like(videoArchives.url, '%nico.ms%')),
+          ...[
+            '%youtube.com%',
+            '%youtu.be%',
+            '%x.com%',
+            '%twitter.com%',
+            '%nicovideo.jp%',
+            '%nico.ms%',
+          ].map((domain) => not(like(videoArchives.url, domain))),
         )
     }
   })()
 
-  const where = keywordWhere && sourceWhere ? and(keywordWhere, sourceWhere) : keywordWhere ?? sourceWhere
+  const where =
+    keywordWhere && sourceWhere
+      ? and(keywordWhere, sourceWhere)
+      : (keywordWhere ?? sourceWhere)
 
   const list = await db
     .select()

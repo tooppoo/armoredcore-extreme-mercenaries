@@ -154,7 +154,9 @@ export default function App() {
   const location = useLocation()
 
   const breadcrumbItems = buildBreadcrumbItems(matches, location)
-  const isWide = matches.some((m) => (m.handle as MatchHandle | undefined)?.layout === 'wide')
+  const isWide = matches.some(
+    (m) => (m.handle as MatchHandle | undefined)?.layout === 'wide',
+  )
   const containerClass = isWide
     ? 'max-w-screen-2xl mx-auto'
     : 'max-w-3xl mx-auto'
