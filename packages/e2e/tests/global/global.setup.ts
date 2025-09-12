@@ -7,7 +7,8 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 setup('setup db', async () => {
-  const frontCommand = 'npm run --prefix ../../ front'
+  const repoRoot = path.resolve(__dirname, '../../../../')
+  const frontCommand = `npm run --prefix ${repoRoot} front`
   // Apply migrations
   execSync(`${frontCommand} -- migration:test`)
   // Ensure clean DB state before all tests (avoid cross-project duplicates)

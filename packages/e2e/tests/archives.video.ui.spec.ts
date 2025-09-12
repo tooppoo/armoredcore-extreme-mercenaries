@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type APIRequestContext } from '@playwright/test'
 
-async function uploadVideo(request: any, url: string) {
+async function uploadVideo(request: APIRequestContext, url: string) {
   await request.post('/api/archives/video', {
     data: {
       url,
@@ -30,7 +30,9 @@ test.describe('動画アーカイブ UI', () => {
 
     // カード一覧（またはリスト一覧）が表示されていること
     await expect(
-      page.locator('section[aria-label="動画アーカイブ一覧（カード）"], section[aria-label="動画アーカイブ一覧（リスト）"]'),
+      page.locator(
+        'section[aria-label="動画アーカイブ一覧（カード）"], section[aria-label="動画アーカイブ一覧（リスト）"]',
+      ),
     ).toBeVisible()
 
     // YouTube バッジが1つ以上存在し、他サイトのバッジが存在しないこと
@@ -68,4 +70,3 @@ test.describe('動画アーカイブ UI', () => {
     ).toBeVisible()
   })
 })
-
