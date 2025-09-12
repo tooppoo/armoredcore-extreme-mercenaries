@@ -1,5 +1,8 @@
 import { describe, it, expect, beforeAll } from 'vitest'
-import { getLatestVideoArchives, getLatestChallengeArchives } from './repository.server'
+import {
+  getLatestVideoArchives,
+  getLatestChallengeArchives,
+} from './repository.server'
 import { getPlatformProxy } from 'wrangler'
 import { getDB } from '~/db/driver.server'
 import fs from 'node:fs'
@@ -10,7 +13,10 @@ let db: ReturnType<typeof getDB>
 
 function run(cmd: string) {
   // run in package root: packages/front
-  execSync(cmd, { stdio: 'inherit', cwd: path.resolve(__dirname, '../../../../') })
+  execSync(cmd, {
+    stdio: 'inherit',
+    cwd: path.resolve(__dirname, '../../../../'),
+  })
 }
 
 beforeAll(async () => {
@@ -21,10 +27,7 @@ beforeAll(async () => {
   run('npm run sql:test -- --file ./app/db/queries/clear-records.sql')
 
   // Seed test DB using existing local seed SQLs against test binding
-  const seedDir = path.resolve(
-    __dirname,
-    '../../../../app/db/seeds/local',
-  )
+  const seedDir = path.resolve(__dirname, '../../../../app/db/seeds/local')
   const files = fs
     .readdirSync(seedDir)
     .filter((f) => f.endsWith('.sql'))
@@ -49,7 +52,9 @@ describe('Latest Archives Repository (with real D1 + seeds)', () => {
     expect(result.length).toBeLessThanOrEqual(3)
     // Sorted by createdAt desc, id asc within same day
     for (let i = 1; i < result.length; i++) {
-      expect(new Date(result[i - 1].createdAt) >= new Date(result[i].createdAt)).toBe(true)
+      expect(
+        new Date(result[i - 1].createdAt) >= new Date(result[i].createdAt),
+      ).toBe(true)
     }
   })
 
@@ -64,7 +69,9 @@ describe('Latest Archives Repository (with real D1 + seeds)', () => {
     expect(result.length).toBeGreaterThan(0)
     expect(result.length).toBeLessThanOrEqual(3)
     for (let i = 1; i < result.length; i++) {
-      expect(new Date(result[i - 1].createdAt) >= new Date(result[i].createdAt)).toBe(true)
+      expect(
+        new Date(result[i - 1].createdAt) >= new Date(result[i].createdAt),
+      ).toBe(true)
     }
   })
 

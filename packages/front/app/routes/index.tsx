@@ -6,18 +6,26 @@ import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server'
 import { buildMeta } from '~/lib/head/build-meta'
 import { LinkCard } from '~/lib/utils/components/LinkCard'
 import { TZDate } from '@date-fns/tz'
-import { getLatestVideoArchives, getLatestChallengeArchives } from '~/lib/archives/latest/repository.server'
+import {
+  getLatestVideoArchives,
+  getLatestChallengeArchives,
+} from '~/lib/archives/latest/repository.server'
 import { getLatestUpdates } from '~/lib/updates/repository/read.server'
 import type { ReadUpdate } from '~/lib/updates/entity.server'
 import { ArchiveCardItem } from '~/lib/archives/video/components/ArchiveItems'
-import { ArchiveTable, ArchiveRow } from '~/lib/archives/challenge/components/ArchiveTable'
+import {
+  ArchiveTable,
+  ArchiveRow,
+} from '~/lib/archives/challenge/components/ArchiveTable'
 
-type IndexLoaderData = Readonly<LoadDiscord & { 
-  inquiryUrl: string
-  latestVideos: Awaited<ReturnType<typeof getLatestVideoArchives>>
-  latestChallenges: Awaited<ReturnType<typeof getLatestChallengeArchives>>
-  latestUpdates: ReadUpdate[]
-}>
+type IndexLoaderData = Readonly<
+  LoadDiscord & {
+    inquiryUrl: string
+    latestVideos: Awaited<ReturnType<typeof getLatestVideoArchives>>
+    latestChallenges: Awaited<ReturnType<typeof getLatestChallengeArchives>>
+    latestUpdates: ReadUpdate[]
+  }
+>
 export const loader = async (args: Route.LoaderArgs) => {
   const [latestVideos, latestChallenges, latestUpdates] = await Promise.all([
     getLatestVideoArchives(args.context.db, 3),
@@ -83,15 +91,19 @@ type IndexItem = Readonly<{
   id: string
   content: React.ReactNode
 }>
-const lists = ({ discord, inquiryUrl, latestVideos, latestChallenges, latestUpdates }: IndexLoaderData): IndexItem[] => [
+const lists = ({
+  discord,
+  inquiryUrl,
+  latestVideos,
+  latestChallenges,
+  latestUpdates,
+}: IndexLoaderData): IndexItem[] => [
   {
     caption: '最新チャレンジ情報',
     id: 'latest-challenges',
     content: (
       <section>
-        <p>
-          最新の攻略・チャレンジ情報をご紹介します。
-        </p>
+        <p>最新の攻略・チャレンジ情報をご紹介します。</p>
         <div className="mt-6">
           <h4 className="text-lg font-semibold mb-3">最新攻略動画</h4>
           {latestVideos.length > 0 ? (
@@ -155,9 +167,7 @@ const lists = ({ discord, inquiryUrl, latestVideos, latestChallenges, latestUpda
     id: 'recent-updates',
     content: (
       <section>
-        <p>
-          最近の更新情報をご紹介します。
-        </p>
+        <p>最近の更新情報をご紹介します。</p>
         {latestUpdates.length > 0 ? (
           <ul className="content-list mt-4 space-y-2">
             {latestUpdates.map((update) => (
