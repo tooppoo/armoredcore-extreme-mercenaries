@@ -21,4 +21,4 @@ flowchart TD
 
 - コンポーネント構成
   - `VideoArchives`（検索フォーム+一覧+ページング）
-  - `ArchiveItem`（カード: バッジ/日付/サムネ/タイトル/説明）
+  - `ArchiveCardItem`（カード: バッジ/日付/サムネ/タイトル/説明）

@@ -182,7 +182,7 @@ const VideoArchives: React.FC = () => {
           aria-label="動画アーカイブ一覧（カード）"
         >
           {archives.map((a) => (
-            <ArchiveItem
+            <ArchiveCardItem
               key={a.externalId}
               title={a.title}
               description={a.description}
@@ -263,7 +263,7 @@ const MovePage: React.FC<MovePageProps> = ({
   )
 }
 
-export type ArchiveItemProps = Readonly<{
+export type ArchiveCardItemProps = Readonly<{
   title: string
   description: string
   imageUrl: string
@@ -313,7 +313,7 @@ function sourceLabelText(source: SourceKey): string {
   }
 }
 
-export const ArchiveItem: React.FC<ArchiveItemProps> = ({
+export const ArchiveCardItem: React.FC<ArchiveCardItemProps> = ({
   title,
   description,
   imageUrl,
@@ -374,7 +374,7 @@ const ArchiveItemDescription: React.FC<WithChildren> = ({ children }) => (
   </div>
 )
 
-type ArchiveListItemProps = ArchiveItemProps
+type ArchiveListItemProps = ArchiveCardItemProps
 const ArchiveListItem: React.FC<ArchiveListItemProps> = ({
   title,
   description,
