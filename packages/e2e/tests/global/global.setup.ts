@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename)
 setup('setup db', async () => {
   const repoRoot = path.resolve(__dirname, '../../../../')
   const frontCommand = `npm run --prefix ${repoRoot} front`
-  
+
   console.log('=== E2E Database Setup ===')
   console.log(`Repository root: ${repoRoot}`)
   console.log(`Front command: ${frontCommand}`)
