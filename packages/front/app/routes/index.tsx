@@ -9,6 +9,8 @@ import { TZDate } from '@date-fns/tz'
 import { getLatestVideoArchives, getLatestChallengeArchives } from '~/lib/archives/latest/repository.server'
 import { getLatestUpdates } from '~/lib/updates/repository/read.server'
 import type { ReadUpdate } from '~/lib/updates/entity.server'
+import { ArchiveCardItem } from '~/lib/archives/video/components/ArchiveItems'
+import { ArchiveTable, ArchiveRow } from '~/lib/archives/challenge/components/ArchiveTable'
 
 type IndexLoaderData = Readonly<LoadDiscord & { 
   inquiryUrl: string
@@ -93,26 +95,26 @@ const lists = ({ discord, inquiryUrl, latestVideos, latestChallenges, latestUpda
         <div className="mt-6">
           <h4 className="text-lg font-semibold mb-3">最新攻略動画</h4>
           {latestVideos.length > 0 ? (
-            <ul className="content-list space-y-3">
+            <section
+              className={[
+                'grid',
+                'grid-cols-1 gap-4',
+                'sm:grid-cols-2 sm:gap-4',
+                'md:grid-cols-3 md:gap-4',
+              ].join(' ')}
+              aria-label="最新攻略動画一覧"
+            >
               {latestVideos.map((video) => (
-                <li key={video.id} className="border rounded-lg p-3">
-                  <div className="flex flex-col space-y-2">
-                    <h5 className="font-medium text-blue-700 dark:text-blue-300">
-                      <LinkCard
-                        to={video.url}
-                        type="external"
-                        aria-label={`${video.title}（新しいタブで開く）`}
-                      >
-                        {video.title}
-                      </LinkCard>
-                    </h5>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {video.description}
-                    </p>
-                  </div>
-                </li>
+                <ArchiveCardItem
+                  key={video.id}
+                  title={video.title}
+                  description={video.description}
+                  url={video.url}
+                  imageUrl={video.imageUrl}
+                  createdAt={video.createdAt}
+                />
               ))}
-            </ul>
+            </section>
           ) : (
             <p className="text-gray-500">まだ動画が登録されていません</p>
           )}
@@ -120,30 +122,18 @@ const lists = ({ discord, inquiryUrl, latestVideos, latestChallenges, latestUpda
         <div className="mt-6">
           <h4 className="text-lg font-semibold mb-3">最新チャレンジ</h4>
           {latestChallenges.length > 0 ? (
-            <ul className="content-list space-y-3">
+            <ArchiveTable className="w-full">
               {latestChallenges.map((challenge) => (
-                <li key={challenge.id} className="border rounded-lg p-3">
-                  <div className="flex flex-col space-y-2">
-                    <h5 className="font-medium text-green-700 dark:text-green-300">
-                      {challenge.url ? (
-                        <LinkCard
-                          to={challenge.url}
-                          type="external"
-                          aria-label={`${challenge.title}（新しいタブで開く）`}
-                        >
-                          {challenge.title}
-                        </LinkCard>
-                      ) : (
-                        challenge.title
-                      )}
-                    </h5>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {challenge.description}
-                    </p>
-                  </div>
-                </li>
+                <ArchiveRow
+                  key={challenge.id}
+                  id={challenge.externalId}
+                  title={challenge.title}
+                  description={challenge.description}
+                  url={challenge.url}
+                  showDetailLink={false}
+                />
               ))}
-            </ul>
+            </ArchiveTable>
           ) : (
             <p className="text-gray-500">まだチャレンジが登録されていません</p>
           )}
