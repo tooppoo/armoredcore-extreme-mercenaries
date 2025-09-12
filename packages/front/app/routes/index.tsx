@@ -6,21 +6,29 @@ import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server'
 import { buildMeta } from '~/lib/head/build-meta'
 import { LinkCard } from '~/lib/utils/components/LinkCard'
 import { TZDate } from '@date-fns/tz'
+import { getLatestContent, type LatestContent } from '~/lib/top-page/repository/latest-content.server'
 
-type IndexLoaderData = Readonly<LoadDiscord & { inquiryUrl: string }>
-export const loader = async (args: Route.LoaderArgs) =>
-  Response.json(
+type IndexLoaderData = Readonly<LoadDiscord & { inquiryUrl: string } & LatestContent>
+export const loader = async (args: Route.LoaderArgs) => {
+  const [discordData, latestContent] = await Promise.all([
+    loadDiscord(args),
+    getLatestContent(args.context.db),
+  ])
+  
+  return Response.json(
     {
-      ...loadDiscord(args),
+      ...discordData,
       inquiryUrl: args.context.cloudflare.env.GOOGLE_FORM_INQUIRY,
+      ...latestContent,
     },
     {
       headers: {
-        'Cache-Control': `public, max-age=${args.context.cloudflare.env.BASE_LONG_CACHE_TIME}`,
+        'Cache-Control': `public, max-age=${args.context.cloudflare.env.BASE_SHORT_CACHE_TIME}`,
         ETag: new TZDate(2025, 1, 15).toISOString(),
       },
     },
   )
+}
 export function headers({ loaderHeaders }: Route.HeadersArgs) {
   return loaderHeaders
 }
@@ -63,7 +71,7 @@ type IndexItem = Readonly<{
   id: string
   content: React.ReactNode
 }>
-const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
+const lists = ({ discord, inquiryUrl, videos, challenges, updates }: IndexLoaderData): IndexItem[] => [
   {
     caption: '本コミュニティについて',
     id: 'about',
@@ -87,6 +95,148 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
         <p>
           攻略・チャレンジのアーカイブやDiscord案内、ルール・罰則規定・更新履歴なども公開中です。シリーズ未経験者や復帰勢も歓迎していますので、ぜひご活用ください。
         </p>
+      </section>
+    ),
+  },
+  {
+    caption: '最新チャレンジ情報',
+    id: 'latest-challenges',
+    content: (
+      <section>
+        <div className="space-y-6">
+          {videos.length > 0 && (
+            <div>
+              <h4 className="text-lg font-semibold mb-3">最新動画アーカイブ</h4>
+              <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-3">
+                {videos.map((video) => (
+                  <article key={video.externalId} className="border rounded-lg p-4 space-y-2">
+                    <img 
+                      src={video.imageUrl} 
+                      alt={video.title}
+                      className="w-full h-32 object-cover rounded"
+                      loading="lazy"
+                    />
+                    <h5 className="font-medium text-sm leading-tight"
+                        style={{ 
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden'
+                        }}
+                    >
+                      {video.title}
+                    </h5>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 leading-tight"
+                       style={{ 
+                         display: '-webkit-box',
+                         WebkitLineClamp: 2,
+                         WebkitBoxOrient: 'vertical',
+                         overflow: 'hidden'
+                       }}
+                    >
+                      {video.description}
+                    </p>
+                    <LinkCard
+                      to={video.url}
+                      type="external"
+                      aria-label={`動画「${video.title}」を開く（新しいタブで開く）`}
+                      className="text-xs"
+                    >
+                      動画を見る
+                    </LinkCard>
+                  </article>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {challenges.length > 0 && (
+            <div>
+              <h4 className="text-lg font-semibold mb-3">最新チャレンジアーカイブ</h4>
+              <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-3">
+                {challenges.map((challenge) => (
+                  <article key={challenge.externalId} className="border rounded-lg p-4 space-y-2">
+                    <h5 className="font-medium text-sm leading-tight"
+                        style={{ 
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden'
+                        }}
+                    >
+                      {challenge.title}
+                    </h5>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 leading-tight"
+                       style={{ 
+                         display: '-webkit-box',
+                         WebkitLineClamp: 2,
+                         WebkitBoxOrient: 'vertical',
+                         overflow: 'hidden'
+                       }}
+                    >
+                      {challenge.description}
+                    </p>
+                    {challenge.url && (
+                      <LinkCard
+                        to={challenge.url}
+                        type="external"
+                        aria-label={`チャレンジ「${challenge.title}」を開く（新しいタブで開く）`}
+                        className="text-xs"
+                      >
+                        詳細を見る
+                      </LinkCard>
+                    )}
+                  </article>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          <div className="pt-4">
+            <LinkCard
+              to="/archives"
+              type="internal"
+              aria-label="すべてのアーカイブを見る"
+            >
+              すべてのアーカイブを見る
+            </LinkCard>
+          </div>
+        </div>
+      </section>
+    ),
+  },
+  {
+    caption: '最近の更新',
+    id: 'recent-updates',
+    content: (
+      <section>
+        {updates.length > 0 ? (
+          <div className="space-y-3">
+            <ul className="space-y-2">
+              {updates.map((update) => (
+                <li key={update.externalId} className="border-l-4 border-blue-500 pl-4">
+                  <Link 
+                    to={`/updates/${update.externalId}`}
+                    className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                  >
+                    {update.caption}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <div className="pt-4">
+              <LinkCard
+                to="/updates"
+                type="internal"
+                aria-label="すべての更新履歴を見る"
+              >
+                すべての更新履歴を見る
+              </LinkCard>
+            </div>
+          </div>
+        ) : (
+          <p>更新情報はありません。</p>
+        )}
       </section>
     ),
   },
