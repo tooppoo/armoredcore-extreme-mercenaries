@@ -4,4 +4,5 @@ export type ReadArchive = Readonly<{
   description: string
   imageUrl: string
   url: string
+  createdAt: Date
 }>

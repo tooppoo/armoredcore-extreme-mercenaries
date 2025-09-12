@@ -69,7 +69,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </h1>
         </header>
         <hr className="my-4" />
-        <article className="max-w-3xl mx-auto">{children}</article>
+        <article className="mx-auto w-full">{children}</article>
         <hr className="my-4" />
         <Footer />
         <ScrollRestoration />
@@ -129,6 +129,7 @@ type MatchData = {
 
 type MatchHandle = {
   breadcrumb?: string | ((params: Record<string, string>) => string) | 'hidden'
+  layout?: 'default' | 'wide'
 }
 
 type RouteMatch = {
@@ -153,12 +154,18 @@ export default function App() {
   const location = useLocation()
 
   const breadcrumbItems = buildBreadcrumbItems(matches, location)
+  const isWide = matches.some(
+    (m) => (m.handle as MatchHandle | undefined)?.layout === 'wide',
+  )
+  const containerClass = isWide
+    ? 'max-w-screen-2xl mx-auto'
+    : 'max-w-3xl mx-auto'
 
   return (
-    <>
+    <div className={containerClass}>
       <Breadcrumbs items={breadcrumbItems} />
       <Outlet />
-    </>
+    </div>
   )
 }
 
