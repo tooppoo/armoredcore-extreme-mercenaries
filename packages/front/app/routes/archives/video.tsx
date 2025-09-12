@@ -263,7 +263,7 @@ const MovePage: React.FC<MovePageProps> = ({
   )
 }
 
-export type ArchiveCardItemProps = Readonly<{
+export type ArchiveItemProps = Readonly<{
   title: string
   description: string
   imageUrl: string
@@ -313,7 +313,7 @@ function sourceLabelText(source: SourceKey): string {
   }
 }
 
-export const ArchiveCardItem: React.FC<ArchiveCardItemProps> = ({
+export const ArchiveCardItem: React.FC<ArchiveItemProps> = ({
   title,
   description,
   imageUrl,
@@ -374,7 +374,7 @@ const ArchiveItemDescription: React.FC<WithChildren> = ({ children }) => (
   </div>
 )
 
-type ArchiveListItemProps = ArchiveCardItemProps
+type ArchiveListItemProps = ArchiveItemProps
 const ArchiveListItem: React.FC<ArchiveListItemProps> = ({
   title,
   description,
