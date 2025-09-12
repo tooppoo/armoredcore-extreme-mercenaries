@@ -27,7 +27,9 @@ export async function findUpdate({
 }
 
 // 最新の更新情報を取得
-export async function getLatestUpdates(limit: number = 3): Promise<ReadUpdate[]> {
+export async function getLatestUpdates(
+  limit: number = 3,
+): Promise<ReadUpdate[]> {
   return records
     .flat()
     .map(transform)
