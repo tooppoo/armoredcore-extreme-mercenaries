@@ -29,16 +29,15 @@ test.describe('動画アーカイブ UI', () => {
     await page.click('button:has-text("適用")')
 
     // カード一覧（またはリスト一覧）が表示されていること
-    await expect(
-      page.locator(
-        'section[aria-label="動画アーカイブ一覧（カード）"], section[aria-label="動画アーカイブ一覧（リスト）"]',
-      ),
-    ).toBeVisible()
+    const container = page.locator(
+      'section[aria-label="動画アーカイブ一覧（カード）"], section[aria-label="動画アーカイブ一覧（リスト）"]',
+    )
+    await expect(container).toBeVisible()
 
-    // YouTube バッジが1つ以上存在し、他サイトのバッジが存在しないこと
-    await expect(page.locator('text=YouTube').first()).toBeVisible()
-    await expect(page.locator('text=X/Twitter')).toHaveCount(0)
-    await expect(page.locator('text=ニコニコ動画')).toHaveCount(0)
+    // YouTube バッジが1つ以上存在し、他サイトのバッジが存在しないこと（検索フォームのoptionではなく一覧内を対象）
+    await expect(container.locator('text=YouTube').first()).toBeVisible()
+    await expect(container.locator('text=X/Twitter')).toHaveCount(0)
+    await expect(container.locator('text=ニコニコ動画')).toHaveCount(0)
   })
 
   test('表示モード切替: カード <-> リスト', async ({ page }) => {
