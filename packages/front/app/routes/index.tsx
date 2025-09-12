@@ -6,13 +6,30 @@ import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server'
 import { buildMeta } from '~/lib/head/build-meta'
 import { LinkCard } from '~/lib/utils/components/LinkCard'
 import { TZDate } from '@date-fns/tz'
+import { getLatestVideoArchives, getLatestChallengeArchives } from '~/lib/archives/latest/repository.server'
+import { getLatestUpdates } from '~/lib/updates/repository/read.server'
+import type { ReadUpdate } from '~/lib/updates/entity.server'
 
-type IndexLoaderData = Readonly<LoadDiscord & { inquiryUrl: string }>
-export const loader = async (args: Route.LoaderArgs) =>
-  Response.json(
+type IndexLoaderData = Readonly<LoadDiscord & { 
+  inquiryUrl: string
+  latestVideos: Awaited<ReturnType<typeof getLatestVideoArchives>>
+  latestChallenges: Awaited<ReturnType<typeof getLatestChallengeArchives>>
+  latestUpdates: ReadUpdate[]
+}>
+export const loader = async (args: Route.LoaderArgs) => {
+  const [latestVideos, latestChallenges, latestUpdates] = await Promise.all([
+    getLatestVideoArchives(args.context.db, 3),
+    getLatestChallengeArchives(args.context.db, 3),
+    getLatestUpdates(3),
+  ])
+
+  return Response.json(
     {
       ...loadDiscord(args),
       inquiryUrl: args.context.cloudflare.env.GOOGLE_FORM_INQUIRY,
+      latestVideos,
+      latestChallenges,
+      latestUpdates,
     },
     {
       headers: {
@@ -21,6 +38,7 @@ export const loader = async (args: Route.LoaderArgs) =>
       },
     },
   )
+}
 export function headers({ loaderHeaders }: Route.HeadersArgs) {
   return loaderHeaders
 }
@@ -63,7 +81,122 @@ type IndexItem = Readonly<{
   id: string
   content: React.ReactNode
 }>
-const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
+const lists = ({ discord, inquiryUrl, latestVideos, latestChallenges, latestUpdates }: IndexLoaderData): IndexItem[] => [
+  {
+    caption: '最新チャレンジ情報',
+    id: 'latest-challenges',
+    content: (
+      <section>
+        <p>
+          最新の攻略・チャレンジ情報をご紹介します。
+        </p>
+        <div className="mt-6">
+          <h4 className="text-lg font-semibold mb-3">最新攻略動画</h4>
+          {latestVideos.length > 0 ? (
+            <ul className="content-list space-y-3">
+              {latestVideos.map((video) => (
+                <li key={video.id} className="border rounded-lg p-3">
+                  <div className="flex flex-col space-y-2">
+                    <h5 className="font-medium text-blue-700 dark:text-blue-300">
+                      <LinkCard
+                        to={video.url}
+                        type="external"
+                        aria-label={`${video.title}（新しいタブで開く）`}
+                      >
+                        {video.title}
+                      </LinkCard>
+                    </h5>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {video.description}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-500">まだ動画が登録されていません</p>
+          )}
+        </div>
+        <div className="mt-6">
+          <h4 className="text-lg font-semibold mb-3">最新チャレンジ</h4>
+          {latestChallenges.length > 0 ? (
+            <ul className="content-list space-y-3">
+              {latestChallenges.map((challenge) => (
+                <li key={challenge.id} className="border rounded-lg p-3">
+                  <div className="flex flex-col space-y-2">
+                    <h5 className="font-medium text-green-700 dark:text-green-300">
+                      {challenge.url ? (
+                        <LinkCard
+                          to={challenge.url}
+                          type="external"
+                          aria-label={`${challenge.title}（新しいタブで開く）`}
+                        >
+                          {challenge.title}
+                        </LinkCard>
+                      ) : (
+                        challenge.title
+                      )}
+                    </h5>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {challenge.description}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-500">まだチャレンジが登録されていません</p>
+          )}
+        </div>
+        <div className="highlight-box mt-6">
+          <LinkCard
+            to="/archives"
+            type="internal"
+            aria-label="攻略・チャレンジアーカイブページへ移動"
+          >
+            すべてのアーカイブを見る
+          </LinkCard>
+        </div>
+      </section>
+    ),
+  },
+  {
+    caption: '更新履歴の抜粋',
+    id: 'recent-updates',
+    content: (
+      <section>
+        <p>
+          最近の更新情報をご紹介します。
+        </p>
+        {latestUpdates.length > 0 ? (
+          <ul className="content-list mt-4 space-y-2">
+            {latestUpdates.map((update) => (
+              <li key={update.externalId}>
+                <LinkCard
+                  to={`/updates/${update.externalId}`}
+                  type="internal"
+                  aria-label={`${update.caption}の詳細ページへ移動`}
+                >
+                  {update.caption}
+                </LinkCard>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-gray-500 mt-4">まだ更新情報がありません</p>
+        )}
+        <div className="highlight-box mt-6">
+          <LinkCard
+            to="/updates"
+            type="internal"
+            aria-label="更新履歴ページへ移動"
+          >
+            すべての更新履歴を見る
+          </LinkCard>
+        </div>
+      </section>
+    ),
+  },
   {
     caption: '本コミュニティについて',
     id: 'about',

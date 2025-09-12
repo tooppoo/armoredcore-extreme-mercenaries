@@ -26,6 +26,15 @@ export async function findUpdate({
   return r ? transform(r) : r
 }
 
+// 最新の更新情報を取得
+export async function getLatestUpdates(limit: number = 3): Promise<ReadUpdate[]> {
+  return records
+    .flat()
+    .map(transform)
+    .toSorted((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
+    .slice(0, limit)
+}
+
 function transform(r: Update): ReadUpdate {
   return {
     ...r,
