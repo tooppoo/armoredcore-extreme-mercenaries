@@ -3,10 +3,7 @@ import { videoArchives, challengeArchives } from '~/db/schema.server'
 import { desc, asc } from 'drizzle-orm'
 
 // 最新の動画アーカイブを取得
-export async function getLatestVideoArchives(
-  db: Database,
-  limit: number = 3,
-) {
+export async function getLatestVideoArchives(db: Database, limit: number = 3) {
   return db
     .select()
     .from(videoArchives)
