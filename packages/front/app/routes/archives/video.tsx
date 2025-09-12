@@ -16,7 +16,10 @@ import { Margin } from '~/lib/utils/components/spacer'
 import type { Route } from './+types/video'
 import { getVideoArchiveListRevision } from '~/lib/archives/video/revision/repository'
 import { parseQuery } from '~/lib/http/request/parser.server'
-import { ArchiveCardItem, ArchiveListItem } from '~/lib/archives/video/components/ArchiveItems'
+import {
+  ArchiveCardItem,
+  ArchiveListItem,
+} from '~/lib/archives/video/components/ArchiveItems'
 
 type LoadArchives = Readonly<{
   totalPage: number

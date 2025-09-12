@@ -16,7 +16,10 @@ import { Margin } from '~/lib/utils/components/spacer'
 import type { Route } from './+types/list'
 import { getChallengeArchiveListRevision } from '~/lib/archives/challenge/revision/repository'
 import { parseQuery } from '~/lib/http/request/parser.server'
-import { ArchiveTable, ArchiveRow } from '~/lib/archives/challenge/components/ArchiveTable'
+import {
+  ArchiveTable,
+  ArchiveRow,
+} from '~/lib/archives/challenge/components/ArchiveTable'
 
 type LoadArchives = Readonly<{
   totalPage: number
