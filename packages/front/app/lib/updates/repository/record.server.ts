@@ -79,16 +79,22 @@ export const records: readonly Update[][] = [
       `,
     },
     {
+      externalId: '7a943eab-5506-4e17-b132-6baba586089e',
+      title: 'デザインの更新',
+      createdAt: new TZDate(2025, 7, 26, 12, timezone),
+      content: 'ページのデザインをより読みやすいように更新しました',
+    },
+    {
       externalId: 'ba53c467-9486-c62c-c132-9298745138d3',
       title: 'TOPページ更新',
       createdAt: new TZDate(2025, 7, 26, 20, timezone),
       content: 'TOPページの内容を、より詳しく更新しました',
     },
     {
-      externalId: '7a943eab-5506-4e17-b132-6baba586089e',
-      title: 'デザインの更新',
-      createdAt: new TZDate(2025, 11, 26, 12, timezone),
-      content: 'ページのデザインをより読みやすいように更新しました',
+      externalId: '8c2f9e1a-7b4d-4e3f-a1c2-5d8e9f2a3b4c',
+      title: '動画アーカイブページのデザイン更新',
+      createdAt: new TZDate(2025, 8, 12, 21, timezone),
+      content: '動画アーカイブページのデザインを更新しました',
     },
   ],
 ]
