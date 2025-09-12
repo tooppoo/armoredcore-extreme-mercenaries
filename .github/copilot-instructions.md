@@ -1,0 +1,3 @@
+- Use Japanese on Issue and Pull Requests
+- Use Japanese for comment and review
+- Follow the instructions in `<repository root>/AGENTS.md`.
