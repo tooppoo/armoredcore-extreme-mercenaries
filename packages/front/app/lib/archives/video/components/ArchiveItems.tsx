@@ -53,7 +53,7 @@ function sourceLabelText(source: SourceKey): string {
   }
 }
 
-// Review comment fix: Move exported ArchiveCardItem to top of components section
+// 先頭に移動: exportされるコンポーネント
 export const ArchiveCardItem: React.FC<ArchiveItemProps> = ({
   title,
   description,
@@ -101,6 +101,50 @@ export const ArchiveCardItem: React.FC<ArchiveItemProps> = ({
   )
 }
 
+export const ArchiveListItem: React.FC<ArchiveItemProps> = ({
+  title,
+  description,
+  imageUrl,
+  url,
+  createdAt,
+}) => {
+  const { source, created } = getArchiveMeta(url, createdAt)
+  const label = sourceLabelText(source)
+  return (
+    <a
+      href={url}
+      title={title}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex gap-3 items-start p-2 ac-border rounded-md ac-hover no-underline"
+      aria-label={title}
+    >
+      <div className="w-28 shrink-0 aspect-video overflow-hidden rounded-sm bg-black/5 dark:bg-white/5">
+        <img
+          src={imageUrl}
+          alt={title}
+          className="w-full h-full object-cover"
+        />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 text-xs mb-1">
+          {label && (
+            <span className="rounded-sm px-2 py-0.5 ac-border text-gray-700 dark:text-gray-200 text-sm font-medium">
+              {label}
+            </span>
+          )}
+          <span className="text-gray-500">{created}</span>
+        </div>
+        <div className="font-medium line-clamp-2 underline">{title}</div>
+        <div className="text-sm line-clamp-2 text-white">
+          <Description description={description} />
+        </div>
+      </div>
+    </a>
+  )
+}
+
+// ヘルパーコンポーネント：ファイル末尾に移動
 const ArchiveItemCaption: React.FC<WithChildren> = ({ children }) => (
   <div
     className={`min-h-12 line-clamp-2 overflow-hidden whitespace-normal text-ellipsis font-medium`}
