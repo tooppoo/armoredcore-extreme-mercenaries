@@ -21,9 +21,12 @@ setup('setup db', async () => {
 
     // Check what tables exist after migration
     console.log('Checking existing tables...')
-    execSync(`${frontCommand} -- sql:test -- --command "SELECT name FROM sqlite_master WHERE type='table';"`, {
-      stdio: 'inherit',
-    })
+    execSync(
+      `${frontCommand} -- sql:test -- --command "SELECT name FROM sqlite_master WHERE type='table';"`,
+      {
+        stdio: 'inherit',
+      },
+    )
 
     // Clear all records to avoid duplicate constraints before seeding
     console.log('Clearing existing records...')
