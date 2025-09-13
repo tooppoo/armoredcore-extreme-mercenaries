@@ -53,6 +53,54 @@ function sourceLabelText(source: SourceKey): string {
   }
 }
 
+// Review comment fix: Move exported ArchiveCardItem to top of components section
+export const ArchiveCardItem: React.FC<ArchiveItemProps> = ({
+  title,
+  description,
+  imageUrl,
+  url,
+  createdAt,
+}) => {
+  const { source, created } = getArchiveMeta(url, createdAt)
+  const label = sourceLabelText(source)
+  return (
+    <a
+      href={url}
+      title={title}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="archive-item rounded-md overflow-hidden flex flex-col ac-border ac-hover no-underline"
+      aria-label={title}
+    >
+      <div className="p-3 flex items-center justify-between text-xs">
+        {label && (
+          <span className="rounded-sm px-2 py-0.5 ac-border text-gray-700 dark:text-gray-200 text-sm font-medium">
+            {label}
+          </span>
+        )}
+        <span aria-label="登録日" className="text-gray-500">
+          {created}
+        </span>
+      </div>
+      <div className="bg-black/5 dark:bg-white/5 aspect-video w-full overflow-hidden">
+        <img
+          src={imageUrl}
+          alt={title}
+          className="w-full h-full object-cover"
+        />
+      </div>
+      <div className="p-3 flex flex-col gap-2">
+        <ArchiveItemCaption>
+          <span className="underline">{title}</span>
+        </ArchiveItemCaption>
+        <ArchiveItemDescription>
+          <Description description={description} />
+        </ArchiveItemDescription>
+      </div>
+    </a>
+  )
+}
+
 const ArchiveItemCaption: React.FC<WithChildren> = ({ children }) => (
   <div
     className={`min-h-12 line-clamp-2 overflow-hidden whitespace-normal text-ellipsis font-medium`}
@@ -108,54 +156,6 @@ export const ArchiveListItem: React.FC<ArchiveListItemProps> = ({
         <div className="text-sm line-clamp-2 text-white">
           <Description description={description} />
         </div>
-      </div>
-    </a>
-  )
-}
-
-// Review comment fix: ArchiveCardItem moved to bottom after ArchiveListItem
-export const ArchiveCardItem: React.FC<ArchiveItemProps> = ({
-  title,
-  description,
-  imageUrl,
-  url,
-  createdAt,
-}) => {
-  const { source, created } = getArchiveMeta(url, createdAt)
-  const label = sourceLabelText(source)
-  return (
-    <a
-      href={url}
-      title={title}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="archive-item rounded-md overflow-hidden flex flex-col ac-border ac-hover no-underline"
-      aria-label={title}
-    >
-      <div className="p-3 flex items-center justify-between text-xs">
-        {label && (
-          <span className="rounded-sm px-2 py-0.5 ac-border text-gray-700 dark:text-gray-200 text-sm font-medium">
-            {label}
-          </span>
-        )}
-        <span aria-label="登録日" className="text-gray-500">
-          {created}
-        </span>
-      </div>
-      <div className="bg-black/5 dark:bg-white/5 aspect-video w-full overflow-hidden">
-        <img
-          src={imageUrl}
-          alt={title}
-          className="w-full h-full object-cover"
-        />
-      </div>
-      <div className="p-3 flex flex-col gap-2">
-        <ArchiveItemCaption>
-          <span className="underline">{title}</span>
-        </ArchiveItemCaption>
-        <ArchiveItemDescription>
-          <Description description={description} />
-        </ArchiveItemDescription>
       </div>
     </a>
   )
