@@ -160,5 +160,3 @@ const ArchiveItemDescription: React.FC<WithChildren> = ({ children }) => (
     {children}
   </div>
 )
-
-
