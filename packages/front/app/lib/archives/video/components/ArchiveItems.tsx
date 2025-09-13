@@ -161,46 +161,4 @@ const ArchiveItemDescription: React.FC<WithChildren> = ({ children }) => (
   </div>
 )
 
-type ArchiveListItemProps = ArchiveItemProps
-export const ArchiveListItem: React.FC<ArchiveListItemProps> = ({
-  title,
-  description,
-  imageUrl,
-  url,
-  createdAt,
-}) => {
-  const { source, created } = getArchiveMeta(url, createdAt)
-  const label = sourceLabelText(source)
-  return (
-    <a
-      href={url}
-      title={title}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex gap-3 items-start p-2 ac-border rounded-md ac-hover no-underline"
-      aria-label={title}
-    >
-      <div className="w-28 shrink-0 aspect-video overflow-hidden rounded-sm bg-black/5 dark:bg-white/5">
-        <img
-          src={imageUrl}
-          alt={title}
-          className="w-full h-full object-cover"
-        />
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 text-xs mb-1">
-          {label && (
-            <span className="rounded-sm px-2 py-0.5 ac-border text-gray-700 dark:text-gray-200 text-sm font-medium">
-              {label}
-            </span>
-          )}
-          <span className="text-gray-500">{created}</span>
-        </div>
-        <div className="font-medium line-clamp-2 underline">{title}</div>
-        <div className="text-sm line-clamp-2 text-white">
-          <Description description={description} />
-        </div>
-      </div>
-    </a>
-  )
-}
+
