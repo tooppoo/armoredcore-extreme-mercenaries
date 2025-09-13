@@ -21,7 +21,7 @@ setup('setup db', async () => {
 
     // Check what tables exist after migration
     console.log('Checking existing tables...')
-    execSync(`${frontCommand} -- sql:test -- --command ".tables"`, {
+    execSync(`${frontCommand} -- sql:test -- --command "SELECT name FROM sqlite_master WHERE type='table';"`, {
       stdio: 'inherit',
     })
 
@@ -52,7 +52,7 @@ setup('setup db', async () => {
     for (const file of seedFiles) {
       const seedPath = path.join(seedDir, file)
       console.log(`Seeding: ${seedPath}`)
-      execSync(`${frontCommand} -- sql:test -- --file ${seedPath}`, {
+      execSync(`${frontCommand} -- sql:test -- --file "${seedPath}"`, {
         stdio: 'inherit',
       })
     }
