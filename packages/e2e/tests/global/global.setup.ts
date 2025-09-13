@@ -10,7 +10,7 @@ setup('setup db', async () => {
   const repoRoot = path.resolve(__dirname, '../../../../')
   const frontCommand = `npm run --prefix ${repoRoot} front`
 
-  console.log('=== E2E Database Setup ===')
+  console.log('=== E2E Database Setup with Seed Data ===')
   console.log(`Repository root: ${repoRoot}`)
   console.log(`Front command: ${frontCommand}`)
 
