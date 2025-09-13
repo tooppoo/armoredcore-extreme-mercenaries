@@ -113,6 +113,7 @@ export const ArchiveListItem: React.FC<ArchiveListItemProps> = ({
   )
 }
 
+// Review comment fix: ArchiveCardItem moved to bottom after ArchiveListItem
 export const ArchiveCardItem: React.FC<ArchiveItemProps> = ({
   title,
   description,

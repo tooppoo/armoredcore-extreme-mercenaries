@@ -6,6 +6,7 @@ test('title', async ({ page }) => {
   await expect(page).toHaveTitle(/ARMORED CORE EXTREME MERCENARIES/)
 })
 
+// Review comment fix: Test with actual DB integration using seed data
 test('latest info display shows max 3 items each', async ({ page }) => {
   await page.goto('/')
 
