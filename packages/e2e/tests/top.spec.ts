@@ -7,7 +7,9 @@ test('title', async ({ page }) => {
 })
 
 // レビューコメント対応: 実際のseedデータを使用したテスト
-test('latest info display shows max 3 items each with seed data', async ({ page }) => {
+test('latest info display shows max 3 items each with seed data', async ({
+  page,
+}) => {
   await page.goto('/')
 
   // 最新攻略動画セクション：seedデータが投入されているので必ずデータがある
@@ -69,21 +71,23 @@ test('seed data integrity test', async ({ page }) => {
   // 動画アーカイブのseedデータが正しく表示されているかチェック
   const videoSection = page.getByLabel('最新攻略動画一覧')
   const videoItems = videoSection.locator('.archive-item')
-  
+
   // 最初の動画アイテムにタイトルと説明が含まれているかチェック
-  if (await videoItems.count() > 0) {
+  if ((await videoItems.count()) > 0) {
     const firstVideo = videoItems.first()
-    await expect(firstVideo.locator('.underline')).toContainText(//) // 何らかのタイトルテキスト
+    await expect(firstVideo.locator('.underline')).toContainText(/.+/) // 何らかのタイトルテキスト
     await expect(firstVideo.locator('img')).toHaveAttribute('src', /.*/) // 画像URL
   }
 
   // チャレンジアーカイブのseedデータが正しく表示されているかチェック
   const challengeTable = page.locator('table')
   const challengeRows = challengeTable.locator('tbody tr')
-  
-  if (await challengeRows.count() > 0) {
+
+  if ((await challengeRows.count()) > 0) {
     const firstChallenge = challengeRows.first()
-    await expect(firstChallenge.locator('td').first()).toContainText(//) // タイトル
-    await expect(firstChallenge.locator('td').nth(1)).toContainText(/\d{4}\/\d{1,2}\/\d{1,2}/) // 日付形式
+    await expect(firstChallenge.locator('td').first()).toContainText(/.+/) // タイトル
+    await expect(firstChallenge.locator('td').nth(1)).toContainText(
+      /\d{4}\/\d{1,2}\/\d{1,2}/,
+    ) // 日付形式
   }
 })

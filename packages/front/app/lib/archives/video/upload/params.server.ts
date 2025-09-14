@@ -1,10 +1,10 @@
 import { z } from 'zod'
 
 export const postArchiveBody = z.object({
-  url: z.string().url().nonempty(),
+  url: z.string().url().min(1),
   discord_user: z.object({
-    id: z.string().nonempty(),
-    name: z.string().nonempty(),
+    id: z.string().min(1),
+    name: z.string().min(1),
   }),
 })
 
