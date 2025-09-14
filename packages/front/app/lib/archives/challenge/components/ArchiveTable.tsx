@@ -7,7 +7,7 @@ export const ArchiveTable: React.FC<WithChildren & WithClassName> = ({
   children,
   className,
 }) => (
-  <table className={'table-fixed ' + className}>
+  <table className={'table-fixed ' + (className || '')}>
     <thead className="h-20">
       <tr>
         <th className="w-3/12 border-b dark:border-b-gray-300">タイトル</th>
