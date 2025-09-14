@@ -2,6 +2,7 @@ import { test as setup } from '@playwright/test'
 import { execSync } from 'node:child_process'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import fs from 'node:fs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -45,13 +46,17 @@ setup('setup db', async () => {
     // Seed test DB with local seed data
     const seedDir = path.resolve(repoRoot, 'packages/front/app/db/seeds/local')
     console.log(`Seed directory: ${seedDir}`)
-    execSync(`ls -la ${seedDir}`, { stdio: 'inherit' })
 
-    const seedFiles = [
-      '01_discord_members.sql',
-      '02_video_archives.sql',
-      '03_challenge_archives.sql',
-    ]
+    if (!fs.existsSync(seedDir)) {
+      throw new Error(`Seed directory not found: ${seedDir}`)
+    }
+
+    // ディレクトリから .sql を動的取得（ソートで投入順を安定化）
+    const seedFiles = fs
+      .readdirSync(seedDir)
+      .filter((file) => file.endsWith('.sql'))
+      .sort()
+    console.log('Seed files:', seedFiles)
     for (const file of seedFiles) {
       const seedPath = path.join(seedDir, file)
       console.log(`Seeding: ${seedPath}`)
