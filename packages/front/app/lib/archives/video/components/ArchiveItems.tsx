@@ -136,7 +136,7 @@ export const ArchiveListItem: React.FC<ArchiveItemProps> = ({
           <span className="text-gray-500">{created}</span>
         </div>
         <div className="font-medium line-clamp-2 underline">{title}</div>
-        <div className="text-sm line-clamp-2 text-white">
+        <div className="text-sm line-clamp-2 text-gray-700 dark:text-gray-300">
           <Description description={description} />
         </div>
       </div>
@@ -155,7 +155,7 @@ const ArchiveItemCaption: React.FC<WithChildren> = ({ children }) => (
 
 const ArchiveItemDescription: React.FC<WithChildren> = ({ children }) => (
   <div
-    className={`min-h-16 line-clamp-3 overflow-hidden whitespace-normal text-ellipsis text-sm text-white`}
+    className={`min-h-16 line-clamp-3 overflow-hidden whitespace-normal text-ellipsis text-sm text-gray-700 dark:text-gray-300`}
   >
     {children}
   </div>

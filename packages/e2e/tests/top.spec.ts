@@ -47,7 +47,7 @@ test('latest info display shows max 3 items each with seed data', async ({
   // チャレンジアーカイブページと同じテーブル形式が使用されているかチェック
   const firstChallengeRow = challengeRows.first()
   await expect(firstChallengeRow.locator('td').first()).toBeVisible() // タイトル列
-  await expect(firstChallengeRow.locator('td').nth(1)).toBeVisible() // 日付列
+  await expect(firstChallengeRow.locator('td').nth(1)).toBeVisible() // 説明列
 
   // 更新履歴の抜粋セクション：静的データなので常に表示される
   const updatesSection = page.locator('#recent-updates')
@@ -86,8 +86,6 @@ test('seed data integrity test', async ({ page }) => {
   if ((await challengeRows.count()) > 0) {
     const firstChallenge = challengeRows.first()
     await expect(firstChallenge.locator('td').first()).toContainText(/.+/) // タイトル
-    await expect(firstChallenge.locator('td').nth(1)).toContainText(
-      /\d{4}\/\d{1,2}\/\d{1,2}/,
-    ) // 日付形式
+    await expect(firstChallenge.locator('td').nth(1)).toContainText(/.+/) // 説明
   }
 })

@@ -24,4 +24,4 @@ export const htmlSanitize: Sanitize = (s) =>
       {} as Record<string, string[]>,
     ),
   })
-export const h: Sanitize = htmlSanitize
+// 別名は可読性が低いため廃止（htmlSanitize に統一）
