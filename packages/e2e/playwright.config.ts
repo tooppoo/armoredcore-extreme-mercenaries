@@ -98,7 +98,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: `npm run --prefix ../front dev:test -- --port ${port}`,
+    command: `npm run --prefix ../front dev:test:prepared -- --port ${port}`,
     url: `http://localhost:${port}`,
     reuseExistingServer: !process.env.CI,
   },
