@@ -42,6 +42,6 @@ test('invalid url', async ({ request }) => {
     },
   })
 
-  // テスト環境では MOCK_OGP=true により全URLで200を返す
-  expect(res.status()).toBe(200)
+  // テスト環境でも無効なURLは400エラーを返すべき
+  expect(res.status()).toBe(400)
 })
