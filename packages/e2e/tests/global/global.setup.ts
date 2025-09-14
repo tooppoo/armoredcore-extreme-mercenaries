@@ -39,7 +39,7 @@ setup('setup db', async () => {
       console.log(
         'Cleanup failed (tables might not exist yet), continuing with seeding...',
       )
-      console.error('Cleanup error:', cleanupError.message)
+      console.error('Cleanup error:', cleanupError)
     }
 
     // Seed test DB with local seed data
