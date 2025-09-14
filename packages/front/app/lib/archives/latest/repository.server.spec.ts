@@ -52,6 +52,6 @@ describe('Latest Archives Repository Functions', () => {
       await getLatestChallengeArchives(mockDb)
 
       expect(mockDbCore.limit).toHaveBeenCalledWith(3)
+    })
   })
-})
 })
