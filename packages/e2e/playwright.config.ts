@@ -101,9 +101,12 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: `npm run --prefix ../front dev:test -- --port ${port}`,
+    command: `MOCK_OGP=true npm run --prefix ../front dev:test -- --port ${port}`,
     url: `http://localhost:${port}`,
     reuseExistingServer: !process.env.CI,
+    env: {
+      MOCK_OGP: 'true',
+    },
   },
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
