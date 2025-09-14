@@ -16,6 +16,9 @@ const __dirname = path.dirname(__filename)
 const reportDir = path.resolve(__dirname, 'playwright-report')
 const jsonReportFile = path.resolve(__dirname, 'playwright-report.json')
 
+// Set test environment variables
+process.env.MOCK_OGP = 'true'
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
