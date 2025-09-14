@@ -5,7 +5,6 @@ import { siteName } from '~/lib/constants'
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server'
 import { buildMeta } from '~/lib/head/build-meta'
 import { LinkCard } from '~/lib/utils/components/LinkCard'
-import { TZDate } from '@date-fns/tz'
 import {
   getLatestVideoArchives,
   getLatestChallengeArchives,
