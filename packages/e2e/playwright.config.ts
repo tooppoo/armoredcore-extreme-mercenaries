@@ -16,8 +16,6 @@ const __dirname = path.dirname(__filename)
 const reportDir = path.resolve(__dirname, 'playwright-report')
 const jsonReportFile = path.resolve(__dirname, 'playwright-report.json')
 
-// Set test environment variables
-process.env.MOCK_OGP = 'true'
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -101,12 +99,9 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: `MOCK_OGP=true npm run --prefix ../front dev:test -- --port ${port}`,
+    command: `npm run --prefix ../front dev:test -- --port ${port}`,
     url: `http://localhost:${port}`,
     reuseExistingServer: !process.env.CI,
-    env: {
-      MOCK_OGP: 'true',
-    },
   },
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
