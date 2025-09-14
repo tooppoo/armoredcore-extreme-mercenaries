@@ -43,8 +43,15 @@ export const loader = async (args: Route.LoaderArgs) => {
     },
     {
       headers: {
-        'Cache-Control': `public, max-age=${args.context.cloudflare.env.BASE_LONG_CACHE_TIME}`,
-        ETag: new TZDate(2025, 1, 15).toISOString(),
+        'Cache-Control': `public, max-age=${args.context.cloudflare.env.BASE_SHORT_CACHE_TIME}`,
+        ETag: `index-${(() => {
+          const ts = [
+            ...latestVideos.map((v) => new Date(v.createdAt).getTime()),
+            ...latestChallenges.map((c) => new Date(c.createdAt).getTime()),
+            ...latestUpdates.map((u) => new Date(u.createdAt).getTime()),
+          ]
+          return ts.length ? Math.max(...ts) : 0
+        })()}-${latestVideos.length}-${latestChallenges.length}-${latestUpdates.length}`,
       },
     },
   )
@@ -102,7 +109,7 @@ const lists = ({
     caption: '最新チャレンジ情報',
     id: 'latest-challenges',
     content: (
-      <section>
+      <>
         <p>最新の攻略・チャレンジ情報をご紹介します。</p>
         <div className="mt-6">
           <h4 className="text-lg font-semibold mb-3">最新攻略動画</h4>
@@ -159,14 +166,14 @@ const lists = ({
             すべてのアーカイブを見る
           </LinkCard>
         </div>
-      </section>
+      </>
     ),
   },
   {
     caption: '更新履歴の抜粋',
     id: 'recent-updates',
     content: (
-      <section>
+      <>
         <p>最近の更新情報をご紹介します。</p>
         {latestUpdates.length > 0 ? (
           <ul className="content-list mt-4 space-y-2">
@@ -194,14 +201,14 @@ const lists = ({
             すべての更新履歴を見る
           </LinkCard>
         </div>
-      </section>
+      </>
     ),
   },
   {
     caption: '本コミュニティについて',
     id: 'about',
     content: (
-      <section>
+      <>
         <p>
           {siteName}は、ARMORED
           COREシリーズのやりこみ攻略・チャレンジに関する情報をまとめた非公式コミュニティです。
@@ -220,7 +227,7 @@ const lists = ({
         <p>
           攻略・チャレンジのアーカイブやDiscord案内、ルール・罰則規定・更新履歴なども公開中です。シリーズ未経験者や復帰勢も歓迎していますので、ぜひご活用ください。
         </p>
-      </section>
+      </>
     ),
   },
   {
