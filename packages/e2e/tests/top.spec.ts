@@ -46,7 +46,7 @@ test('Contents in Top Page', async ({ page }) => {
   await expect(firstChallengeRow.locator('td').nth(1)).toBeVisible() // 説明列
 
   // 更新履歴の抜粋セクション：静的データなので常に表示される
-  const updatesSection = page.getByLabel('最近の更新履歴')
+  const updatesSection = page.getByLabel('最近の更新履歴一覧')
   await expect(updatesSection).toBeVisible()
 
   const updatesList = updatesSection.locator('ul.content-list')
