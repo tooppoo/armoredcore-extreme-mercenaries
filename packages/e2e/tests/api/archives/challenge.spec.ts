@@ -19,7 +19,7 @@ test('upload link', async ({ page, request }) => {
     },
   })
 
-  await page.goto('/archives/challenge')
+  await page.goto('/archives/challenge?k=ヘリアンサス')
 
   await expect(page.getByRole('table')).toContainText('ヘリアンサスチャレンジ')
   await expect(
@@ -48,7 +48,7 @@ test('upload text', async ({ page, request }) => {
     },
   })
 
-  await page.goto('/archives/challenge')
+  await page.goto('/archives/challenge?k=テストチャレンジ')
 
   await expect(page.getByRole('table')).toContainText('テストチャレンジ')
 })

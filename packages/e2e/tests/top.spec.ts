@@ -6,17 +6,16 @@ test('title', async ({ page }) => {
   await expect(page).toHaveTitle(/ARMORED CORE EXTREME MERCENARIES/)
 })
 
-// レビューコメント対応: 実際のseedデータを使用したテスト
 test('latest info display shows max 3 items each with seed data', async ({
   page,
 }) => {
   await page.goto('/')
 
   // 最新攻略動画セクション：seedデータが投入されているので必ずデータがある
-  const latestVideosHeading = page.locator('h4:has-text("最新攻略動画")')
+  const latestVideosHeading = page.locator('h4:has-text("最近の動画")')
   await expect(latestVideosHeading).toBeVisible()
 
-  const latestVideosSection = page.getByLabel('最新攻略動画一覧')
+  const latestVideosSection = page.getByLabel('最近の動画')
   await expect(latestVideosSection).toBeVisible()
 
   // seedデータがあるので動画は必ず存在する：最大3個までの表示をチェック
@@ -32,7 +31,7 @@ test('latest info display shows max 3 items each with seed data', async ({
   await expect(firstVideoItem.locator('.underline')).toBeVisible() // タイトル
 
   // 最新チャレンジセクション：seedデータが投入されているので必ずデータがある
-  const challengesHeading = page.locator('h4:has-text("最新チャレンジ")')
+  const challengesHeading = page.locator('h4:has-text("最近のチャレンジ")')
   await expect(challengesHeading).toBeVisible()
 
   const challengeTable = page.locator('table')
@@ -69,7 +68,7 @@ test('seed data integrity test', async ({ page }) => {
 
   // seedデータからの実際のコンテンツをテスト
   // 動画アーカイブのseedデータが正しく表示されているかチェック
-  const videoSection = page.getByLabel('最新攻略動画一覧')
+  const videoSection = page.getByLabel('最近の動画')
   const videoItems = videoSection.locator('.archive-item')
 
   // 最初の動画アイテムにタイトルと説明が含まれているかチェック
