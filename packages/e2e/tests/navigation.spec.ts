@@ -102,7 +102,6 @@ test.describe('Navigation from corePages', () => {
 
     // Test keyboard navigation for critical links only
     for (const link of criticalLinks) {
-
       // Find the link element by its text content
       const linkElement = footer.getByRole('link', { name: link.text })
 
