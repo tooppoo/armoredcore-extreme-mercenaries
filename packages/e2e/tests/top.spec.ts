@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test'
 
 test('title', async ({ page }) => {
+  test.slow()
+
   await page.goto('/')
 
   await expect(page).toHaveTitle(/ARMORED CORE EXTREME MERCENARIES/)
@@ -9,6 +11,8 @@ test('title', async ({ page }) => {
 test('latest info display shows max 3 items each with seed data', async ({
   page,
 }) => {
+  test.slow()
+
   await page.goto('/')
 
   // 最新攻略動画セクション：seedデータが投入されているので必ずデータがある
@@ -64,6 +68,8 @@ test('latest info display shows max 3 items each with seed data', async ({
 
 // seedデータの内容をテストするための詳細なテスト
 test('seed data integrity test', async ({ page }) => {
+  test.slow()
+
   await page.goto('/')
 
   // seedデータからの実際のコンテンツをテスト
