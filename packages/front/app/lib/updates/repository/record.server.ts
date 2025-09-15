@@ -9,6 +9,7 @@ export type Update = Readonly<{
   content: string
 }>
 
+// ページング用に2次元配列にしておく
 export const records: readonly Update[][] = [
   [
     {
@@ -95,6 +96,20 @@ export const records: readonly Update[][] = [
       title: '動画アーカイブページのデザイン更新',
       createdAt: new TZDate(2025, 8, 12, 21, timezone),
       content: '動画アーカイブページのデザインを更新しました',
+    },
+    {
+      externalId: 'fc5f0b7a-3c1e-4a6d-9a8b-2e7d1c9f4a3b',
+      title: '最近の動画・チャレンジ・更新履歴を、TOPページに追加',
+      createdAt: new TZDate(2025, 8, 15, timezone),
+      content: `
+      <p>
+        ・TOPページに「最近の動画」「最近のチャレンジ」「最近の更新」を追加しました
+      </p>
+      <div style="margin-top: 5px; margin-bottom: 5px;" />
+      <p>
+        ・詳細は<a href="/archives">アーカイブ一覧</a>および<a href="/updates">更新履歴</a>をご覧ください
+      </p>
+      `,
     },
   ],
 ]
