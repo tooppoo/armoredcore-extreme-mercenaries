@@ -82,4 +82,3 @@ setup('setup db', async () => {
     throw error
   }
 })
-
