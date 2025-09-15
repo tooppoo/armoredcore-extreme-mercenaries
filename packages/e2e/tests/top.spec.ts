@@ -1,8 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test('Contents in Top Page', async ({
-  page,
-}) => {
+test('Contents in Top Page', async ({ page }) => {
   test.slow()
 
   await page.goto('/')
