@@ -29,6 +29,7 @@ export default [
   ]),
 
   ...prefix('api', [
+    route('ping', './routes/api/ping.ts'),
     ...prefix('archives', [
       route('video', './routes/api/archives/video.ts'),
       route('challenge', './routes/api/archives/challenge.ts'),

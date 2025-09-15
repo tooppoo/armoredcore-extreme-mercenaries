@@ -99,7 +99,7 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: {
     command: `npm run --prefix ../front dev:test -- --port ${port}`,
-    url: `http://localhost:${port}`,
+    url: `http://localhost:${port}/api/ping`,
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
   },
