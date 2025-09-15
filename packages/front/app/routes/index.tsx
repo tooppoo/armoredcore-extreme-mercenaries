@@ -359,23 +359,22 @@ const lists = ({
         </div>
         <div className="mt-6">
           <h4 className="text-lg font-semibold mb-3">最近の更新履歴</h4>
-          {latestUpdates.length > 0 ? (
-            <ul
-              className="content-list mt-4 space-y-2"
-              aria-label="最近の更新履歴一覧"
-            >
-              {latestUpdates.map((update) => (
-                <li key={update.externalId}>
-                  <LinkCard
-                    to={`/updates/${update.externalId}`}
-                    type="internal"
-                    aria-label={`${update.caption}の詳細ページへ移動`}
-                  >
-                    {update.caption}
-                  </LinkCard>
-                </li>
-              ))}
-            </ul>
+            {latestUpdates.length > 0 ? (
+              <section aria-label="最近の更新履歴一覧">
+                <ul className="content-list mt-4 space-y-2">
+                  {latestUpdates.map((update) => (
+                    <li key={update.externalId}>
+                      <LinkCard
+                        to={`/updates/${update.externalId}`}
+                        type="internal"
+                        aria-label={`${update.caption}の詳細ページへ移動`}
+                      >
+                        {update.caption}
+                      </LinkCard>
+                    </li>
+                  ))}
+                </ul>
+              </section>
           ) : (
             <p className="text-gray-500 mt-4">まだ更新情報がありません</p>
           )}
