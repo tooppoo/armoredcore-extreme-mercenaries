@@ -237,7 +237,6 @@ const lists = ({
                   title={challenge.title}
                   description={challenge.description}
                   url={challenge.url}
-                  showDetailLink={false}
                 />
               ))}
             </ArchiveTable>

@@ -24,7 +24,6 @@ type ArchiveRowProps = Readonly<{
   title: string
   description: string
   url: string | null
-  showDetailLink?: boolean
 }>
 
 export const ArchiveRow: React.FC<ArchiveRowProps> = ({
@@ -32,7 +31,6 @@ export const ArchiveRow: React.FC<ArchiveRowProps> = ({
   title,
   description,
   url,
-  showDetailLink = true,
 }) => {
   return (
     <tr className="h-36 border-b dark:border-b-gray-300">
@@ -40,11 +38,7 @@ export const ArchiveRow: React.FC<ArchiveRowProps> = ({
         <div
           className={`m-auto h-12 line-clamp-2 overflow-hidden whitespace-normal text-ellipsis`}
         >
-          {showDetailLink ? (
-            <Link to={`/archives/challenge/${id}`}>{title}</Link>
-          ) : (
-            title
-          )}
+          <Link to={`/archives/challenge/${id}`}>{title}</Link>
         </div>
       </td>
       <td>
