@@ -1,19 +1,14 @@
 import { test, expect } from '@playwright/test'
 
-test('title', async ({ page }) => {
-  test.slow()
-
-  await page.goto('/')
-
-  await expect(page).toHaveTitle(/ARMORED CORE EXTREME MERCENARIES/)
-})
-
-test('latest info display shows max 3 items each with seed data', async ({
+test('Contents in Top Page', async ({
   page,
 }) => {
   test.slow()
 
   await page.goto('/')
+
+  // ページタイトルの確認
+  await expect(page).toHaveTitle(/ARMORED CORE EXTREME MERCENARIES/)
 
   // 最新攻略動画セクション：seedデータが投入されているので必ずデータがある
   const latestVideosHeading = page.locator('h4:has-text("最近の動画")')
@@ -64,18 +59,6 @@ test('latest info display shows max 3 items each with seed data', async ({
   const updateCount = await updateItems.count()
   expect(updateCount).toBeGreaterThan(0)
   expect(updateCount).toBeLessThanOrEqual(3)
-})
-
-// seedデータの内容をテストするための詳細なテスト
-test('seed data integrity test', async ({ page }) => {
-  test.slow()
-
-  await page.goto('/')
-
-  // seedデータからの実際のコンテンツをテスト
-  // 動画アーカイブのseedデータが正しく表示されているかチェック
-  const videoSection = page.getByLabel('最近の動画一覧')
-  const videoItems = videoSection.locator('.archive-item')
 
   // 最初の動画アイテムにタイトルと説明が含まれているかチェック
   if ((await videoItems.count()) > 0) {
@@ -85,9 +68,6 @@ test('seed data integrity test', async ({ page }) => {
   }
 
   // チャレンジアーカイブのseedデータが正しく表示されているかチェック
-  const challengeTable = page.locator('table')
-  const challengeRows = challengeTable.locator('tbody tr')
-
   if ((await challengeRows.count()) > 0) {
     const firstChallenge = challengeRows.first()
     await expect(firstChallenge.locator('td').first()).toContainText(/.+/) // タイトル

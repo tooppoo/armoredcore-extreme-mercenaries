@@ -360,7 +360,7 @@ const lists = ({
         <div className="mt-6">
           <h4 className="text-lg font-semibold mb-3">最近の更新履歴</h4>
           {latestUpdates.length > 0 ? (
-            <ul className="content-list mt-4 space-y-2">
+            <ul className="content-list mt-4 space-y-2" aria-labelledby='最近の更新履歴'>
               {latestUpdates.map((update) => (
                 <li key={update.externalId}>
                   <LinkCard
