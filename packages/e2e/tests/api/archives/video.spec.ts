@@ -26,9 +26,11 @@ test('upload', async ({ page, request }) => {
 test('invalid url', async ({ request }) => {
   test.slow()
 
+  // ユニークなURLを生成してduplicated-urlエラーを回避
+  const uniqueUrl = `https://unsupported-site-for-e2e-test.example/${Date.now()}`
   const res = await request.post('/api/archives/video', {
     data: {
-      url: 'https://example.com',
+      url: uniqueUrl,
       discord_user: {
         id: '1234',
         name: 'test_user',
@@ -40,8 +42,6 @@ test('invalid url', async ({ request }) => {
     },
   })
 
-  // CIのテスト環境では MOCK_OGP=true で全URLをモック取得するため200となる。
-  // 実運用に近い環境（MOCK_OGP=false）ではunsupported扱いで400。
-  const expected = process.env.MOCK_OGP === 'true' ? 200 : 400
-  expect(res.status()).toBe(expected)
+  // テスト環境でも無効なURLは400エラーを返すべき
+  expect(res.status()).toBe(400)
 })

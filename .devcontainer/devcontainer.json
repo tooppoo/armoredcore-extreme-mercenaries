@@ -1,0 +1,31 @@
+{
+  "name": "Node 22.19.0 + TypeScript",
+  "image": "node:22.19.0-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {},
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+  "containerEnv": {
+    "NODE_ENV": "development"
+  },
+  "mounts": [
+    "target=/root/.npm"
+  ],
+  "forwardPorts": [5173],
+  "postCreateCommand": "bash -lc 'npm i -g npm@11.6.0 && if [ -f package.json ]; then npm ci; fi'",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-typescript-next",
+        "github.vscode-github-actions"
+      ],
+      "settings": {
+        "typescript.tsdk": "node_modules/typescript/lib",
+        "editor.formatOnSave": true
+      }
+    }
+  },
+  "remoteUser": "root"
+}

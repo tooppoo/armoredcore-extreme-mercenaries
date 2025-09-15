@@ -22,4 +22,7 @@ export default defineConfig(({ mode }) => ({
       : [reactRouter()]),
     tsconfigPaths(),
   ],
+  server: {
+    host: '127.0.0.1',
+  },
 }))

@@ -1,5 +1,4 @@
 import sanitizeHtml from 'sanitize-html'
-const { defaults } = sanitizeHtml
 
 type Sanitize = (s: string) => string
 
@@ -10,14 +9,14 @@ type Sanitize = (s: string) => string
 
 export const htmlSanitize: Sanitize = (s) =>
   sanitizeHtml(s, {
-    allowedAttributes: defaults.allowedTags.reduce(
+    allowedAttributes: sanitizeHtml.defaults.allowedTags.reduce(
       (acc, tag) => ({
         ...acc,
         [tag]: [
           'class',
           'style',
 
-          ...(defaults.allowedAttributes[tag] || []).map((attr) =>
+          ...(sanitizeHtml.defaults.allowedAttributes[tag] || []).map((attr) =>
             attr.toString(),
           ),
         ],
@@ -25,4 +24,4 @@ export const htmlSanitize: Sanitize = (s) =>
       {} as Record<string, string[]>,
     ),
   })
-export const h: Sanitize = htmlSanitize
+// 別名は可読性が低いため廃止（htmlSanitize に統一）

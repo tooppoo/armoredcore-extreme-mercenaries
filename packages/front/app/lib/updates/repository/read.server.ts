@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import { ReadUpdate } from '~/lib/updates/entity.server'
 import { records, Update } from '~/lib/updates/repository/record.server'
-import { h } from '~/lib/utils/sanitize.server'
+import { htmlSanitize } from '~/lib/utils/sanitize.server'
 import { parseHtml } from '~/lib/utils/html-parser'
 
 type PageUpdatesArgs = Readonly<{
@@ -26,10 +26,21 @@ export async function findUpdate({
   return r ? transform(r) : r
 }
 
+// 最新の更新情報を取得
+export async function getLatestUpdates(
+  limit: number = 3,
+): Promise<ReadUpdate[]> {
+  return records
+    .flat()
+    .map(transform)
+    .toSorted((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
+    .slice(0, limit)
+}
+
 function transform(r: Update): ReadUpdate {
   return {
     ...r,
     caption: `${r.title} - ${format(r.createdAt, 'yyyy/MM/dd')}`,
-    content: parseHtml(h(r.content)),
+    content: parseHtml(htmlSanitize(r.content)),
   }
 }

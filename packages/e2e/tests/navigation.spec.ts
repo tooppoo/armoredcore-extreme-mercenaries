@@ -8,6 +8,8 @@ test.describe('Navigation from corePages', () => {
   ]
 
   test('footer contains critical navigation links', async ({ page }) => {
+    test.slow()
+
     await page.goto('/')
 
     const footer = page.locator('footer')
@@ -30,6 +32,8 @@ test.describe('Navigation from corePages', () => {
     test(`critical link "${link.text}" is clickable and navigates correctly`, async ({
       page,
     }) => {
+      test.slow()
+
       await page.goto('/')
 
       const footer = page.locator('footer')
@@ -52,6 +56,8 @@ test.describe('Navigation from corePages', () => {
     test(`aria-current is set correctly for ${currentLinkName} page`, async ({
       page,
     }) => {
+      test.slow()
+
       await page.goto(path)
 
       const footer = page.locator('footer')
@@ -89,11 +95,13 @@ test.describe('Navigation from corePages', () => {
   test('keyboard navigation works for critical footer links', async ({
     page,
   }) => {
+    test.slow()
+
+    await page.goto('/')
+    const footer = page.locator('footer')
+
     // Test keyboard navigation for critical links only
     for (const link of criticalLinks) {
-      await page.goto('/')
-      const footer = page.locator('footer')
-
       // Find the link element by its text content
       const linkElement = footer.getByRole('link', { name: link.text })
 

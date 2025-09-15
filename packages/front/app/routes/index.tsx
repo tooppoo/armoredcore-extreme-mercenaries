@@ -5,22 +5,56 @@ import { siteName } from '~/lib/constants'
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server'
 import { buildMeta } from '~/lib/head/build-meta'
 import { LinkCard } from '~/lib/utils/components/LinkCard'
-import { TZDate } from '@date-fns/tz'
+import {
+  getLatestVideoArchives,
+  getLatestChallengeArchives,
+} from '~/lib/archives/latest/repository.server'
+import { getLatestUpdates } from '~/lib/updates/repository/read.server'
+import type { ReadUpdate } from '~/lib/updates/entity.server'
+import { ArchiveCardItem } from '~/lib/archives/video/components/ArchiveItems'
+import {
+  ArchiveTable,
+  ArchiveRow,
+} from '~/lib/archives/challenge/components/ArchiveTable'
 
-type IndexLoaderData = Readonly<LoadDiscord & { inquiryUrl: string }>
-export const loader = async (args: Route.LoaderArgs) =>
-  Response.json(
+type IndexLoaderData = Readonly<
+  LoadDiscord & {
+    inquiryUrl: string
+    latestVideos: Awaited<ReturnType<typeof getLatestVideoArchives>>
+    latestChallenges: Awaited<ReturnType<typeof getLatestChallengeArchives>>
+    latestUpdates: ReadUpdate[]
+  }
+>
+export const loader = async (args: Route.LoaderArgs) => {
+  const [latestVideos, latestChallenges, latestUpdates] = await Promise.all([
+    getLatestVideoArchives(args.context.db, 3),
+    getLatestChallengeArchives(args.context.db, 3),
+    getLatestUpdates(3),
+  ])
+
+  return Response.json(
     {
       ...loadDiscord(args),
       inquiryUrl: args.context.cloudflare.env.GOOGLE_FORM_INQUIRY,
+      latestVideos,
+      latestChallenges,
+      latestUpdates,
     },
     {
       headers: {
-        'Cache-Control': `public, max-age=${args.context.cloudflare.env.BASE_LONG_CACHE_TIME}`,
-        ETag: new TZDate(2025, 1, 15).toISOString(),
+        'Cache-Control': `public, max-age=${args.context.cloudflare.env.BASE_SHORT_CACHE_TIME}`,
+        ETag: `index-${(() => {
+          const ts = [
+            ...latestVideos.map((v) => new Date(v.createdAt).getTime()),
+            ...latestChallenges.map((c) => new Date(c.createdAt).getTime()),
+            ...latestUpdates.map((u) => new Date(u.createdAt).getTime()),
+          ]
+          return ts.length ? Math.max(...ts) : 0
+        })()}-${latestVideos.length}-${latestChallenges.length}-${latestUpdates.length}`,
       },
     },
   )
+}
 export function headers({ loaderHeaders }: Route.HeadersArgs) {
   return loaderHeaders
 }
@@ -63,12 +97,18 @@ type IndexItem = Readonly<{
   id: string
   content: React.ReactNode
 }>
-const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
+const lists = ({
+  discord,
+  inquiryUrl,
+  latestVideos,
+  latestChallenges,
+  latestUpdates,
+}: IndexLoaderData): IndexItem[] => [
   {
     caption: '本コミュニティについて',
     id: 'about',
     content: (
-      <section>
+      <>
         <p>
           {siteName}は、ARMORED
           COREシリーズのやりこみ攻略・チャレンジに関する情報をまとめた非公式コミュニティです。
@@ -87,7 +127,7 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
         <p>
           攻略・チャレンジのアーカイブやDiscord案内、ルール・罰則規定・更新履歴なども公開中です。シリーズ未経験者や復帰勢も歓迎していますので、ぜひご活用ください。
         </p>
-      </section>
+      </>
     ),
   },
   {
@@ -149,13 +189,6 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
             攻略・チャレンジアーカイブを見る
           </LinkCard>
         </div>
-        <h4 className="text-lg font-semibold mt-6 mb-3">アーカイブ掲載例</h4>
-        <ul className="content-list">
-          <li>アーキバスバルテウスのノーダメージ撃破</li>
-          <li>スタンニードルランチャー無しでアイスワームをSランク撃破</li>
-          <li>マニュアルロックでアイビスを撃破</li>
-          <li>他、多数の攻略・チャレンジ情報</li>
-        </ul>
         <div className="mt-6 space-y-3">
           <p>
             <strong>閲覧について：</strong>
@@ -166,11 +199,56 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
             アーカイブの登録はDiscordサーバー参加者にのみ開放しています。詳細はDiscordサーバー内の該当チャンネルにてご確認ください。
           </p>
         </div>
+        <div className="mt-6">
+          <h4 className="text-lg font-semibold mb-3">最近の動画</h4>
+          {latestVideos.length > 0 ? (
+            <section
+              className={[
+                'grid',
+                'grid-cols-1 gap-4',
+                'sm:grid-cols-2 sm:gap-4',
+                'md:grid-cols-3 md:gap-4',
+              ].join(' ')}
+              aria-label="最近の動画一覧"
+            >
+              {latestVideos.map((video) => (
+                <ArchiveCardItem
+                  key={video.id}
+                  title={video.title}
+                  description={video.description}
+                  url={video.url}
+                  imageUrl={video.imageUrl}
+                  createdAt={video.createdAt}
+                />
+              ))}
+            </section>
+          ) : (
+            <p className="text-gray-500">まだ動画が登録されていません</p>
+          )}
+        </div>
+        <div className="mt-6">
+          <h4 className="text-lg font-semibold mb-3">最近のチャレンジ</h4>
+          {latestChallenges.length > 0 ? (
+            <ArchiveTable className="w-full">
+              {latestChallenges.map((challenge) => (
+                <ArchiveRow
+                  key={challenge.id}
+                  id={challenge.externalId}
+                  title={challenge.title}
+                  description={challenge.description}
+                  url={challenge.url}
+                />
+              ))}
+            </ArchiveTable>
+          ) : (
+            <p className="text-gray-500">まだチャレンジが登録されていません</p>
+          )}
+        </div>
       </>
     ),
   },
   {
-    caption: 'コミュニティ用Discordサーバーの利用規約',
+    caption: 'Discordサーバーの利用規約',
     id: 'rule',
     content: (
       <>
@@ -198,7 +276,7 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
     ),
   },
   {
-    caption: 'コミュニティ用Discordサーバー利用者への罰則規定',
+    caption: 'Discordサーバー利用者への罰則規定',
     id: 'penalties',
     content: (
       <>
@@ -221,7 +299,7 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
     ),
   },
   {
-    caption: 'コミュニティ用Discordサーバーへの参加方法',
+    caption: 'Discordサーバーへの参加方法',
     id: 'server',
     content: (
       <>
@@ -278,6 +356,28 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
             更新履歴を見る
           </LinkCard>
         </div>
+        <div className="mt-6">
+          <h4 className="text-lg font-semibold mb-3">最近の更新履歴</h4>
+          {latestUpdates.length > 0 ? (
+            <section aria-label="最近の更新履歴一覧">
+              <ul className="content-list mt-4 space-y-2">
+                {latestUpdates.map((update) => (
+                  <li key={update.externalId}>
+                    <LinkCard
+                      to={`/updates/${update.externalId}`}
+                      type="internal"
+                      aria-label={`${update.caption}の詳細ページへ移動`}
+                    >
+                      {update.caption}
+                    </LinkCard>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : (
+            <p className="text-gray-500 mt-4">まだ更新情報がありません</p>
+          )}
+        </div>
       </>
     ),
   },
@@ -306,7 +406,7 @@ const lists = ({ discord, inquiryUrl }: IndexLoaderData): IndexItem[] => [
             aria-label="Creative Commonsライセンス詳細ページ（新しいタブで開く）"
           >
             <span className="flex items-center gap-2">
-              <span>ライセンス詳細を見る</span>
+              <div>ライセンス詳細を見る</div>
               <div className="flex items-center">
                 <img
                   height="22"
