@@ -200,7 +200,7 @@ const lists = ({
           </p>
         </div>
         <div className="mt-6">
-          <h4 className="text-lg font-semibold mb-3">最新攻略アーカイブ</h4>
+          <h4 className="text-lg font-semibold mb-3">最近の動画</h4>
           {latestVideos.length > 0 ? (
             <section
               className={[
@@ -209,7 +209,7 @@ const lists = ({
                 'sm:grid-cols-2 sm:gap-4',
                 'md:grid-cols-3 md:gap-4',
               ].join(' ')}
-              aria-label="最新攻略アーカイブ一覧"
+              aria-label="最近の動画一覧"
             >
               {latestVideos.map((video) => (
                 <ArchiveCardItem
@@ -227,7 +227,7 @@ const lists = ({
           )}
         </div>
         <div className="mt-6">
-          <h4 className="text-lg font-semibold mb-3">最新チャレンジ</h4>
+          <h4 className="text-lg font-semibold mb-3">最近のチャレンジ</h4>
           {latestChallenges.length > 0 ? (
             <ArchiveTable className="w-full">
               {latestChallenges.map((challenge) => (
@@ -249,7 +249,7 @@ const lists = ({
     ),
   },
   {
-    caption: 'コミュニティ用Discordサーバーの利用規約',
+    caption: 'Discordサーバーの利用規約',
     id: 'rule',
     content: (
       <>
@@ -277,7 +277,7 @@ const lists = ({
     ),
   },
   {
-    caption: 'コミュニティ用Discordサーバー利用者への罰則規定',
+    caption: 'Discordサーバー利用者への罰則規定',
     id: 'penalties',
     content: (
       <>
@@ -300,7 +300,7 @@ const lists = ({
     ),
   },
   {
-    caption: 'コミュニティ用Discordサーバーへの参加方法',
+    caption: 'Discordサーバーへの参加方法',
     id: 'server',
     content: (
       <>
