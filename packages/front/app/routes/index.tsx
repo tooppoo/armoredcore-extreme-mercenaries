@@ -362,7 +362,7 @@ const lists = ({
           {latestUpdates.length > 0 ? (
             <ul
               className="content-list mt-4 space-y-2"
-              aria-labelledby="最近の更新履歴"
+              aria-label="最近の更新履歴一覧"
             >
               {latestUpdates.map((update) => (
                 <li key={update.externalId}>
