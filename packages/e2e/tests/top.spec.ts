@@ -15,7 +15,7 @@ test('latest info display shows max 3 items each with seed data', async ({
   const latestVideosHeading = page.locator('h4:has-text("最近の動画")')
   await expect(latestVideosHeading).toBeVisible()
 
-  const latestVideosSection = page.getByLabel('最近の動画')
+  const latestVideosSection = page.getByLabel('最近の動画一覧')
   await expect(latestVideosSection).toBeVisible()
 
   // seedデータがあるので動画は必ず存在する：最大3個までの表示をチェック
@@ -68,7 +68,7 @@ test('seed data integrity test', async ({ page }) => {
 
   // seedデータからの実際のコンテンツをテスト
   // 動画アーカイブのseedデータが正しく表示されているかチェック
-  const videoSection = page.getByLabel('最近の動画')
+  const videoSection = page.getByLabel('最近の動画一覧')
   const videoItems = videoSection.locator('.archive-item')
 
   // 最初の動画アイテムにタイトルと説明が含まれているかチェック

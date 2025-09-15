@@ -99,7 +99,7 @@ export const records: readonly Update[][] = [
     },
     {
       externalId: 'fc5f0b7a-3c1e-4a6d-9a8b-2e7d1c9f4a3b',
-      title: '最近の動画・チャレンジ・更新履歴を、TOPページに追加',
+      title: '最近のコンテンツ表示を、TOPページに追加',
       createdAt: new TZDate(2025, 8, 15, timezone),
       content: `
       <p>
