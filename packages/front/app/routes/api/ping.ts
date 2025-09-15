@@ -1,4 +1,3 @@
-
 // A minimal health-check endpoint that simply returns 200
 
 /**
