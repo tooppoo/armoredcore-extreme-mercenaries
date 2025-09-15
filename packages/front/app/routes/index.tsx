@@ -200,7 +200,7 @@ const lists = ({
           </p>
         </div>
         <div className="mt-6">
-          <h4 className="text-lg font-semibold mb-3">最近の動画</h4>
+          <h3 className="text-lg font-semibold mb-3">最近の動画</h3>
           {latestVideos.length > 0 ? (
             <section
               className={[
@@ -227,7 +227,7 @@ const lists = ({
           )}
         </div>
         <div className="mt-6">
-          <h4 className="text-lg font-semibold mb-3">最近のチャレンジ</h4>
+          <h3 className="text-lg font-semibold mb-3">最近のチャレンジ</h3>
           {latestChallenges.length > 0 ? (
             <ArchiveTable className="w-full">
               {latestChallenges.map((challenge) => (
@@ -261,9 +261,9 @@ const lists = ({
             利用規約を確認する
           </LinkCard>
         </div>
-        <h4 className="text-lg font-semibold mt-6 mb-3">
+        <h3 className="text-lg font-semibold mt-6 mb-3">
           規約に含まれる主な内容
-        </h4>
+        </h3>
         <ul className="content-list">
           <li>Discordサーバーの運営方針</li>
           <li>Discordサーバーの利用方法</li>
@@ -357,7 +357,7 @@ const lists = ({
           </LinkCard>
         </div>
         <div className="mt-6">
-          <h4 className="text-lg font-semibold mb-3">最近の更新履歴</h4>
+          <h3 className="text-lg font-semibold mb-3">最近の更新履歴</h3>
           {latestUpdates.length > 0 ? (
             <section aria-label="最近の更新履歴一覧">
               <ul className="content-list mt-4 space-y-2">
