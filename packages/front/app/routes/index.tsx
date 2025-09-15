@@ -105,105 +105,6 @@ const lists = ({
   latestUpdates,
 }: IndexLoaderData): IndexItem[] => [
   {
-    caption: '最新チャレンジ情報',
-    id: 'latest-challenges',
-    content: (
-      <>
-        <p>最新の攻略・チャレンジ情報をご紹介します。</p>
-        <div className="mt-6">
-          <h4 className="text-lg font-semibold mb-3">最新攻略動画</h4>
-          {latestVideos.length > 0 ? (
-            <section
-              className={[
-                'grid',
-                'grid-cols-1 gap-4',
-                'sm:grid-cols-2 sm:gap-4',
-                'md:grid-cols-3 md:gap-4',
-              ].join(' ')}
-              aria-label="最新攻略動画一覧"
-            >
-              {latestVideos.map((video) => (
-                <ArchiveCardItem
-                  key={video.id}
-                  title={video.title}
-                  description={video.description}
-                  url={video.url}
-                  imageUrl={video.imageUrl}
-                  createdAt={video.createdAt}
-                />
-              ))}
-            </section>
-          ) : (
-            <p className="text-gray-500">まだ動画が登録されていません</p>
-          )}
-        </div>
-        <div className="mt-6">
-          <h4 className="text-lg font-semibold mb-3">最新チャレンジ</h4>
-          {latestChallenges.length > 0 ? (
-            <ArchiveTable className="w-full">
-              {latestChallenges.map((challenge) => (
-                <ArchiveRow
-                  key={challenge.id}
-                  id={challenge.externalId}
-                  title={challenge.title}
-                  description={challenge.description}
-                  url={challenge.url}
-                  showDetailLink={false}
-                />
-              ))}
-            </ArchiveTable>
-          ) : (
-            <p className="text-gray-500">まだチャレンジが登録されていません</p>
-          )}
-        </div>
-        <div className="highlight-box mt-6">
-          <LinkCard
-            to="/archives"
-            type="internal"
-            aria-label="攻略・チャレンジアーカイブページへ移動"
-          >
-            すべてのアーカイブを見る
-          </LinkCard>
-        </div>
-      </>
-    ),
-  },
-  {
-    caption: '更新履歴の抜粋',
-    id: 'recent-updates',
-    content: (
-      <>
-        <p>最近の更新情報をご紹介します。</p>
-        {latestUpdates.length > 0 ? (
-          <ul className="content-list mt-4 space-y-2">
-            {latestUpdates.map((update) => (
-              <li key={update.externalId}>
-                <LinkCard
-                  to={`/updates/${update.externalId}`}
-                  type="internal"
-                  aria-label={`${update.caption}の詳細ページへ移動`}
-                >
-                  {update.caption}
-                </LinkCard>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-gray-500 mt-4">まだ更新情報がありません</p>
-        )}
-        <div className="highlight-box mt-6">
-          <LinkCard
-            to="/updates"
-            type="internal"
-            aria-label="更新履歴ページへ移動"
-          >
-            すべての更新履歴を見る
-          </LinkCard>
-        </div>
-      </>
-    ),
-  },
-  {
     caption: '本コミュニティについて',
     id: 'about',
     content: (
@@ -288,13 +189,6 @@ const lists = ({
             攻略・チャレンジアーカイブを見る
           </LinkCard>
         </div>
-        <h4 className="text-lg font-semibold mt-6 mb-3">アーカイブ掲載例</h4>
-        <ul className="content-list">
-          <li>アーキバスバルテウスのノーダメージ撃破</li>
-          <li>スタンニードルランチャー無しでアイスワームをSランク撃破</li>
-          <li>マニュアルロックでアイビスを撃破</li>
-          <li>他、多数の攻略・チャレンジ情報</li>
-        </ul>
         <div className="mt-6 space-y-3">
           <p>
             <strong>閲覧について：</strong>
@@ -304,6 +198,52 @@ const lists = ({
             <strong>投稿について：</strong>
             アーカイブの登録はDiscordサーバー参加者にのみ開放しています。詳細はDiscordサーバー内の該当チャンネルにてご確認ください。
           </p>
+        </div>
+        <div className="mt-6">
+          <h4 className="text-lg font-semibold mb-3">最新攻略アーカイブ</h4>
+          {latestVideos.length > 0 ? (
+            <section
+              className={[
+                'grid',
+                'grid-cols-1 gap-4',
+                'sm:grid-cols-2 sm:gap-4',
+                'md:grid-cols-3 md:gap-4',
+              ].join(' ')}
+              aria-label="最新攻略アーカイブ一覧"
+            >
+              {latestVideos.map((video) => (
+                <ArchiveCardItem
+                  key={video.id}
+                  title={video.title}
+                  description={video.description}
+                  url={video.url}
+                  imageUrl={video.imageUrl}
+                  createdAt={video.createdAt}
+                />
+              ))}
+            </section>
+          ) : (
+            <p className="text-gray-500">まだ動画が登録されていません</p>
+          )}
+        </div>
+        <div className="mt-6">
+          <h4 className="text-lg font-semibold mb-3">最新チャレンジ</h4>
+          {latestChallenges.length > 0 ? (
+            <ArchiveTable className="w-full">
+              {latestChallenges.map((challenge) => (
+                <ArchiveRow
+                  key={challenge.id}
+                  id={challenge.externalId}
+                  title={challenge.title}
+                  description={challenge.description}
+                  url={challenge.url}
+                  showDetailLink={false}
+                />
+              ))}
+            </ArchiveTable>
+          ) : (
+            <p className="text-gray-500">まだチャレンジが登録されていません</p>
+          )}
         </div>
       </>
     ),
@@ -417,6 +357,26 @@ const lists = ({
             更新履歴を見る
           </LinkCard>
         </div>
+        <div className="mt-6">
+          <h4 className="text-lg font-semibold mb-3">最近の更新</h4>
+          {latestUpdates.length > 0 ? (
+            <ul className="content-list mt-4 space-y-2">
+              {latestUpdates.map((update) => (
+                <li key={update.externalId}>
+                  <LinkCard
+                    to={`/updates/${update.externalId}`}
+                    type="internal"
+                    aria-label={`${update.caption}の詳細ページへ移動`}
+                  >
+                    {update.caption}
+                  </LinkCard>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-500 mt-4">まだ更新情報がありません</p>
+          )}
+        </div>
       </>
     ),
   },
@@ -445,7 +405,7 @@ const lists = ({
             aria-label="Creative Commonsライセンス詳細ページ（新しいタブで開く）"
           >
             <span className="flex items-center gap-2">
-              <span>ライセンス詳細を見る</span>
+              <div>ライセンス詳細を見る</div>
               <div className="flex items-center">
                 <img
                   height="22"

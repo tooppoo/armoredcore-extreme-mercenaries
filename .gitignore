@@ -8,3 +8,5 @@ build/
 .wrangler
 
 coverage/
+
+.DS_Store
