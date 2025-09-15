@@ -101,6 +101,7 @@ export default defineConfig({
     command: `npm run --prefix ../front dev:test:prepared -- --port ${port}`,
     url: `http://localhost:${port}`,
     reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
   },
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
