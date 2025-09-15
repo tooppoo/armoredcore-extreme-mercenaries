@@ -358,7 +358,7 @@ const lists = ({
           </LinkCard>
         </div>
         <div className="mt-6">
-          <h4 className="text-lg font-semibold mb-3">最近の更新</h4>
+          <h4 className="text-lg font-semibold mb-3">最近の更新履歴</h4>
           {latestUpdates.length > 0 ? (
             <ul className="content-list mt-4 space-y-2">
               {latestUpdates.map((update) => (

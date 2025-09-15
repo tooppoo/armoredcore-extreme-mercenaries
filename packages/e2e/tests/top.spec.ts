@@ -49,7 +49,7 @@ test('latest info display shows max 3 items each with seed data', async ({
   await expect(firstChallengeRow.locator('td').nth(1)).toBeVisible() // 説明列
 
   // 更新履歴の抜粋セクション：静的データなので常に表示される
-  const updatesSection = page.locator('#recent-updates')
+  const updatesSection = page.getByLabel('最近の更新履歴')
   await expect(updatesSection).toBeVisible()
 
   const updatesList = updatesSection.locator('ul.content-list')
