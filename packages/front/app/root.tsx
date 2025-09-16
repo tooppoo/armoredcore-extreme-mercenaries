@@ -9,9 +9,11 @@ import {
   ScrollRestoration,
   useMatches,
   useLocation,
+  useNavigation,
 } from 'react-router'
 import type { BreadcrumbItem } from './types/breadcrumb'
 import { Breadcrumbs } from './lib/utils/components/Breadcrumbs'
+import { Spinner } from './lib/utils/components/loading'
 import { generateFooterLinks } from './lib/site/core-pages'
 
 import './tailwind.css'
@@ -152,6 +154,7 @@ function hasBreadcrumbTitle(data: unknown): data is MatchData {
 export default function App() {
   const matches = useMatches() as RouteMatch[]
   const location = useLocation()
+  const navigation = useNavigation()
 
   const breadcrumbItems = buildBreadcrumbItems(matches, location)
   const isWide = matches.some(
@@ -161,9 +164,16 @@ export default function App() {
     ? 'max-w-screen-2xl mx-auto'
     : 'max-w-3xl mx-auto'
 
+  const isLoading = navigation.state === 'loading'
+
   return (
     <div className={containerClass}>
       <Breadcrumbs items={breadcrumbItems} />
+      {isLoading && (
+        <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex items-center justify-center z-50">
+          <Spinner />
+        </div>
+      )}
       <Outlet />
     </div>
   )
