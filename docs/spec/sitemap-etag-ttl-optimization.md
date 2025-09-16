@@ -1,9 +1,15 @@
 # 仕様: SitemapのETag/TTL最適化（contents_revisions連動 + Conditional GET）
 
 ## 概要
-- `/sitemap.xml`（およびインデックス/子サイトマップ）で、`contents_revisions` に基づき ETag/Last-Modified を算出。
+- `/sitemap.xml`（インデックス）と子サイトマップで、`contents_revisions` に基づき ETag/Last-Modified を算出。
 - `If-None-Match` 受領時は弱いETag `W/"<hash>"` で比較し、一致なら 304 を返す。
 - `Cache-Control` は更新頻度に応じて可変（動的TTL）。
+
+### 子サイトマップ構成（2025-09 現在）
+- `/sitemap.core.xml` 静的/一覧ページ（TOP, 規約, 罰則, 更新履歴, アーカイブなど）
+- `/sitemap.updates.xml` 更新履歴の詳細ページ群（更新レコード由来・コード管理）
+- `/sitemap.challenge.xml` チャレンジ詳細ページ群（D1管理）
+- `/sitemap.video.xml` 動画アーカイブ一覧（個別詳細は無し）
 
 ## HTTP応答仕様
 - 200 OK（本文あり）
@@ -84,4 +90,3 @@ export async function handleSitemap(req: Request, env: Env): Promise<Response> {
 - sample-based testing
   - `If-None-Match` 一致で304、非一致で200。
   - 分割サイトマップで一部更新時に対象のみ `ETag` が変化。
-

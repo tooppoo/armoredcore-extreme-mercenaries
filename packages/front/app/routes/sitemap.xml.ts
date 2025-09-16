@@ -9,6 +9,7 @@ import {
   getVideoArchiveListUpdatedAt,
   getVideoArchiveListRevision,
 } from '~/lib/archives/video/revision/repository'
+import { records as updateRecords } from '~/lib/updates/repository/record.server'
 
 /**
  * なぜ子sitemapに分割するのか（方針3-1）
@@ -22,15 +23,20 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   const [challengeUpdatedAt, videoUpdatedAt, challengeRev, videoRev] =
     await fetchRevisions(context.db as Database)
 
+  // Updates(更新履歴)の最終更新日時（コード管理のためDB外）
+  const updatesUpdatedAt = getLatestUpdateDateFromUpdates()
+
   // 2) Last-Modified は最大の更新時刻
-  const lastMs = [challengeUpdatedAt, videoUpdatedAt]
+  const lastMs = [challengeUpdatedAt, videoUpdatedAt, updatesUpdatedAt]
     .filter((d): d is Date => Boolean(d))
     .map((d) => d.getTime())
     .reduce((a, b) => (a > b ? a : b), 0)
   const lastModified = lastMs ? new Date(lastMs) : null
 
   // 3) グローバルETag: 複数リビジョンを安定化して弱いETag化
-  const base = JSON.stringify({ c: challengeRev ?? 0, v: videoRev ?? 0 })
+  // updatesはDBリビジョンが無いので、最新日時を数値化してETagに含める
+  const u = updatesUpdatedAt ? updatesUpdatedAt.getTime() : 0
+  const base = JSON.stringify({ c: challengeRev ?? 0, v: videoRev ?? 0, u })
   const hash = await stableHash(base)
   const etag = `W/"${hash.substring(0, 32)}"` // 16bytes(32hex)に短縮
   const cacheControl = computeCacheControl(lastModified)
@@ -61,6 +67,12 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   parts.push(`<loc>${origin}/sitemap.core.xml</loc>`)
   if (lastModified)
     parts.push(`<lastmod>${lastModified.toISOString()}</lastmod>`)
+  parts.push('</sitemap>')
+
+  // Updates（更新履歴 詳細）の子sitemap
+  parts.push('<sitemap>')
+  parts.push(`<loc>${origin}/sitemap.updates.xml</loc>`) // child sitemap for updates details
+  if (fmt(updatesUpdatedAt)) parts.push(`<lastmod>${fmt(updatesUpdatedAt)}</lastmod>`)
   parts.push('</sitemap>')
 
   // Challenge 詳細の子sitemap
@@ -186,5 +198,21 @@ async function stableHash(input: string): Promise<string> {
       h = Math.imul(h, 0x01000193)
     }
     return (h >>> 0).toString(16).padStart(8, '0')
+  }
+}
+
+// 更新履歴(records)から最終更新日時を取得
+function getLatestUpdateDateFromUpdates(): Date | null {
+  try {
+    const flat = updateRecords.flat()
+    if (flat.length === 0) return null
+    let max = flat[0].createdAt
+    for (let i = 1; i < flat.length; i++) {
+      if (flat[i].createdAt > max) max = flat[i].createdAt
+    }
+    return max
+  } catch (e) {
+    console.error(e)
+    return null
   }
 }

@@ -12,6 +12,7 @@ export default [
   // Sitemaps (index + children)
   route('sitemap.xml', './routes/sitemap.xml.ts'),
   route('sitemap.core.xml', './routes/sitemap.core.xml.ts'),
+  route('sitemap.updates.xml', './routes/sitemap.updates.xml.ts'),
   route('sitemap.challenge.xml', './routes/sitemap.challenge.xml.ts'),
   route('sitemap.video.xml', './routes/sitemap.video.xml.ts'),
 
