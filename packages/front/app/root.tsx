@@ -168,13 +168,18 @@ export default function App() {
 
   return (
     <div className={containerClass}>
-      <Breadcrumbs items={breadcrumbItems} />
+      <div aria-hidden={isLoading}>
+        <Breadcrumbs items={breadcrumbItems} />
+        <Outlet />
+      </div>
       {isLoading && (
-        <div className="fixed top-0 left-0 w-full h-full bg-white/80 dark:bg-gray-950/80 flex items-center justify-center z-50">
+        <div
+          role="status"
+          className="fixed top-0 left-0 w-full h-full bg-white/80 dark:bg-gray-950/80 flex items-center justify-center z-50"
+        >
           <Spinner />
         </div>
       )}
-      <Outlet />
     </div>
   )
 }
