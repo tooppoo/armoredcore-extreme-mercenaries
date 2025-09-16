@@ -81,7 +81,6 @@ sequenceDiagram
     participant Archive as Archiveアプリ
     participant DB as Cloudflare D1
     participant User as 一般ユーザー
-    participant Admin as 管理者
 
     Bot->>Discord: メッセージ監視
     Note over Discord,Bot: URLを含むメッセージが投稿される
@@ -98,14 +97,6 @@ sequenceDiagram
     Archive->>DB: アーカイブ情報取得
     DB-->>Archive: アーカイブ情報
     Archive-->>User: アーカイブ一覧表示
-
-    Admin->>Archive: adminページアクセス
-    Archive->>DB: 詳細情報取得
-    DB-->>Archive: 詳細情報
-    Archive-->>Admin: 詳細情報表示
-    Admin->>Archive: 削除要求
-    Archive->>DB: アーカイブ削除
-    Archive-->>Admin: 削除完了通知
 ```
 
 ## データ
