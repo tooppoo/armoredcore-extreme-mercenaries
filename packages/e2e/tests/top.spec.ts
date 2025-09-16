@@ -9,7 +9,7 @@ test('Contents in Top Page', async ({ page }) => {
   await expect(page).toHaveTitle(/ARMORED CORE EXTREME MERCENARIES/)
 
   // 最新攻略動画セクション：seedデータが投入されているので必ずデータがある
-  const latestVideosHeading = page.locator('h4:has-text("最近の動画")')
+  const latestVideosHeading = page.locator('h3:has-text("最近の動画")')
   await expect(latestVideosHeading).toBeVisible()
 
   const latestVideosSection = page.getByLabel('最近の動画一覧')
@@ -28,7 +28,7 @@ test('Contents in Top Page', async ({ page }) => {
   await expect(firstVideoItem.locator('.underline')).toBeVisible() // タイトル
 
   // 最新チャレンジセクション：seedデータが投入されているので必ずデータがある
-  const challengesHeading = page.locator('h4:has-text("最近のチャレンジ")')
+  const challengesHeading = page.locator('h3:has-text("最近のチャレンジ")')
   await expect(challengesHeading).toBeVisible()
 
   const challengeTable = page.locator('table')
