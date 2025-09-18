@@ -4,6 +4,7 @@ export type CorePage = Readonly<{
   label?: string
   showInFooter?: boolean
   showInHeader?: boolean
+  priority?: number
 }>
 
 export type NavLink = Readonly<{
@@ -25,6 +26,7 @@ export const corePages: readonly CorePage[] = [
     label: 'TOP',
     showInFooter: true,
     showInHeader: false,
+    priority: 1.0,
   },
   { path: '/rule', label: '利用規約', showInFooter: true, showInHeader: false },
   {
