@@ -3,7 +3,8 @@
   "image": "node:22.19.0-bookworm",
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {},
-    "ghcr.io/devcontainers/features/git:1": {}
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
   },
   "containerEnv": {
     "NODE_ENV": "development"
@@ -11,7 +12,9 @@
   "mounts": [
     "target=/root/.npm"
   ],
-  "forwardPorts": [5173],
+  "forwardPorts": [
+    5173
+  ],
   "postCreateCommand": "bash -lc 'npm i -g npm@11.6.0 && if [ -f package.json ]; then npm ci; fi'",
   "customizations": {
     "vscode": {
@@ -19,7 +22,8 @@
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "ms-vscode.vscode-typescript-next",
-        "github.vscode-github-actions"
+        "github.vscode-github-actions",
+        "openai.chatgpt"
       ],
       "settings": {
         "typescript.tsdk": "node_modules/typescript/lib",
