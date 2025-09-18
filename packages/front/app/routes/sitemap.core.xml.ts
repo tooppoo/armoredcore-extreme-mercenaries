@@ -13,6 +13,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
     corePages.map(async (p) => ({
       loc: `${origin}${p.path}`,
       lastmod: await resolveLastmod(p.lastmod, { db: context.db }),
+      priority: p.priority,
     })),
   )
 
@@ -20,10 +21,15 @@ export async function loader({ context }: LoaderFunctionArgs) {
   parts.push('<?xml version="1.0" encoding="UTF-8"?>')
   parts.push('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
 
+  const fmtPriority = (n: number | undefined) =>
+    typeof n === 'number' && !Number.isNaN(n) ? n.toFixed(1) : undefined
+
   for (const u of entries) {
     parts.push('<url>')
     parts.push(`<loc>${u.loc}</loc>`)
     if (u.lastmod) parts.push(`<lastmod>${u.lastmod.toISOString()}</lastmod>`)
+    const pr = fmtPriority(u.priority)
+    if (pr) parts.push(`<priority>${pr}</priority>`)
     parts.push('</url>')
   }
 

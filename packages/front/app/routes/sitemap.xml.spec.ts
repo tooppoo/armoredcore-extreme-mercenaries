@@ -39,8 +39,10 @@ describe('sitemap.xml loader', () => {
     expect(res.status).toBe(200)
     const etag = res.headers.get('ETag')
     expect(etag).toBeTruthy()
+    // Last-Modified should be the latest among challenge, video, and updates
+    // Updates has the latest date: 2025-09-15 JST = 2025-09-14T15:00:00Z UTC
     expect(res.headers.get('Last-Modified')).toBe(
-      new Date('2025-01-02T00:00:00Z').toUTCString(),
+      new Date('2025-09-14T15:00:00Z').toUTCString(),
     )
     expect(res.headers.get('Cache-Control')).toMatch(/^public, /)
     const body = await res.text()

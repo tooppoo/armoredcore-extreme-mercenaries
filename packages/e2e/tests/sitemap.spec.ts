@@ -3,6 +3,7 @@ import { test, expect } from '@playwright/test'
 const paths: string[] = [
   '/sitemap.xml',
   '/sitemap.core.xml',
+  '/sitemap.updates.xml',
   '/sitemap.challenge.xml',
   '/sitemap.video.xml',
 ]
@@ -17,6 +18,13 @@ test.describe('sitemap endpoints', () => {
 })
 
 test.describe('child sitemap has non-zero urls', () => {
+  test('GET /sitemap.updates.xml has at least 1 url', async ({ request }) => {
+    const res = await request.get('/sitemap.updates.xml')
+    expect(res.status()).toBe(200)
+    const body = await res.text()
+    expect(body.includes('<url>')).toBeTruthy()
+  })
+
   test('GET /sitemap.challenge.xml has at least 1 url', async ({ request }) => {
     // ensure at least one challenge archive exists (text upload avoids OGP)
     await request.post('/api/archives/challenge', {
