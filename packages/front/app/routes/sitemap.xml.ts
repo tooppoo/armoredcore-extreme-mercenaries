@@ -72,7 +72,8 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   // Updates（更新履歴 詳細）の子sitemap
   parts.push('<sitemap>')
   parts.push(`<loc>${origin}/sitemap.updates.xml</loc>`) // child sitemap for updates details
-  if (fmt(updatesUpdatedAt)) parts.push(`<lastmod>${fmt(updatesUpdatedAt)}</lastmod>`)
+  if (fmt(updatesUpdatedAt))
+    parts.push(`<lastmod>${fmt(updatesUpdatedAt)}</lastmod>`)
   parts.push('</sitemap>')
 
   // Challenge 詳細の子sitemap
@@ -205,12 +206,12 @@ async function stableHash(input: string): Promise<string> {
 function getLatestUpdateDateFromUpdates(): Date | null {
   try {
     const flat = updateRecords.flat()
-    if (flat.length === 0) return null
-    let max = flat[0].createdAt
-    for (let i = 1; i < flat.length; i++) {
-      if (flat[i].createdAt > max) max = flat[i].createdAt
-    }
-    return max
+    return flat.length > 0
+      ? flat.reduce(
+          (latest, u) => (u.createdAt > latest ? u.createdAt : latest),
+          flat[0].createdAt,
+        )
+      : null
   } catch (e) {
     console.error(e)
     return null
