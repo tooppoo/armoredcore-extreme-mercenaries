@@ -1,0 +1,46 @@
+version: 2
+
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "02:00"
+      timezone: "Asia/Tokyo"
+    cooldown:
+      default-days: 3
+      include:
+        - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/front"
+    schedule:
+      interval: "daily"
+      time: "02:00"
+      timezone: "Asia/Tokyo"
+    cooldown:
+      default-days: 3
+      include:
+        - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/discord-bot"
+    schedule:
+      interval: "daily"
+      time: "02:00"
+      timezone: "Asia/Tokyo"
+    cooldown:
+      default-days: 3
+      include:
+        - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/e2e"
+    schedule:
+      interval: "daily"
+      time: "02:00"
+      timezone: "Asia/Tokyo"
+    cooldown:
+      default-days: 3
+      include:
+        - "*"

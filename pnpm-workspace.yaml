@@ -2,3 +2,5 @@ packages:
   - packages/front
   - packages/discord-bot
   - packages/e2e
+minimumReleaseAge: 1440
+enablePrePostScripts: false
