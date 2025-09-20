@@ -10,7 +10,7 @@
     "NODE_ENV": "development"
   },
   "mounts": [
-    "target=/root/.npm"
+    "source=pnpm-store,target=/root/.pnpm-store"
   ],
   "forwardPorts": [
     5173
