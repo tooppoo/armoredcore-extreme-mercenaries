@@ -3,7 +3,7 @@ set -e
 
 # Install pnpm using npm
 echo "Installing pnpm..."
-npm install -g $(node -p "require('../../package.json').packageManager")
+npm install -g $(node -p "require('./package.json').packageManager")
 
 # Verify pnpm installation
 pnpm --version
