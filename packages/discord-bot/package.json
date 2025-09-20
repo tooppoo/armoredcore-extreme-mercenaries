@@ -24,7 +24,7 @@
     "hono": "^4.9.7"
   },
   "devDependencies": {
-    "@types/node": "22.18.3",
+    "@types/node": "24.5.1",
     "tsx": "4.20.5",
     "prettier": "3.6.2"
   }
