@@ -35,7 +35,7 @@ FROM node:${NODE_VERSION}-alpine AS runtime
 WORKDIR /app
 
 COPY --from=build /app/packages/discord-bot/dist /app/dist
-COPY --from=deps /app/node_modules /app/node_modules
+COPY --from=deps /app/packages/discord-bot/node_modules /app/node_modules
 
 # PID1問題に対応する
 RUN apk add --no-cache tini
