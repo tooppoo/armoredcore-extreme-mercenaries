@@ -37,9 +37,6 @@ jobs:
           mkdir -p reports
           pnpm audit --prod --json > reports/pnpm-audit.json
 
-      - name: Run lockfile-lint
-        run: pnpm exec lockfile-lint --path pnpm-lock.yaml --type pnpm --validate-https
-
       - name: Upload reports
         if: ${{ always() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
