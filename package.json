@@ -4,38 +4,31 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "test": "npm run run-all -- test",
-    "build": "npm run run-all -- build",
-    "coverage": "npm run run-all -- coverage",
-    "lint": "npm run run-all -- lint",
-    "typecheck": "npm run run-all -- typecheck",
-    "run-all": "npm run --workspaces --if-present",
-    "discord-bot": "npm run -w @ac-extreme-mercenaries/discord-bot",
-    "discord-bot:install": "npm install -w @ac-extreme-mercenaries/discord-bot",
-    "discord-bot:uninstall": "npm uninstall -w @ac-extreme-mercenaries/discord-bot",
-    "discord-bot:dev": "npm run discord-bot -- dev",
-    "front": "npm run -w @ac-extreme-mercenaries/front",
-    "front:install": "npm install -w @ac-extreme-mercenaries/front",
-    "front:uninstall": "npm uninstall -w @ac-extreme-mercenaries/front",
-    "front:dev": "npm run front -- dev",
-    "e2e": "npm run -w @ac-extreme-mercenaries/e2e",
-    "e2e:install": "npm install -w @ac-extreme-mercenaries/e2e",
-    "e2e:uninstall": "npm uninstall -w @ac-extreme-mercenaries/e2e",
-    "adr:new": "npx log4brains adr new",
-    "adr:preview": "npx log4brains preview"
+    "test": "pnpm -r --if-present run test",
+    "build": "pnpm -r --if-present run build",
+    "coverage": "pnpm -r --if-present run coverage",
+    "lint": "pnpm -r --if-present run lint",
+    "typecheck": "pnpm -r --if-present run typecheck",
+    "discord-bot": "pnpm --filter @ac-extreme-mercenaries/discord-bot",
+    "front": "pnpm --filter @ac-extreme-mercenaries/front",
+    "e2e": "pnpm --filter @ac-extreme-mercenaries/e2e",
+    "adr:new": "pnpm exec log4brains adr new",
+    "adr:preview": "pnpm exec log4brains preview"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.18.0"
   },
+  "packageManager": "pnpm@10.17.0",
   "workspaces": [
     "packages/discord-bot",
     "packages/front",
     "packages/e2e"
   ],
   "devDependencies": {
-    "@ysk8hori/typescript-graph": "0.26.4"
+    "@ysk8hori/typescript-graph": "0.26.4",
+    "lockfile-lint": "4.14.1"
   },
   "dependencies": {
-    "@ac-extreme-mercenaries/front": "^1.0.1"
+    "@ac-extreme-mercenaries/front": "workspace:*"
   }
 }
