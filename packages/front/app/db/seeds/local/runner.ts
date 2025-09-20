@@ -7,7 +7,7 @@ const seedFiles = fs
 
 seedFiles.forEach((file) => {
   const frontCommand = 'pnpm --dir ../../ --filter @ac-extreme-mercenaries/front run'
-  const cmd = `${frontCommand} sql -- --file=${resolve(file)}`
+  const cmd = `${frontCommand} sql -- --file="${resolve(file)}"`
   console.log(`Run: ${file}`)
   execSync(cmd)
 })
