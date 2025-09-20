@@ -4,7 +4,7 @@
   "main": "build/index.js",
   "type": "module",
   "scripts": {
-    "start": "tsx src/app.ts",
+    "start": "node build/index.js",
     "dev": "dotenvx run -f .env.local -f .env -- tsx watch src/app.ts",
     "deploy:commands": "tsx scripts/deploy-commands.ts",
     "build": "tsc",
@@ -17,14 +17,14 @@
   "license": "MIT",
   "description": "",
   "dependencies": {
-    "@dotenvx/dotenvx": "^1.32.1",
     "@hono/node-server": "^1.13.7",
     "discord.js": "14.22.1",
-    "dotenv": "17.2.2",
     "hono": "^4.9.7"
   },
   "devDependencies": {
+    "@dotenvx/dotenvx": "^1.32.1",
     "@types/node": "22.18.3",
+    "dotenv": "17.2.2",
     "tsx": "4.20.5",
     "prettier": "3.6.2"
   }
