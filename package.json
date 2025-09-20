@@ -10,7 +10,9 @@
     "lint": "pnpm -r --if-present run lint",
     "typecheck": "pnpm -r --if-present run typecheck",
     "discord-bot": "pnpm --filter @ac-extreme-mercenaries/discord-bot",
+    "discord-bot:dev": "pnpm --filter @ac-extreme-mercenaries/discord-bot run dev",
     "front": "pnpm --filter @ac-extreme-mercenaries/front",
+    "front:dev": "pnpm --filter @ac-extreme-mercenaries/front run dev",
     "e2e": "pnpm --filter @ac-extreme-mercenaries/e2e",
     "adr:new": "pnpm exec log4brains adr new",
     "adr:preview": "pnpm exec log4brains preview"
