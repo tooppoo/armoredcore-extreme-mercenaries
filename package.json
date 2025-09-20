@@ -31,6 +31,8 @@
     "globals": "16.3.0"
   },
   "dependencies": {
-    "@ac-extreme-mercenaries/front": "workspace:*"
+    "@ac-extreme-mercenaries/front": "workspace:*",
+    "@typescript-eslint/eslint-plugin": "^8.44.0",
+    "@typescript-eslint/parser": "^8.44.0"
   }
 }
