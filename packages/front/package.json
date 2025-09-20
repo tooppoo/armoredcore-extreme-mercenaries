@@ -56,7 +56,7 @@
     "@cloudflare/workers-types": "4.20250902.0",
     "@fast-check/vitest": "0.2.2",
     "@react-router/dev": "7.9.1",
-    "@react-router/node": "^7.9.1",
+    "@react-router/node": "7.9.1",
     "@tailwindcss/postcss": "4.1.13",
     "@types/jsdom": "21.1.7",
     "@types/react": "19.1.13",
