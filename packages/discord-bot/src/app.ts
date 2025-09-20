@@ -23,3 +23,5 @@ serve(
     startBot()
   },
 )
+
+export default app

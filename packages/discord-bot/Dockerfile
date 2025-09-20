@@ -34,7 +34,7 @@ FROM node:${NODE_VERSION}-alpine AS runtime
 
 WORKDIR /app
 
-COPY --from=build /app/packages/discord-bot/build /app/build
+COPY --from=build /app/packages/discord-bot/dist /app/dist
 COPY --from=deps /app/node_modules /app/node_modules
 
 # PID1問題に対応する
@@ -43,4 +43,4 @@ ENTRYPOINT ["/sbin/tini", "--"]
 
 USER node
 
-CMD ["node", "build/index.js"]
+CMD ["node", "dist/index.js"]
