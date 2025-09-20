@@ -6,8 +6,8 @@ const seedFiles = fs
   .filter((file) => file.endsWith('.sql'))
 
 seedFiles.forEach((file) => {
-  const frontCommand = 'npm run --prefix ../../ front'
-  const cmd = `${frontCommand} -- sql -- --file=${resolve(file)}`
+  const frontCommand = 'pnpm --dir ../../ front'
+  const cmd = `${frontCommand} sql --file="${resolve(file)}"`
   console.log(`Run: ${file}`)
   execSync(cmd)
 })

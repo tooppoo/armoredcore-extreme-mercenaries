@@ -8,8 +8,8 @@ const __dirname = path.dirname(__filename)
 
 teardown('setup db', async () => {
   const repoRoot = path.resolve(__dirname, '../../../../')
-  const frontCommand = `npm run --prefix ${repoRoot} front`
+  const frontCommand = `pnpm --dir ${repoRoot} front`
   execSync(
-    `${frontCommand} -- sql:test -- --file ${__dirname}/global.setup.cleanup.sql`,
+    `${frontCommand} sql:test --file ${__dirname}/global.setup.cleanup.sql`,
   )
 })

@@ -2,8 +2,8 @@ name: Lighthouse
 on:
   pull_request:
     branches:
-      - '*'
-    types: 
+      - "*"
+    types:
       - opened
       - synchronize
       - reopened
@@ -13,21 +13,30 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: front
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.0.0
+        with:
+          run_install: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version-file: '.node-version'
-          cache: 'npm'
-      - run: npm ci && npm install -g @lhci/cli@0.14.x
+          node-version-file: ".node-version"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       # DB構築
-      - run: npm run migration
+      - run: pnpm run migration
         working-directory: packages/front
-      - run: npm run seed:local
+      - run: pnpm run seed:local
         working-directory: packages/front
 
-      - run: lhci autorun
+      - name: Run Lighthouse CI
+        run: pnpm dlx @lhci/cli@0.14.x autorun
         working-directory: packages/front
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}

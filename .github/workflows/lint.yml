@@ -3,28 +3,33 @@ name: lint and format
 on:
   pull_request:
     branches-ignore:
-      - 'renovate/*'
+      - "renovate/*"
 
 jobs:
   lint-fix:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
       # setup runtime
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.0.0
+        with:
+          run_install: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version-file: '.node-version'
-          cache: 'npm'
-      - run: npm ci
-      - run: npm run build
+          node-version-file: ".node-version"
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
 
       - name: lint
-        run: npm run lint
+        run: pnpm run lint
 
       - name: auto commit
         run: |
@@ -52,12 +57,16 @@ jobs:
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       # setup runtime
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.0.0
+        with:
+          run_install: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version-file: '.node-version'
-          cache: 'npm'
-      - run: npm ci
-      - run: npm run ${{ matrix.package }} -- build
+          node-version-file: ".node-version"
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run ${{ matrix.package }} -- build
       - name: reviewdog:${{ matrix.package }}
         uses: reviewdog/action-eslint@556a3fdaf8b4201d4d74d406013386aa4f7dab96 # v1
         with:

@@ -115,20 +115,20 @@ sequenceDiagram
 ### 2. ローカルDBの準備（必要な場合）
 
 ```sh
-npm run front -- migration
-npm run front -- seed:local
+pnpm --filter @ac-extreme-mercenaries/front run migration
+pnpm --filter @ac-extreme-mercenaries/front run seed:local
 ```
 
 ### 3. Front起動
 
 ```sh
-npm run front:dev
+pnpm run front:dev
 ```
 
 ### 4. Bot起動
 
 ```sh
-npm run discord-bot:dev
+pnpm run discord-bot:dev
 ```
 
 ### 5. テスト

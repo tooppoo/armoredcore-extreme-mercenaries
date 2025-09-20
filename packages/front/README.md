@@ -5,14 +5,14 @@
 ローカル起動
 
 ```sh
-npm run dev
+pnpm run front:dev
 ```
 
 Wrangler起動
 
 ```sh
-npm run build
-npm run start
+pnpm run build
+pnpm --filter @ac-extreme-mercenaries/front run start
 ```
 
 ## 型定義生成 (Typegen)
@@ -20,7 +20,7 @@ npm run start
 `wrangler.toml` に記述されている Cloudflare バインディングの型を生成
 
 ```sh
-npm run typegen
+pnpm --filter @ac-extreme-mercenaries/front run typegen
 ```
 
 `wrangler.toml` を変更するたびに、型定義生成 (typegen) を再実行する必要があります。
@@ -32,25 +32,25 @@ npm run typegen
 `app/db/schema.server.ts` を変更したら実行
 
 ```sh
-npm run migration:gen
+pnpm --filter @ac-extreme-mercenaries/front run migration:gen
 ```
 
 ### ローカル
 
 ```sh
-npm run migration
+pnpm --filter @ac-extreme-mercenaries/front run migration
 ```
 
 ### 本番
 
 ```sh
-npm run migration:prod
+pnpm --filter @ac-extreme-mercenaries/front run migration:prod
 ```
 
 ## Seed
 
 ```sh
-npm run seed
+pnpm --filter @ac-extreme-mercenaries/front run seed
 ```
 
 ## スタイリング

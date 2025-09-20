@@ -12,21 +12,28 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: discord-bot
+    permissions:
+      contents: read
     steps:
-    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
-    # setup runtime
-    - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-      with:
-        node-version-file: '.node-version'
-        cache: 'npm'
-    - run: npm ci
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      # setup runtime
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.0.0
+        with:
+          run_install: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: ".node-version"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-    - name: type check for discord bot
-      run: npm run discord-bot -- typecheck
+      - name: type check for discord bot
+        run: pnpm run discord-bot -- typecheck
 
-    - name: deploy discord bot commands
-      run: npm run discord-bot -- deploy:commands
-      env:
-        DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
-        DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
-        DISCORD_GUILD_ID: ${{ secrets.DISCORD_GUILD_ID }}
+      - name: deploy discord bot commands
+        run: pnpm run discord-bot -- deploy:commands
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
+          DISCORD_GUILD_ID: ${{ secrets.DISCORD_GUILD_ID }}
