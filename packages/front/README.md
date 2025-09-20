@@ -11,7 +11,7 @@ pnpm --filter @ac-extreme-mercenaries/front run dev
 Wrangler起動
 
 ```sh
-pnpm --filter @ac-extreme-mercenaries/front run build
+pnpm run build
 pnpm --filter @ac-extreme-mercenaries/front run start
 ```
 
