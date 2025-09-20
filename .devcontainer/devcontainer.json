@@ -9,8 +9,11 @@
   "containerEnv": {
     "NODE_ENV": "development"
   },
+  "remoteUser": "root",
   "mounts": [
-    "source=pnpm-store,target=/root/.pnpm-store"
+    "target=/root/.npm",
+    "source=pnpm-store,target=/root/.pnpm-store",
+    "source=${localEnv:HOME}/.codex,target=/root/.codex,type=bind,consistency=cached"
   ],
   "forwardPorts": [
     5173
@@ -30,6 +33,5 @@
         "editor.formatOnSave": true
       }
     }
-  },
-  "remoteUser": "root"
+  }
 }
