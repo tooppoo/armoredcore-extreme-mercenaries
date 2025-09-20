@@ -9,8 +9,7 @@ const __dirname = path.dirname(__filename)
 
 setup('setup db', async () => {
   const repoRoot = path.resolve(__dirname, '../../../../')
-  const repoDirFlag = JSON.stringify(repoRoot)
-  const frontCommand = `pnpm --dir ${repoDirFlag} --filter @ac-extreme-mercenaries/front run`
+  const frontCommand = `pnpm --dir ${repoRoot} front`
 
   console.log('=== E2E Database Setup with Seed Data (TEST DB) ===')
   console.log(`Repository root: ${repoRoot}`)
@@ -24,7 +23,7 @@ setup('setup db', async () => {
     // Check what tables exist after migration (test DB)
     console.log('Checking existing tables...')
     execSync(
-      `${frontCommand} sql:test -- --command "SELECT name FROM sqlite_master WHERE type='table';"`,
+      `${frontCommand} sql:test --command "SELECT name FROM sqlite_master WHERE type='table';"`,
       {
         stdio: 'inherit',
       },
@@ -34,7 +33,7 @@ setup('setup db', async () => {
     console.log('Clearing existing records...')
     try {
       execSync(
-        `${frontCommand} sql:test -- --file ${path.join(__dirname, 'global.setup.cleanup.sql')}`,
+        `${frontCommand} sql:test --file ${path.join(__dirname, 'global.setup.cleanup.sql')}`,
         { stdio: 'inherit' },
       )
     } catch (cleanupError) {
@@ -61,7 +60,7 @@ setup('setup db', async () => {
     for (const file of seedFiles) {
       const seedPath = path.join(seedDir, file)
       console.log(`Seeding: ${seedPath}`)
-      execSync(`${frontCommand} sql:test -- --file "${seedPath}"`, {
+      execSync(`${frontCommand} sql:test --file "${seedPath}"`, {
         stdio: 'inherit',
       })
     }
@@ -69,11 +68,11 @@ setup('setup db', async () => {
     // Verify data was inserted
     console.log('Verifying seed data...')
     execSync(
-      `${frontCommand} sql:test -- --command "SELECT COUNT(*) as video_count FROM video_archives;"`,
+      `${frontCommand} sql:test --command "SELECT COUNT(*) as video_count FROM video_archives;"`,
       { stdio: 'inherit' },
     )
     execSync(
-      `${frontCommand} sql:test -- --command "SELECT COUNT(*) as challenge_count FROM challenge_archives;"`,
+      `${frontCommand} sql:test --command "SELECT COUNT(*) as challenge_count FROM challenge_archives;"`,
       { stdio: 'inherit' },
     )
 
