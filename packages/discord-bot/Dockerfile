@@ -26,7 +26,7 @@ RUN set -eux; \
   PNPM_SPEC="$(node -p 'require("./package.json").packageManager')"; \
   PNPM_VERSION="${PNPM_SPEC#pnpm@}"; \
   npm install -g "pnpm@${PNPM_VERSION}"; \
-  pnpm --filter @ac-extreme-mercenaries/discord-bot install --frozen-lockfile && \
+  pnpm install --frozen-lockfile && \
   pnpm discord-bot build
 
 # 実行環境
