@@ -14,4 +14,7 @@ pnpm config set store-dir ~/.pnpm-store
 pnpm config set state-dir ~/.pnpm-state
 pnpm install --frozen-lockfile
 
+# Setup dev
+pnpm front -- build
+
 echo "pnpm setup completed successfully"
