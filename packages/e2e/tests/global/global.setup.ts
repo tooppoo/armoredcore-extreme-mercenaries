@@ -20,15 +20,6 @@ setup('setup db', async () => {
     console.log('Applying migrations...')
     execSync(`${frontCommand} migration:test`, { stdio: 'inherit' })
 
-    // Check what tables exist after migration (test DB)
-    console.log('Checking existing tables...')
-    execSync(
-      `${frontCommand} sql:test --command "SELECT name FROM sqlite_master WHERE type='table';"`,
-      {
-        stdio: 'inherit',
-      },
-    )
-
     // Clear all records to avoid duplicate constraints before seeding
     console.log('Clearing existing records...')
     try {
@@ -64,17 +55,6 @@ setup('setup db', async () => {
         stdio: 'inherit',
       })
     }
-
-    // Verify data was inserted
-    console.log('Verifying seed data...')
-    execSync(
-      `${frontCommand} sql:test --command "SELECT COUNT(*) as video_count FROM video_archives;"`,
-      { stdio: 'inherit' },
-    )
-    execSync(
-      `${frontCommand} sql:test --command "SELECT COUNT(*) as challenge_count FROM challenge_archives;"`,
-      { stdio: 'inherit' },
-    )
 
     console.log('=== Database setup complete ===')
   } catch (error) {
