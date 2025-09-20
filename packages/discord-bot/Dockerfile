@@ -1,20 +1,20 @@
 ARG NODE_VERSION=22.19.0
 
 # 本番用の依存関係をインストール
-FROM node:${NODE_VERSION}-slim as deps
+FROM node:${NODE_VERSION}-slim AS deps
 
 WORKDIR /app
 
 COPY ../../ .
 
 RUN set -eux; \
-  PNPM_SPEC="$(node -p \"require('./package.json').packageManager\")"; \
+  PNPM_SPEC="$(node -p 'require("./package.json").packageManager')"; \
   PNPM_VERSION="${PNPM_SPEC#pnpm@}"; \
   npm install -g "pnpm@${PNPM_VERSION}"; \
   pnpm --filter @ac-extreme-mercenaries/discord-bot install --frozen-lockfile --prod 
 
 # アプリケーショ本体のbuild
-FROM node:${NODE_VERSION}-slim as build
+FROM node:${NODE_VERSION}-slim AS build
 
 WORKDIR /app
 
@@ -23,14 +23,14 @@ COPY ../../ .
 ENV NODE_ENV=development
 
 RUN set -eux; \
-  PNPM_SPEC="$(node -p \"require('./package.json').packageManager\")"; \
+  PNPM_SPEC="$(node -p 'require("./package.json").packageManager')"; \
   PNPM_VERSION="${PNPM_SPEC#pnpm@}"; \
   npm install -g "pnpm@${PNPM_VERSION}"; \
   pnpm --filter @ac-extreme-mercenaries/discord-bot install --frozen-lockfile && \
   pnpm discord-bot build
 
 # 実行環境
-FROM node:${NODE_VERSION}-alpine as runtime
+FROM node:${NODE_VERSION}-alpine AS runtime
 
 WORKDIR /app
 
