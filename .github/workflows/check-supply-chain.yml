@@ -14,8 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    env:
-      PNPM_VERSION: 10.17.0
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
@@ -26,16 +24,21 @@ jobs:
           node-version-file: ".node-version"
           cache: "pnpm"
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.0.0
+        with:
+          run_install: false
+
       - name: Install dependencies
-        run: npx pnpm@${PNPM_VERSION} install --ignore-scripts --frozen-lockfile
+        run: pnpm install --ignore-scripts --frozen-lockfile
 
       - name: Run pnpm audit (prod)
         run: |
           mkdir -p reports
-          npx pnpm@${PNPM_VERSION} audit --prod --json > reports/pnpm-audit.json
+          pnpm audit --prod --json > reports/pnpm-audit.json
 
       - name: Run lockfile-lint
-        run: npx pnpm@${PNPM_VERSION} exec lockfile-lint --path pnpm-lock.yaml --type pnpm --validate-https
+        run: pnpm exec lockfile-lint --path pnpm-lock.yaml --type pnpm --validate-https
 
       - name: Upload reports
         if: ${{ always() }}

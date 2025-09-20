@@ -1,11 +1,10 @@
-
 name: test app
 
 on:
   pull_request:
     branches:
       - '*'
-    types: 
+    types:
       - opened
       - synchronize
       - reopened
@@ -19,9 +18,12 @@ jobs:
     - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
       with:
         node-version-file: '.node-version'
-        cache: 'npm'
-    # integration
-    - run: npm ci
-    - run: npm run build
-    - run: npm run typecheck
-    - run: npm run test
+        cache: 'pnpm'
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4.0.0
+      with:
+        run_install: false
+    - run: pnpm install --frozen-lockfile
+    - run: pnpm run build
+    - run: pnpm run typecheck
+    - run: pnpm run test

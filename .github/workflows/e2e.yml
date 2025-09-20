@@ -3,7 +3,7 @@ on:
   pull_request:
     branches:
       - '*'
-    types: 
+    types:
       - opened
       - synchronize
       - reopened
@@ -19,40 +19,44 @@ jobs:
       CI: true
     steps:
       # setup runtime
-    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
-    - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-      with:
-        node-version-file: '.node-version'
-        cache: 'npm'
-    - name: Install dependencies
-      run: npm ci
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: '.node-version'
+          cache: 'pnpm'
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.0.0
+        with:
+          run_install: false
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       # setup app
-    - name: Build Local App
-      run: |
-        npm run front -- build:test
+      - name: Build Local App
+        run: |
+          pnpm run front -- build:test
 
       # e2e
-    - name: Install e2e Browsers
-      run: npm run e2e -- deps
+      - name: Install e2e Browsers
+        run: pnpm run e2e -- deps
 
-    - name: Run e2e tests
-      run: npm run e2e -- e2e
-      env:
-        TIMEOUT: ${{ vars.TIMEOUT }}
-        TIMEOUT_EXPECT: ${{ vars.TIMEOUT_EXPECT }}
+      - name: Run e2e tests
+        run: pnpm run e2e -- e2e
+        env:
+          TIMEOUT: ${{ vars.TIMEOUT }}
+          TIMEOUT_EXPECT: ${{ vars.TIMEOUT_EXPECT }}
 
       # upload report
-    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-      if: ${{ always() }}
-      with:
-        name: e2e-report
-        path: |
-          packages/e2e/playwright-report/
-          packages/e2e/playwright-report.json
-        retention-days: 30
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ always() }}
+        with:
+          name: e2e-report
+          path: |
+            packages/e2e/playwright-report/
+            packages/e2e/playwright-report.json
+          retention-days: 30
 
-    - name: Analyze flaky tests
-      run: node packages/e2e/scripts/check-flaky.mjs
-      env:
-        FLAKY_POLICY: ${{ vars.FLAKY_POLICY || 'warn' }}
+      - name: Analyze flaky tests
+        run: node packages/e2e/scripts/check-flaky.mjs
+        env:
+          FLAKY_POLICY: ${{ vars.FLAKY_POLICY || 'warn' }}

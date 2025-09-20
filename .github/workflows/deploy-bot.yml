@@ -18,14 +18,19 @@ jobs:
     - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
       with:
         node-version-file: '.node-version'
-        cache: 'npm'
-    - run: npm ci
+        cache: 'pnpm'
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4.0.0
+      with:
+        run_install: false
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
 
     - name: type check for discord bot
-      run: npm run discord-bot -- typecheck
+      run: pnpm run discord-bot -- typecheck
 
     - name: deploy discord bot commands
-      run: npm run discord-bot -- deploy:commands
+      run: pnpm run discord-bot -- deploy:commands
       env:
         DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
         DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
