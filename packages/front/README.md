@@ -5,7 +5,7 @@
 ローカル起動
 
 ```sh
-pnpm --filter @ac-extreme-mercenaries/front run dev
+pnpm run front:dev
 ```
 
 Wrangler起動
