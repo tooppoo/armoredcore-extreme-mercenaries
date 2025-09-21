@@ -21,7 +21,7 @@ ARG PNPM_STORE_DIR=/root/.pnpm-store
 
 WORKDIR /app
 
-COPY pnpm-lock.yaml pnpm-workspace.yaml .
+COPY pnpm-lock.yaml pnpm-workspace.yaml ./
 
 RUN pnpm fetch .
 
@@ -38,10 +38,7 @@ RUN set -eux; \
   pnpm install --offline --frozen-lockfile; \
   pnpm discord-bot build; \
   # シンボリックリンク展開
-  pnpm discord-bot deploy --prod build/discord-bot; \
-  apt update; \
-  apt install -y tree; \
-  tree .;
+  pnpm discord-bot deploy --prod build/discord-bot;
 
 # 実行環境
 FROM node:${NODE_VERSION}-alpine AS runtime
@@ -54,6 +51,8 @@ COPY --from=build /app/build/discord-bot/node_modules /app/node_modules
 # PID1問題に対応する
 RUN apk add --no-cache tini
 ENTRYPOINT ["/sbin/tini", "--"]
+
+EXPOSE ${PORT:-3000}
 
 USER node
 
