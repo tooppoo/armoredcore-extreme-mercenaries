@@ -17,6 +17,8 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store set -eux; \
   pnpm discord-bot build; \
   # シンボリックリンク展開
   pnpm discord-bot deploy --prod build/discord-bot; \
+  apt update; \
+  apt install -y tree; \
   tree build/discord-bot;
 
 # 実行環境
