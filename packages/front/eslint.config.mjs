@@ -52,23 +52,20 @@ export default [
       },
     },
   },
-  ...fixupConfigRules(
-    compat.extends(
-      'plugin:react/recommended',
-      'plugin:react/jsx-runtime',
-      'plugin:react-hooks/recommended',
-      'plugin:jsx-a11y/recommended',
-    ),
-  ).map((config) => ({
-    ...config,
-    files: ['**/*.{js,jsx,ts,tsx}'],
-  })),
+  ...fixupConfigRules(compat.extends('plugin:react-hooks/recommended')).map(
+    (config) => ({
+      ...config,
+      files: ['**/*.{js,jsx,ts,tsx}'],
+    }),
+  ),
+  jsxA11Y.flatConfigs.recommended,
+  react.configs.flat.recommended,
+  react.configs.flat['jsx-runtime'],
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
 
     plugins: {
-      react: fixupPluginRules(react),
-      'jsx-a11y': fixupPluginRules(jsxA11Y),
+      react,
     },
 
     settings: {
