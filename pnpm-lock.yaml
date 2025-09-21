@@ -86,9 +86,6 @@ importers:
       '@dotenvx/dotenvx':
         specifier: 1.50.1
         version: 1.50.1
-      '@hono/vite-build':
-        specifier: 1.7.0
-        version: 1.7.0(hono@4.9.8)
 
   packages/e2e:
     devDependencies:
@@ -1059,12 +1056,6 @@ packages:
     engines: {node: '>=18.14.1'}
     peerDependencies:
       hono: ^4
-
-  '@hono/vite-build@1.7.0':
-    resolution: {integrity: sha512-L73WBed5teC7DHTzXYkho83POYYluD2rTkbT76FJuqpfXPgTW/PsbIa8O0YcCETE3VUoh584fe6vuLAM5ctjww==}
-    engines: {node: '>=18.14.1'}
-    peerDependencies:
-      hono: '*'
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -4143,7 +4134,7 @@ snapshots:
       react-hook-form: 7.62.0(react@19.1.1)
       react-router: 7.9.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       sanitize-html: 2.17.0
-      uuid: 11.1.0
+      uuid: 13.0.0
       zod: 4.1.9
     optionalDependencies:
       '@cloudflare/workerd-darwin-64': 1.20250913.0
@@ -4842,10 +4833,6 @@ snapshots:
       react: 19.1.1
 
   '@hono/node-server@1.19.3(hono@4.9.8)':
-    dependencies:
-      hono: 4.9.8
-
-  '@hono/vite-build@1.7.0(hono@4.9.8)':
     dependencies:
       hono: 4.9.8
 

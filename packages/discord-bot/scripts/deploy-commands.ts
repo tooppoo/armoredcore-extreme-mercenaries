@@ -1,8 +1,8 @@
 import 'dotenv/config'
 import { REST, Routes } from 'discord.js'
-import { log } from '../src/lib/log'
-import { makeCatchesSerializable } from '../src/lib/error'
-import { commands } from '../src/bot/commands'
+import { log } from '../src/lib/log.js'
+import { makeCatchesSerializable } from '../src/lib/error.js'
+import { commands } from '../src/bot/commands/index.js'
 
 async function main() {
   if (commands.length === 0) {

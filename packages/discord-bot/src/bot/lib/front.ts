@@ -1,6 +1,6 @@
-import { makeCatchesSerializable } from '../../lib/error'
-import { log } from '../../lib/log'
-import { type SendMessage } from './message'
+import { makeCatchesSerializable } from '../../lib/error.js'
+import { log } from '../../lib/log.js'
+import { type SendMessage } from './message.js'
 
 export function frontApi(path: string): string {
   return process.env.FRONT_URL + path

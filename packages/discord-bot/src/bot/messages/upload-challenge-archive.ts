@@ -1,7 +1,7 @@
-import { frontApi } from '../lib/front'
-import type { MessageHandler, MessageHandlerFunction } from '.'
-import type { UserMessage } from '../lib/message'
-import { log } from '../../lib/log'
+import { frontApi } from '../lib/front.js'
+import type { MessageHandler, MessageHandlerFunction } from './index.js'
+import type { UserMessage } from '../lib/message.js'
+import { log } from '../../lib/log.js'
 
 const name = 'upload-challenge-archive'
 const handle: MessageHandlerFunction = async (userMessage, frontRequest) => {

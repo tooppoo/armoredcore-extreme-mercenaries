@@ -1,9 +1,9 @@
 import 'dotenv/config'
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js'
-import { log } from '../lib/log'
-import { setupMessageSender } from './lib/message'
-import { messageHandlers } from './messages'
-import { frontRequestHandler } from './lib/front'
+import { log } from '../lib/log.js'
+import { setupMessageSender } from './lib/message.js'
+import { messageHandlers } from './messages/index.js'
+import { frontRequestHandler } from './lib/front.js'
 
 export function startBot() {
   const client = setupClient()

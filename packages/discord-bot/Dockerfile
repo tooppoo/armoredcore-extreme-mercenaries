@@ -1,7 +1,6 @@
-ARG NODE_VERSION=22.19.0
 
 # buildのための共通イメージ
-FROM node:${NODE_VERSION}-slim AS base-build
+FROM node:22.19.0-slim AS base-build
 
 ARG PNPM_STORE_DIR=/root/.pnpm-store
 
@@ -22,38 +21,52 @@ ARG PNPM_STORE_DIR=/root/.pnpm-store
 WORKDIR /app
 
 COPY pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/discord-bot/package.json ./packages/discord-bot/package.json
+# ENOENT回避のため、最低限のディレクトリは構成は用意
+COPY packages/front/package.json ./packages/front/package.json
+COPY packages/e2e/package.json ./packages/e2e/package.json
 
-RUN pnpm fetch .
+RUN pnpm fetch
 
 # アプリケーショ本体のbuild
 FROM base-build AS build
 
 WORKDIR /app
 
-COPY ../../ .
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/discord-bot ./packages/discord-bot
+# ENOENT回避のため、最低限のディレクトリは構成は用意
+COPY packages/front/package.json ./packages/front/package.json
+COPY packages/e2e/package.json ./packages/e2e/package.json
+
 COPY --from=fetch /app/node_modules ./node_modules
 COPY --from=fetch ${PNPM_STORE_DIR} ${PNPM_STORE_DIR}
+
+# PID1問題に対応用のtini追加
+ENV TINI_VERSION=v0.19.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 
 RUN set -eux; \
   pnpm install --offline --frozen-lockfile; \
   pnpm discord-bot build; \
   # シンボリックリンク展開
-  pnpm discord-bot deploy --prod build/discord-bot;
+  pnpm discord-bot deploy --prod build/discord-bot; \
+  chmod +x /tini
 
-# 実行環境
-FROM node:${NODE_VERSION}-alpine AS runtime
+# 実行環境(22.19.0)
+FROM gcr.io/distroless/nodejs22-debian12@sha256:3732180ba4a39101bd95b7105ef0c47526c197d6c29c6d48f7059a647a4064a5 AS runtime
 
 WORKDIR /app
 
 COPY --from=build /app/build/discord-bot/dist /app/dist
 COPY --from=build /app/build/discord-bot/node_modules /app/node_modules
+COPY --from=build /tini /sbin/tini
 
 # PID1問題に対応する
-RUN apk add --no-cache tini
 ENTRYPOINT ["/sbin/tini", "--"]
 
 EXPOSE ${PORT:-3000}
 
-USER node
+USER nonroot
 
-CMD ["node", "dist/index.js"]
+CMD ["/nodejs/bin/node", "dist/app.js"]

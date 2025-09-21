@@ -1,13 +1,13 @@
 {
   "name": "@ac-extreme-mercenaries/discord-bot",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "dist/app.js",
   "type": "module",
   "scripts": {
-    "start": "node dist/index.js",
-    "dev": "dotenvx run -f .env.local -f .env -- vite dev",
+    "start": "node dist/app.js",
+    "dev": "dotenvx run -f .env.local -f .env -- tsx src/app.ts",
     "deploy:commands": "tsx scripts/deploy-commands.ts",
-    "build": "vite build",
+    "build": "tsc --project tsconfig.build.json",
     "lint": "run-s run-eslint run-prettier",
     "run-eslint": "eslint --cache --cache-location ./node_modules/.cache/eslint --fix .",
     "run-prettier": "prettier --write .",
@@ -23,7 +23,6 @@
     "hono": "^4.9.7"
   },
   "devDependencies": {
-    "@dotenvx/dotenvx": "1.50.1",
-    "@hono/vite-build": "1.7.0"
+    "@dotenvx/dotenvx": "1.50.1"
   }
 }
