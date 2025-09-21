@@ -74,7 +74,7 @@
     "wrangler": "4.33.1"
   },
   "optionalDependencies": {
-    "@cloudflare/workerd-darwin-64": "1.20250913.0",
+    "@cloudflare/workerd-darwin-64": "1.20250918.0",
     "@cloudflare/workerd-darwin-arm64": "1.20250905.0",
     "@cloudflare/workerd-linux-64": "1.20250903.0",
     "@rollup/rollup-darwin-arm64": "4.50.2",
@@ -89,7 +89,7 @@
     "workerd": {
       "optionalDependencies": {
         "@cloudflare/workerd-linux-64": "1.20250903.0",
-        "@cloudflare/workerd-darwin-64": "1.20250913.0",
+        "@cloudflare/workerd-darwin-64": "1.20250918.0",
         "@cloudflare/workerd-darwin-arm64": "1.20250905.0"
       }
     }
