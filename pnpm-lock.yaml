@@ -66,7 +66,7 @@ importers:
         version: 5.1.4(typescript@5.9.2)(vite@7.1.6(@types/node@22.18.6)(jiti@2.5.1)(lightningcss@1.30.1)(tsx@4.20.5))
       vitest:
         specifier: 3.2.4
-        version: 3.2.4(@types/node@22.18.6)(jiti@2.5.1)(jsdom@27.0.0(postcss@8.5.6))(lightningcss@1.30.1)(tsx@4.20.5)
+        version: 3.2.4(@types/node@22.18.6)(jiti@2.5.1)(jsdom@27.0.0)(lightningcss@1.30.1)(tsx@4.20.5)
 
   packages/discord-bot:
     dependencies:
@@ -114,8 +114,8 @@ importers:
         specifier: 11.11.1
         version: 11.11.1
       html-react-parser:
-        specifier: 5.2.3
-        version: 5.2.3(@types/react@19.1.13)(react@19.1.1)
+        specifier: 5.2.6
+        version: 5.2.6(@types/react@19.1.13)(react@19.1.1)
       isbot:
         specifier: ^5.0.0
         version: 5.1.30
@@ -2689,8 +2689,8 @@ packages:
     resolution: {integrity: sha512-HVJyzUrLIL1c0QmviVh5E8VGyUS7xCFPS6yydaVd1UegW+ibV/CohqTH9MkOLDp5o+rb82DMo77PTuc9F/8GKw==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
-  html-dom-parser@5.0.13:
-    resolution: {integrity: sha512-B7JonBuAfG32I7fDouUQEogBrz3jK9gAuN1r1AaXpED6dIhtg/JwiSRhjGL7aOJwRz3HU4efowCjQBaoXiREqg==}
+  html-dom-parser@5.1.1:
+    resolution: {integrity: sha512-+o4Y4Z0CLuyemeccvGN4bAO20aauB2N9tFEAep5x4OW34kV4PTarBHm6RL02afYt2BMKcr0D2Agep8S3nJPIBg==}
 
   html-encoding-sniffer@4.0.0:
     resolution: {integrity: sha512-Y22oTqIU4uuPgEemfz7NDJz6OeKf12Lsu+QC+s3BVpda64lTiMYCyGwg5ki4vFxkMwQdeZDl2adZoqUgdFuTgQ==}
@@ -2699,8 +2699,8 @@ packages:
   html-escaper@2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
 
-  html-react-parser@5.2.3:
-    resolution: {integrity: sha512-y34oKTu+9T1fKdJE1cN9QWFWu8sx8Qa5tJOafUfMUF5Niah+yF6zlEHhWh7a0iZEcLRPIMw54bY14ajQF7xP7A==}
+  html-react-parser@5.2.6:
+    resolution: {integrity: sha512-qcpPWLaSvqXi+TndiHbCa+z8qt0tVzjMwFGFBAa41ggC+ZA5BHaMIeMJla9g3VSp4SmiZb9qyQbmbpHYpIfPOg==}
     peerDependencies:
       '@types/react': 0.14 || 15 || 16 || 17 || 18 || 19
       react: 0.14 || 15 || 16 || 17 || 18 || 19
@@ -3677,11 +3677,11 @@ packages:
   strip-literal@3.0.0:
     resolution: {integrity: sha512-TcccoMhJOM3OebGhSBEmp3UZ2SfDMZUEBdRA/9ynfLi8yYajyWX3JiXArcJt4Umh4vISpspkQIY8ZZoCqjbviA==}
 
-  style-to-js@1.1.16:
-    resolution: {integrity: sha512-/Q6ld50hKYPH3d/r6nr117TZkHR0w0kGGIVfpG9N6D8NymRPM9RqCUv4pRpJ62E5DqOYx2AFpbZMyCPnjQCnOw==}
+  style-to-js@1.1.17:
+    resolution: {integrity: sha512-xQcBGDxJb6jjFCTzvQtfiPn6YvvP2O8U1MDIPNfJQlWMYfktPy+iGsHE7cssjs7y84d9fQaK4UF3RIJaAHSoYA==}
 
-  style-to-object@1.0.8:
-    resolution: {integrity: sha512-xT47I/Eo0rwJmaXC4oilDGDWLohVhR6o/xAQcPQN8q6QBuZVL8qMYL85kLmST5cPjAorwvqIA4qXTRQoYHaL6g==}
+  style-to-object@1.0.9:
+    resolution: {integrity: sha512-G4qppLgKu/k6FwRpHiGiKPaPTFcG3g4wNVX/Qsfu+RqQM30E7Tyu/TEgxcL9PNLF5pdRLwQdE3YKKf+KF2Dzlw==}
 
   supports-color@10.2.2:
     resolution: {integrity: sha512-SS+jx45GF1QjgEXQx4NJZV9ImqmO2NPz5FNsIHrsDjh2YsHnawpan7SNQ1o8NuhrbHZy9AZhIoCUiCeaW/C80g==}
@@ -4101,7 +4101,7 @@ snapshots:
       date-fns: 4.1.0
       drizzle-orm: 0.44.5(@cloudflare/workers-types@4.20250902.0)
       highlight.js: 11.11.1
-      html-react-parser: 5.2.3(@types/react@19.1.13)(react@19.1.1)
+      html-react-parser: 5.2.6(@types/react@19.1.13)(react@19.1.1)
       isbot: 5.1.30
       jsdom: 27.0.0(postcss@8.5.6)
       react: 19.1.1
@@ -4801,7 +4801,7 @@ snapshots:
   '@fast-check/vitest@0.2.2(vitest@3.2.4(@types/node@22.18.6)(jiti@2.5.1)(jsdom@27.0.0(postcss@8.5.6))(lightningcss@1.30.1)(tsx@4.20.5))':
     dependencies:
       fast-check: 4.3.0
-      vitest: 3.2.4(@types/node@22.18.6)(jiti@2.5.1)(jsdom@27.0.0(postcss@8.5.6))(lightningcss@1.30.1)(tsx@4.20.5)
+      vitest: 3.2.4(@types/node@22.18.6)(jiti@2.5.1)(jsdom@27.0.0)(lightningcss@1.30.1)(tsx@4.20.5)
 
   '@heroicons/react@2.2.0(react@19.1.1)':
     dependencies:
@@ -5454,7 +5454,7 @@ snapshots:
       std-env: 3.9.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/node@22.18.6)(jiti@2.5.1)(jsdom@27.0.0(postcss@8.5.6))(lightningcss@1.30.1)(tsx@4.20.5)
+      vitest: 3.2.4(@types/node@22.18.6)(jiti@2.5.1)(jsdom@27.0.0)(lightningcss@1.30.1)(tsx@4.20.5)
     transitivePeerDependencies:
       - supports-color
 
@@ -6509,7 +6509,7 @@ snapshots:
     dependencies:
       lru-cache: 7.18.3
 
-  html-dom-parser@5.0.13:
+  html-dom-parser@5.1.1:
     dependencies:
       domhandler: 5.0.3
       htmlparser2: 10.0.0
@@ -6520,13 +6520,13 @@ snapshots:
 
   html-escaper@2.0.2: {}
 
-  html-react-parser@5.2.3(@types/react@19.1.13)(react@19.1.1):
+  html-react-parser@5.2.6(@types/react@19.1.13)(react@19.1.1):
     dependencies:
       domhandler: 5.0.3
-      html-dom-parser: 5.0.13
+      html-dom-parser: 5.1.1
       react: 19.1.1
       react-property: 2.0.2
-      style-to-js: 1.1.16
+      style-to-js: 1.1.17
     optionalDependencies:
       '@types/react': 19.1.13
 
@@ -7547,11 +7547,11 @@ snapshots:
     dependencies:
       js-tokens: 9.0.1
 
-  style-to-js@1.1.16:
+  style-to-js@1.1.17:
     dependencies:
-      style-to-object: 1.0.8
+      style-to-object: 1.0.9
 
-  style-to-object@1.0.8:
+  style-to-object@1.0.9:
     dependencies:
       inline-style-parser: 0.2.4
 
@@ -7801,7 +7801,7 @@ snapshots:
       lightningcss: 1.30.1
       tsx: 4.20.5
 
-  vitest@3.2.4(@types/node@22.18.6)(jiti@2.5.1)(jsdom@27.0.0(postcss@8.5.6))(lightningcss@1.30.1)(tsx@4.20.5):
+  vitest@3.2.4(@types/node@22.18.6)(jiti@2.5.1)(jsdom@27.0.0)(lightningcss@1.30.1)(tsx@4.20.5):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.4
