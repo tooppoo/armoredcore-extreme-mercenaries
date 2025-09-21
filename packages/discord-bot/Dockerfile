@@ -19,7 +19,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store set -eux; \
   pnpm discord-bot deploy --prod build/discord-bot; \
   apt update; \
   apt install -y tree; \
-  tree build/discord-bot;
+  tree .;
 
 # 実行環境
 FROM node:${NODE_VERSION}-alpine AS runtime
