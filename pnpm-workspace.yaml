@@ -1,6 +1,9 @@
-packages:
-  - packages/front
-  - packages/discord-bot
-  - packages/e2e
 minimumReleaseAge: 1440
 enablePrePostScripts: false
+packages:
+  - "packages/*"
+
+# https://pnpm.io/docker#example-2-build-multiple-docker-images-in-a-monorepo
+injectWorkspacePackages: true # pnpm deploy のためtrue
+syncInjectedDepsAfterScripts:
+  - build

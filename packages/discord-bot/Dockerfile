@@ -13,8 +13,9 @@ RUN set -eux; \
   PNPM_SPEC="$(node -p 'require("./package.json").packageManager')"; \
   PNPM_VERSION="${PNPM_SPEC#pnpm@}"; \
   npm install -g "pnpm@${PNPM_VERSION}"; \
-  pnpm install --frozen-lockfile; \
+  --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile; \
   pnpm discord-bot build; \
+  # シンボリックリンク展開
   pnpm discord-bot deploy --prod build/discord-bot;
 
 # 実行環境
