@@ -218,8 +218,8 @@ importers:
         specifier: 4.50.1
         version: 4.50.1
       '@rollup/rollup-darwin-x64':
-        specifier: 4.50.1
-        version: 4.50.1
+        specifier: 4.50.2
+        version: 4.50.2
       '@rollup/rollup-linux-arm64-gnu':
         specifier: 4.50.1
         version: 4.50.1
@@ -1339,8 +1339,8 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
-  '@rollup/rollup-darwin-x64@4.50.1':
-    resolution: {integrity: sha512-2ofU89lEpDYhdLAbRdeyz/kX3Y2lpYc6ShRnDjY35bZhd2ipuDMDi6ZTQ9NIag94K28nFMofdnKeHR7BT0CATw==}
+  '@rollup/rollup-darwin-x64@4.50.2':
+    resolution: {integrity: sha512-Wa/Wn8RFkIkr1vy1k1PB//VYhLnlnn5eaJkfTQKivirOvzu5uVd2It01ukeQstMursuz7S1bU+8WW+1UPXpa8A==}
     cpu: [x64]
     os: [darwin]
 
@@ -5020,7 +5020,7 @@ snapshots:
   '@rollup/rollup-darwin-arm64@4.51.0':
     optional: true
 
-  '@rollup/rollup-darwin-x64@4.50.1':
+  '@rollup/rollup-darwin-x64@4.50.2':
     optional: true
 
   '@rollup/rollup-darwin-x64@4.51.0':
