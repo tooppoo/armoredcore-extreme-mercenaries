@@ -84,10 +84,10 @@ importers:
         version: 4.9.8
     devDependencies:
       '@dotenvx/dotenvx':
-        specifier: ^1.32.1
+        specifier: 1.50.1
         version: 1.50.1
       '@hono/vite-build':
-        specifier: ^1.7.0
+        specifier: 1.7.0
         version: 1.7.0(hono@4.9.8)
 
   packages/e2e:

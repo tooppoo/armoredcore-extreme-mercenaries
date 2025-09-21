@@ -23,7 +23,7 @@
     "hono": "^4.9.7"
   },
   "devDependencies": {
-    "@dotenvx/dotenvx": "^1.32.1",
-    "@hono/vite-build": "^1.7.0"
+    "@dotenvx/dotenvx": "1.50.1",
+    "@hono/vite-build": "1.7.0"
   }
 }
