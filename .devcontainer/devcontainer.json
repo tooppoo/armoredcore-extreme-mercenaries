@@ -13,8 +13,7 @@
   "mounts": [
     "target=/root/.npm",
     "source=pnpm-store,target=/root/.pnpm-store",
-    "source=${localEnv:HOME}/.codex,target=/root/.codex,type=bind,consistency=cached",
-    "source=${localEnv:HOME}/.ssh/config,target=/root/.ssh/config,type=bind,consistency=cached"
+    "source=${localEnv:HOME}/.codex,target=/root/.codex,type=bind,consistency=cached"
   ],
   "forwardPorts": [
     5173
