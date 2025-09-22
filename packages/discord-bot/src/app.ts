@@ -16,7 +16,7 @@ serve(
     fetch: app.fetch,
     port: process.env.PORT ? Number(process.env.PORT) : 3000,
   },
-  (({ port }) => {
+  ({ port }) => {
     if (process.env.ENV === 'local') {
       log('debug', `Server running on http://localhost:${port}`)
     }
@@ -24,7 +24,7 @@ serve(
     startBot()
 
     log('info', 'Starting Discord Bot...')
-  }),
+  },
 )
 
 export default app
