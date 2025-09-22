@@ -20,7 +20,7 @@ alias l1='ls -1'
 
 # util
 alias now='date "+%Y%m%d-%H%M%S"'
-alias grep='grep --color=auto -v grep'
+alias grep='grep --color=auto -v grep | grep'
 ALIASES
 
 for shell_rc in ~/.bashrc ~/.zshrc ~/.profile; do
