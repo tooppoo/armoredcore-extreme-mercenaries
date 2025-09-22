@@ -6,38 +6,38 @@
   "packageRules": [
     {
       "groupName": "rollup optional binaries",
-      "matchPackagePatterns": [
-        "^@rollup/rollup-"
-      ],
       "matchDepTypes": [
         "optionalDependencies"
+      ],
+      "matchPackageNames": [
+        "/^@rollup/rollup-/"
       ]
     },
     {
       "groupName": "lightningcss optional binaries",
-      "matchPackagePatterns": [
-        "^lightningcss-"
-      ],
       "matchDepTypes": [
         "optionalDependencies"
+      ],
+      "matchPackageNames": [
+        "/^lightningcss-/"
       ]
     },
     {
       "groupName": "cloudflare workerd optional binaries",
-      "matchPackagePatterns": [
-        "^@cloudflare/workerd-"
-      ],
       "matchDepTypes": [
         "optionalDependencies"
+      ],
+      "matchPackageNames": [
+        "/^@cloudflare/workerd-/"
       ]
     },
     {
       "groupName": "sharp optional binaries",
-      "matchPackagePatterns": [
-        "^@img/sharp-"
-      ],
       "matchDepTypes": [
         "optionalDependencies"
+      ],
+      "matchPackageNames": [
+        "/^@img/sharp-/"
       ]
     }
   ]
