@@ -11,6 +11,8 @@ on:
       - "packages/e2e/**"
       - "packages/front/**"
       - ".github/workflows/e2e.yml"
+    paths-ignore:
+      - "docs/**"
 jobs:
   test:
     timeout-minutes: 60
