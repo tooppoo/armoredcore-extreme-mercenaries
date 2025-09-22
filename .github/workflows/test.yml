@@ -8,8 +8,9 @@ on:
       - opened
       - synchronize
       - reopened
-    paths-ignore:
-      - "docs/**"
+    paths:
+      - "packages/front/**"
+      - "packages/discord-bot/**"
 
 jobs:
   build:

@@ -7,8 +7,9 @@ on:
       - opened
       - synchronize
       - reopened
-    paths-ignore:
-      - "docs/**"
+    paths:
+      - "packages/front/**"
+      - ".github/workflows/lighthouse-ci.yml"
 
 jobs:
   lighthouse:

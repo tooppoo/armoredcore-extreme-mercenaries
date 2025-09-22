@@ -8,8 +8,10 @@ on:
       - opened
       - synchronize
       - reopened
-    paths-ignore:
-      - "docs/**"
+    paths:
+      - "packages/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
 
 jobs:
   audit:
