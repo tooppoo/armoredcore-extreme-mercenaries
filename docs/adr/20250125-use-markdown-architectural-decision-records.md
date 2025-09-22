@@ -1,42 +1,46 @@
-# Use Markdown Architectural Decision Records
+# ADR を Markdown 形式で管理する
 
-- Status: accepted
-- Date: 2025-01-24
-- Tags: doc
+- ステータス: 承認済み
+- 日付: 2025-01-25
+- タグ: ドキュメント, フォーマット
 
-## Context and Problem Statement
+技術ストーリー: プロジェクトで作成する ADR の記述形式を統一し、継続的に扱いやすいテンプレートを確立する。
 
-We want to record architectural decisions made in this project.
-Which format and structure should these records follow?
+## 背景 / 文脈
 
-## Considered Options
+ADR を記録するにあたり、チーム全員が編集しやすく、履歴管理とも親和性の高いフォーマットを選ぶ必要があった。既存のドキュメント資産が Markdown で書かれていることから、同様の形式が望ましいと考えた。
 
-- [MADR](https://adr.github.io/madr/) 2.1.2 with Log4brains patch
-- [MADR](https://adr.github.io/madr/) 2.1.2 – The original Markdown Architectural Decision Records
-- [Michael Nygard's template](http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions) – The first incarnation of the term "ADR"
-- [Sustainable Architectural Decisions](https://www.infoq.com/articles/sustainable-architectural-design-decisions) – The Y-Statements
-- Other templates listed at <https://github.com/joelparkerhenderson/architecture_decision_record>
-- Formless – No conventions for file format and structure
+## 決定ドライバ
 
-## Decision Outcome
+- Git での差分管理とレビューに適したテキストフォーマットであること。
+- テンプレートを定義し、記述ぶれを抑えたい。
+- Log4brains などのツールと連携しやすい形式にしたい。
 
-Chosen option: "MADR 2.1.2 with Log4brains patch", because
+## 検討した選択肢
 
-- Implicit assumptions should be made explicit.
-  Design documentation is important to enable people understanding the decisions later on.
-  See also [A rational design process: How and why to fake it](https://doi.org/10.1109/TSE.1986.6312940).
-- The MADR format is lean and fits our development style.
-- The MADR structure is comprehensible and facilitates usage & maintenance.
-- The MADR project is vivid.
-- Version 2.1.2 is the latest one available when starting to document ADRs.
-- The Log4brains patch adds more features, like tags.
+1. MADR 2.1.2 + Log4brains パッチ。
+2. 純粋な MADR 2.1.2。
+3. Michael Nygard 提唱の ADR テンプレート。
+4. その他（adr-viewer、adr-log 等）のフォーマット。
+5. 独自形式を設計する。
 
-The "Log4brains patch" performs the following modifications to the original template:
+## 決定（採択）
 
-- Change the ADR filenames format (`NNN-adr-name` becomes `YYYYMMDD-adr-name`), to avoid conflicts during Git merges.
-- Add a `draft` status, to enable collaborative writing.
-- Add a `Tags` field.
+Markdown Architectural Decision Records（MADR）ベースの Markdown 形式を採用する。既存ツールとの互換性が高く、テンプレートを用意しやすいため、記法を統一しやすいと判断した。
 
-## Links
+## 影響評価
 
-- Relates to [Use Log4brains to manage the ADRs](20250125-use-log4brains-to-manage-the-adrs.md)
+### ポジティブな影響
+
+- Markdown に慣れた開発者が抵抗なく ADR を記述できる。
+- Git 差分が明確になり、レビュー効率が向上する。
+
+### ネガティブな影響
+
+- 図式化やリッチ表現は別途ツールを併用する必要がある。
+- テンプレートの遵守を継続的にチェックする運用が必要。
+
+## その他検討事項
+
+- Michael Nygard のテンプレートは簡潔だが、現在利用しているツール群との親和性が低い。
+- 独自形式は柔軟だが、チーム外のベストプラクティスを活用しづらい。
