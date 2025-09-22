@@ -2,5 +2,43 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "local>tooppoo/renovate-config"
+  ],
+  "packageRules": [
+    {
+      "groupName": "rollup optional binaries",
+      "matchPackagePatterns": [
+        "^@rollup/rollup-"
+      ],
+      "matchDepTypes": [
+        "optionalDependencies"
+      ]
+    },
+    {
+      "groupName": "lightningcss optional binaries",
+      "matchPackagePatterns": [
+        "^lightningcss-"
+      ],
+      "matchDepTypes": [
+        "optionalDependencies"
+      ]
+    },
+    {
+      "groupName": "cloudflare workerd optional binaries",
+      "matchPackagePatterns": [
+        "^@cloudflare/workerd-"
+      ],
+      "matchDepTypes": [
+        "optionalDependencies"
+      ]
+    },
+    {
+      "groupName": "sharp optional binaries",
+      "matchPackagePatterns": [
+        "^@img/sharp-"
+      ],
+      "matchDepTypes": [
+        "optionalDependencies"
+      ]
+    }
   ]
 }
