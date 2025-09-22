@@ -221,8 +221,8 @@ importers:
         specifier: 4.50.2
         version: 4.50.2
       '@rollup/rollup-linux-x64-gnu':
-        specifier: 4.50.1
-        version: 4.50.1
+        specifier: 4.50.2
+        version: 4.50.2
       lightningcss-darwin-arm64:
         specifier: 1.30.1
         version: 1.30.1
@@ -1423,8 +1423,8 @@ packages:
     os: [linux]
     libc: [glibc]
 
-  '@rollup/rollup-linux-x64-gnu@4.50.1':
-    resolution: {integrity: sha512-MCgtFB2+SVNuQmmjHf+wfI4CMxy3Tk8XjA5Z//A0AKD7QXUYFMQcns91K6dEHBvZPCnhJSyDWLApk40Iq/H3tA==}
+  '@rollup/rollup-linux-x64-gnu@4.50.2':
+    resolution: {integrity: sha512-9Jie/At6qk70dNIcopcL4p+1UirusEtznpNtcq/u/C5cC4HBX7qSGsYIcG6bdxj15EYWhHiu02YvmdPzylIZlA==}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
@@ -4118,7 +4118,7 @@ snapshots:
       '@rollup/rollup-darwin-arm64': 4.50.2
       '@rollup/rollup-darwin-x64': 4.50.2
       '@rollup/rollup-linux-arm64-gnu': 4.50.2
-      '@rollup/rollup-linux-x64-gnu': 4.50.1
+      '@rollup/rollup-linux-x64-gnu': 4.50.2
       lightningcss-darwin-arm64: 1.30.1
       lightningcss-darwin-x64: 1.30.1
       lightningcss-linux-x64-gnu: 1.30.1
@@ -5131,7 +5131,7 @@ snapshots:
   '@rollup/rollup-linux-s390x-gnu@4.52.0':
     optional: true
 
-  '@rollup/rollup-linux-x64-gnu@4.50.1':
+  '@rollup/rollup-linux-x64-gnu@4.50.2':
     optional: true
 
   '@rollup/rollup-linux-x64-gnu@4.52.0':
