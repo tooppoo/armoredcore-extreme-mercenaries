@@ -4,21 +4,24 @@
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {},
     "ghcr.io/devcontainers/features/git:1": {},
-    "ghcr.io/devcontainers/features/github-cli:1": {}
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
   },
   "containerEnv": {
     "NODE_ENV": "development"
   },
-  "remoteUser": "root",
+  "containerUser": "node",
   "mounts": [
-    "target=/root/.npm",
-    "source=pnpm-store,target=/root/.pnpm-store",
-    "source=${localEnv:HOME}/.codex,target=/root/.codex,type=bind,consistency=cached"
+    "type=volume,source=pnpm-store,target=/home/node/.pnpm-store",
+    "source=${localEnv:HOME}/.codex,target=/home/node/.codex,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.claude,target=/home/node/.claude,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.vimrc,target=/home/node/.vimrc,type=bind,consistency=cached"
   ],
   "forwardPorts": [
     5173
   ],
   "postCreateCommand": "bash -l .devcontainer/scripts/setup-pnpm.sh",
+  "postStartCommand": "bash -l .devcontainer/scripts/setup-alias.sh",
   "customizations": {
     "vscode": {
       "extensions": [
