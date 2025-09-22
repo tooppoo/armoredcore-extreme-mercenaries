@@ -13,7 +13,8 @@
   "mounts": [
     "target=/root/.npm",
     "source=pnpm-store,target=/root/.pnpm-store",
-    "source=${localEnv:HOME}/.codex,target=/root/.codex,type=bind,consistency=cached"
+    "source=${localEnv:HOME}/.codex,target=/root/.codex,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.ssh/config,target=/root/.ssh/config,type=bind,consistency=cached"
   ],
   "forwardPorts": [
     5173
@@ -27,7 +28,21 @@
         "ms-vscode.vscode-typescript-next",
         "github.vscode-github-actions",
         "openai.chatgpt",
-        "eamodio.gitlens"
+        "streetsidesoftware.code-spell-checker",
+        "eamodio.gitlens",
+        "docker.docker",
+        "tamasfe.even-better-toml",
+        "mhutchie.git-graph",
+        "oderwat.indent-rainbow",
+        "MS-CEINTL.vscode-language-pack-ja",
+        "bierner.markdown-mermaid",
+        "DavidAnson.vscode-markdownlint",
+        "svelte.svelte-vscode",
+        "bradlc.vscode-tailwindcss",
+        "pmneo.tsimporter",
+        "vscodevim.vim",
+        "redhat.vscode-yaml",
+        "Vue.volar"
       ],
       "settings": {
         "typescript.tsdk": "node_modules/typescript/lib",
