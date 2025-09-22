@@ -41,7 +41,8 @@
         "pmneo.tsimporter",
         "vscodevim.vim",
         "redhat.vscode-yaml",
-        "Vue.volar"
+        "Vue.volar",
+        "Anthropic.claude-code"
       ],
       "settings": {
         "typescript.tsdk": "node_modules/typescript/lib",
