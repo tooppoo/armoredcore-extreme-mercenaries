@@ -218,8 +218,8 @@ importers:
         specifier: 4.50.2
         version: 4.50.2
       '@rollup/rollup-linux-arm64-gnu':
-        specifier: 4.50.1
-        version: 4.50.1
+        specifier: 4.50.2
+        version: 4.50.2
       '@rollup/rollup-linux-x64-gnu':
         specifier: 4.50.1
         version: 4.50.1
@@ -1375,8 +1375,8 @@ packages:
     os: [linux]
     libc: [musl]
 
-  '@rollup/rollup-linux-arm64-gnu@4.50.1':
-    resolution: {integrity: sha512-2AbMhFFkTo6Ptna1zO7kAXXDLi7H9fGTbVaIq2AAYO7yzcAsuTNWPHhb2aTA6GPiP+JXh85Y8CiS54iZoj4opw==}
+  '@rollup/rollup-linux-arm64-gnu@4.50.2':
+    resolution: {integrity: sha512-df0Eou14ojtUdLQdPFnymEQteENwSJAdLf5KCDrmZNsy1c3YaCNaJvYsEUHnrg+/DLBH612/R0xd3dD03uz2dg==}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
@@ -4117,7 +4117,7 @@ snapshots:
       '@cloudflare/workerd-linux-64': 1.20250903.0
       '@rollup/rollup-darwin-arm64': 4.50.2
       '@rollup/rollup-darwin-x64': 4.50.2
-      '@rollup/rollup-linux-arm64-gnu': 4.50.1
+      '@rollup/rollup-linux-arm64-gnu': 4.50.2
       '@rollup/rollup-linux-x64-gnu': 4.50.1
       lightningcss-darwin-arm64: 1.30.1
       lightningcss-darwin-x64: 1.30.1
@@ -5107,7 +5107,7 @@ snapshots:
   '@rollup/rollup-linux-arm-musleabihf@4.52.0':
     optional: true
 
-  '@rollup/rollup-linux-arm64-gnu@4.50.1':
+  '@rollup/rollup-linux-arm64-gnu@4.50.2':
     optional: true
 
   '@rollup/rollup-linux-arm64-gnu@4.52.0':
