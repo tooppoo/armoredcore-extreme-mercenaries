@@ -22,7 +22,9 @@
 
 ## 決定（採択）
 
-選択したオプション: "optional 更新でも全 CI を実行し、Renovate で optional 依存グループをまとめる"。理由: optional 依存はビルドや実行環境全体へ影響し得るため、テスト範囲を削ると不具合検知が遅れる。ワークフローを特別扱いすると設定が複雑化し、長期的に保守が難しくなる。代わりに Renovate の `packageRules` で Rollup/LightningCSS/Cloudflare workerd/sharp 等の optional 依存をそれぞれ一つの PR にまとめ、CI 実行回数を抑制することでコストと品質のバランスを取る。
+選択したオプション: "optional 更新でも全 CI を実行し、Renovate で optional 依存グループをまとめる"。
+
+理由: optional 依存はビルドや実行環境全体へ影響し得るため、テスト範囲を削ると不具合検知が遅れる。ワークフローを特別扱いすると設定が複雑化し、長期的に保守が難しくなる。代わりに Renovate の `packageRules` で Rollup/LightningCSS/Cloudflare workerd/sharp 等の optional 依存をそれぞれ一つの PR にまとめ、CI 実行回数を抑制することでコストと品質のバランスを取る。
 
 ## 影響評価
 

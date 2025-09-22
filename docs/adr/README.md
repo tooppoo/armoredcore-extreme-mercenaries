@@ -1,35 +1,13 @@
-# Architecture Decision Records
+# ADR ガイドライン
 
-ADRs are automatically published to our Log4brains architecture knowledge base:
+- ADR の目的は意思決定の経緯と影響を追跡可能にすること。新規・更新時は必ず決定理由と影響評価を明記する。
+- 既存 ADR の一覧やタグ検索は `docs/adr/index.md` を参照。必要に応じてリンクを最新状態に更新する。
+- ローカルでプレビューする場合は `pnpm exec log4brains preview` を推奨。初回は `pnpm install` を実行して依存を揃える。
+- 新規 ADR を作成するときは `pnpm exec log4brains adr new` を使うとテンプレートが自動で差し込まれる。
+- ADR の形式は `docs/adr/template.md` に従うこと。
+- 変更内容を PR に含める際は、関連する仕様・要件ドキュメントの更新要否も確認し、必要に応じてリンクを追加する。
 
-🔗 **<http://INSERT-YOUR-LOG4BRAINS-URL>**
+## 参考資料
 
-Please use this link to browse them.
-
-## Development
-
-If not already done, install Log4brains:
-
-```bash
-npm install -g log4brains
-```
-
-To preview the knowledge base locally, run:
-
-```bash
-log4brains preview
-```
-
-In preview mode, the Hot Reload feature is enabled: any change you make to a markdown file is applied live in the UI.
-
-To create a new ADR interactively, run:
-
-```bash
-log4brains adr new
-```
-
-## More information
-
-- [Log4brains documentation](https://github.com/thomvaill/log4brains/tree/develop#readme)
-- [What is an ADR and why should you use them](https://github.com/thomvaill/log4brains/tree/develop#-what-is-an-adr-and-why-should-you-use-them)
-- [ADR GitHub organization](https://adr.github.io/)
+- [Log4brains ドキュメント](https://github.com/thomvaill/log4brains/tree/develop#readme)
+- [ADR に関する概要](https://adr.github.io/)

@@ -1,51 +1,44 @@
-# Workers互換のため @googleapis/youtube を REST fetch に置換
+# @googleapis/youtube を REST fetch 実装に置換する
 
+- ステータス: 承認済み
 - 日付: 2025-09-03
+- タグ: Cloudflare Workers, YouTube API, 依存整理
+
+技術ストーリー: Cloudflare Workers 環境で発生したランタイム非互換を解消し、デプロイ失敗を防ぐための依存置換を決定する。
 
 ## 背景 / 文脈
 
-- Renovate により `@googleapis/youtube` のメジャーアップデート（v28）が導入された結果、Cloudflare Pages Functions の公開時に例外が発生。
-- 例外は `google-logging-utils` → `gcp-metadata` 依存の初期化コードに起因し、Workers 環境の Node 互換（`process.stderr` など）が限定的なためクラッシュする。
-- E2E は API の認証失敗時の期待コード（401）が合っていないことでも落ちていたが、こちらはテスト修正で解消可能。一方、デプロイ失敗はランタイム非互換が根本原因。
+Renovate により `@googleapis/youtube` v28 へ更新したところ、Cloudflare Pages Functions でデプロイ時に例外が発生した。原因は依存チェーンにある `google-logging-utils` → `gcp-metadata` が Node.js 固有の API を利用していることで、Workers 実行環境と互換性がなかった。
 
-参考情報:
-- Cloudflare Docs: Node 互換は限定的で、多くの npm パッケージは実行時にエラーとなりうる。
-  - “Many npm packages rely on APIs from the Node.js runtime, and will not work unless these Node.js APIs are available.”
-  - https://developers.cloudflare.com/workers/runtime-apis/nodejs/
-- 実例（googleapis/js-genai #324）: Workers で `google-logging-utils` 周りが原因で例外。 https://github.com/googleapis/js-genai/issues/324
+## 決定ドライバ
+
+- Workers 上で Node.js 固有 API に依存しない実装が必要。
+- 既存の OGP 取得処理（`withYouTubeData`）の動作を維持したい。
+- 依存アップデートによる再発を防ぎたい。
+
+## 検討した選択肢
+
+1. `@googleapis/youtube` を削除し、YouTube Data API v3 を `fetch` で直接呼び出す（採択）。
+2. 旧バージョンにピン留めし、Workers 互換のパッチを待つ。
+3. 代替ライブラリ（`googleapis` 全体など）を検討する。
 
 ## 決定（採択）
 
-- `@googleapis/youtube` の利用を廃止し、YouTube Data API v3 を `fetch` で直接呼び出す実装に置換する。
-- 対象箇所: `withYouTubeData`（OGP 取得戦略）。
-- API エンドポイント: `GET https://www.googleapis.com/youtube/v3/videos?part=snippet&id={id}&key={API_KEY}`。
-- 依存削減のため、`packages/front/package.json` から `@googleapis/youtube` を削除。
+`@googleapis/youtube` の利用を廃止し、REST API を直接 `fetch` で呼び出す実装へ置換する。これにより Workers 環境での依存互換性問題を解消しつつ、機能を維持する。
 
-## 影響
+## 影響評価
 
-- セキュリティ: 依存チェーンを縮小し攻撃面積を低減。API キーは Workers の変数/シークレットから注入。
-- パフォーマンス: バンドル軽量化・初期化コスト低減。コールドスタート改善。
-- ユーザー体験: デプロイの安定性向上。失敗時の制御が明瞭（HTTP ステータスに基づく処理）。
-- トレーサビリティ: 直接 REST 呼び出しにより挙動が読みやすく、将来の API 変更にも追随しやすい。
+### ポジティブな影響
 
-## 却下した選択肢
+- Workers でのデプロイ失敗を解消し、互換性問題の再発リスクを下げられる。
+- 依存チェーンが短くなり、脆弱性や非互換の検知が容易になる。
 
-1) 旧バージョンへのピン留め（例: 25.1.0）
-- 長所: 迅速な復旧が可能。
-- 短所: 依存が重く、将来の互換性/脆弱性リスクが残る。Workers 互換性の問題再発の懸念。
+### ネガティブな影響
 
-2) 動的 import やツリーシェイクで問題モジュールを除外
-- 長所: 変更範囲が少ない可能性。
-- 短所: ビルド設定/依存更新で再発しやすく、保守性とトレーサビリティが悪い。
+- REST 呼び出しの署名・クエリ構築を自前で維持管理する必要がある。
+- Google API の仕様変更時に手動で追随するコストが増える。
 
-## 実装メモ
+## その他検討事項
 
-- `withYouTubeData` 内で URL 正規化 → videoId 抽出 → YouTube Data API v3 を `fetch`。
-- 取得した `snippet` から `title` / `description` / `thumbnails.high/std/maxres` を OGP 形式にマップ。
-- 既存の公開 API（戻り値型/エラー文言）は極力維持。
-
-## 追跡項目（今後の拡張）
-
-- 429/5xx のバックオフ、短期キャッシュの検討（クォータ対策）。
-- フォールバック戦略（OGP Scanner への切替）検討。
-
+- 旧バージョンのピン留めは短期的な回避策に留まり、将来のアップデートで再発する懸念が残る。
+- 代替ライブラリも多くが Node.js API 前提であり、Workers 互換性の担保が難しい。
