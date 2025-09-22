@@ -83,4 +83,54 @@ describe('buildMeta', () => {
       { name: 'twitter:creator', content: '@Philomagi' },
     ])
   })
+
+  it('should embed FAQ schema when faq entries are provided', () => {
+    const meta = buildMeta({
+      title: 'FAQ Title',
+      description: 'FAQ Description',
+      pathname: '/',
+      faq: [
+        {
+          question: '質問1',
+          answer: '回答1',
+        },
+      ],
+    })
+
+    const schema = meta.find(
+      (item): item is {
+        'script:ld+json': {
+          '@context': string
+          '@graph': unknown[]
+        }
+      } => 'script:ld+json' in item,
+    )
+
+    expect(schema).toBeDefined()
+    const webPageNode = schema?.['script:ld+json']['@graph'].find(
+      (node): node is {
+        '@id': string
+        '@type': string[]
+        mainEntity: unknown[]
+      } =>
+        typeof node === 'object' &&
+        node !== null &&
+        '@id' in node &&
+        (node as { '@id': string })['@id'] ===
+          'https://armoredcore-extreme-mercenaries.philomagi.dev/#webpage',
+    )
+
+    expect(webPageNode).toBeDefined()
+    expect(webPageNode?.['@type']).toStrictEqual(['WebPage', 'FAQPage'])
+    expect(webPageNode?.mainEntity).toStrictEqual([
+      {
+        '@type': 'Question',
+        name: '質問1',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: '回答1',
+        },
+      },
+    ])
+  })
 })

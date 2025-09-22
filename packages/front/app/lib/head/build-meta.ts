@@ -3,10 +3,16 @@ import { cacheKey, origin, siteName } from '~/lib/constants'
 
 type Meta = MetaDescriptor[]
 
+type FaqEntry = Readonly<{
+  question: string
+  answer: string
+}>
+
 export type BuildMetaArgs = Readonly<{
   title: string
   description: string
   pathname: string
+  faq?: FaqEntry[]
 }>
 export function buildMeta(args: BuildMetaArgs): Meta {
   const url = origin + args.pathname
@@ -50,11 +56,37 @@ type JsonLdArgs = Readonly<{
   title: string
   description: string
   url: string
+  faq?: FaqEntry[]
 }>
-function jsonLd({ title, description, url }: JsonLdArgs): Meta {
+function jsonLd({ title, description, url, faq }: JsonLdArgs): Meta {
   const orgId = `${origin}/#org`
   const websiteId = `${origin}/#website`
   const webpageId = `${origin}/#webpage`
+
+  const faqEntities = faq?.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.answer,
+    },
+  }))
+
+  const webPageNode: Record<string, unknown> = {
+    '@type': 'WebPage',
+    '@id': webpageId,
+    url,
+    name: siteName,
+    headline: title,
+    inLanguage: 'ja',
+    description,
+    isPartOf: { '@id': websiteId },
+  }
+
+  if (faqEntities?.length) {
+    webPageNode['@type'] = ['WebPage', 'FAQPage']
+    webPageNode.mainEntity = faqEntities
+  }
 
   return [
     {
@@ -75,16 +107,7 @@ function jsonLd({ title, description, url }: JsonLdArgs): Meta {
               'https://github.com/tooppoo/armoredcore-extreme-mercenaries',
             ],
           },
-          {
-            '@type': 'WebPage',
-            '@id': webpageId,
-            url,
-            name: siteName,
-            headline: title,
-            inLanguage: 'ja',
-            description,
-            isPartOf: { '@id': websiteId },
-          },
+          webPageNode,
           {
             '@type': 'WebSite',
             '@id': websiteId,
