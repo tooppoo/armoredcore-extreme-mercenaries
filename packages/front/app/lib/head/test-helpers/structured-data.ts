@@ -14,7 +14,9 @@ type Meta = MetaDescriptor[]
  */
 export function findJsonLdSchema(meta: Meta) {
   const schema = meta.find(
-    (item): item is {
+    (
+      item,
+    ): item is {
       'script:ld+json': {
         '@context': string
         '@graph': unknown[]
@@ -43,7 +45,7 @@ export function findWebPageNode(meta: Meta) {
       node !== null &&
       '@id' in node &&
       typeof node['@id'] === 'string' &&
-      node['@id'].includes('#webpage')
+      node['@id'].includes('#webpage'),
   )
 }
 

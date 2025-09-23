@@ -20,7 +20,7 @@ type Meta = MetaDescriptor[]
  */
 export function buildStructuredData(
   options: StructuredDataOptions | undefined,
-  args: { title: string; description: string; url: string }
+  args: { title: string; description: string; url: string },
 ): Meta {
   if (!options || Object.keys(options).length === 0) {
     return buildBasicJsonLd(args)
@@ -43,7 +43,15 @@ export function buildStructuredData(
  * 構造化データがない場合の基本的なJSON-LDを生成する
  * Organization、WebSite、WebPageのみを含むシンプルな構造
  */
-function buildBasicJsonLd({ title, description, url }: { title: string; description: string; url: string }): Meta {
+function buildBasicJsonLd({
+  title,
+  description,
+  url,
+}: {
+  title: string
+  description: string
+  url: string
+}): Meta {
   const orgId = `${origin}/#org`
   const websiteId = `${origin}/#website`
   const webpageId = `${origin}/#webpage`
@@ -72,8 +80,12 @@ function buildBasicJsonLd({ title, description, url }: { title: string; descript
  * @param structuredDataSchemas 各構造化データタイプから生成されたスキーマ配列
  */
 function buildJsonLdWithStructuredData(
-  { title, description, url }: { title: string; description: string; url: string },
-  structuredDataSchemas: JsonLdSchema[]
+  {
+    title,
+    description,
+    url,
+  }: { title: string; description: string; url: string },
+  structuredDataSchemas: JsonLdSchema[],
 ): Meta {
   const orgId = `${origin}/#org`
   const websiteId = `${origin}/#website`
@@ -88,11 +100,15 @@ function buildJsonLdWithStructuredData(
   })
 
   if (structuredDataSchemas.length > 0) {
-    const hasFaq = structuredDataSchemas.some(schema => schema['@type'] === 'Question')
+    const hasFaq = structuredDataSchemas.some(
+      (schema) => schema['@type'] === 'Question',
+    )
 
     if (hasFaq) {
       webPageNode['@type'] = ['WebPage', 'FAQPage']
-      webPageNode.mainEntity = structuredDataSchemas.filter(schema => schema['@type'] === 'Question')
+      webPageNode.mainEntity = structuredDataSchemas.filter(
+        (schema) => schema['@type'] === 'Question',
+      )
     }
   }
 
@@ -164,7 +180,13 @@ function buildWebPageSchema({
  * WebSiteスキーマを生成する
  * サイト全体の情報を記述
  */
-function buildWebSiteSchema({ websiteId, orgId }: { websiteId: string; orgId: string }): JsonLdSchema {
+function buildWebSiteSchema({
+  websiteId,
+  orgId,
+}: {
+  websiteId: string
+  orgId: string
+}): JsonLdSchema {
   return {
     '@type': 'WebSite',
     '@id': websiteId,

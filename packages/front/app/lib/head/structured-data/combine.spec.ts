@@ -1,7 +1,11 @@
 import { describe, it, expect } from 'vitest'
 import { buildStructuredData } from './combine'
 import { mockFaqData } from '../test-fixtures/structured-data'
-import { expectValidJsonLd, expectFaqSchema, hasStructuredData } from '../test-helpers/structured-data'
+import {
+  expectValidJsonLd,
+  expectFaqSchema,
+  hasStructuredData,
+} from '../test-helpers/structured-data'
 
 describe('combineStructuredData', () => {
   const baseArgs = {

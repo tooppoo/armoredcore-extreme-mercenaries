@@ -14,7 +14,7 @@ export const mockFaqData: FaqEntry[] = [
   {
     question: '質問2',
     answer: '回答2',
-  }
+  },
 ]
 
 /**
@@ -27,5 +27,5 @@ export const mockSingleFaqData: FaqEntry[] = [
   {
     question: 'テスト質問',
     answer: 'テスト回答',
-  }
+  },
 ]

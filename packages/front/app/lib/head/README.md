@@ -29,7 +29,7 @@ lib/head/
 const meta = buildMeta({
   title: 'ページタイトル',
   description: 'ページ説明',
-  pathname: '/example'
+  pathname: '/example',
 })
 
 // 構造化データ付きの使用例
@@ -38,8 +38,8 @@ const meta = buildMeta({
   description: 'ページ説明',
   pathname: '/example',
   structuredData: {
-    faq: faqData
-  }
+    faq: faqData,
+  },
 })
 ```
 
@@ -129,7 +129,7 @@ export type ProductEntry = Readonly<{
 
 export type StructuredDataOptions = Readonly<{
   faq?: FaqEntry[]
-  product?: ProductEntry[]  // 追加
+  product?: ProductEntry[] // 追加
   // ...
 }>
 ```
@@ -139,13 +139,13 @@ export type StructuredDataOptions = Readonly<{
 ```typescript
 // structured-data/product.ts
 export function buildProductSchema(entries: ProductEntry[]): JsonLdSchema[] {
-  return entries.map(product => ({
+  return entries.map((product) => ({
     '@type': 'Product',
     name: product.name,
     offers: {
       '@type': 'Offer',
-      price: product.price
-    }
+      price: product.price,
+    },
   }))
 }
 ```
@@ -210,8 +210,8 @@ export const meta: Route.MetaFunction = ({ location }) => [
   ...buildMeta({
     title: 'ページタイトル',
     description: 'ページ説明',
-    pathname: location.pathname
-  })
+    pathname: location.pathname,
+  }),
 ]
 ```
 
@@ -224,7 +224,7 @@ import { createFaqStructuredData } from '~/lib/head/structured-data'
 
 const faqItems = [
   { question: 'Q1', answerText: 'A1' },
-  { question: 'Q2', answerText: 'A2' }
+  { question: 'Q2', answerText: 'A2' },
 ]
 
 export const meta: Route.MetaFunction = ({ location }) => [
@@ -233,9 +233,9 @@ export const meta: Route.MetaFunction = ({ location }) => [
     description: 'FAQ説明',
     pathname: location.pathname,
     structuredData: {
-      faq: createFaqStructuredData(faqItems)
-    }
-  })
+      faq: createFaqStructuredData(faqItems),
+    },
+  }),
 ]
 ```
 

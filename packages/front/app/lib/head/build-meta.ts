@@ -1,6 +1,9 @@
 import { MetaDescriptor } from 'react-router'
 import { cacheKey, origin, siteName } from '~/lib/constants'
-import { buildStructuredData, type StructuredDataOptions } from './structured-data'
+import {
+  buildStructuredData,
+  type StructuredDataOptions,
+} from './structured-data'
 
 type Meta = MetaDescriptor[]
 
@@ -91,7 +94,6 @@ function description(text: string): Meta {
     { property: 'og:description', content: text },
   ]
 }
-
 
 /**
  * URL関連のメタタグを生成する

@@ -30,9 +30,11 @@ export function buildFaqSchema(entries: FaqEntry[]): JsonLdSchema[] {
  * @param faqItems 外部形式のFAQ項目配列（answerTextプロパティを持つ）
  * @returns 内部形式のFaqEntry配列
  */
-export function createFaqStructuredData(faqItems: { question: string; answerText: string }[]): FaqEntry[] {
-  return faqItems.map(item => ({
+export function createFaqStructuredData(
+  faqItems: { question: string; answerText: string }[],
+): FaqEntry[] {
+  return faqItems.map((item) => ({
     question: item.question,
-    answer: item.answerText
+    answer: item.answerText,
   }))
 }
