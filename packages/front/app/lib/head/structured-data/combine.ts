@@ -1,5 +1,5 @@
 import { MetaDescriptor } from 'react-router'
-import { origin } from '~/lib/constants'
+import { cacheKey, origin, siteName } from '~/lib/constants'
 import type { StructuredDataOptions, JsonLdSchema } from './types'
 import { buildFaqSchema } from './faq'
 
@@ -118,11 +118,11 @@ function buildOrganizationSchema(orgId: string): JsonLdSchema {
   return {
     '@type': 'Organization',
     '@id': orgId,
-    name: 'ARMORED CORE EXTREME MERCENARIES',
+    name: siteName,
     url: origin + '/',
     logo: {
       '@type': 'ImageObject',
-      url: 'https://philomagi.dev/ogp-full.jpg?c=20241017',
+      url: `https://philomagi.dev/ogp-full.jpg?c=${cacheKey}`,
     },
     sameAs: [
       'https://x.com/Philomagi',
@@ -152,7 +152,7 @@ function buildWebPageSchema({
     '@type': 'WebPage',
     '@id': webpageId,
     url,
-    name: 'ARMORED CORE EXTREME MERCENARIES',
+    name: siteName,
     headline: title,
     inLanguage: 'ja',
     description,
@@ -169,7 +169,7 @@ function buildWebSiteSchema({ websiteId, orgId }: { websiteId: string; orgId: st
     '@type': 'WebSite',
     '@id': websiteId,
     url: origin + '/',
-    name: 'ARMORED CORE EXTREME MERCENARIES',
+    name: siteName,
     publisher: { '@id': orgId },
   }
 }
