@@ -119,13 +119,13 @@ const faqItems: FAQItem[] = [
   {
     question: 'サイトの情報は誰がまとめていますか？',
     answerText: '運営メンバーの Philomagi によって更新されています。',
-    renderAnswer: (_answerText) => (
+    renderAnswer: () => (
       <>
-        A. 運営メンバーの{' '}
+        運営メンバーの{' '}
         <LinkCard
           to="https://x.com/Philomagi"
           type="external"
-          aria-label="Philomagi氏のXプロフィール（新しいタブで開く）"
+          aria-label="PhilomagiのXプロフィール（新しいタブで開く）"
         >
           Philomagi
         </LinkCard>
@@ -178,7 +178,7 @@ const lists = ({
             <article className="faq-item" key={faq.question}>
               <h3 className="faq-question">Q. {faq.question}</h3>
               <div className="faq-answer">
-                {faq.renderAnswer?.(faq.answerText) ?? <>A. {faq.answerText}</>}
+                A. {faq.renderAnswer?.(faq.answerText) ?? <>{faq.answerText}</>}
               </div>
             </article>
           ))}
