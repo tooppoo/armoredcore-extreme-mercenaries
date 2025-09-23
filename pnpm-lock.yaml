@@ -6523,8 +6523,8 @@ snapshots:
       '@log4brains/cli-common': 1.1.0
       '@log4brains/core': 1.1.0
       '@material-ui/core': 4.12.4(@types/react@17.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
-      '@material-ui/icons': 4.11.3(@material-ui/core@4.12.4(@types/react@17.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@types/react@17.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
-      '@material-ui/lab': 4.0.0-alpha.61(@material-ui/core@4.12.4(@types/react@17.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@types/react@17.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+      '@material-ui/icons': 4.11.3(@material-ui/core@4.12.4(@types/react@17.0.4)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@types/react@17.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+      '@material-ui/lab': 4.0.0-alpha.61(@material-ui/core@4.12.4(@types/react@17.0.4)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@types/react@17.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@next/bundle-analyzer': 10.2.3
       '@types/node': 15.14.9
       '@types/react': 17.0.4
@@ -6576,7 +6576,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 17.0.4
 
-  '@material-ui/icons@4.11.3(@material-ui/core@4.12.4(@types/react@17.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@types/react@17.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
+  '@material-ui/icons@4.11.3(@material-ui/core@4.12.4(@types/react@17.0.4)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@types/react@17.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@material-ui/core': 4.12.4(@types/react@17.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -6585,7 +6585,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 17.0.4
 
-  '@material-ui/lab@4.0.0-alpha.61(@material-ui/core@4.12.4(@types/react@17.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@types/react@17.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
+  '@material-ui/lab@4.0.0-alpha.61(@material-ui/core@4.12.4(@types/react@17.0.4)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@types/react@17.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@material-ui/core': 4.12.4(@types/react@17.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -7830,7 +7830,7 @@ snapshots:
     dependencies:
       cipher-base: 1.0.6
       inherits: 2.0.4
-      ripemd160: 2.0.1
+      ripemd160: 2.0.2
       sha.js: 2.4.12
 
   create-hash@1.2.0:
