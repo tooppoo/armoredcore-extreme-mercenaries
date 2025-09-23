@@ -14,14 +14,14 @@
     "front": "pnpm --filter @ac-extreme-mercenaries/front",
     "front:dev": "pnpm --filter @ac-extreme-mercenaries/front run dev",
     "e2e": "pnpm --filter @ac-extreme-mercenaries/e2e",
-    "adr:new": "pnpm exec log4brains adr new",
-    "adr:preview": "pnpm exec log4brains preview"
+    "adr": "pnpm --filter @ac-extreme-mercenaries/adr run"
   },
   "engines": {
     "node": ">=22.18.0"
   },
   "packageManager": "pnpm@10.17.0",
   "workspaces": [
+    "packages/adr",
     "packages/discord-bot",
     "packages/front",
     "packages/e2e"
@@ -36,7 +36,6 @@
     "eslint-import-resolver-typescript": "4.4.4",
     "eslint-plugin-import": "2.32.0",
     "globals": "16.4.0",
-    "log4brains": "^1.1.0",
     "npm-run-all2": "8.0.4",
     "prettier": "3.6.2",
     "tsx": "4.20.5",

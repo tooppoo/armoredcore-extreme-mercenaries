@@ -18,7 +18,8 @@
     "source=${localEnv:HOME}/.vimrc,target=/home/node/.vimrc,type=bind,consistency=cached"
   ],
   "forwardPorts": [
-    5173
+    5173,
+    4004
   ],
   "postCreateCommand": "bash -l .devcontainer/scripts/setup-pnpm.sh",
   "postStartCommand": "bash -l .devcontainer/scripts/setup-alias.sh",
