@@ -2,7 +2,11 @@
   "name": "Node 22.19.0 + TypeScript",
   "image": "node:22.19.0-bookworm",
   "features": {
-    "ghcr.io/devcontainers/features/common-utils:2": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "username": "node",
+      "installZsh": true,
+      "configureZshAsDefaultShell": false
+    },
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
