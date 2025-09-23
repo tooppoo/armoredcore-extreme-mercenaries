@@ -4,6 +4,7 @@ import { LinkIcon } from '@heroicons/react/16/solid'
 import { siteName } from '~/lib/constants'
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server'
 import { buildMeta } from '~/lib/head/build-meta'
+import { createFaqStructuredData } from '~/lib/head/structured-data'
 import { LinkCard } from '~/lib/utils/components/LinkCard'
 import {
   getLatestVideoArchives,
@@ -459,10 +460,9 @@ export const meta: Route.MetaFunction = ({ location }) => {
       description:
         'ARMORED COREシリーズのやりこみ攻略・独自チャレンジ・縛りプレイの体験談やノウハウを集約した非公式コミュニティ。Discord案内・アーカイブ・ルール・FAQも掲載。初心者も歓迎。',
       pathname: location.pathname,
-      faq: faqItems.map((faq) => ({
-        question: faq.question,
-        answer: faq.answerText,
-      })),
+      structuredData: {
+        faq: createFaqStructuredData(faqItems),
+      },
     }),
   ]
 }
