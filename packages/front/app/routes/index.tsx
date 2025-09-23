@@ -4,6 +4,7 @@ import { LinkIcon } from '@heroicons/react/16/solid'
 import { siteName } from '~/lib/constants'
 import { LoadDiscord, loadDiscord } from '~/lib/discord/loader.server'
 import { buildMeta } from '~/lib/head/build-meta'
+import { createFaqStructuredData } from '~/lib/head/structured-data'
 import { LinkCard } from '~/lib/utils/components/LinkCard'
 import {
   getLatestVideoArchives,
@@ -97,6 +98,43 @@ type IndexItem = Readonly<{
   id: string
   content: React.ReactNode
 }>
+
+type FAQItem = Readonly<{
+  question: string
+  answerText: string
+  renderAnswer?: (answerText: string) => React.ReactNode
+}>
+
+const faqItems: FAQItem[] = [
+  {
+    question: '初心者でも参加できますか？',
+    answerText:
+      'はい、初心者の方も歓迎しています。Discord内で質問も受け付けています。',
+  },
+  {
+    question: 'アーカイブへ攻略・チャレンジを投稿する方法は？',
+    answerText:
+      'Discordサーバーの専用チャンネルで受付中です。詳細は参加後にご確認いただけます。',
+  },
+  {
+    question: 'サイトの情報は誰がまとめていますか？',
+    answerText: '運営メンバーの Philomagi によって更新されています。',
+    renderAnswer: () => (
+      <>
+        運営メンバーの{' '}
+        <LinkCard
+          to="https://x.com/Philomagi"
+          type="external"
+          aria-label="PhilomagiのXプロフィール（新しいタブで開く）"
+        >
+          Philomagi
+        </LinkCard>
+        によって更新されています。
+      </>
+    ),
+  },
+]
+
 const lists = ({
   discord,
   inquiryUrl,
@@ -136,38 +174,14 @@ const lists = ({
     content: (
       <section aria-label="よくある質問">
         <div className="content-list">
-          <article className="faq-item">
-            <h3 className="faq-question">Q. 初心者でも参加できますか？</h3>
-            <div className="faq-answer">
-              A.
-              はい、初心者の方も歓迎しています。Discord内で質問も受け付けています。
-            </div>
-          </article>
-          <article className="faq-item">
-            <h3 className="faq-question">
-              Q. アーカイブへ攻略・チャレンジを投稿する方法は？
-            </h3>
-            <div className="faq-answer">
-              A.
-              Discordサーバーの専用チャンネルで受付中です。詳細は参加後にご確認いただけます。
-            </div>
-          </article>
-          <article className="faq-item">
-            <h3 className="faq-question">
-              Q. サイトの情報は誰がまとめていますか？
-            </h3>
-            <div className="faq-answer">
-              A. 運営メンバーの
-              <LinkCard
-                to="https://x.com/Philomagi"
-                type="external"
-                aria-label="Philomagi氏のXプロフィール（新しいタブで開く）"
-              >
-                Philomagi
-              </LinkCard>
-              によって更新されています。
-            </div>
-          </article>
+          {faqItems.map((faq) => (
+            <article className="faq-item" key={faq.question}>
+              <h3 className="faq-question">Q. {faq.question}</h3>
+              <div className="faq-answer">
+                A. {faq.renderAnswer?.(faq.answerText) ?? <>{faq.answerText}</>}
+              </div>
+            </article>
+          ))}
         </div>
       </section>
     ),
@@ -446,39 +460,9 @@ export const meta: Route.MetaFunction = ({ location }) => {
       description:
         'ARMORED COREシリーズのやりこみ攻略・独自チャレンジ・縛りプレイの体験談やノウハウを集約した非公式コミュニティ。Discord案内・アーカイブ・ルール・FAQも掲載。初心者も歓迎。',
       pathname: location.pathname,
-    }),
-    {
-      // FAQ構造化データ
-      'script:ld+json': {
-        '@context': 'https://schema.org',
-        '@type': 'FAQPage',
-        mainEntity: [
-          {
-            '@type': 'Question',
-            name: '初心者でも参加できますか？',
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: 'はい、初心者の方も歓迎しています。Discord内で質問も受け付けています。',
-            },
-          },
-          {
-            '@type': 'Question',
-            name: '攻略・チャレンジの投稿方法は？',
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: 'Discordサーバーの専用チャンネルで受付中です。詳細は参加後にご案内します。',
-            },
-          },
-          {
-            '@type': 'Question',
-            name: 'サイトの情報は誰がまとめていますか？',
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: '有志メンバーが実際のプレイ体験をもとにまとめています。',
-            },
-          },
-        ],
+      structuredData: {
+        faq: createFaqStructuredData(faqItems),
       },
-    },
+    }),
   ]
 }

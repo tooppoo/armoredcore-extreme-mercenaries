@@ -14,14 +14,14 @@
     "front": "pnpm --filter @ac-extreme-mercenaries/front",
     "front:dev": "pnpm --filter @ac-extreme-mercenaries/front run dev",
     "e2e": "pnpm --filter @ac-extreme-mercenaries/e2e",
-    "adr:new": "pnpm exec log4brains adr new",
-    "adr:preview": "pnpm exec log4brains preview"
+    "adr": "pnpm --filter @ac-extreme-mercenaries/adr run"
   },
   "engines": {
     "node": ">=22.18.0"
   },
   "packageManager": "pnpm@10.17.0",
   "workspaces": [
+    "packages/adr",
     "packages/discord-bot",
     "packages/front",
     "packages/e2e"
