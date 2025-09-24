@@ -94,7 +94,7 @@ const setupCommandHandler: ClientSetupFunction = (client: Client): Client => {
         return
       }
 
-      const fallbackMessage = 'アーカイブ追加に失敗しました'
+      const fallbackMessage = 'コマンドの実行中にエラーが発生しました'
 
       if (interaction.deferred) {
         if (!interaction.replied) {
