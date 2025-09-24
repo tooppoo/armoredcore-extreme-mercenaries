@@ -131,6 +131,8 @@ flowchart LR
 | `FRONT_AUTH_UPLOAD_ARCHIVE` | API Bearer Token |
 | `LOG_LEVEL` | Bot ログレベル |
 
+> 運用メモ: 本番デプロイ前に `DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS` と `DISCORD_DEV_ALERT_CHANNEL_ID` を Secrets/環境変数に設定し、Slash コマンドを `pnpm --filter @ac-extreme-mercenaries/discord-bot run deploy:commands` で再登録する。
+
 ## エラーハンドリング設計
 
 - API から 400 (`unsupported-url`, `duplicated-url`): Bot 側は info レベルでログし、ユーザー向けメッセージ返却

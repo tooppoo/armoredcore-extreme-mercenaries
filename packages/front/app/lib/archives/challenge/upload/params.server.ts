@@ -4,6 +4,7 @@ const postChallengeArchiveLinkBody = z.object({
   type: z.literal('link'),
   title: z.string().min(1),
   url: z.string().url().min(1),
+  description: z.string().min(1).optional(),
   discord_user: z.object({
     id: z.string().min(1),
     name: z.string().min(1),

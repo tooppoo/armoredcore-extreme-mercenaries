@@ -13,3 +13,6 @@ coverage/
 reports/
 
 .DS_Store
+
+tmp/
+!tmp/.keep
