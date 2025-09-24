@@ -43,9 +43,18 @@ export const archiveChallengeCommand: Command = {
     }
 
     const correlationId = interaction.id
-    const allowedChannelIds = parseAllowedChannelIds(
-      process.env.DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS,
-    )
+    const allowedChannelIdsEnv =
+      process.env.DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS
+    if (!allowedChannelIdsEnv) {
+      await interaction.reply({ content: 'コマンド設定が未完了です' })
+      log('error', {
+        message: 'DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS is not set',
+        correlationId,
+      })
+      return
+    }
+
+    const allowedChannelIds = parseAllowedChannelIds(allowedChannelIdsEnv)
 
     if (
       allowedChannelIds.size > 0 &&
@@ -182,13 +191,6 @@ async function notifyDeveloper(
   { correlationId, errorCode, title, url }: DeveloperNotificationPayload,
 ): Promise<void> {
   const channelId = process.env.DISCORD_DEV_ALERT_CHANNEL_ID
-  if (!channelId) {
-    log('error', {
-      message: 'DISCORD_DEV_ALERT_CHANNEL_ID is not set',
-      correlationId,
-    })
-    return
-  }
 
   const content = [
     'チャレンジアーカイブ登録でエラーが発生しました',
@@ -200,6 +202,7 @@ async function notifyDeveloper(
     `URL: ${url}`,
   ].join('\n')
 
+  // 通知に失敗したら、一定回数リトライ
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       const channel = await interaction.client.channels.fetch(channelId)
