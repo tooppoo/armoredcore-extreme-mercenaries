@@ -46,12 +46,13 @@ export const archiveChallengeCommand: Command = {
     const allowedChannelIdsEnv =
       process.env.DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS
     if (!allowedChannelIdsEnv) {
-      await interaction.reply({ content: 'コマンド設定が未完了です' })
+      await interaction.reply({ content: 'コマンドの実行が許可されていません。管理者にお問い合わせください。' })
       log('error', {
         message: 'DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS is not set',
         correlationId,
       })
       return
+    }
     }
 
     const allowedChannelIds = parseAllowedChannelIds(allowedChannelIdsEnv)
