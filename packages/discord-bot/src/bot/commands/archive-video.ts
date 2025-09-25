@@ -74,7 +74,7 @@ const data = new SlashCommandBuilder()
   .setName('archive-video')
   .setDescription('動画アーカイブを登録します')
   .addStringOption((option) =>
-    option.setName('url').setDescription('対象のURL').setRequired(true),
+    option.setName('url').setDescription('対象のURL（必須）').setRequired(true),
   )
   .addStringOption((option) =>
     option

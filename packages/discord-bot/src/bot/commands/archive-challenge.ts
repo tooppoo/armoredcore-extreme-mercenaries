@@ -66,10 +66,13 @@ const data = new SlashCommandBuilder()
   .setName('archive-challenge')
   .setDescription('チャレンジアーカイブを登録します')
   .addStringOption((option) =>
-    option.setName('title').setDescription('タイトル').setRequired(true),
+    option
+      .setName('title')
+      .setDescription('タイトル（必須）')
+      .setRequired(true),
   )
   .addStringOption((option) =>
-    option.setName('url').setDescription('対象のURL').setRequired(true),
+    option.setName('url').setDescription('対象のURL（必須）').setRequired(true),
   )
   .addStringOption((option) =>
     option
