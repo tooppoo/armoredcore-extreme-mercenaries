@@ -9,9 +9,8 @@ const RETRY_WAIT_MS = 1000
 /**
  * 開発者通知の追加メタデータ
  */
-export interface DeveloperAlertMetadata {
+export interface DeveloperAlertMetadata extends Record<string, unknown> {
   correlationId: string
-  [key: string]: unknown
 }
 
 /**
