@@ -59,11 +59,23 @@ Discord スラッシュコマンド `/archive-challenge` を用いて参加者�
 - ボディ
 
   ```json
+  // type=link の場合
   {
-    "type": "link" | "text",
+    "type": "link",
     "title": "...",
-    "url": "...",          // type=link の場合
-    "description": "...",  // type=text の場合
+    "url": "...",
+    "description": "...",  // オプショナル（未指定の場合は自動取得）
+    "discord_user": {
+      "id": "...",
+      "name": "..."
+    }
+  }
+
+  // type=text の場合
+  {
+    "type": "text",
+    "title": "...",
+    "text": "...",       // テキスト本文
     "discord_user": {
       "id": "...",
       "name": "..."
