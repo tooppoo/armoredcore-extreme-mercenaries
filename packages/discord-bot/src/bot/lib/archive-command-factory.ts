@@ -7,7 +7,10 @@ import { frontApi } from './front.js'
 import { log } from '../../lib/log.js'
 import { makeCatchesSerializable } from '../../lib/error.js'
 import { parseAllowedChannelIds } from './channel.js'
-import { sendDeveloperAlert, type DeveloperAlertMetadata } from './notification.js'
+import {
+  sendDeveloperAlert,
+  type DeveloperAlertMetadata,
+} from './notification.js'
 import { type Command } from '../commands/index.js'
 
 /**
