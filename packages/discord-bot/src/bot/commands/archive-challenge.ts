@@ -7,7 +7,11 @@ import { log } from '../../lib/log.js'
 import { makeCatchesSerializable } from '../../lib/error.js'
 import { type Command } from './index.js'
 
-function createSuccessMessage(title: string, url: string, description?: string): string {
+function createSuccessMessage(
+  title: string,
+  url: string,
+  description?: string,
+): string {
   const lines = [
     'アーカイブに登録しました',
     '',
@@ -139,7 +143,11 @@ export const archiveChallengeCommand: Command = {
       })
 
       if (response.ok) {
-        const successMessage = createSuccessMessage(title, url, descriptionOption)
+        const successMessage = createSuccessMessage(
+          title,
+          url,
+          descriptionOption,
+        )
         await interaction.editReply({ content: successMessage })
         return
       }
