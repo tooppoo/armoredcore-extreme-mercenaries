@@ -1,5 +1,11 @@
 import { z } from 'zod'
 
+/**
+ * NOTE:
+ * スラッシュコマンド導入後、typeプロパティは廃止
+ * パラメータも一種類のみになる予定
+ */
+
 const postChallengeArchiveLinkBody = z.object({
   type: z.literal('link'),
   title: z.string().min(1),
