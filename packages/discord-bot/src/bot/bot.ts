@@ -102,33 +102,27 @@ const setupCommandHandler: ClientSetupFunction = (client: Client): Client => {
 
       if (interaction.deferred) {
         if (!interaction.replied) {
-          await interaction
-            .editReply({ content: fallbackMessage })
-            .catch((e) =>
-              log('warn', {
-                message: 'Failed to send fallback message on editReply',
-                detail: makeCatchesSerializable(e),
-              }),
-            )
-        } else {
-          await interaction
-            .followUp({ content: fallbackMessage })
-            .catch((e) =>
-              log('warn', {
-                message: 'Failed to send fallback message on followUp',
-                detail: makeCatchesSerializable(e),
-              }),
-            )
-        }
-      } else {
-        await interaction
-          .reply({ content: fallbackMessage })
-          .catch((e) =>
+          await interaction.editReply({ content: fallbackMessage }).catch((e) =>
             log('warn', {
-              message: 'Failed to send fallback message on reply',
+              message: 'Failed to send fallback message on editReply',
               detail: makeCatchesSerializable(e),
             }),
           )
+        } else {
+          await interaction.followUp({ content: fallbackMessage }).catch((e) =>
+            log('warn', {
+              message: 'Failed to send fallback message on followUp',
+              detail: makeCatchesSerializable(e),
+            }),
+          )
+        }
+      } else {
+        await interaction.reply({ content: fallbackMessage }).catch((e) =>
+          log('warn', {
+            message: 'Failed to send fallback message on reply',
+            detail: makeCatchesSerializable(e),
+          }),
+        )
       }
     }
   })
