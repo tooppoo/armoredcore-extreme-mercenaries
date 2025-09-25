@@ -6,8 +6,12 @@ import { setupMessageSender } from './lib/message.js'
 import { messageHandlers } from './messages/index.js'
 import { frontRequestHandler } from './lib/front.js'
 import { commands } from './commands/index.js'
+import { validateEnvironmentVariables } from '../lib/env.js'
 
 export function startBot() {
+  // 起動時に必要な環境変数がすべて設定されているかチェック
+  validateEnvironmentVariables()
+
   const client = setupClient()
 
   client.login(process.env.DISCORD_TOKEN)
