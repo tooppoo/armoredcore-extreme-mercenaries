@@ -8,16 +8,19 @@ import { makeCatchesSerializable } from '../../lib/error.js'
 import { type Command } from './index.js'
 
 function createSuccessMessage(
-  title: string,
   url: string,
+  title?: string,
   description?: string,
 ): string {
   const lines = [
     'アーカイブに登録しました',
     '',
-    `**タイトル:** ${title}`,
     `**URL:** ${url}`, // URLプレビューを表示してユーザーが指定したURLの内容を確認できるようにする
   ]
+
+  if (title) {
+    lines.push(`**タイトル:** ${title}`)
+  }
 
   if (description) {
     lines.push(`**説明:** ${description}`)
@@ -28,17 +31,20 @@ function createSuccessMessage(
 
 function createFailureMessage(
   baseMessage: string,
-  title: string,
   url: string,
   correlationId: string,
+  title?: string,
   description?: string,
 ): string {
   const lines = [
     baseMessage,
     '',
-    `**タイトル:** ${title}`,
     `**URL:** ${url}`, // URLプレビューを表示してユーザーが指定したURLの内容を確認できるようにする
   ]
+
+  if (title) {
+    lines.push(`**タイトル:** ${title}`)
+  }
 
   if (description) {
     lines.push(`**説明:** ${description}`)
@@ -48,6 +54,7 @@ function createFailureMessage(
 
   return lines.join('\n')
 }
+
 const invalidResponseMessage = 'アーカイブ追加中にエラーが発生しました'
 const commandFailureMessage = 'アーカイブ追加に失敗しました'
 const disallowedChannelMessage =
@@ -56,20 +63,24 @@ const fallbackErrorMessage = 'アーカイブに登録されませんでした'
 
 const errorMessageMap: Record<string, string> = {
   'unsupported-url': 'サポート外のURLなのでスキップしました',
-  'duplicated-url': '登録済みのアーカイブなので、スキップしました',
+  'duplicated-url': '既にアーカイブ済みのURLなのでスキップしました',
+  'failed-get-ogp': 'アーカイブの情報を取得できませんでした',
 }
 
 const DEV_ALERT_RETRY_ATTEMPTS = 3
 const RETRY_WAIT_MS = 1000
 
 const data = new SlashCommandBuilder()
-  .setName('archive-challenge')
-  .setDescription('チャレンジアーカイブを登録します')
-  .addStringOption((option) =>
-    option.setName('title').setDescription('タイトル').setRequired(true),
-  )
+  .setName('archive-video')
+  .setDescription('動画アーカイブを登録します')
   .addStringOption((option) =>
     option.setName('url').setDescription('対象のURL').setRequired(true),
+  )
+  .addStringOption((option) =>
+    option
+      .setName('title')
+      .setDescription('タイトル（未指定の場合は自動取得）')
+      .setRequired(false),
   )
   .addStringOption((option) =>
     option
@@ -78,7 +89,7 @@ const data = new SlashCommandBuilder()
       .setRequired(false),
   )
 
-export const archiveChallengeCommand: Command = {
+export const archiveVideoCommand: Command = {
   data,
   async execute(interaction) {
     if (!interaction.isChatInputCommand()) {
@@ -87,14 +98,14 @@ export const archiveChallengeCommand: Command = {
 
     const correlationId = interaction.id
     const allowedChannelIdsEnv =
-      process.env.DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS
+      process.env.DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS
     if (!allowedChannelIdsEnv) {
       await interaction.reply({
         content:
           'コマンドの実行が許可されていません。管理者にお問い合わせください。',
       })
       log('error', {
-        message: 'DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS is not set',
+        message: 'DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS is not set',
         correlationId,
       })
       return
@@ -118,7 +129,14 @@ export const archiveChallengeCommand: Command = {
 
     const authToken = process.env.FRONT_AUTH_UPLOAD_ARCHIVE
     if (!authToken) {
-      await interaction.reply({ content: commandFailureMessage })
+      const failureMessage = createFailureMessage(
+        commandFailureMessage,
+        interaction.options.getString('url', true).trim(),
+        correlationId,
+        interaction.options.getString('title')?.trim(),
+        interaction.options.getString('description')?.trim(),
+      )
+      await interaction.reply({ content: failureMessage })
       log('error', {
         message: 'FRONT_AUTH_UPLOAD_ARCHIVE is not set',
         correlationId,
@@ -126,8 +144,8 @@ export const archiveChallengeCommand: Command = {
       return
     }
 
-    const title = interaction.options.getString('title', true).trim()
     const url = interaction.options.getString('url', true).trim()
+    const titleOption = interaction.options.getString('title')?.trim()
     const descriptionOption = interaction.options
       .getString('description')
       ?.trim()
@@ -135,8 +153,6 @@ export const archiveChallengeCommand: Command = {
     await interaction.deferReply()
 
     const requestBody: Record<string, unknown> = {
-      type: 'link',
-      title,
       url,
       discord_user: {
         id: interaction.user.id,
@@ -144,12 +160,16 @@ export const archiveChallengeCommand: Command = {
       },
     }
 
+    if (titleOption) {
+      requestBody.title = titleOption
+    }
+
     if (descriptionOption) {
       requestBody.description = descriptionOption
     }
 
     try {
-      const response = await fetch(frontApi('/api/archives/challenge'), {
+      const response = await fetch(frontApi('/api/archives/video'), {
         method: 'POST',
         body: JSON.stringify(requestBody),
         headers: {
@@ -160,15 +180,15 @@ export const archiveChallengeCommand: Command = {
       })
 
       log('debug', {
-        message: 'Received response from challenge archive API',
+        message: 'Received response from video archive API',
         status: response.status,
         correlationId,
       })
 
       if (response.ok) {
         const successMessage = createSuccessMessage(
-          title,
           url,
+          titleOption,
           descriptionOption,
         )
         await interaction.editReply({ content: successMessage })
@@ -183,15 +203,15 @@ export const archiveChallengeCommand: Command = {
         }
       } catch (error) {
         log('error', {
-          message: 'Failed to parse error response from challenge archive API',
+          message: 'Failed to parse error response from video archive API',
           detail: makeCatchesSerializable(error),
           correlationId,
         })
         const failureMessage = createFailureMessage(
           invalidResponseMessage,
-          title,
           url,
           correlationId,
+          titleOption,
           descriptionOption,
         )
         await interaction.editReply({ content: failureMessage })
@@ -201,9 +221,9 @@ export const archiveChallengeCommand: Command = {
       if (response.status >= 500) {
         const failureMessage = createFailureMessage(
           `予期しないエラーが発生しました (コード: ${errorCode})`,
-          title,
           url,
           correlationId,
+          titleOption,
           descriptionOption,
         )
         await interaction.editReply({
@@ -212,8 +232,9 @@ export const archiveChallengeCommand: Command = {
         await notifyDeveloper(interaction, {
           correlationId,
           errorCode,
-          title,
           url,
+          title: titleOption,
+          description: descriptionOption,
         })
         return
       }
@@ -221,23 +242,23 @@ export const archiveChallengeCommand: Command = {
       const baseMessage = errorMessageMap[errorCode] ?? fallbackErrorMessage
       const failureMessage = createFailureMessage(
         baseMessage,
-        title,
         url,
         correlationId,
+        titleOption,
         descriptionOption,
       )
       await interaction.editReply({ content: failureMessage })
     } catch (error) {
       log('error', {
-        message: 'Failed to call challenge archive API',
+        message: 'Failed to call video archive API',
         detail: makeCatchesSerializable(error),
         correlationId,
       })
       const failureMessage = createFailureMessage(
         commandFailureMessage,
-        title,
         url,
         correlationId,
+        titleOption,
         descriptionOption,
       )
       await interaction.editReply({ content: failureMessage })
@@ -245,41 +266,44 @@ export const archiveChallengeCommand: Command = {
   },
 }
 
-function parseAllowedChannelIds(value?: string): Set<string> {
-  if (!value) {
-    return new Set<string>()
-  }
-
-  return new Set(
-    value
-      .split(',')
-      .map((id) => id.trim())
-      .filter((id) => id.length > 0),
-  )
-}
-
 type DeveloperNotificationPayload = Readonly<{
   correlationId: string
   errorCode: string
-  title: string
   url: string
+  title?: string
+  description?: string
 }>
 
 async function notifyDeveloper(
   interaction: ChatInputCommandInteraction,
-  { correlationId, errorCode, title, url }: DeveloperNotificationPayload,
+  {
+    correlationId,
+    errorCode,
+    url,
+    title,
+    description,
+  }: DeveloperNotificationPayload,
 ): Promise<void> {
   const channelId = process.env.DISCORD_DEV_ALERT_CHANNEL_ID
 
-  const content = [
-    'チャレンジアーカイブ登録でエラーが発生しました',
+  const contentLines = [
+    '動画アーカイブ登録でエラーが発生しました',
     `コード: ${errorCode}`,
     `Correlation ID: ${correlationId}`,
     `User: ${interaction.user.username} (${interaction.user.id})`,
     `Channel: ${interaction.channelId ?? 'unknown'}`,
-    `Title: ${title}`,
     `URL: ${url}`,
-  ].join('\n')
+  ]
+
+  if (title) {
+    contentLines.push(`Title: ${title}`)
+  }
+
+  if (description) {
+    contentLines.push(`Description: ${description}`)
+  }
+
+  const content = contentLines.join('\n')
 
   // 通知に失敗したら、一定回数リトライ
   for (let attempt = 1; attempt <= DEV_ALERT_RETRY_ATTEMPTS; attempt++) {
@@ -291,7 +315,7 @@ async function notifyDeveloper(
 
       await channel.send({ content })
       log('info', {
-        message: 'Sent developer alert for challenge archive error',
+        message: 'Sent developer alert for video archive error',
         correlationId,
         errorCode,
         attempt,
@@ -321,4 +345,17 @@ async function notifyDeveloper(
 
 function wait(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+function parseAllowedChannelIds(value?: string): Set<string> {
+  if (!value) {
+    return new Set<string>()
+  }
+
+  return new Set(
+    value
+      .split(',')
+      .map((id) => id.trim())
+      .filter((id) => id.length > 0),
+  )
 }
