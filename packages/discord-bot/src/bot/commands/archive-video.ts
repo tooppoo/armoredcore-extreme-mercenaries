@@ -227,15 +227,9 @@ export const archiveVideoCommand: Command = {
           `User: ${interaction.user.username} (${interaction.user.id})`,
           `Channel: ${interaction.channelId ?? 'unknown'}`,
           `URL: ${url}`,
+          ...(titleOption ? [`Title: ${titleOption}`] : []),
+          ...(descriptionOption ? [`Description: ${descriptionOption}`] : []),
         ]
-
-        if (titleOption) {
-          alertContentLines.push(`Title: ${titleOption}`)
-        }
-
-        if (descriptionOption) {
-          alertContentLines.push(`Description: ${descriptionOption}`)
-        }
 
         const alertContent = alertContentLines.join('\n')
 
