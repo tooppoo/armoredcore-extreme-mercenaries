@@ -34,5 +34,8 @@ export function validateEnvironmentVariables(): void {
     throw new Error(errorMessage)
   }
 
-  log('info', 'Environment variables validation completed: All required variables are set')
+  log(
+    'info',
+    'Environment variables validation completed: All required variables are set',
+  )
 }

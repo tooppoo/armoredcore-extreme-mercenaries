@@ -19,6 +19,9 @@ const errorMessageMap: Record<string, string> = {
   'duplicated-url': '登録済みのアーカイブなので、スキップしました',
 }
 
+const DEV_ALERT_RETRY_ATTEMPTS = 3
+const RETRY_WAIT_MS = 1000
+
 const data = new SlashCommandBuilder()
   .setName('archive-challenge')
   .setDescription('チャレンジアーカイブを登録します')
@@ -46,13 +49,15 @@ export const archiveChallengeCommand: Command = {
     const allowedChannelIdsEnv =
       process.env.DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS
     if (!allowedChannelIdsEnv) {
-      await interaction.reply({ content: 'コマンドの実行が許可されていません。管理者にお問い合わせください。' })
+      await interaction.reply({
+        content:
+          'コマンドの実行が許可されていません。管理者にお問い合わせください。',
+      })
       log('error', {
         message: 'DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS is not set',
         correlationId,
       })
       return
-    }
     }
 
     const allowedChannelIds = parseAllowedChannelIds(allowedChannelIdsEnv)
@@ -204,7 +209,7 @@ async function notifyDeveloper(
   ].join('\n')
 
   // 通知に失敗したら、一定回数リトライ
-  for (let attempt = 1; attempt <= 3; attempt++) {
+  for (let attempt = 1; attempt <= DEV_ALERT_RETRY_ATTEMPTS; attempt++) {
     try {
       const channel = await interaction.client.channels.fetch(channelId)
       if (!channel || !channel.isSendable()) {
@@ -228,8 +233,8 @@ async function notifyDeveloper(
         detail: makeCatchesSerializable(error),
       })
 
-      if (attempt < 3) {
-        await wait(1000)
+      if (attempt < DEV_ALERT_RETRY_ATTEMPTS) {
+        await wait(RETRY_WAIT_MS)
       }
     }
   }

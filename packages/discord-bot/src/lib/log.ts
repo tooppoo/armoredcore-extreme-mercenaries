@@ -1,5 +1,5 @@
 type Loggable = string | ({ message: string } & { [key: string]: unknown })
-export type LogLevel = 'info' | 'debug' | 'error'
+export type LogLevel = 'info' | 'debug' | 'warn' | 'error'
 
 export function log(level: LogLevel, data: Loggable): void {
   if (isLowThanLogLevel(level)) {
@@ -32,5 +32,6 @@ function isLowThanLogLevel(level: LogLevel): boolean {
 const logLevel: Record<string, number> = {
   debug: 0,
   info: 1,
-  error: 2,
+  warn: 2,
+  error: 3,
 } satisfies Record<LogLevel, number>
