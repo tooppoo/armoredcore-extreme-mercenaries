@@ -1,10 +1,10 @@
-import {
-  SlashCommandBuilder,
-  type ChatInputCommandInteraction,
-} from 'discord.js'
+import { SlashCommandBuilder } from 'discord.js'
 import { frontApi } from '../lib/front.js'
 import { log } from '../../lib/log.js'
 import { makeCatchesSerializable } from '../../lib/error.js'
+import { parseAllowedChannelIds } from '../lib/channel.js'
+import { sendDeveloperAlert } from '../lib/notification.js'
+import { type VideoArchiveRequestBody } from '../types/archive.js'
 import { type Command } from './index.js'
 
 function createSuccessMessage(
@@ -66,9 +66,6 @@ const errorMessageMap: Record<string, string> = {
   'duplicated-url': '既にアーカイブ済みのURLなのでスキップしました',
   'failed-get-ogp': 'アーカイブの情報を取得できませんでした',
 }
-
-const DEV_ALERT_RETRY_ATTEMPTS = 3
-const RETRY_WAIT_MS = 1000
 
 const data = new SlashCommandBuilder()
   .setName('archive-video')
@@ -152,20 +149,14 @@ export const archiveVideoCommand: Command = {
 
     await interaction.deferReply()
 
-    const requestBody: Record<string, unknown> = {
+    const requestBody: VideoArchiveRequestBody = {
       url,
       discord_user: {
         id: interaction.user.id,
         name: interaction.user.username,
       },
-    }
-
-    if (titleOption) {
-      requestBody.title = titleOption
-    }
-
-    if (descriptionOption) {
-      requestBody.description = descriptionOption
+      ...(titleOption && { title: titleOption }),
+      ...(descriptionOption && { description: descriptionOption }),
     }
 
     try {
@@ -229,7 +220,26 @@ export const archiveVideoCommand: Command = {
         await interaction.editReply({
           content: failureMessage,
         })
-        await notifyDeveloper(interaction, {
+        const alertContentLines = [
+          '動画アーカイブ登録でエラーが発生しました',
+          `コード: ${errorCode}`,
+          `Correlation ID: ${correlationId}`,
+          `User: ${interaction.user.username} (${interaction.user.id})`,
+          `Channel: ${interaction.channelId ?? 'unknown'}`,
+          `URL: ${url}`,
+        ]
+
+        if (titleOption) {
+          alertContentLines.push(`Title: ${titleOption}`)
+        }
+
+        if (descriptionOption) {
+          alertContentLines.push(`Description: ${descriptionOption}`)
+        }
+
+        const alertContent = alertContentLines.join('\n')
+
+        await sendDeveloperAlert(interaction, alertContent, {
           correlationId,
           errorCode,
           url,
@@ -264,98 +274,4 @@ export const archiveVideoCommand: Command = {
       await interaction.editReply({ content: failureMessage })
     }
   },
-}
-
-type DeveloperNotificationPayload = Readonly<{
-  correlationId: string
-  errorCode: string
-  url: string
-  title?: string
-  description?: string
-}>
-
-async function notifyDeveloper(
-  interaction: ChatInputCommandInteraction,
-  {
-    correlationId,
-    errorCode,
-    url,
-    title,
-    description,
-  }: DeveloperNotificationPayload,
-): Promise<void> {
-  const channelId = process.env.DISCORD_DEV_ALERT_CHANNEL_ID
-
-  const contentLines = [
-    '動画アーカイブ登録でエラーが発生しました',
-    `コード: ${errorCode}`,
-    `Correlation ID: ${correlationId}`,
-    `User: ${interaction.user.username} (${interaction.user.id})`,
-    `Channel: ${interaction.channelId ?? 'unknown'}`,
-    `URL: ${url}`,
-  ]
-
-  if (title) {
-    contentLines.push(`Title: ${title}`)
-  }
-
-  if (description) {
-    contentLines.push(`Description: ${description}`)
-  }
-
-  const content = contentLines.join('\n')
-
-  // 通知に失敗したら、一定回数リトライ
-  for (let attempt = 1; attempt <= DEV_ALERT_RETRY_ATTEMPTS; attempt++) {
-    try {
-      const channel = await interaction.client.channels.fetch(channelId)
-      if (!channel || !channel.isSendable()) {
-        throw new Error('Developer alert channel is not sendable')
-      }
-
-      await channel.send({ content })
-      log('info', {
-        message: 'Sent developer alert for video archive error',
-        correlationId,
-        errorCode,
-        attempt,
-      })
-      return
-    } catch (error) {
-      log('error', {
-        message: 'Failed to send developer alert',
-        attempt,
-        correlationId,
-        errorCode,
-        detail: makeCatchesSerializable(error),
-      })
-
-      if (attempt < DEV_ALERT_RETRY_ATTEMPTS) {
-        await wait(RETRY_WAIT_MS)
-      }
-    }
-  }
-
-  log('error', {
-    message: 'Developer alert retries exhausted',
-    correlationId,
-    errorCode,
-  })
-}
-
-function wait(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms))
-}
-
-function parseAllowedChannelIds(value?: string): Set<string> {
-  if (!value) {
-    return new Set<string>()
-  }
-
-  return new Set(
-    value
-      .split(',')
-      .map((id) => id.trim())
-      .filter((id) => id.length > 0),
-  )
 }
