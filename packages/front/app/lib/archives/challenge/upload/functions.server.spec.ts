@@ -45,6 +45,36 @@ describe('buildArchiveFromUrl', () => {
     })
   })
 
+  it('should use provided description when available without calling ogp', async () => {
+    const mockUrl = 'https://example.com/path'
+    const mockRun = vi.fn()
+
+    const getOGPStrategyMock: GetOGPStrategy = () => ({
+      name: 'mock',
+      condition: () => true,
+      run: mockRun,
+    })
+
+    const findByURLMock: FindArchiveByURL = vi.fn().mockResolvedValue(null)
+
+    const result = await buildChallengeArchiveFromUrl(
+      { url: mockUrl, title: 'provided', description: 'manual description' },
+      {
+        env,
+        getOGPStrategy: getOGPStrategyMock,
+        findArchiveByURL: findByURLMock,
+      },
+    )
+
+    expect(findByURLMock).toHaveBeenCalledWith(new URL(mockUrl))
+    expect(mockRun).not.toHaveBeenCalled()
+    expect(result).toMatchObject({
+      url: new URL(mockUrl),
+      title: 'provided',
+      description: 'manual description',
+    })
+  })
+
   it('should throw if the same URL already exists in the archive', async () => {
     const mockUrl = 'https://x.com/example/status/12345678'
     const mockStrategyResult: OGP = {

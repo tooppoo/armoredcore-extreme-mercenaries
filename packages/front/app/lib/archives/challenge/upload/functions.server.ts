@@ -27,7 +27,7 @@ type IODeps = Readonly<{
  * @throws {ArchiveError}
  */
 export async function buildChallengeArchiveFromUrl(
-  data: Pick<PostChallengeArchiveLinkBody, 'url' | 'title'>,
+  data: Pick<PostChallengeArchiveLinkBody, 'url' | 'title' | 'description'>,
   { env, getOGPStrategy, findArchiveByURL }: IODeps,
 ): Promise<ArchiveContents> {
   const url = new URL(data.url)
@@ -35,6 +35,15 @@ export async function buildChallengeArchiveFromUrl(
   const sameURLArchive = await findArchiveByURL(url)
   if (sameURLArchive !== null) {
     return throwAlreadyArchivedURL(url, sameURLArchive)
+  }
+
+  const descriptionFromInput = data.description?.trim()
+  if (descriptionFromInput) {
+    return createNewArchiveContents({
+      title: data.title,
+      description: descriptionFromInput,
+      url,
+    })
   }
 
   // まず対応ストラテジーを選定（未対応URLはここで例外 = 400）
