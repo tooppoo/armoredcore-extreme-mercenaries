@@ -7,7 +7,47 @@ import { log } from '../../lib/log.js'
 import { makeCatchesSerializable } from '../../lib/error.js'
 import { type Command } from './index.js'
 
-const successMessage = 'アーカイブに登録しました'
+function createSuccessMessage(
+  title: string,
+  url: string,
+  description?: string,
+): string {
+  const lines = [
+    'アーカイブに登録しました',
+    '',
+    `**タイトル:** ${title}`,
+    `**URL:** ${url}`, // URLプレビューを表示してユーザーが指定したURLの内容を確認できるようにする
+  ]
+
+  if (description) {
+    lines.push(`**説明:** ${description}`)
+  }
+
+  return lines.join('\n')
+}
+
+function createFailureMessage(
+  baseMessage: string,
+  title: string,
+  url: string,
+  correlationId: string,
+  description?: string,
+): string {
+  const lines = [
+    baseMessage,
+    '',
+    `**タイトル:** ${title}`,
+    `**URL:** ${url}`, // URLプレビューを表示してユーザーが指定したURLの内容を確認できるようにする
+  ]
+
+  if (description) {
+    lines.push(`**説明:** ${description}`)
+  }
+
+  lines.push('', `**トレース ID:** ${correlationId}`)
+
+  return lines.join('\n')
+}
 const invalidResponseMessage = 'アーカイブ追加中にエラーが発生しました'
 const commandFailureMessage = 'アーカイブ追加に失敗しました'
 const disallowedChannelMessage =
@@ -126,6 +166,11 @@ export const archiveChallengeCommand: Command = {
       })
 
       if (response.ok) {
+        const successMessage = createSuccessMessage(
+          title,
+          url,
+          descriptionOption,
+        )
         await interaction.editReply({ content: successMessage })
         return
       }
@@ -142,13 +187,27 @@ export const archiveChallengeCommand: Command = {
           detail: makeCatchesSerializable(error),
           correlationId,
         })
-        await interaction.editReply({ content: invalidResponseMessage })
+        const failureMessage = createFailureMessage(
+          invalidResponseMessage,
+          title,
+          url,
+          correlationId,
+          descriptionOption,
+        )
+        await interaction.editReply({ content: failureMessage })
         return
       }
 
       if (response.status >= 500) {
+        const failureMessage = createFailureMessage(
+          `予期しないエラーが発生しました (コード: ${errorCode})`,
+          title,
+          url,
+          correlationId,
+          descriptionOption,
+        )
         await interaction.editReply({
-          content: `予期しないエラーが発生しました (コード: ${errorCode})`,
+          content: failureMessage,
         })
         await notifyDeveloper(interaction, {
           correlationId,
@@ -159,15 +218,29 @@ export const archiveChallengeCommand: Command = {
         return
       }
 
-      const message = errorMessageMap[errorCode] ?? fallbackErrorMessage
-      await interaction.editReply({ content: message })
+      const baseMessage = errorMessageMap[errorCode] ?? fallbackErrorMessage
+      const failureMessage = createFailureMessage(
+        baseMessage,
+        title,
+        url,
+        correlationId,
+        descriptionOption,
+      )
+      await interaction.editReply({ content: failureMessage })
     } catch (error) {
       log('error', {
         message: 'Failed to call challenge archive API',
         detail: makeCatchesSerializable(error),
         correlationId,
       })
-      await interaction.editReply({ content: commandFailureMessage })
+      const failureMessage = createFailureMessage(
+        commandFailureMessage,
+        title,
+        url,
+        correlationId,
+        descriptionOption,
+      )
+      await interaction.editReply({ content: failureMessage })
     }
   },
 }
