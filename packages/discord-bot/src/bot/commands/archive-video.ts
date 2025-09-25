@@ -4,30 +4,33 @@ import {
   createArchiveCommand,
   type BaseCommandParameters,
 } from '../lib/archive-command-factory.js'
-import { type ChallengeArchiveRequestBody } from '../types/archive.js'
+import { type VideoArchiveRequestBody } from '../types/archive.js'
 
-interface ChallengeArchiveParameters extends BaseCommandParameters {
-  title: string // 必須フィールド
+interface VideoArchiveParameters extends BaseCommandParameters {
+  title?: string
   description?: string
 }
 
 function extractParams(
   interaction: ChatInputCommandInteraction,
-): ChallengeArchiveParameters {
+): VideoArchiveParameters {
   return {
     url: interaction.options.getString('url', true).trim(),
-    title: interaction.options.getString('title', true).trim(),
+    title: interaction.options.getString('title')?.trim(),
     description: interaction.options.getString('description')?.trim(),
   }
 }
 
-function createSuccessMessage(params: ChallengeArchiveParameters): string {
+function createSuccessMessage(params: VideoArchiveParameters): string {
   const lines = [
     'アーカイブに登録しました',
     '',
-    `**タイトル:** ${params.title}`,
     `**URL:** ${params.url}`, // URLプレビューを表示してユーザーが指定したURLの内容を確認できるようにする
   ]
+
+  if (params.title) {
+    lines.push(`**タイトル:** ${params.title}`)
+  }
 
   if (params.description) {
     lines.push(`**説明:** ${params.description}`)
@@ -38,15 +41,18 @@ function createSuccessMessage(params: ChallengeArchiveParameters): string {
 
 function createFailureMessage(
   baseMessage: string,
-  params: ChallengeArchiveParameters,
+  params: VideoArchiveParameters,
   correlationId?: string,
 ): string {
   const lines = [
     baseMessage,
     '',
-    `**タイトル:** ${params.title}`,
     `**URL:** ${params.url}`, // URLプレビューを表示してユーザーが指定したURLの内容を確認できるようにする
   ]
+
+  if (params.title) {
+    lines.push(`**タイトル:** ${params.title}`)
+  }
 
   if (params.description) {
     lines.push(`**説明:** ${params.description}`)
@@ -60,37 +66,37 @@ function createFailureMessage(
 }
 
 function createRequestBody(
-  params: ChallengeArchiveParameters,
+  params: VideoArchiveParameters,
   interaction: ChatInputCommandInteraction,
-): ChallengeArchiveRequestBody {
+): VideoArchiveRequestBody {
   return {
-    type: 'link',
-    title: params.title,
     url: params.url,
     discord_user: {
       id: interaction.user.id,
       name: interaction.user.username,
     },
+    ...(params.title && { title: params.title }),
     ...(params.description && { description: params.description }),
   }
 }
 
 const errorMessageMap: Record<string, string> = {
   'unsupported-url': 'サポート外のURLなのでスキップしました',
-  'duplicated-url': '登録済みのアーカイブなので、スキップしました',
+  'duplicated-url': '既にアーカイブ済みのURLなのでスキップしました',
+  'failed-get-ogp': 'アーカイブの情報を取得できませんでした',
 }
 
 const data = new SlashCommandBuilder()
-  .setName('archive-challenge')
-  .setDescription('チャレンジアーカイブを登録します')
+  .setName('archive-video')
+  .setDescription('動画アーカイブを登録します')
+  .addStringOption((option) =>
+    option.setName('url').setDescription('対象のURL（必須）').setRequired(true),
+  )
   .addStringOption((option) =>
     option
       .setName('title')
-      .setDescription('タイトル（必須）')
-      .setRequired(true),
-  )
-  .addStringOption((option) =>
-    option.setName('url').setDescription('対象のURL（必須）').setRequired(true),
+      .setDescription('タイトル（未指定の場合は自動取得）')
+      .setRequired(false),
   )
   .addStringOption((option) =>
     option
@@ -99,15 +105,15 @@ const data = new SlashCommandBuilder()
       .setRequired(false),
   )
 
-export const archiveChallengeCommand = createArchiveCommand(
+export const archiveVideoCommand = createArchiveCommand(
   data,
   {
-    commandName: 'challenge-archive',
-    commandDescription: 'チャレンジアーカイブを登録します',
-    apiEndpoint: '/api/archives/challenge',
-    allowedChannelIdsEnvVar: 'DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS',
+    commandName: 'video-archive',
+    commandDescription: '動画アーカイブを登録します',
+    apiEndpoint: '/api/archives/video',
+    allowedChannelIdsEnvVar: 'DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS',
     errorMessageMap,
-    developerAlertPrefix: 'チャレンジアーカイブ登録',
+    developerAlertPrefix: '動画アーカイブ登録',
   },
   createSuccessMessage,
   createFailureMessage,

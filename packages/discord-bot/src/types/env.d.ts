@@ -13,6 +13,7 @@ declare module 'process' {
         DISCORD_VIDEO_ARCHIVE_CHANNEL: string
         DISCORD_CHALLENGE_ARCHIVE_CHANNEL: string
         DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS: string
+        DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS: string
         DISCORD_DEV_ALERT_CHANNEL_ID: string
 
         FRONT_URL: string
