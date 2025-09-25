@@ -7,7 +7,20 @@ import { log } from '../../lib/log.js'
 import { makeCatchesSerializable } from '../../lib/error.js'
 import { type Command } from './index.js'
 
-const successMessage = 'アーカイブに登録しました'
+function createSuccessMessage(title: string, url: string, description?: string): string {
+  const lines = [
+    'アーカイブに登録しました',
+    '',
+    `**タイトル:** ${title}`,
+    `**URL:** ${url}`,
+  ]
+
+  if (description) {
+    lines.push(`**説明:** ${description}`)
+  }
+
+  return lines.join('\n')
+}
 const invalidResponseMessage = 'アーカイブ追加中にエラーが発生しました'
 const commandFailureMessage = 'アーカイブ追加に失敗しました'
 const disallowedChannelMessage =
@@ -126,6 +139,7 @@ export const archiveChallengeCommand: Command = {
       })
 
       if (response.ok) {
+        const successMessage = createSuccessMessage(title, url, descriptionOption)
         await interaction.editReply({ content: successMessage })
         return
       }
