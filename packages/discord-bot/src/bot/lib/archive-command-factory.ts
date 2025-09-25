@@ -7,10 +7,7 @@ import { frontApi } from './front.js'
 import { log } from '../../lib/log.js'
 import { makeCatchesSerializable } from '../../lib/error.js'
 import { parseAllowedChannelIds } from './channel.js'
-import {
-  sendDeveloperAlert,
-  type DeveloperAlertMetadata,
-} from './notification.js'
+import { sendDeveloperAlert } from './notification.js'
 import { type Command } from '../commands/index.js'
 
 /**
@@ -36,6 +33,8 @@ export interface ArchiveCommandConfig {
  */
 export interface BaseCommandParameters {
   url: string
+  title?: string
+  description?: string
 }
 
 /**
@@ -93,7 +92,7 @@ export function createArchiveCommand<T extends BaseCommandParameters>(
         return
       }
 
-      const correlationId = interaction.id
+      const correlationId = interaction.id as string
       const allowedChannelIdsEnv = process.env[allowedChannelIdsEnvVar]
       if (!allowedChannelIdsEnv) {
         await interaction.reply({
@@ -206,6 +205,10 @@ export function createArchiveCommand<T extends BaseCommandParameters>(
             `User: ${interaction.user.username} (${interaction.user.id})`,
             `Channel: ${interaction.channelId ?? 'unknown'}`,
             `URL: ${params.url}`,
+            ...(params.title ? [`Title: ${params.title}`] : []),
+            ...(params.description
+              ? [`Description: ${params.description}`]
+              : []),
           ]
 
           // パラメータの詳細をアラートに追加
@@ -220,8 +223,8 @@ export function createArchiveCommand<T extends BaseCommandParameters>(
           await sendDeveloperAlert(interaction, alertContent, {
             correlationId,
             errorCode,
-            ...params,
-          } as unknown as DeveloperAlertMetadata)
+            ...(params as Record<string, unknown>),
+          })
           return
         }
 
