@@ -1,6 +1,9 @@
-<!-- This file is the homepage of your Log4brains knowledge base. You are free to edit it as you want -->
+---
+layout: base.njk
+title: Architecture Decision Records
+---
 
-# Architecture knowledge base
+# Architecture Decision Records
 
 Welcome 👋 to the architecture knowledge base of ac-extreme-mercenaries.
 You will find here all the Architecture Decision Records (ADR) of the project.
@@ -19,18 +22,21 @@ Moreover, maintaining this documentation aims at:
 
 ## Usage
 
-This website is automatically updated after a change on the `main` branch of the project's Git repository.
-In fact, the developers manage this documentation directly with markdown files located next to their code, so it is more convenient for them to keep it up-to-date.
-You can browse the ADRs by using the left menu or the search bar.
+ローカルでADRをプレビューする場合：
 
-The typical workflow of an ADR is the following:
+```bash
+# 開発サーバーを起動
+pnpm adr dev
 
-![ADR workflow](/l4b-static/adr-workflow.png)
+# ビルドして静的ファイルを生成
+pnpm adr build
 
-The decision process is entirely collaborative and backed by pull requests.
+# ビルド後のファイルをプレビュー
+pnpm adr preview
+```
 
 ## More information
 
-- [Log4brains documentation](https://github.com/thomvaill/log4brains/tree/develop#readme)
-- [What is an ADR and why should you use them](https://github.com/thomvaill/log4brains/tree/develop#-what-is-an-adr-and-why-should-you-use-them)
+- [VitePress documentation](https://vitepress.dev/)
+- [What is an ADR and why should you use them](https://github.com/joelparkerhenderson/architecture_decision_record#what-is-an-architecture-decision-record)
 - [ADR GitHub organization](https://adr.github.io/)

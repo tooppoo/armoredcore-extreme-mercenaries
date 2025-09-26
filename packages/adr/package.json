@@ -5,11 +5,14 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "new": "log4brains adr new",
-    "preview": "log4brains preview"
+    "dev": "eleventy --input=../../docs/adr --output=_site --serve --port=4004",
+    "build": "eleventy --input=../../docs/adr --output=_site",
+    "preview": "eleventy --input=../../docs/adr --output=_site --serve --port=4004"
   },
-  "dependencies": {
-    "log4brains": "^1.1.0"
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.0",
+    "markdown-it-anchor": "^9.2.0"
   },
   "exports": {}
 }
