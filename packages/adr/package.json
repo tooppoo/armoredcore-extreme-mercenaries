@@ -9,9 +9,9 @@
     "build": "eleventy --input=../../docs/adr --output=_site"
   },
   "devDependencies": {
-    "@11ty/eleventy": "^3.0.0",
-    "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.0",
-    "markdown-it-anchor": "^9.2.0"
+    "@11ty/eleventy": "3.1.2",
+    "@11ty/eleventy-plugin-syntaxhighlight": "5.0.2",
+    "markdown-it-anchor": "9.2.0"
   },
   "exports": {}
 }
