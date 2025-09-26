@@ -71,13 +71,13 @@ importers:
   packages/adr:
     devDependencies:
       '@11ty/eleventy':
-        specifier: ^3.0.0
+        specifier: 3.1.2
         version: 3.1.2
       '@11ty/eleventy-plugin-syntaxhighlight':
-        specifier: ^5.0.0
+        specifier: 5.0.2
         version: 5.0.2
       markdown-it-anchor:
-        specifier: ^9.2.0
+        specifier: 9.2.0
         version: 9.2.0(@types/markdown-it@14.1.2)(markdown-it@14.1.0)
 
   packages/discord-bot:
