@@ -1,5 +1,0 @@
-project:
-  name: ac-extreme-mercenaries
-  tz: Asia/Tokyo
-  adrFolder: ../../docs/adr
-  packages: []

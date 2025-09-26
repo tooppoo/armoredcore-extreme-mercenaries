@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if title %}{{ title }} - {% endif %}Architecture Decision Records</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #24292f;
+        }
+        .container {
+            display: flex;
+            gap: 30px;
+        }
+        .sidebar {
+            flex: 0 0 300px;
+            background: #f6f8fa;
+            padding: 20px;
+            border-radius: 6px;
+            height: fit-content;
+        }
+        .content {
+            flex: 1;
+            min-width: 0;
+        }
+        .sidebar h2 {
+            margin-top: 0;
+            color: #0969da;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin: 8px 0;
+        }
+        .sidebar a {
+            color: #0969da;
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: block;
+        }
+        .sidebar a:hover {
+            background: #dbeafe;
+        }
+        .sidebar .date {
+            font-size: 0.85em;
+            color: #656d76;
+            margin-left: 8px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #24292f;
+        }
+        h1 {
+            border-bottom: 1px solid #d8dee4;
+            padding-bottom: 10px;
+        }
+        code {
+            background: #f6f8fa;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        pre {
+            background: #f6f8fa;
+            padding: 16px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        blockquote {
+            border-left: 4px solid #d8dee4;
+            margin: 0;
+            padding: 0 16px;
+            color: #656d76;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #d8dee4;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background: #f6f8fa;
+        }
+        .direct-link {
+            color: #656d76;
+            text-decoration: none;
+            margin-left: 4px;
+        }
+        .direct-link:hover {
+            color: #0969da;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                flex: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h2>ADR 一覧</h2>
+            <ul>
+                <li><a href="/">ホーム</a></li>
+                {% for adr in collections.adrsByDate %}
+                <li>
+                    <a href="{{ adr.url }}">{{ adr | extractTitleFromItem }}</a>
+                    <span class="date">{{ adr.inputPath | extractDateFromPath | formatDate }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+
+            {% if collections.adrsByDate.length == 0 %}
+            <p>ADRが見つかりませんでした。デバッグ情報を確認してください。</p>
+            {% endif %}
+        </aside>
+        <main class="content">
+            {{ content | safe }}
+        </main>
+    </div>
+</body>
+</html>

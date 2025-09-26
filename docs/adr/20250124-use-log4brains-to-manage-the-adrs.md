@@ -1,6 +1,6 @@
 # ADR 管理ツールとして Log4brains を採用する
 
-- ステータス: 承認済み
+- ステータス: [20250926-migrate-adr-viewer-from-log4brains-to-eleventy.md](20250926-migrate-adr-viewer-from-log4brains-to-eleventy.md) によって置き換え
 - 日付: 2025-01-24
 - タグ: ドキュメント, ツール選定
 
@@ -43,3 +43,7 @@ Log4brains を採用する。CLI での ADR 作成とプレビュー、静的サ
 
 - adr-tools 系列は CLI 操作がシンプルだが、ビューアを別途用意する必要がある。
 - 独自管理は柔軟だが、テンプレート統一や一覧化の仕組みを自前で整える必要がある。
+
+## 参考リンク
+
+- [ADRビューアをLog4brainsからEleventyに移行する](20250926-migrate-adr-viewer-from-log4brains-to-eleventy.md) - セキュリティ脆弱性によりこの決定を上書き

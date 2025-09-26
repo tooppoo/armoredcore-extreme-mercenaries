@@ -44,3 +44,15 @@ updates:
       default-days: 3
       include:
         - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/adr"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "02:00"
+      timezone: "Asia/Tokyo"
+    cooldown:
+      default-days: 3
+      include:
+        - "*"
