@@ -2,8 +2,6 @@ name: test app
 
 on:
   pull_request:
-    branches:
-      - "*"
     types:
       - opened
       - synchronize
@@ -22,9 +20,9 @@ jobs:
       matrix:
         include:
           - package: front
-            paths: 'packages/front/**'
+            paths: "packages/front/**"
           - package: discord-bot
-            paths: 'packages/discord-bot/**'
+            paths: "packages/discord-bot/**"
     steps:
       - uses: dorny/paths-filter@v3
         id: changes
