@@ -71,7 +71,7 @@
     "fast-check": "4.3.0",
     "postcss": "8.5.6",
     "tailwindcss": "4.1.13",
-    "wrangler": "4.33.1"
+    "wrangler": "4.38.0"
   },
   "optionalDependencies": {
     "@cloudflare/workerd-darwin-64": "1.20250923.0",
