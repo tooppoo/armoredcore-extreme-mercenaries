@@ -2,13 +2,12 @@ name: test app
 
 on:
   pull_request:
+    branches:
+      - "*"
     types:
       - opened
       - synchronize
       - reopened
-    branches-ignore:
-      - "renovate/*"
-      - "dependabot/*"
 
 jobs:
   test-packages:
