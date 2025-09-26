@@ -4,36 +4,74 @@ on:
   pull_request:
     branches-ignore:
       - "renovate/*"
-    paths-ignore:
-      - "docs/**"
+      - "dependabot/*"
+    paths:
+      - "packages/front"
+      - "packages/discord-bot"
+      - "packages/e2e"
 
 jobs:
-  lint-fix:
+  lint-packages:
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - package: front
+            paths: "packages/front/**"
+          - package: discord-bot
+            paths: "packages/discord-bot/**"
+          - package: e2e
+            paths: "packages/e2e/**"
     steps:
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            package:
+              - ${{ matrix.paths }}
+
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+        if: steps.changes.outputs.package == 'true'
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-      # setup runtime
+
       - name: Setup pnpm
+        if: steps.changes.outputs.package == 'true'
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
           run_install: false
+
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        if: steps.changes.outputs.package == 'true'
         with:
           node-version-file: ".node-version"
           cache: "pnpm"
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run build
 
-      - name: lint
-        run: pnpm run lint
+      - run: pnpm install --frozen-lockfile
+        if: steps.changes.outputs.package == 'true'
+
+      - run: pnpm run ${{ matrix.package }} -- build
+        if: steps.changes.outputs.package == 'true'
+
+      - name: reviewdog:${{ matrix.package }}
+        if: steps.changes.outputs.package == 'true'
+        uses: reviewdog/action-eslint@556a3fdaf8b4201d4d74d406013386aa4f7dab96 # v1
+        with:
+          eslint_flags: '"**/*.{ts,tsx,js,jsx}" --fix'
+          level: warning
+          workdir: packages/${{ matrix.package }}
+
+      - name: prettier:${{ matrix.package }}
+        if: steps.changes.outputs.package == 'true'
+        run: pnpm run ${{ matrix.package }} -- run-prettier
 
       - name: auto commit
+        if: steps.changes.outputs.package == 'true'
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
@@ -44,34 +82,6 @@ jobs:
             git checkout ${{ github.head_ref }}
             git pull origin ${{ github.head_ref }}
             git add -A
-            git commit -m "Auto commit with fmt" --author="tooppoo <10760022+tooppoo@users.noreply.github.com>"
+            git commit -m "Auto commit with fmt (${{ matrix.package }})" --author="tooppoo <10760022+tooppoo@users.noreply.github.com>"
             git push origin ${{ github.head_ref }}
           fi
-  reviewdog:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-    strategy:
-      fail-fast: false
-      matrix:
-        package: [front, discord-bot, e2e]
-    steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
-      # setup runtime
-      - name: Setup pnpm
-        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
-        with:
-          run_install: false
-      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
-        with:
-          node-version-file: ".node-version"
-          cache: "pnpm"
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run ${{ matrix.package }} -- build
-      - name: reviewdog:${{ matrix.package }}
-        uses: reviewdog/action-eslint@556a3fdaf8b4201d4d74d406013386aa4f7dab96 # v1
-        with:
-          eslint_flags: '"**/*.{ts,tsx,js,jsx}" --fix'
-          level: warning
-          workdir: packages/${{ matrix.package }}
