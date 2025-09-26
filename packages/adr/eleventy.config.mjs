@@ -26,13 +26,11 @@ export default function(eleventyConfig) {
 
   // コレクションの作成（ADRファイルを日付順にソート）
   eleventyConfig.addCollection("adrsByDate", function(collectionApi) {
-    console.log("All items:", collectionApi.getAll().map(item => item.inputPath));
 
     const adrItems = collectionApi.getAll()
       .filter(item => {
         /** @type {String} */
         const path = item.inputPath;
-        console.log("Checking path:", path);
         return path.match(/\d{8}-[a-z0-9-]+\.md/); // 日付パターンを含む
       })
       .sort((a, b) => {
@@ -41,9 +39,6 @@ export default function(eleventyConfig) {
         const dateB = b.inputPath.match(/(\d{8})/)?.[1] || "00000000";
         return dateB.localeCompare(dateA);
       });
-
-    console.log("ADR items found:", adrItems.length);
-    adrItems.forEach(item => console.log("- " + item.inputPath));
 
     return adrItems;
   });
