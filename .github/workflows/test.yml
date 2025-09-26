@@ -8,6 +8,9 @@ on:
       - opened
       - synchronize
       - reopened
+    paths:
+      - "packages/front"
+      - "packages/discord-bot"
 
 jobs:
   test-packages:
