@@ -9,8 +9,6 @@ on:
       - synchronize
       - reopened
     paths:
-      - "packages/**"
-      - "package.json"
       - "pnpm-lock.yaml"
 
 jobs:
