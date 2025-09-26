@@ -24,7 +24,6 @@ alias grep='grep --color=auto'
 ALIASES
 
 for shell_rc in ~/.bashrc ~/.zshrc ~/.profile; do
-  touch "${shell_rc}"
   if ! grep -Fq "${ALIAS_FILE}" "${shell_rc}"; then
     printf '\n[ -f "%s" ] && source "%s"\n' "${ALIAS_FILE}" "${ALIAS_FILE}" >>"${shell_rc}"
   fi

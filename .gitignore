@@ -1,21 +1,32 @@
+# Node
 node_modules
 .pnpm-store/
 .pnpm-state/
 
+# build
 .cache/
 build/
 .env
 .dev.vars
 
+# cloudflare
 .wrangler
 
+# IDE
+.vscode
+.idea
+
+# test
 coverage/
 reports/
 
+# Mac
 .DS_Store
 
+# AI
+.codex/
+!.codex/prompts/*
+
+# other
 tmp/
 !tmp/.keep
-
-.vscode
-.idea
