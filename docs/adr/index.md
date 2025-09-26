@@ -31,9 +31,6 @@ pnpm adr dev
 
 # ビルドして静的ファイルを生成
 pnpm adr build
-
-# ビルド後のファイルをプレビュー
-pnpm adr preview
 ```
 
 ## 参考情報

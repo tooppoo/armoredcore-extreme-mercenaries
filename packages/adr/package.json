@@ -6,8 +6,7 @@
   "sideEffects": false,
   "scripts": {
     "dev": "eleventy --input=../../docs/adr --output=_site --serve --port=4004",
-    "build": "eleventy --input=../../docs/adr --output=_site",
-    "preview": "eleventy --input=../../docs/adr --output=_site --serve --port=4004"
+    "build": "eleventy --input=../../docs/adr --output=_site"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0",
