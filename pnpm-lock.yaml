@@ -224,17 +224,17 @@ importers:
         specifier: 1.20250922.0
         version: 1.20250922.0
       '@rollup/rollup-darwin-arm64':
-        specifier: 4.52.0
-        version: 4.52.0
+        specifier: 4.52.2
+        version: 4.52.2
       '@rollup/rollup-darwin-x64':
-        specifier: 4.52.0
-        version: 4.52.0
+        specifier: 4.52.2
+        version: 4.52.2
       '@rollup/rollup-linux-arm64-gnu':
-        specifier: 4.52.0
-        version: 4.52.0
+        specifier: 4.52.2
+        version: 4.52.2
       '@rollup/rollup-linux-x64-gnu':
-        specifier: 4.52.0
-        version: 4.52.0
+        specifier: 4.52.2
+        version: 4.52.2
       lightningcss-darwin-arm64:
         specifier: 1.30.1
         version: 1.30.1
@@ -1389,8 +1389,18 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
+  '@rollup/rollup-darwin-arm64@4.52.2':
+    resolution: {integrity: sha512-vngduywkkv8Fkh3wIZf5nFPXzWsNsVu1kvtLETWxTFf/5opZmflgVSeLgdHR56RQh71xhPhWoOkEBvbehwTlVA==}
+    cpu: [arm64]
+    os: [darwin]
+
   '@rollup/rollup-darwin-x64@4.52.0':
     resolution: {integrity: sha512-z4nw6y1j+OOSGzuVbSWdIp1IUks9qNw4dc7z7lWuWDKojY38VMWBlEN7F9jk5UXOkUcp97vA1N213DF+Lz8BRg==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@rollup/rollup-darwin-x64@4.52.2':
+    resolution: {integrity: sha512-h11KikYrUCYTrDj6h939hhMNlqU2fo/X4NB0OZcys3fya49o1hmFaczAiJWVAFgrM1NCP6RrO7lQKeVYSKBPSQ==}
     cpu: [x64]
     os: [darwin]
 
@@ -1418,6 +1428,12 @@ packages:
 
   '@rollup/rollup-linux-arm64-gnu@4.52.0':
     resolution: {integrity: sha512-uj672IVOU9m08DBGvoPKPi/J8jlVgjh12C9GmjjBxCTQc3XtVmRkRKyeHSmIKQpvJ7fIm1EJieBUcnGSzDVFyw==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@rollup/rollup-linux-arm64-gnu@4.52.2':
+    resolution: {integrity: sha512-66lA8vnj5mB/rtDNwPgrrKUOtCLVQypkyDa2gMfOefXK6rcZAxKLO9Fy3GkW8VkPnENv9hBkNOFfGLf6rNKGUg==}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
@@ -1460,6 +1476,12 @@ packages:
 
   '@rollup/rollup-linux-x64-gnu@4.52.0':
     resolution: {integrity: sha512-nmSVN+F2i1yKZ7rJNKO3G7ZzmxJgoQBQZ/6c4MuS553Grmr7WqR7LLDcYG53Z2m9409z3JLt4sCOhLdbKQ3HmA==}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@rollup/rollup-linux-x64-gnu@4.52.2':
+    resolution: {integrity: sha512-opH8GSUuVcCSSyHHcl5hELrmnk4waZoVpgn/4FDao9iyE4WpQhyWJ5ryl5M3ocp4qkRuHfyXnGqg8M9oKCEKRA==}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
@@ -4656,10 +4678,10 @@ snapshots:
       '@cloudflare/workerd-darwin-64': 1.20250922.0
       '@cloudflare/workerd-darwin-arm64': 1.20250922.0
       '@cloudflare/workerd-linux-64': 1.20250922.0
-      '@rollup/rollup-darwin-arm64': 4.52.0
-      '@rollup/rollup-darwin-x64': 4.52.0
-      '@rollup/rollup-linux-arm64-gnu': 4.52.0
-      '@rollup/rollup-linux-x64-gnu': 4.52.0
+      '@rollup/rollup-darwin-arm64': 4.52.2
+      '@rollup/rollup-darwin-x64': 4.52.2
+      '@rollup/rollup-linux-arm64-gnu': 4.52.2
+      '@rollup/rollup-linux-x64-gnu': 4.52.2
       lightningcss-darwin-arm64: 1.30.1
       lightningcss-darwin-x64: 1.30.1
       lightningcss-linux-x64-gnu: 1.30.1
@@ -5627,7 +5649,13 @@ snapshots:
   '@rollup/rollup-darwin-arm64@4.52.0':
     optional: true
 
+  '@rollup/rollup-darwin-arm64@4.52.2':
+    optional: true
+
   '@rollup/rollup-darwin-x64@4.52.0':
+    optional: true
+
+  '@rollup/rollup-darwin-x64@4.52.2':
     optional: true
 
   '@rollup/rollup-freebsd-arm64@4.52.0':
@@ -5643,6 +5671,9 @@ snapshots:
     optional: true
 
   '@rollup/rollup-linux-arm64-gnu@4.52.0':
+    optional: true
+
+  '@rollup/rollup-linux-arm64-gnu@4.52.2':
     optional: true
 
   '@rollup/rollup-linux-arm64-musl@4.52.0':
@@ -5664,6 +5695,9 @@ snapshots:
     optional: true
 
   '@rollup/rollup-linux-x64-gnu@4.52.0':
+    optional: true
+
+  '@rollup/rollup-linux-x64-gnu@4.52.2':
     optional: true
 
   '@rollup/rollup-linux-x64-musl@4.52.0':
