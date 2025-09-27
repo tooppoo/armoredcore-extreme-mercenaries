@@ -17,6 +17,8 @@
    → Tests: contract tests, integration tests
    → Core: models, services, CLI commands
    → Integration: DB, middleware, logging
+   → Observability: structured logging, correlation IDs, monitoring hooks
+   → Compliance: ADR updates, release notes, secrets rotation
    → Polish: unit tests, performance, docs
 4. Apply task rules:
    → Different files = mark [P] for parallel
@@ -122,6 +124,9 @@ Task: "Integration test auth in tests/integration/test_auth.py"
 - [ ] All contracts have corresponding tests
 - [ ] All entities have model tasks
 - [ ] All tests come before implementation
+- [ ] Structured logging・マスキング・相関IDの実装/テストタスクが含まれている
+- [ ] Secrets設定や依存脆弱性チェックのタスクが含まれている
+- [ ] ADR/ドキュメント/リリースノート更新タスクが必要に応じて含まれている
 - [ ] Parallel tasks truly independent
 - [ ] Each task specifies exact file path
 - [ ] No task modifies same file as another [P] task

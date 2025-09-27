@@ -17,6 +17,7 @@
    → If no clear user flow: ERROR "Cannot determine user scenarios"
 5. Generate Functional Requirements
    → Each requirement must be testable
+   → Evaluate i18n/a11y applicability; if undecided, mark with [NEEDS CLARIFICATION]
    → Mark ambiguous requirements
 6. Identify Key Entities (if data involved)
 7. Run Review Checklist
@@ -68,6 +69,7 @@ When creating this spec from a user prompt:
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
+- **FR-000**: Document traceability back to originating request and scenario (link to docs/requests/*)
 - **FR-001**: System MUST [specific capability, e.g., "allow users to create accounts"]
 - **FR-002**: System MUST [specific capability, e.g., "validate email addresses"]  
 - **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
@@ -99,6 +101,8 @@ When creating this spec from a user prompt:
 - [ ] Success criteria are measurable
 - [ ] Scope is clearly bounded
 - [ ] Dependencies and assumptions identified
+- [ ] i18n/a11yの適用可否と理由が明示されている
+- [ ] 要求→シナリオ→要件→ユースケース→仕様の参照関係が記載されている
 
 ---
 

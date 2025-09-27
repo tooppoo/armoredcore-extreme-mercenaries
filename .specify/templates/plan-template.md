@@ -47,7 +47,11 @@
 ## Constitution Check
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] 要求→シナリオ→要件→ユースケース→仕様→設計→実装→テストの連鎖が計画で担保されているか確認する
+- [ ] テスト戦略がTDD、ユニット+E2E、カバレッジ可視化まで含むか確認する
+- [ ] 構造化ログ・相関ID・マスキング方針が設計とテスト計画に反映されているか確認する
+- [ ] Secrets管理と依存脆弱性チェックの実施方法が計画に含まれているか確認する
+- [ ] PR運用、リリースノート、ADR更新方針が計画に織り込まれているか確認する
 
 ## Project Structure
 
@@ -216,4 +220,4 @@ directories captured above]
 - [ ] Complexity deviations documented
 
 ---
-*Based on Constitution v2.1.1 - See `/memory/constitution.md`*
+*Based on Constitution v3.0.0 - See `/memory/constitution.md`*
