@@ -25,8 +25,8 @@
     5173,
     4004
   ],
-  "postCreateCommand": "bash -l .devcontainer/scripts/setup-pnpm.sh",
-  "postStartCommand": "bash -l .devcontainer/scripts/setup-alias.sh",
+  "postCreateCommand": "bash -l .devcontainer/scripts/post-create.sh",
+  "postStartCommand": "bash -l .devcontainer/scripts/post-start.sh",
   "customizations": {
     "vscode": {
       "extensions": [
