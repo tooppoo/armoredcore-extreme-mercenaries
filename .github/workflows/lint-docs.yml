@@ -1,0 +1,42 @@
+name: Lint & Fix Markdown Files
+
+on:
+  push:
+    paths:
+      - "**.md"
+      - ".github/workflows/lint-docs.yml"
+  pull_request:
+    paths:
+      - "**.md"
+      - ".github/workflows/lint-docs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lint-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DavidAnson/markdownlint-cli2-action@v20
+        with:
+          fix: true
+          globs: |
+            '**/*.md'
+            '!**/node_modules/**'
+
+      - name: 変更の検出とコミット
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            git add .
+            git commit -m "docs: markdownファイルのフォーマット修正
+
+            CIによる自動コミット"
+            git push
+          else
+            echo "変更はありませんでした"
+          fi

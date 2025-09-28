@@ -7,8 +7,7 @@
 `docs/spec/` は AGENTS.md で定義されたプロセス（要求 → シナリオ → 要件 → ユースケース → 仕様）に基づき、テーマごとにファイルを整理しています。
 
 - テンプレート類: `docs/spec/templates/_requests.md`, `_scenario.md`, `_requirements.md`, `_usecase.md`
-- テーマ別資料の例: `docs/spec/challenge-archive-discord-command/`, `docs/spec/archive/`, `docs/spec/sitemap-etag-ttl-optimization/`, `docs/spec/ci-flaky-detection/`
-- 共通ドメイン資料: `docs/spec/shared/domain-model.md`
+- テーマ別資料の例: `docs/spec/archive/`, `docs/spec/sitemap-etag-ttl-optimization/`, `docs/spec/ci-flaky-detection/`
 
 ## ADR（意思決定記録）
 
