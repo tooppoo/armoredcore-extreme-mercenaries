@@ -6,9 +6,9 @@ on:
       - "renovate/*"
       - "dependabot/*"
     paths:
-      - "packages/front"
-      - "packages/discord-bot"
-      - "packages/e2e"
+      - "packages/front/**"
+      - "packages/discord-bot/**"
+      - "packages/e2e/**"
 
 jobs:
   lint-packages:
