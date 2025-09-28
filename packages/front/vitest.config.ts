@@ -9,12 +9,12 @@ export default defineConfig({
     },
   },
   test: {
-    include: ['app/**/*.spec.ts'],
+    include: ['app/**/*.spec.ts', 'functions/**/*.test.ts'],
     coverage: {
       reporter: ['text', 'json'],
       all: true,
-      include: ['app/**/*.ts'],
-      exclude: ['app/**/*.spec.ts'],
+      include: ['app/**/*.ts', 'functions/**/*.ts'],
+      exclude: ['app/**/*.spec.ts', 'functions/**/*.test.ts'],
       provider: 'v8',
     },
     setupFiles: ['./vitest-setup'],

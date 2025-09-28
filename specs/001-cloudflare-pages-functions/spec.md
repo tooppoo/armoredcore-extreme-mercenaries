@@ -99,6 +99,7 @@ Discord コミュニティ参加者が許可対象チャンネルで `/archive-c
 - Q: Slash Command 応答はDiscord上でどの公開範囲にしますか？ → A: チャンネル公開メッセージ
 - Q: Slash Command はどのチャンネルで実行できるようにしますか？ → A: 設定した特定チャンネルのみ許可する
 
+
 ---
 
 ## Review & Acceptance Checklist
