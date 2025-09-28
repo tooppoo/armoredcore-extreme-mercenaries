@@ -1,34 +1,35 @@
 # 開発ドキュメント
 
-## プロセス文書
+リポジトリのドキュメントは `docs/` に集約しています。用途に応じた参照先は以下の通りです。
 
-- 要求: `docs/requests/{タイトル}.md`（AGENTS.md に準拠）
-- シナリオ: `docs/scenario/{タイトル}.md`
-- 要件: `docs/requirements/{タイトル}.md`
-- ユースケース: `docs/usecases/{タイトル}.md`
-- 仕様: `docs/spec/{タイトル}.md`
+## 仕様・プロセス
 
-## ドメイン
+`docs/spec/` は AGENTS.md で定義されたプロセス（要求 → シナリオ → 要件 → ユースケース → 仕様）に基づき、テーマごとにファイルを整理しています。
 
-- 要件: `docs/requirements/{要件名}.md`
-  - [Discord Bot Ping 通知](./requirements/discord-bot-ping.md)
-  - [CI における E2E フレーク検知](./requirements/ci-flaky-detection.md)
-  - [アーカイブ機能（要件）](./requirements/archive.md)
-- ドメインモデル: [domain-model.md](./domain/domain-model.md)（Mermaid 記法）
+- テンプレート類: `docs/spec/templates/_requests.md`, `_scenario.md`, `_requirements.md`, `_usecase.md`
+- テーマ別資料の例: `docs/spec/challenge-archive-discord-command/`, `docs/spec/archive/`, `docs/spec/sitemap-etag-ttl-optimization/`, `docs/spec/ci-flaky-detection/`
+- 共通ドメイン資料: `docs/spec/shared/domain-model.md`
 
 ## ADR（意思決定記録）
 
-- すべての設計上の主要な意思決定は `docs/adr/{YYYYMMDD}-{title}.md`
-- 一覧: [docs/adr/index.md](./adr/index.md)
+- 各意思決定: `docs/adr/{YYYYMMDD}-{title}.md`
+- 一覧: `docs/adr/index.md`
+- 運用ガイドライン: `docs/adr/README.md`
+- テンプレート: `docs/adr/template.md`
 
-## データモデル
+## チェックリスト
 
-- ER 図・テーブル定義: [docs/data/README.md](./data/README.md)
+- 依存追加時の確認事項: `docs/checklist/add-dependency.md`
 
-## 機能別ドキュメント（実装/運用メモ等）
+## 用語集
 
-- [アーカイブ機能 詳細](./functions/archive/README.md)
+- プロジェクト固有の用語定義: `docs/terms.md`
 
-## その他
+## FAQ / ナレッジ
 
-- FAQ: [docs/faq.md](./faq.md)
+- よくある質問や補足情報: `docs/faq.md`
+
+## 編集時のメモ
+
+- 新しいドキュメントを追加するときは既存ディレクトリ構成に従い、必要に応じてテンプレートを複製してください。
+- 仕様や設計を変更する際は、関連する ADR・チェックリスト・用語集の整合性も必ず確認してください。
