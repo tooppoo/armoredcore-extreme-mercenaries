@@ -21,6 +21,7 @@ import type { Route } from './+types/video'
 import { requireAuthToken } from '~/lib/http/request/require-auth-token.server'
 import { handleZodError, parseJson } from '~/lib/http/request/parser.server'
 import { normalizeUrl } from '~/lib/archives/common/url/support-url.server'
+import { overrideArchiveContents } from '~/lib/archives/video/upload/override-archive-contents.server'
 
 export const action = (args: Route.ActionArgs) => {
   requireAuthToken(args)
@@ -41,7 +42,7 @@ const post = async ({ request, context }: Route.ActionArgs) => {
   const originalUrl = new URL(data.url)
   const normalizedUrl = normalizeUrl(originalUrl)
 
-  const archive = await buildVideoArchiveFromUrl(normalizedUrl, {
+  const archiveFromUrl = await buildVideoArchiveFromUrl(normalizedUrl, {
     env: context.cloudflare.env,
     getOGPStrategy: getOgpStrategyProvider(context.cloudflare.env),
     findArchiveByURL: findVideoArchiveByURL(context.db),
@@ -58,6 +59,10 @@ const post = async ({ request, context }: Route.ActionArgs) => {
         throw unknownError(error)
     }
   })
+
+  // サムネイル画像など、OGPはいずれにせよ必要なので
+  // このタイミングでの上書きで良い
+  const archive = overrideArchiveContents(archiveFromUrl, data)
 
   await saveVideoArchive(
     {
