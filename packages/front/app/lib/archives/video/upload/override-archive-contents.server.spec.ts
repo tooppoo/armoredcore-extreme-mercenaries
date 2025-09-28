@@ -26,6 +26,7 @@ describe('overrideArchiveContents', () => {
       title: 'custom title',
     })
 
+    expect(result).not.toBe(archive)
     expect(result).toMatchObject({
       title: 'custom title',
       description: archive.description,
@@ -39,6 +40,7 @@ describe('overrideArchiveContents', () => {
       description: 'custom description',
     })
 
+    expect(result).not.toBe(archive)
     expect(result).toMatchObject({
       title: archive.title,
       description: 'custom description',
@@ -53,6 +55,7 @@ describe('overrideArchiveContents', () => {
       description: 'custom description',
     })
 
+    expect(result).not.toBe(archive)
     expect(result).toMatchObject({
       title: 'custom title',
       description: 'custom description',
