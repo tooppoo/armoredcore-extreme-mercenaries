@@ -2,9 +2,6 @@ import 'dotenv/config'
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js'
 import { log } from '../lib/log.js'
 import { makeCatchesSerializable } from '../lib/error.js'
-import { setupMessageSender } from './lib/message.js'
-import { messageHandlers } from './messages/index.js'
-import { frontRequestHandler } from './lib/front.js'
 import { commands } from './commands/index.js'
 import { validateEnvironmentVariables } from '../lib/env.js'
 
@@ -20,36 +17,13 @@ export function startBot() {
 function setupClient() {
   const c = applyClientSetup(
     new Client({
-      intents: [
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent,
-      ],
+      intents: [GatewayIntentBits.Guilds],
     }),
-    [setupCommandHandler, setupMessageHandler],
+    [setupCommandHandler],
   )
-
-  const buildMessageSender = setupMessageSender(c)
 
   c.once(Events.ClientReady, () => {
     log('info', 'AC ARCHIVE BOT Ready')
-  })
-  c.on(Events.MessageCreate, async (message) => {
-    log('debug', {
-      event: Events.MessageCreate,
-      message: message.content,
-      author: message.author.username,
-    })
-
-    if (message.author.bot) {
-      log('debug', { message: 'ignore bot message' })
-      return
-    }
-
-    const messageSender = buildMessageSender(message)
-    c.messageHandlers.forEach((messageHandler) => {
-      messageHandler.handle(message, frontRequestHandler(messageSender))
-    })
   })
 
   return c
@@ -125,19 +99,6 @@ const setupCommandHandler: ClientSetupFunction = (client: Client): Client => {
         )
       }
     }
-  })
-
-  return client
-}
-
-const setupMessageHandler: ClientSetupFunction = (client: Client): Client => {
-  client.messageHandlers = new Collection()
-
-  messageHandlers.forEach((messageHandler) => {
-    client.messageHandlers.set(messageHandler.name, messageHandler)
-    log('info', {
-      message: `register message handler: ${messageHandler.name}`,
-    })
   })
 
   return client

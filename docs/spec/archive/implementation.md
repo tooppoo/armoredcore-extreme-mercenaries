@@ -107,10 +107,10 @@ sequenceDiagram
 
 ### 1. discord-bot の .env設定
 
-テスト対象のチャンネル用環境変数に、監視するテスト用チャンネルのIDを設定する
+テスト対象のチャンネル用環境変数に、Slash Command の実行を許可するチャンネルIDを設定する
 
-- DISCORD_VIDEO_ARCHIVE_CHANNEL
-- DISCORD_CHALLENGE_ARCHIVE_CHANNEL
+- DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS
+- DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS
 
 ### 2. ローカルDBの準備（必要な場合）
 
@@ -133,4 +133,4 @@ pnpm run discord-bot:dev
 
 ### 5. テスト
 
-テスト用のチャンネルに、実際にコンテンツを投稿する
+テスト用のチャンネルで `/archive-video` や `/archive-challenge` の Slash Command を実行する
