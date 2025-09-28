@@ -2,9 +2,9 @@
 
 ## 対象ドキュメント
 
-- 要求: `docs/requests/challenge-archive-discord-command.md`
-- シナリオ: `docs/scenario/challenge-archive-discord-command.md`
-- 要件: `docs/requirements/challenge-archive-discord-command.md`
+- 要求: `docs/spec/archive/requests.md`
+- シナリオ: `docs/spec/archive/scenario.md`
+- 要件: `docs/spec/archive/requirements.md`
 
 ## 概要
 

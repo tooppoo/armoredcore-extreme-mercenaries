@@ -3,7 +3,7 @@
 ## 前提・コンテキスト
 
 - Issue: <https://github.com/tooppoo/armoredcore-extreme-mercenaries/issues/764>
-- 要求・シナリオ: `docs/requests/challenge-archive-discord-command.md`, `docs/scenario/challenge-archive-discord-command.md`
+- 要求・シナリオ: `docs/spec/archive/requests.md`, `docs/spec/archive/scenario.md`
 - 既存のテキスト書式投稿フローは廃止し、Discord スラッシュコマンド `/archive-challenge` `/archive-video` に統一する
 - D1 のスキーマおよび保存処理は既存実装（`packages/front/app/lib/archives/challenge/upload` / `packages/front/app/lib/archives/video/upload`）を継承し、構造を変更しない
 
