@@ -60,7 +60,7 @@ export function buildMeta(args: BuildMetaWithStructuredDataArgs): Meta {
     { property: 'og:type', content: 'website' },
     {
       property: 'og:image',
-      content: `/ogp-full.jpg?c=${cacheKey}`,
+      content: `${origin}/ogp-full.jpg?c=${cacheKey}`,
     },
     { name: 'twitter:card', content: 'summary' },
     { name: 'twitter:creator', content: '@Philomagi' },
