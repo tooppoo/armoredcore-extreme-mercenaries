@@ -138,7 +138,7 @@ function buildOrganizationSchema(orgId: string): JsonLdSchema {
     url: origin + '/',
     logo: {
       '@type': 'ImageObject',
-      url: `/ogp-full.jpg?c=${cacheKey}`,
+      url: `${origin}/ogp-full.jpg?c=${cacheKey}`,
     },
     sameAs: [
       'https://x.com/Philomagi',
