@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { onRequest } from '../../interactions'
+import { onRequest } from '../interactions'
 
 const makeCtx = (init?: { method?: string; body?: unknown; headers?: HeadersInit }) => {
   const method = init?.method ?? 'POST'
@@ -43,4 +43,3 @@ describe('Discord Interactions contract', () => {
     expect(json?.data?.flags ?? 0).not.toBe(64)
   })
 })
-

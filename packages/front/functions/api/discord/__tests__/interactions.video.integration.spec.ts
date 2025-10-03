@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import { onRequest } from '../../interactions'
+import { onRequest } from '../interactions'
+import { vi } from 'vitest'
+
+vi.mock('~/lib/discord/interactions/archive-repository', () => ({
+  upsertVideo: async () => ({ ok: false, code: 'duplicate' as const }),
+}))
 
 const makeCtx = (init?: { body?: unknown; headers?: HeadersInit; env?: any }) => {
   const headers = new Headers(init?.headers)
@@ -19,26 +24,25 @@ const makeCtx = (init?: { body?: unknown; headers?: HeadersInit; env?: any }) =>
   return ctx
 }
 
-describe('/archive-challenge integration', () => {
-  it('happy path: accepts command and responds public message', async () => {
+describe('/archive-video duplicate handling', () => {
+  it('returns duplicate notice for already-registered URL', async () => {
     const body = {
       type: 2,
-      id: 'test-correlation',
+      id: 'corr-dup',
       channel_id: '111',
       data: {
-        name: 'archive-challenge',
-        options: [
-          { name: 'title', type: 3, value: 'タイトル' },
-          { name: 'url', type: 3, value: 'https://example.com/page' },
-        ],
+        name: 'archive-video',
+        options: [{ name: 'url', type: 3, value: 'https://youtu.be/abc123' }],
       },
     }
-    const ctx = makeCtx({ body })
+    const headers = {
+      'X-Signature-Ed25519': '00',
+      'X-Signature-Timestamp': '0',
+    }
+    const ctx = makeCtx({ body, headers })
     const res = await onRequest(ctx)
     expect(res.status).toBe(200)
     const json = await res.clone().json().catch(() => null)
-    expect([4, 5]).toContain(json?.type)
-    expect(json?.data?.flags ?? 0).not.toBe(64)
+    expect(json?.data?.content ?? '').toContain('登録済み')
   })
 })
-

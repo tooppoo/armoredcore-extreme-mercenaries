@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import { onRequest } from '../../interactions'
+import { onRequest } from '../interactions'
+import { vi } from 'vitest'
+
+vi.mock('~/lib/discord/interactions/archive-repository', () => ({
+  upsertVideo: async () => ({ ok: false, code: 'ogp_fetch_failed' as const }),
+}))
 
 const makeCtx = (init?: { body?: unknown; headers?: HeadersInit; env?: any }) => {
   const headers = new Headers(init?.headers)
@@ -19,22 +24,25 @@ const makeCtx = (init?: { body?: unknown; headers?: HeadersInit; env?: any }) =>
   return ctx
 }
 
-describe('/archive-video duplicate handling', () => {
-  it('returns duplicate notice for already-registered URL', async () => {
+describe('OGP fallback', () => {
+  it('sets fallback message when OGP fetching fails', async () => {
     const body = {
       type: 2,
-      id: 'corr-dup',
+      id: 'corr-ogp-fail',
       channel_id: '111',
       data: {
         name: 'archive-video',
-        options: [{ name: 'url', type: 3, value: 'https://youtu.be/abc123' }],
+        options: [{ name: 'url', type: 3, value: 'https://httpstat.us/404' }],
       },
     }
-    const ctx = makeCtx({ body })
+    const headers = {
+      'X-Signature-Ed25519': '00',
+      'X-Signature-Timestamp': '0',
+    }
+    const ctx = makeCtx({ body, headers })
     const res = await onRequest(ctx)
     expect(res.status).toBe(200)
     const json = await res.clone().json().catch(() => null)
-    expect(json?.data?.content ?? '').toContain('登録済み')
+    expect(json?.data?.content ?? '').toContain('取得できません')
   })
 })
-
