@@ -3,80 +3,56 @@
 **Input**: Design documents from `/specs/001-cloudflare-pages-functions/`
 **Prerequisites**: plan.md, research.md, data-model.md, contracts/, quickstart.md
 
-## Phase 3.1: Setup
-- [ ] T001 Set up `packages/front/functions/api/discord/` scaffold and stub `interactions.ts` with no-op handler (export default `onRequest`) to unblock test imports.
-- [ ] T002 Add `@noble/ed25519@3.0.0` to `packages/front/package.json` & `pnpm-lock.yaml`, update dependency checklist, and run `pnpm install`.
- - [ ] T003 Configure Cloudflare Pages bindings in `packages/front/wrangler.toml`（D1 `DB` のみ確認）。DISCORD_* は wrangler.toml に書かず、Cloudflare Pages の環境変数/Secrets と `.dev.vars`（ローカル）で供給する方針を明記。
+## Phase 3.1-3.3（完了済みメモ）
+- ✅ Pages Functions ハンドラのスキャフォールド、署名検証ユーティリティ、リポジトリ／バリデータ／通知／ロガーは `packages/front/app/lib/discord/interactions/` に統合済み。
+- ✅ `.spec.ts` ベースのテストで PING 応答、重複検知、OGP フォールバック、署名・チャンネル制限をカバー済み。
+- ✅ `data-model.md` の方針に従い、追加テーブルや新規マイグレーションは導入しない。
 
-## Phase 3.2: Tests First (TDD)
-- [ ] T004 [P] Author contract tests for `POST /api/discord/interactions` in `packages/front/functions/api/discord/__tests__/interactions.contract.test.ts` covering PING, signature failure (401), and public message flag assertions.
-- [ ] T005 [P] Create integration test for `/archive-challenge` happy path in `packages/front/functions/api/discord/__tests__/interactions.challenge.integration.test.ts` (deferred ACK → success message, D1 insert mock).
-- [ ] T006 [P] Create integration test for `/archive-video` duplicate URL handling in `packages/front/functions/api/discord/__tests__/interactions.video.integration.test.ts`.
-- [ ] T007 [P] Create integration test for OGP取得失敗フォールバック in `packages/front/functions/api/discord/__tests__/interactions.ogp.integration.test.ts` (timeout → fallback copy, dev alert).
-- [ ] T008 [P] Add unit tests for署名検証・チャンネル制限 in `packages/front/functions/api/discord/__tests__/signature.guard.test.ts`.
+## Phase 3.4: ハンドラ強化・統合
+- [x] T101 `packages/front/functions/api/discord/interactions.ts` の許可チャンネル計算を `DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS` と `DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS` の和集合に修正し、同ファイルおよび `packages/front/functions/api/discord/__tests__/signature.guard.spec.ts` でカバレッジを追加する。
+- [ ] T102 `packages/front/functions/api/discord/interactions.ts` に `zod` での Interaction パースと `Result` 型（成功/失敗）を導入し、Parse don't validate 原則で `/archive-*` コマンド入力を型安全に扱う。異常時は構造化レスポンス（`type=4` のエラーメッセージ）を返す。
+- [ ] T103 Discord リクエストの `member` / `user` から送信者ID・表示名を抽出し、`packages/front/app/lib/discord/interactions/archive-repository.ts` へ渡す型をブランド化する。対応するテストを追加する。
+- [ ] T104 `packages/front/functions/api/discord/interactions.ts` のログ出力を `logger.withCorrelation(correlationId)` に統一し、正常系は `info`、入力不備は `warn`、予期しない例外は `error` で出力する。`packages/front/app/lib/observability/logger.ts` のマスキング方針と整合させる。
 
-## Phase 3.3: Core Implementation (after tests are red)
-- [ ] T009 [P] Implement `ArchiveSubmission` schema & helpers in `packages/front/functions/api/discord/domain/archiveSubmission.ts` (validate inputs, derive stored payload).
-- [ ] T010 [P] Implement `ProcessingOutcome` data structure in `packages/front/functions/api/discord/domain/processingOutcome.ts` with status enum + logging payload builders.
-- [ ] T011 [P] Implement `OGPMetadata` cache model in `packages/front/functions/api/discord/domain/ogpMetadata.ts` with TTL helpers.
-- [ ] T012 Create Drizzle migration `packages/front/drizzle/migrations/00x_cloudflare_pages_discord.sql` to add required columns/tables (`processing_outcome`, OGP fields) with reversible down script.
-- [ ] T013 Update `packages/front/app/db/schema.server.ts` and related drizzle types to expose new entities & indexes; ensure existing archives APIs remain unaffected.
-- [ ] T014 Implement archive repository (`packages/front/functions/api/discord/repository/archiveRepository.ts`) to upsert challenge/video submissions via D1 prepared statements.
-- [ ] T015 Implement processing outcome repository (`packages/front/functions/api/discord/repository/outcomeRepository.ts`) to record statuses & fetch duplicates.
-- [ ] T016 Implement OGP metadata repository/cache utilities in `packages/front/functions/api/discord/repository/ogpMetadataRepository.ts`.
-- [ ] T017 Implement OGP fetcher with 2s timeout & fallback in `packages/front/functions/api/discord/services/ogpFetcher.ts` using `undici`/`AbortController`.
-- [ ] T018 Implement Discord署名検証ユーティリティ in `packages/front/functions/api/discord/security/verifySignature.ts` using `@noble/ed25519`.
-- [ ] T019 Implement Slash Command validation & channel guard in `packages/front/functions/api/discord/application/commandValidator.ts` (allowed channels, required options, duplication guard).
-- [ ] T020 Implement command dispatcher in `packages/front/functions/api/discord/application/commandDispatcher.ts` orchestrating repository calls & response payloads.
-- [ ] T021 Implement developer alert notifier in `packages/front/functions/api/discord/notifications/devAlert.ts` posting to `DISCORD_DEV_ALERT_CHANNEL_ID` via Bot token with retry/backoff.
-- [ ] T022 Implement `packages/front/functions/api/discord/interactions.ts` main handler wiring: signature verification, command dispatch, structured logging, correlation IDs, deferred/public responses.
-- [ ] T023 Ensure structured JSON logging module (`packages/front/functions/api/discord/observability/logger.ts`) + log formatting integration across handler & repositories.
-
-## Phase 3.4: Integration & Validation
-- [ ] T024 Wire Cloudflare Pages bindings in `packages/front/load-context.ts` or equivalent to pass D1 connection & secrets to Functions runtime tests.
-- [ ] T025 Update Quickstart (`specs/001-cloudflare-pages-functions/quickstart.md` + `docs/spec/archive/spec.md`) with new env vars, Miniflare commands, and validation steps.
-- [ ] T026 Document secrets & operational runbooks in `docs/checklist/add-dependency.md` / relevant docs, including `pnpm audit` verification for新依存。
-- [ ] T027 Execute automated test suite (`pnpm test --filter @ac-extreme-mercenaries/front`) ensuring new tests pass and capture coverage report.
-- [ ] T028 Perform manual Quickstart verification (ngrok + Discord test server) and log evidence in `docs/test/discord-bot-pages.md`.
-- [ ] T029 Update release notes/ADR references (if behavior changes) ensuring decision trail in `docs/adr/20250928-adopt-cloudflare-pages-functions-for-discord-bot.md` remains consistent.
-
-## Phase 3.5: Polish
-- [ ] T030 [P] Add unit tests for error handling/logging branches in `packages/front/functions/api/discord/__tests__/interactions.errors.test.ts`.
-- [ ] T031 [P] Add performance check script (OGP fetch latency, D1 write p95) and note results in `packages/front/functions/api/discord/__tests__/performance.test.ts` or measurement doc.
-- [ ] T032 [P] Run lint/typecheck (`pnpm --filter @ac-extreme-mercenaries/front run lint && run typecheck`) and address findings.
-- [ ] T033 [P] Final doc sweep: ensure `AGENTS.md`, quickstart, spec remain in sync; remove dead code and confirm old Koyeb bot references are deprecated.
+## Phase 3.5: テスト・ドキュメント整備
+- [ ] T105 `packages/front/functions/api/discord/__tests__/interactions.errors.spec.ts` を作成し、署名不備・バリデーション失敗・OGP 失敗・例外時のレスポンスとログ分岐を網羅する。
+- [ ] T106 `packages/front/functions/api/discord/__tests__/performance.spec.ts` で OGP 取得タイムアウトと D1 模擬書き込みの計測を行い、95パーセンタイル < 2s を確認して記録する。
+- [ ] T107 `specs/001-cloudflare-pages-functions/quickstart.md` と `docs/spec/archive/spec.md` を現行の `.spec.ts` / `app/lib/discord` 構成に更新する。
+- [ ] T108 Secrets 運用と依存追加記録を `docs/checklist/add-dependency.md` 等に追記し、`@noble/ed25519@3.0.0` の監査結果を残す。
+- [ ] T109 `pnpm test --filter @ac-extreme-mercenaries/front` を実行してカバレッジ80%以上を確認し、結果を記録する。
+- [ ] T110 `docs/test/discord-bot-pages.md` に手動検証手順（ngrok + Discord Test Server）と実施結果を追記する。
+- [ ] T111 `docs/adr/20250928-adopt-cloudflare-pages-functions-for-discord-bot.md` へ新構成と依存採用理由を反映する。
+- [ ] T112 `pnpm --filter @ac-extreme-mercenaries/front run lint` と `pnpm --filter @ac-extreme-mercenaries/front run typecheck` を完走させ、必要な修正を行う。
+- [ ] T113 `AGENTS.md`, quickstart, spec, README から旧 Koyeb Bot 記述を除去し、整合性を確認する。
 
 ## Dependencies
-- T001 → T002 → T003 (setup chain)
-- Tests (T004-T008) must fail before starting implementation tasks T009+.
-- Repository/Services（T009-T014）完了がハンドラ結線（T015-T016）に必須。
-- Integration（T017-T022）は実装（T009-T016）に依存。
-- Polish（T023-T026）は統合後に実施。
+- T101 → T102（正しいチャンネルリストを前提にパースを実装）
+- T102 → T103, T104, T105（Result 型とログ整備に依存）
+- テスト／ドキュメント系（T105-T113）は実装タスク完了後に実施
 
 ## Parallel Execution Example
 ```
-# Suggested parallel batch 1 (after setup):
-Task: "T004 [P] contract tests in interactions.contract.test.ts"
-Task: "T005 [P] integration test for /archive-challenge"
-Task: "T006 [P] integration test for /archive-video"
-Task: "T007 [P] integration test for OGP fallback"
-Task: "T008 [P] unit tests for signature guard"
+# Batch 1 (ハンドラ改修)
+Task: "T101 allowed channel union fix"
+Task: "T102 interaction parser"
+Task: "T103 user metadata brand"
+Task: "T104 structured logging"
 
-# Suggested parallel batch 2 (after repos/services ready):
-Task: "T009 [P] archive repository"
-Task: "T010 [P] OGP fetcher"
-Task: "T011 [P] signature verification"
-Task: "T012 [P] command validator"
+# Batch 2 (品質保証)
+Task: "T105 error handling tests"
+Task: "T106 performance metrics"
+Task: "T112 lint/typecheck"
 
-# Suggested parallel batch 3 (polish stage):
-Task: "T030 [P] error handling unit tests"
-Task: "T031 [P] performance check script"
-Task: "T032 [P] lint/typecheck fixes"
-Task: "T033 [P] final documentation sweep"
+# Batch 3 (ドキュメント)
+Task: "T107 quickstart更新"
+Task: "T108 secrets記録"
+Task: "T109 coverage run"
+Task: "T110 manual test log"
+Task: "T111 ADR更新"
+Task: "T113 final doc sweep"
 ```
 
 ## Notes
-- [P] タスクは異なるファイルを編集する前提。共有ファイルを変更する場合は `[P]` を外すこと。
-- すべてのテストは実装前に RED を確認し、実装後に GREEN を確認すること。
-- Secrets は Cloudflare Pages Projects UI で更新し、ローカル `.dev.vars` に平文保存しない。
-- 各ステップ後にコミットし、PR でレビューを受ける。
+- 追加テーブルやマイグレーションは禁止（`data-model.md`）。
+- `.spec.ts` の命名と `app/lib` 配置は `docs/naming.md` を参照する。
+- Secrets は Cloudflare Pages UI で管理し、`.dev.vars` にはダミー値のみ記載する。
