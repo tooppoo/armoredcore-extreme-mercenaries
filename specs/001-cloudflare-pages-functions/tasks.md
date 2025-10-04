@@ -10,7 +10,7 @@
 
 ## Phase 3.4: ハンドラ強化・統合
 - [x] T101 `packages/front/functions/api/discord/interactions.ts` の許可チャンネル計算を `DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS` と `DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS` の和集合に修正し、同ファイルおよび `packages/front/functions/api/discord/__tests__/signature.guard.spec.ts` でカバレッジを追加する。
-- [ ] T102 `packages/front/functions/api/discord/interactions.ts` に `zod` での Interaction パースと `Result` 型（成功/失敗）を導入し、Parse don't validate 原則で `/archive-*` コマンド入力を型安全に扱う。異常時は構造化レスポンス（`type=4` のエラーメッセージ）を返す。
+- [x] T102 `packages/front/functions/api/discord/interactions.ts` に `zod` での Interaction パースと `Result` 型（成功/失敗）を導入し、Parse don't validate 原則で `/archive-*` コマンド入力を型安全に扱う。異常時は構造化レスポンス（`type=4` のエラーメッセージ）を返す。
 - [ ] T103 Discord リクエストの `member` / `user` から送信者ID・表示名を抽出し、`packages/front/app/lib/discord/interactions/archive-repository.ts` へ渡す型をブランド化する。対応するテストを追加する。
 - [ ] T104 `packages/front/functions/api/discord/interactions.ts` のログ出力を `logger.withCorrelation(correlationId)` に統一し、正常系は `info`、入力不備は `warn`、予期しない例外は `error` で出力する。`packages/front/app/lib/observability/logger.ts` のマスキング方針と整合させる。
 

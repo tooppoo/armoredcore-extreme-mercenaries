@@ -1,28 +1,53 @@
-type Interaction =
-  | { type: 1 }
-  | {
-      type: 2
-      id: string
-      channel_id?: string
-      data?: { name?: string; options?: Array<{ name: string; type: number; value?: string }> }
-    }
+
+import { z } from 'zod'
+import type { ErrorCode } from '~/lib/discord/interactions/errors'
+
+type Result<T, E> = { ok: true; data: T } | { ok: false; error: E }
+
+const commandOptionSchema = z.object({
+  name: z.string(),
+  type: z.number(),
+  value: z.union([z.string(), z.number(), z.boolean()]).optional(),
+})
+
+const commandDataSchema = z.object({
+  name: z.string(),
+  options: z.array(commandOptionSchema).optional(),
+})
+
+const userSchema = z.object({
+  id: z.string(),
+  username: z.string().optional(),
+  global_name: z.string().optional(),
+})
+
+const guildMemberSchema = z.object({
+  user: userSchema.optional(),
+  nick: z.string().optional(),
+})
+
+const interactionSchema = z.discriminatedUnion('type', [
+  z.object({ type: z.literal(1) }),
+  z.object({
+    type: z.literal(2),
+    id: z.string(),
+    channel_id: z.string().optional(),
+    member: guildMemberSchema.optional(),
+    user: userSchema.optional(),
+    data: commandDataSchema.optional(),
+  }),
+])
+
+type Interaction = z.infer<typeof interactionSchema>
+type CommandInteraction = Extract<Interaction, { type: 2 }>
+type CommandOption = z.infer<typeof commandOptionSchema>
+type NormalizedOption = { name: string; type: number; value?: string }
 
 const json = (value: unknown, init?: ResponseInit) =>
   new Response(JSON.stringify(value), {
     headers: { 'content-type': 'application/json; charset=utf-8' },
     ...init,
   })
-
-const getOption = (i: any, name: string) =>
-  i?.data?.options?.find((o: any) => o?.name === name)?.value as string | undefined
-
-const tryParseJson = (text: string): Interaction | undefined => {
-  try {
-    return JSON.parse(text) as Interaction
-  } catch {
-    return undefined
-  }
-}
 
 const DEFAULT_ALLOWED_CHANNELS = ['111', '222'] as const
 
@@ -40,50 +65,78 @@ const getAllowedChannels = (env: Record<string, unknown>): Set<string> => {
   return new Set(source)
 }
 
+const normalizeOptions = (options: CommandOption[] | undefined): NormalizedOption[] | undefined =>
+  options?.map((option) => ({
+    name: option.name,
+    type: option.type,
+    value: option.value === undefined ? undefined : String(option.value),
+  }))
+
+const parseInteraction = (rawBody: string): Result<Interaction, ErrorCode> => {
+  if (!rawBody) return { ok: false, error: 'bad_request' }
+
+  let jsonBody: unknown
+  try {
+    jsonBody = JSON.parse(rawBody)
+  } catch {
+    return { ok: false, error: 'bad_request' }
+  }
+
+  const parsed = interactionSchema.safeParse(jsonBody)
+  if (!parsed.success) {
+    return { ok: false, error: 'bad_request' }
+  }
+
+  return { ok: true, data: parsed.data }
+}
+
+const respondWithError = async (code: ErrorCode, status = 200) => {
+  const { messageFor } = await import('~/lib/discord/interactions/errors')
+  return new Response(
+    JSON.stringify({ type: 4, data: { content: messageFor(code) } }),
+    {
+      status,
+      headers: { 'content-type': 'application/json; charset=utf-8' },
+    },
+  )
+}
+
 export const onRequest: PagesFunction = async (ctx) => {
   const { request, env } = ctx
 
   const rawBody = await request.text()
-  const body = tryParseJson(rawBody)
-  if (!body) {
-    const { messageFor } = await import('~/lib/discord/interactions/errors')
-    return new Response(messageFor('bad_request'), { status: 400 })
-  }
+  const parsed = parseInteraction(rawBody)
+  if (!parsed.ok) return respondWithError(parsed.error)
 
-  if ((body as any).type === 1) return json({ type: 1 }, { status: 200 })
+  const body = parsed.data
+  if (body.type === 1) return json({ type: 1 }, { status: 200 })
 
   const sig = request.headers.get('X-Signature-Ed25519')
   const ts = request.headers.get('X-Signature-Timestamp')
-  if (!sig || !ts) {
-    const { messageFor } = await import('~/lib/discord/interactions/errors')
-    return new Response(messageFor('unauthorized'), { status: 401 })
-  }
+  if (!sig || !ts) return respondWithError('unauthorized')
 
   try {
     const { verifyRequestSignature } = await import('~/lib/discord/interactions/verify-signature')
     const ok = await verifyRequestSignature(request, env as any, rawBody)
-    if (!ok) return new Response('Unauthorized', { status: 401 })
+    if (!ok) return respondWithError('unauthorized')
   } catch {
-    const { messageFor } = await import('~/lib/discord/interactions/errors')
-    return new Response(messageFor('unauthorized'), { status: 401 })
+    return respondWithError('unauthorized')
   }
 
   const allowed = getAllowedChannels(env as any)
-  const ch = (body as any).channel_id
-  if (ch && !allowed.has(String(ch))) {
-    const { messageFor } = await import('~/lib/discord/interactions/errors')
-    return new Response(messageFor('forbidden'), { status: 403 })
-  }
+  const channelId = body.channel_id
+  if (channelId && !allowed.has(String(channelId))) return respondWithError('forbidden', 403)
 
-  const name = (body as any).data?.name
-  const url = getOption(body, 'url')
-  const correlationId = (body as any).id as string | undefined
+  const commandName = body.data?.name
+  if (!commandName) return respondWithError('bad_request')
 
-  // Dispatch to repositories (minimal wiring for tests; signature verification TBD)
-  if (name === 'archive-video') {
+  const options = normalizeOptions(body.data?.options)
+  const correlationId = body.id
+
+  if (commandName === 'archive-video') {
     const { messageFor } = await import('~/lib/discord/interactions/errors')
     const { validateVideoCommand } = await import('~/lib/discord/interactions/command-validator')
-    const v = validateVideoCommand((body as any).data?.options)
+    const v = validateVideoCommand(options)
     if (!v.ok) return json({ type: 4, data: { content: v.message } }, { status: 200 })
     const { url, title, description } = v.data
     const user = { id: 'unknown', name: 'unknown' }
@@ -116,10 +169,10 @@ export const onRequest: PagesFunction = async (ctx) => {
     }
   }
 
-  if (name === 'archive-challenge') {
+  if (commandName === 'archive-challenge') {
     const { messageFor } = await import('~/lib/discord/interactions/errors')
     const { validateChallengeCommand } = await import('~/lib/discord/interactions/command-validator')
-    const v = validateChallengeCommand((body as any).data?.options)
+    const v = validateChallengeCommand(options)
     if (!v.ok) return json({ type: 4, data: { content: v.message } }, { status: 200 })
     const user = { id: 'unknown', name: 'unknown' }
     try {

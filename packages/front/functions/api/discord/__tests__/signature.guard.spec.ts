@@ -20,10 +20,12 @@ const makeCtx = (init?: { body?: unknown; headers?: HeadersInit; env?: any }) =>
 }
 
 describe('signature & channel guards', () => {
-  it('returns 401 when signature headers are missing', async () => {
-    const ctx = makeCtx({ body: { type: 2, data: {} } })
+  it('returns structured unauthorized response when signature headers are missing', async () => {
+    const ctx = makeCtx({ body: { type: 2, id: 'sig-missing', data: { name: 'archive-challenge', options: [] } } })
     const res = await onRequest(ctx)
-    expect(res.status).toBe(401)
+    expect(res.status).toBe(200)
+    const json = await res.clone().json().catch(() => null)
+    expect(json).toEqual({ type: 4, data: { content: '認証に失敗しました' } })
   })
 
   it('returns 403 when executed from non-permitted channel', async () => {
