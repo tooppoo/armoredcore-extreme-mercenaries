@@ -1,13 +1,14 @@
 name: Lint & Fix Markdown Files
 
 on:
-  push:
-    paths:
-      - "**.md"
-      - ".github/workflows/lint-docs.yml"
   pull_request:
+    branches: ["*"]
     paths:
-      - "**.md"
+      - "*.md"
+      - ".github/**/*.md"
+      - "docs/**/*.md"
+      - "packages/**/*.md"
+      - "specs/**/*.md"
       - ".github/workflows/lint-docs.yml"
   workflow_dispatch:
 
@@ -24,8 +25,10 @@ jobs:
         with:
           fix: true
           globs: |
-            '**/*.md'
-            '!**/node_modules/**'
+            .github/**/*.md
+            docs/**/*.md
+            packages/**/*.md
+            *.md
 
       - name: 変更の検出とコミット
         run: |
