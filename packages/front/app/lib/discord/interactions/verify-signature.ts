@@ -3,6 +3,8 @@ import * as ed from '@noble/ed25519'
 const hexToBytes = (hex: string): Uint8Array =>
   new Uint8Array((hex.match(/.{1,2}/g) || []).map((b) => parseInt(b, 16)))
 
+type SignatureEnv = Env & { DISCORD_PUBLIC_KEY?: string }
+
 export async function verifyRequestSignature(
   req: Request,
   env: Env,
@@ -12,7 +14,7 @@ export async function verifyRequestSignature(
   const ts = req.headers.get('X-Signature-Timestamp')
   if (!sigHex || !ts) return false
 
-  const publicKeyHex = (env as any).DISCORD_PUBLIC_KEY as string | undefined
+  const { DISCORD_PUBLIC_KEY: publicKeyHex } = env as SignatureEnv
 
   // ローカル/テストで PUBLIC_KEY 未設定なら検証をスキップ（運用では必ず設定）
   if (!publicKeyHex || publicKeyHex.trim().length === 0) return true
@@ -27,4 +29,3 @@ export async function verifyRequestSignature(
     return false
   }
 }
-

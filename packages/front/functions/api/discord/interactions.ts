@@ -1,4 +1,3 @@
-
 import { z } from 'zod'
 import type { ErrorCode } from '~/lib/discord/interactions/errors'
 import type {
@@ -6,6 +5,13 @@ import type {
   DiscordUser,
   DiscordUserId,
 } from '~/lib/discord/interactions/archive-repository'
+
+type DiscordEnv = Env & {
+  DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS?: string
+  DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS?: string
+  DISCORD_DEV_ALERT_CHANNEL_ID?: string
+  DISCORD_BOT_TOKEN?: string
+}
 
 type Result<T, E> = { ok: true; data: T } | { ok: false; error: E }
 
@@ -62,15 +68,20 @@ const channelListFrom = (value: unknown): string[] =>
     .map((s) => s.trim())
     .filter((s) => s.length > 0)
 
-const getAllowedChannels = (env: Record<string, unknown>): Set<string> => {
-  const challenge = channelListFrom((env as any).DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS)
-  const video = channelListFrom((env as any).DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS)
+const getAllowedChannels = (env: DiscordEnv): Set<string> => {
+  const challenge = channelListFrom(
+    env.DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS,
+  )
+  const video = channelListFrom(env.DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS)
   const merged = [...challenge, ...video]
-  const source = merged.length > 0 ? merged : Array.from(DEFAULT_ALLOWED_CHANNELS)
+  const source =
+    merged.length > 0 ? merged : Array.from(DEFAULT_ALLOWED_CHANNELS)
   return new Set(source)
 }
 
-const normalizeOptions = (options: CommandOption[] | undefined): NormalizedOption[] | undefined =>
+const normalizeOptions = (
+  options: CommandOption[] | undefined,
+): NormalizedOption[] | undefined =>
   options?.map((option) => ({
     name: option.name,
     type: option.type,
@@ -137,6 +148,7 @@ const respondWithError = async (code: ErrorCode, status = 200) => {
 
 export const onRequest: PagesFunction = async (ctx) => {
   const { request, env } = ctx
+  const pagesEnv = env as DiscordEnv
 
   const rawBody = await request.text()
   const parsed = parseInteraction(rawBody)
@@ -150,16 +162,19 @@ export const onRequest: PagesFunction = async (ctx) => {
   if (!sig || !ts) return respondWithError('unauthorized')
 
   try {
-    const { verifyRequestSignature } = await import('~/lib/discord/interactions/verify-signature')
-    const ok = await verifyRequestSignature(request, env as any, rawBody)
+    const { verifyRequestSignature } = await import(
+      '~/lib/discord/interactions/verify-signature'
+    )
+    const ok = await verifyRequestSignature(request, pagesEnv, rawBody)
     if (!ok) return respondWithError('unauthorized')
   } catch {
     return respondWithError('unauthorized')
   }
 
-  const allowed = getAllowedChannels(env as any)
+  const allowed = getAllowedChannels(pagesEnv)
   const channelId = body.channel_id
-  if (channelId && !allowed.has(String(channelId))) return respondWithError('forbidden', 403)
+  if (channelId && !allowed.has(String(channelId)))
+    return respondWithError('forbidden', 403)
 
   const commandName = body.data?.name
   if (!commandName) return respondWithError('bad_request')
@@ -172,75 +187,192 @@ export const onRequest: PagesFunction = async (ctx) => {
 
   if (commandName === 'archive-video') {
     const { messageFor } = await import('~/lib/discord/interactions/errors')
-    const { validateVideoCommand } = await import('~/lib/discord/interactions/command-validator')
+    const { validateVideoCommand } = await import(
+      '~/lib/discord/interactions/command-validator'
+    )
     const v = validateVideoCommand(options)
-    if (!v.ok) return json({ type: 4, data: { content: v.message } }, { status: 200 })
+    const { logger } = await import('~/lib/observability/logger')
+    const log = logger.withCorrelation(correlationId)
+    if (!v.ok) {
+      log.warn('video_command_invalid', { reason: v.message })
+      return json({ type: 4, data: { content: v.message } }, { status: 200 })
+    }
     const { url, title, description } = v.data
     try {
-      const { upsertVideo } = await import('~/lib/discord/interactions/archive-repository')
-      const result = await upsertVideo({ url, title, description, user }, env as any)
-      const { logger } = await import('~/lib/observability/logger')
-      logger.info('video_upsert', { correlationId, result: result.ok ? 'ok' : result.code })
-      if (result.ok) return json({ type: 4, data: { content: 'アーカイブに登録しました' } }, { status: 200 })
-      if (result.code === 'duplicate')
-        return json({ type: 4, data: { content: messageFor('duplicate') } }, { status: 200 })
-      if (result.code === 'ogp_fetch_failed')
-        {
-          const { sendDevAlert } = await import('~/lib/discord/interactions/dev-alert')
-          await sendDevAlert(env as any, 'OGP取得に失敗しました', { code: result.code, correlationId })
-          return json({ type: 4, data: { content: messageFor('ogp_fetch_failed') } }, { status: 200 })
-        }
-      if (result.code === 'unsupported')
-        return json({ type: 4, data: { content: messageFor('unsupported') } }, { status: 200 })
-      {
-        const { sendDevAlert } = await import('~/lib/discord/interactions/dev-alert')
-        await sendDevAlert(env as any, '予期しないエラーが発生しました', { code: result.code, correlationId })
-        return json({ type: 4, data: { content: messageFor('unexpected') } }, { status: 200 })
+      const { upsertVideo } = await import(
+        '~/lib/discord/interactions/archive-repository'
+      )
+      const result = await upsertVideo(
+        { url, title, description, user },
+        pagesEnv,
+      )
+      if (result.ok) {
+        log.info('video_upsert_success', { result: 'ok' })
+        return json(
+          { type: 4, data: { content: 'アーカイブに登録しました' } },
+          { status: 200 },
+        )
       }
-    } catch {
-      const { sendDevAlert } = await import('~/lib/discord/interactions/dev-alert')
-      await sendDevAlert(env as any, '予期しないエラーが発生しました', { code: 'unexpected', correlationId })
+      if (result.code === 'duplicate') {
+        log.warn('video_upsert_duplicate', { result: result.code })
+        return json(
+          { type: 4, data: { content: messageFor('duplicate') } },
+          { status: 200 },
+        )
+      }
+      if (result.code === 'ogp_fetch_failed') {
+        log.warn('video_upsert_ogp_failed', { result: result.code })
+        const { sendDevAlert } = await import(
+          '~/lib/discord/interactions/dev-alert'
+        )
+        await sendDevAlert(pagesEnv, 'OGP取得に失敗しました', {
+          code: result.code,
+          correlationId,
+        })
+        return json(
+          { type: 4, data: { content: messageFor('ogp_fetch_failed') } },
+          { status: 200 },
+        )
+      }
+      if (result.code === 'unsupported') {
+        log.warn('video_upsert_unsupported', { result: result.code })
+        return json(
+          { type: 4, data: { content: messageFor('unsupported') } },
+          { status: 200 },
+        )
+      }
+      log.error('video_upsert_unexpected', { result: result.code })
+      const { sendDevAlert } = await import(
+        '~/lib/discord/interactions/dev-alert'
+      )
+      await sendDevAlert(pagesEnv, '予期しないエラーが発生しました', {
+        code: result.code,
+        correlationId,
+      })
+      return json(
+        { type: 4, data: { content: messageFor('unexpected') } },
+        { status: 200 },
+      )
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'unknown'
+      const cause =
+        error instanceof Error && error.cause ? String(error.cause) : undefined
+      log.error('video_upsert_exception', { message, cause })
+      const { sendDevAlert } = await import(
+        '~/lib/discord/interactions/dev-alert'
+      )
+      await sendDevAlert(pagesEnv, '予期しないエラーが発生しました', {
+        code: 'unexpected',
+        correlationId,
+      })
       const { messageFor } = await import('~/lib/discord/interactions/errors')
-      return json({ type: 4, data: { content: messageFor('unexpected') } }, { status: 200 })
+      return json(
+        { type: 4, data: { content: messageFor('unexpected') } },
+        { status: 200 },
+      )
     }
   }
 
   if (commandName === 'archive-challenge') {
     const { messageFor } = await import('~/lib/discord/interactions/errors')
-    const { validateChallengeCommand } = await import('~/lib/discord/interactions/command-validator')
+    const { validateChallengeCommand } = await import(
+      '~/lib/discord/interactions/command-validator'
+    )
     const v = validateChallengeCommand(options)
-    if (!v.ok) return json({ type: 4, data: { content: v.message } }, { status: 200 })
+    const { logger } = await import('~/lib/observability/logger')
+    const log = logger.withCorrelation(correlationId)
+    if (!v.ok) {
+      log.warn('challenge_command_invalid', { reason: v.message })
+      return json({ type: 4, data: { content: v.message } }, { status: 200 })
+    }
     try {
-      const { upsertChallenge } = await import('~/lib/discord/interactions/archive-repository')
+      const { upsertChallenge } = await import(
+        '~/lib/discord/interactions/archive-repository'
+      )
       const result = await (async () => {
         if (v.data.kind === 'link')
-          return upsertChallenge({ type: 'link', url: v.data.url, title: v.data.title, description: v.data.description, user }, env as any)
-        return upsertChallenge({ type: 'text', title: v.data.title, text: v.data.text, user }, env as any)
+          return upsertChallenge(
+            {
+              type: 'link',
+              url: v.data.url,
+              title: v.data.title,
+              description: v.data.description,
+              user,
+            },
+            pagesEnv,
+          )
+        return upsertChallenge(
+          { type: 'text', title: v.data.title, text: v.data.text, user },
+          pagesEnv,
+        )
       })()
-      const { logger } = await import('~/lib/observability/logger')
-      logger.info('challenge_upsert', { correlationId, result: result.ok ? 'ok' : (result as any).code })
-      if (result.ok)
-        return json({ type: 5, data: { content: 'アーカイブに登録しました' } }, { status: 200 })
-      if (result.code === 'duplicate')
-        return json({ type: 4, data: { content: messageFor('duplicate') } }, { status: 200 })
-      if (result.code === 'ogp_fetch_failed')
-        {
-          const { sendDevAlert } = await import('~/lib/discord/interactions/dev-alert')
-          await sendDevAlert(env as any, 'OGP取得に失敗しました', { code: result.code, correlationId })
-          return json({ type: 4, data: { content: messageFor('ogp_fetch_failed') } }, { status: 200 })
-        }
-      if (result.code === 'unsupported')
-        return json({ type: 4, data: { content: messageFor('unsupported') } }, { status: 200 })
-      {
-        const { sendDevAlert } = await import('~/lib/discord/interactions/dev-alert')
-        await sendDevAlert(env as any, '予期しないエラーが発生しました', { code: result.code, correlationId })
-        return json({ type: 4, data: { content: messageFor('unexpected') } }, { status: 200 })
+      if (result.ok) {
+        log.info('challenge_upsert_success', {
+          result: 'ok',
+          mode: v.data.kind,
+        })
+        return json(
+          { type: 5, data: { content: 'アーカイブに登録しました' } },
+          { status: 200 },
+        )
       }
-    } catch {
-      const { sendDevAlert } = await import('~/lib/discord/interactions/dev-alert')
-      await sendDevAlert(env as any, '予期しないエラーが発生しました', { code: 'unexpected', correlationId })
+      if (result.code === 'duplicate') {
+        log.warn('challenge_upsert_duplicate', { result: result.code })
+        return json(
+          { type: 4, data: { content: messageFor('duplicate') } },
+          { status: 200 },
+        )
+      }
+      if (result.code === 'ogp_fetch_failed') {
+        log.warn('challenge_upsert_ogp_failed', { result: result.code })
+        const { sendDevAlert } = await import(
+          '~/lib/discord/interactions/dev-alert'
+        )
+        await sendDevAlert(pagesEnv, 'OGP取得に失敗しました', {
+          code: result.code,
+          correlationId,
+        })
+        return json(
+          { type: 4, data: { content: messageFor('ogp_fetch_failed') } },
+          { status: 200 },
+        )
+      }
+      if (result.code === 'unsupported') {
+        log.warn('challenge_upsert_unsupported', { result: result.code })
+        return json(
+          { type: 4, data: { content: messageFor('unsupported') } },
+          { status: 200 },
+        )
+      }
+      log.error('challenge_upsert_unexpected', { result: result.code })
+      const { sendDevAlert } = await import(
+        '~/lib/discord/interactions/dev-alert'
+      )
+      await sendDevAlert(pagesEnv, '予期しないエラーが発生しました', {
+        code: result.code,
+        correlationId,
+      })
+      return json(
+        { type: 4, data: { content: messageFor('unexpected') } },
+        { status: 200 },
+      )
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'unknown'
+      const cause =
+        error instanceof Error && error.cause ? String(error.cause) : undefined
+      log.error('challenge_upsert_exception', { message, cause })
+      const { sendDevAlert } = await import(
+        '~/lib/discord/interactions/dev-alert'
+      )
+      await sendDevAlert(pagesEnv, '予期しないエラーが発生しました', {
+        code: 'unexpected',
+        correlationId,
+      })
       const { messageFor } = await import('~/lib/discord/interactions/errors')
-      return json({ type: 4, data: { content: messageFor('unexpected') } }, { status: 200 })
+      return json(
+        { type: 4, data: { content: messageFor('unexpected') } },
+        { status: 200 },
+      )
     }
   }
 
