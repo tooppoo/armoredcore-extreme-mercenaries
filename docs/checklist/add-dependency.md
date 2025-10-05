@@ -34,3 +34,9 @@
 - [ ] 導入手順・ロールバック手順を反映した。
 - [ ] テスト・ドキュメントを更新し、`docs/terms.md` や ***ADR*** への追記が必要な場合は実施した。
 - [ ] 変更内容を構造化ログや監視設定が参照する場合は整合性を確認した。
+
+## Cloudflare Pages Functions Discord Bot 運用メモ
+
+- Secrets は Cloudflare Pages プロジェクトの環境変数として管理する。ローカル `.dev.vars` にはダミー値のみを記載し、`DISCORD_PUBLIC_KEY` / `DISCORD_BOT_TOKEN` / `DISCORD_ALLOWED_*` / `DISCORD_DEV_ALERT_CHANNEL_ID` / `D1_DB` を本番環境でのみ設定する。
+- 依存監査ログ
+  - 2025-10-05: packages/front で `pnpm audit` を実行。`@noble/ed25519@3.0.0`（MIT）に既知の脆弱性はなく、署名検証用途として継続採用する。一方でトランジティブ依存 `esbuild<=0.24.2`（`drizzle-kit` 経由）に GHSA-67mh-4wv8-2f99 が報告されているため、`drizzle-kit` のアップデート監視とビルド経路への未組み込み（開発専用利用）を維持する。
