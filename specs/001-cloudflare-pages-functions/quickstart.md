@@ -20,27 +20,32 @@ pnpm install
 ## 3. ローカル開発（Miniflare）
 ```bash
 cd packages/front
-pnpm run dev:pages   # wrangler pages dev を想定
+pnpm run dev   # wrangler pages dev を想定
 ```
-- `/api/discord/interactions` が 8788 などローカルポートで待機。
-- Miniflare の D1 in-memory を利用し、マイグレーションを適用。
+- `/api/discord/interactions` がローカルポート（例: 8788）で待機。
+- Miniflare の D1 in-memory を利用し、必要に応じて `pnpm run migration:test` でテーブルを初期化。
 
 ## 4. 自動テスト
-### 4.1 ユニットテスト（Vitest）
+### 4.1 Discord Interactions テスト（Vitest）
 ```bash
-cd packages/front
-pnpm test -- --runInBand src/functions/api/discord/__tests__/interactions.test.ts
+pnpm --filter @ac-extreme-mercenaries/front test -- \
+  packages/front/functions/api/discord/__tests__/interactions.contract.spec.ts \
+  packages/front/functions/api/discord/__tests__/signature.guard.spec.ts \
+  packages/front/functions/api/discord/__tests__/interactions.challenge.integration.spec.ts \
+  packages/front/functions/api/discord/__tests__/interactions.video.integration.spec.ts \
+  packages/front/functions/api/discord/__tests__/interactions.errors.spec.ts \
+  packages/front/functions/api/discord/__tests__/interactions.ogp.integration.spec.ts
 ```
-- ケース: 署名検証成功/失敗、Ping ハンドリング、OGP フォールバック。
-- カバレッジ: `pnpm test -- --coverage`（Workers プール対応設定要追加）。
+- コマンド引数を省略すると front パッケージ全体の Vitest が実行される。
+- `.spec.ts` はすべて `packages/front/functions/api/discord/__tests__/` 配下に配置し、Workers ランタイムで実行する。
 
-### 4.2 統合テスト（Miniflare）
+### 4.2 パフォーマンステスト（p95 < 2s）
 ```bash
-cd packages/front
-pnpm test -- --runInBand src/functions/api/discord/__tests__/interactions.integration.test.ts
+pnpm --filter @ac-extreme-mercenaries/front test -- \
+  packages/front/functions/api/discord/__tests__/performance.spec.ts
 ```
-- 実際の JSON リクエストを POST → D1 in-memory を検証。
-- 公開メッセージにエフェメラルフラグが含まれないことを確認。
+- Miniflare 上で OGP 取得タイムアウトと D1 書き込みを模擬し、95 パーセンタイルが 2 秒未満であることを確認。
+- `logger.withCorrelation(correlationId)` の warn 出力と Dev Alert 呼び出しも検証される。
 
 ## 5. 手動検証（Discord Test Server）
 1. Discord Developer Portal で Interactions Endpoint をローカル ngrok URL に設定。
@@ -55,15 +60,14 @@ pnpm test -- --runInBand src/functions/api/discord/__tests__/interactions.integr
 3. Cloudflare Pages プロジェクトで Secrets / D1 バインディングを最新化
 4. Discord Developer Portal で Interactions Endpoint を本番 URL へ切り替え
 5. `/archive-...` コマンドを本番チャンネルで実行し、成功レスポンス・D1 登録を確認
-6. 旧 Koyeb Bot を disable、ロールバック手順として wrangler ログと D1 バックアップを取得
+6. Cloudflare Pages デプロイ後に Slash Command を再登録し、ロールバック手順として wrangler ログと D1 バックアップを取得
 
 ## 7. ログ・監視
-- `console.log(JSON.stringify({ level, correlationId, message, context }))` 形式で出力
-- Cloudflare Dash の Logpush を設定し、エラー/フォールバックを可視化
-- Slash Command エラー発生時は `DISCORD_DEV_ALERT_CHANNEL_ID` へ通知
+- `logger.withCorrelation(correlationId).info|warn|error` で JSON 構造化ログを出力（機微情報は含めない）
+- Cloudflare Dash の Logpush を設定し、`video_upsert_*` / `challenge_upsert_*` で検索すると追跡が容易
+- Slash Command エラー発生時は `DISCORD_DEV_ALERT_CHANNEL_ID` への通知で一次対応を起動
 
 ## 8. トラブルシューティング
 - **401 Unauthorized**: 署名ヘッダー不正 → Cloudflare Pages で `DISCORD_PUBLIC_KEY` を再確認
 - **D1 書き込み失敗**: マイグレーション未適用 → `pnpm front db:migrate` を実行
 - **OGP タイムアウト**: 2 秒タイムアウトによりフォールバック → URL を検証し必要なら手動補完
-

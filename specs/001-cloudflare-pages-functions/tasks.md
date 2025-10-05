@@ -11,13 +11,13 @@
 ## Phase 3.4: ハンドラ強化・統合
 - [x] T101 `packages/front/functions/api/discord/interactions.ts` の許可チャンネル計算を `DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS` と `DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS` の和集合に修正し、同ファイルおよび `packages/front/functions/api/discord/__tests__/signature.guard.spec.ts` でカバレッジを追加する。
 - [x] T102 `packages/front/functions/api/discord/interactions.ts` に `zod` での Interaction パースと `Result` 型（成功/失敗）を導入し、Parse don't validate 原則で `/archive-*` コマンド入力を型安全に扱う。異常時は構造化レスポンス（`type=4` のエラーメッセージ）を返す。
-- [ ] T103 Discord リクエストの `member` / `user` から送信者ID・表示名を抽出し、`packages/front/app/lib/discord/interactions/archive-repository.ts` へ渡す型をブランド化する。対応するテストを追加する。
-- [ ] T104 `packages/front/functions/api/discord/interactions.ts` のログ出力を `logger.withCorrelation(correlationId)` に統一し、正常系は `info`、入力不備は `warn`、予期しない例外は `error` で出力する。`packages/front/app/lib/observability/logger.ts` のマスキング方針と整合させる。
+- [x] T103 Discord リクエストの `member` / `user` から送信者ID・表示名を抽出し、`packages/front/app/lib/discord/interactions/archive-repository.ts` へ渡す型をブランド化する。対応するテストを追加する。
+- [x] T104 `packages/front/functions/api/discord/interactions.ts` のログ出力を `logger.withCorrelation(correlationId)` に統一し、正常系は `info`、入力不備は `warn`、予期しない例外は `error` で出力する。`packages/front/app/lib/observability/logger.ts` のマスキング方針と整合させる。
 
 ## Phase 3.5: テスト・ドキュメント整備
-- [ ] T105 `packages/front/functions/api/discord/__tests__/interactions.errors.spec.ts` を作成し、署名不備・バリデーション失敗・OGP 失敗・例外時のレスポンスとログ分岐を網羅する。
-- [ ] T106 `packages/front/functions/api/discord/__tests__/performance.spec.ts` で OGP 取得タイムアウトと D1 模擬書き込みの計測を行い、95パーセンタイル < 2s を確認して記録する。
-- [ ] T107 `specs/001-cloudflare-pages-functions/quickstart.md` と `docs/spec/archive/spec.md` を現行の `.spec.ts` / `app/lib/discord` 構成に更新する。
+- [x] T105 `packages/front/functions/api/discord/__tests__/interactions.errors.spec.ts` を作成し、署名不備・バリデーション失敗・OGP 失敗・例外時のレスポンスとログ分岐を網羅する。
+- [x] T106 `packages/front/functions/api/discord/__tests__/performance.spec.ts` で OGP 取得タイムアウトと D1 模擬書き込みの計測を行い、95パーセンタイル < 2s を確認して記録する。
+- [x] T107 `specs/001-cloudflare-pages-functions/quickstart.md` と `docs/spec/archive/spec.md` を現行の `.spec.ts` / `app/lib/discord` 構成に更新する。
 - [ ] T108 Secrets 運用と依存追加記録を `docs/checklist/add-dependency.md` 等に追記し、`@noble/ed25519@3.0.0` の監査結果を残す。
 - [ ] T109 `pnpm test --filter @ac-extreme-mercenaries/front` を実行してカバレッジ80%以上を確認し、結果を記録する。
 - [ ] T110 `docs/test/discord-bot-pages.md` に手動検証手順（ngrok + Discord Test Server）と実施結果を追記する。

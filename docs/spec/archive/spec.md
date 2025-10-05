@@ -64,6 +64,7 @@ Discord コミュニティ参加者が許可対象チャンネルで `/archive-c
 
 ### Edge Cases
 - OGP 取得に失敗した場合はフォールバック文言を設定し、エラーを構造化ログに記録する。
+- 利用者入力の不足や重複は warn ログで記録し、システム障害（例: D1 エラー）は error ログで記録する。
 - 署名検証に失敗した場合は直ちに処理を中断し、利用者には一般的な失敗メッセージが返る。
 - アーカイブ登録先のデータストアにアクセスできない場合は再試行を行わず「システムエラー」が通知され、管理者向けのモニタリングで検出できる。
 - Slash Command が 3 秒以内に応答できない処理量となった場合は一時応答で受領し、完了通知を後報する。
@@ -85,9 +86,10 @@ Discord コミュニティ参加者が許可対象チャンネルで `/archive-c
 - **FR-008**: システム MUST Pages Functions がアーカイブ対象URLの OGP 情報（タイトル・説明・サムネイルURL）を取得し、取得成功時は Cloudflare D1 に保存、取得失敗時は既定のフォールバック文言を設定して通知する。
 - **FR-009**: システム MUST すべての Slash Command 応答を Discord チャンネルの公開メッセージとして投稿し、エフェメラル返信は使用しない。
 - **FR-010**: システム MUST Slash Command の実行チャンネルを環境変数で管理し、許可されたチャンネル以外からの実行はエラーメッセージで拒否する。
+- **FR-011**: システム MUST Slash Command の送信者（Guild Member または Direct Message の user）から Discord 識別子と表示名を取得し、登録処理に利用できない場合はリクエストを `bad_request` として拒否する。
 
 ### Key Entities *(include if feature involves data)*
-- **Archive Submission**: Discord 参加者が入力したタイトル、URL、任意の説明、送信時刻、送信者 ID を含むリクエスト単位。Pages Functions が OGP 情報を取得して補完し、重複判定や登録成否がログに記録される。
+- **Archive Submission**: Discord 参加者が入力したタイトル、URL、任意の説明、送信時刻、送信者 ID（Guild Member or User）、表示名を含むリクエスト単位。Pages Functions が OGP 情報を取得して補完し、重複判定や登録成否がログに記録される。
 - **Processing Outcome**: アーカイブ登録結果（成功、重複、システムエラー）と Discord への通知内容を表す。Pages Functions が Cloudflare D1 に直接書き込み、取得した OGP 情報と構造化ログ（Correlation ID 付き）を保持する。
 
 ## Clarifications
