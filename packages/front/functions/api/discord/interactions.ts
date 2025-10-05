@@ -1,6 +1,11 @@
 
 import { z } from 'zod'
 import type { ErrorCode } from '~/lib/discord/interactions/errors'
+import type {
+  DiscordDisplayName,
+  DiscordUser,
+  DiscordUserId,
+} from '~/lib/discord/interactions/archive-repository'
 
 type Result<T, E> = { ok: true; data: T } | { ok: false; error: E }
 
@@ -90,6 +95,35 @@ const parseInteraction = (rawBody: string): Result<Interaction, ErrorCode> => {
   return { ok: true, data: parsed.data }
 }
 
+const asDiscordUserId = (value: string): DiscordUserId => value as DiscordUserId
+const asDiscordDisplayName = (value: string): DiscordDisplayName =>
+  value as DiscordDisplayName
+
+const extractUser = (
+  interaction: CommandInteraction,
+): Result<DiscordUser, ErrorCode> => {
+  const candidateUser = interaction.member?.user ?? interaction.user
+  const rawId = candidateUser?.id?.trim()
+  if (!rawId) return { ok: false, error: 'bad_request' }
+
+  const nameCandidates = [
+    interaction.member?.nick,
+    candidateUser?.global_name,
+    candidateUser?.username,
+  ]
+  const resolvedName = nameCandidates.find((name) => name?.trim()) ?? 'unknown'
+  const normalizedName =
+    resolvedName.trim().length > 0 ? resolvedName.trim() : 'unknown'
+
+  return {
+    ok: true,
+    data: {
+      id: asDiscordUserId(rawId),
+      name: asDiscordDisplayName(normalizedName),
+    },
+  }
+}
+
 const respondWithError = async (code: ErrorCode, status = 200) => {
   const { messageFor } = await import('~/lib/discord/interactions/errors')
   return new Response(
@@ -132,6 +166,9 @@ export const onRequest: PagesFunction = async (ctx) => {
 
   const options = normalizeOptions(body.data?.options)
   const correlationId = body.id
+  const userResult = extractUser(body)
+  if (!userResult.ok) return respondWithError(userResult.error)
+  const user = userResult.data
 
   if (commandName === 'archive-video') {
     const { messageFor } = await import('~/lib/discord/interactions/errors')
@@ -139,7 +176,6 @@ export const onRequest: PagesFunction = async (ctx) => {
     const v = validateVideoCommand(options)
     if (!v.ok) return json({ type: 4, data: { content: v.message } }, { status: 200 })
     const { url, title, description } = v.data
-    const user = { id: 'unknown', name: 'unknown' }
     try {
       const { upsertVideo } = await import('~/lib/discord/interactions/archive-repository')
       const result = await upsertVideo({ url, title, description, user }, env as any)
@@ -174,7 +210,6 @@ export const onRequest: PagesFunction = async (ctx) => {
     const { validateChallengeCommand } = await import('~/lib/discord/interactions/command-validator')
     const v = validateChallengeCommand(options)
     if (!v.ok) return json({ type: 4, data: { content: v.message } }, { status: 200 })
-    const user = { id: 'unknown', name: 'unknown' }
     try {
       const { upsertChallenge } = await import('~/lib/discord/interactions/archive-repository')
       const result = await (async () => {

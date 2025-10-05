@@ -1,34 +1,49 @@
-import { getDB } from '../../../app/db/driver.server'
-import { buildVideoArchiveFromUrl } from '../../../app/lib/archives/video/upload/functions.server'
-import { getOgpStrategyProvider } from '../../../app/lib/archives/common/ogp/get-strategy.provider.server'
-import { findVideoArchiveByURL } from '../../../app/lib/archives/video/upload/repository/find-video-archive-by-url'
-import { saveVideoArchive } from '../../../app/lib/archives/video/upload/repository/save-video-archive.server'
-import { overrideArchiveContents } from '../../../app/lib/archives/video/upload/override-archive-contents.server'
+import { getDB } from '../../../db/driver.server'
+import { buildVideoArchiveFromUrl } from '../../archives/video/upload/functions.server'
+import { getOgpStrategyProvider } from '../../archives/common/ogp/get-strategy.provider.server'
+import { findVideoArchiveByURL } from '../../archives/video/upload/repository/find-video-archive-by-url'
+import { saveVideoArchive } from '../../archives/video/upload/repository/save-video-archive.server'
+import { overrideArchiveContents } from '../../archives/video/upload/override-archive-contents.server'
 
 import {
   buildChallengeArchiveFromText,
   buildChallengeArchiveFromUrl,
-} from '../../../app/lib/archives/challenge/upload/functions.server'
-import { findChallengeArchiveByURL } from '../../../app/lib/archives/challenge/upload/repository/find-challenge-archive-by-url'
-import { saveChallengeArchive } from '../../../app/lib/archives/challenge/upload/repository/save-challenge-archive.server'
+} from '../../archives/challenge/upload/functions.server'
+import { findChallengeArchiveByURL } from '../../archives/challenge/upload/repository/find-challenge-archive-by-url'
+import { saveChallengeArchive } from '../../archives/challenge/upload/repository/save-challenge-archive.server'
 
 import {
   duplicatedUrl,
   failedGetOGP,
   unsupportedUrl,
   type ArchiveError,
-} from '../../../app/lib/archives/common/errors.server'
+} from '../../archives/common/errors.server'
+
+declare const discordUserIdBrand: unique symbol
+declare const discordDisplayNameBrand: unique symbol
+
+export type DiscordUserId = string & {
+  readonly [discordUserIdBrand]: 'DiscordUserId'
+}
+export type DiscordDisplayName = string & {
+  readonly [discordDisplayNameBrand]: 'DiscordDisplayName'
+}
+
+export type DiscordUser = { id: DiscordUserId; name: DiscordDisplayName }
 
 export type UpsertResult =
   | { ok: true }
-  | { ok: false; code: 'duplicate' | 'unsupported' | 'ogp_fetch_failed' | 'unexpected' }
+  | {
+      ok: false
+      code: 'duplicate' | 'unsupported' | 'ogp_fetch_failed' | 'unexpected'
+    }
 
 export async function upsertVideo(
   args: {
     url: string
     title?: string
     description?: string
-    user: { id: string; name: string }
+    user: DiscordUser
   },
   env: Env,
 ): Promise<UpsertResult> {
@@ -52,8 +67,8 @@ export async function upsertVideo(
       db,
     )
     return { ok: true }
-  } catch (e: any) {
-    const err = e as ArchiveError
+  } catch (error: unknown) {
+    const err = error as ArchiveError
     switch (err?.code) {
       case duplicatedUrl:
         return { ok: false, code: 'duplicate' }
@@ -74,13 +89,13 @@ export async function upsertChallenge(
         url: string
         title: string
         description?: string
-        user: { id: string; name: string }
+        user: DiscordUser
       }
     | {
         type: 'text'
         title: string
         text: string
-        user: { id: string; name: string }
+        user: DiscordUser
       },
   env: Env,
 ): Promise<UpsertResult> {
@@ -88,7 +103,10 @@ export async function upsertChallenge(
     const db = getDB(env)
     const contents = await (async () => {
       if (args.type === 'text') {
-        return buildChallengeArchiveFromText({ title: args.title, text: args.text })
+        return buildChallengeArchiveFromText({
+          title: args.title,
+          text: args.text,
+        })
       }
       return buildChallengeArchiveFromUrl(
         { title: args.title, url: args.url, description: args.description },
@@ -107,8 +125,8 @@ export async function upsertChallenge(
       db,
     )
     return { ok: true }
-  } catch (e: any) {
-    const err = e as ArchiveError
+  } catch (error: unknown) {
+    const err = error as ArchiveError
     switch (err?.code) {
       case duplicatedUrl:
         return { ok: false, code: 'duplicate' }
@@ -121,4 +139,3 @@ export async function upsertChallenge(
     }
   }
 }
-

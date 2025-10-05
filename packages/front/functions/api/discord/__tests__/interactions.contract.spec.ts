@@ -1,7 +1,15 @@
 import { describe, it, expect } from 'vitest'
 import { onRequest } from '../interactions'
 
-const makeCtx = (init?: { method?: string; body?: unknown; rawBody?: string; headers?: HeadersInit }) => {
+type RequestContext = Parameters<typeof onRequest>[0]
+
+const makeCtx = (init?: {
+  method?: string
+  body?: unknown
+  rawBody?: string
+  headers?: HeadersInit
+  env?: RequestContext['env']
+}) => {
   const method = init?.method ?? 'POST'
   const body = (() => {
     if (init?.rawBody !== undefined) return init.rawBody
@@ -14,11 +22,11 @@ const makeCtx = (init?: { method?: string; body?: unknown; rawBody?: string; hea
     body,
     headers,
   })
-  const ctx: Parameters<typeof onRequest>[0] = {
+  const ctx: RequestContext = {
     request: req,
-    env: {} as any,
-    params: {} as any,
-    data: {} as any,
+    env: init?.env ?? ({} as RequestContext['env']),
+    params: {} as RequestContext['params'],
+    data: {} as RequestContext['data'],
     waitUntil: () => {},
     next: () => Promise.resolve(new Response('NEXT')),
   }
@@ -30,22 +38,45 @@ describe('Discord Interactions contract', () => {
     const ctx = makeCtx({ body: { type: 1 } })
     const res = await onRequest(ctx)
     expect(res.status).toBe(200)
-    const json = await res.clone().json().catch(() => null)
+    const json = await res
+      .clone()
+      .json()
+      .catch(() => null)
     expect(json).toEqual({ type: 1 })
   })
 
   it('rejects when signature headers are missing', async () => {
-    const ctx = makeCtx({ body: { type: 2, id: 'sig-missing', data: { name: 'archive-challenge', options: [] } } })
+    const ctx = makeCtx({
+      body: {
+        type: 2,
+        id: 'sig-missing',
+        data: { name: 'archive-challenge', options: [] },
+        member: { user: { id: 'u-1', username: 'user-1' } },
+      },
+    })
     const res = await onRequest(ctx)
     expect(res.status).toBe(200)
-    const json = await res.clone().json().catch(() => null)
+    const json = await res
+      .clone()
+      .json()
+      .catch(() => null)
     expect(json).toEqual({ type: 4, data: { content: '認証に失敗しました' } })
   })
 
   it('does not use ephemeral flag (public message)', async () => {
-    const ctx = makeCtx({ body: { type: 2, data: { name: 'archive-challenge', options: [] } } })
+    const ctx = makeCtx({
+      body: {
+        type: 2,
+        id: 'public-msg',
+        data: { name: 'archive-challenge', options: [] },
+        member: { user: { id: 'u-2', username: 'user-2' } },
+      },
+    })
     const res = await onRequest(ctx)
-    const json = await res.clone().json().catch(() => null)
+    const json = await res
+      .clone()
+      .json()
+      .catch(() => null)
     expect(json?.data?.flags ?? 0).not.toBe(64)
   })
 
@@ -53,7 +84,10 @@ describe('Discord Interactions contract', () => {
     const ctx = makeCtx({ rawBody: '{invalid' })
     const res = await onRequest(ctx)
     expect(res.status).toBe(200)
-    const json = await res.clone().json().catch(() => null)
+    const json = await res
+      .clone()
+      .json()
+      .catch(() => null)
     expect(json).toEqual({ type: 4, data: { content: 'リクエストが不正です' } })
   })
 })
