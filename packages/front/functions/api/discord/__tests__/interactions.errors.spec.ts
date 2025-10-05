@@ -1,0 +1,240 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { onRequest } from '../interactions'
+
+const infoMock = vi.fn()
+const warnMock = vi.fn()
+const errorMock = vi.fn()
+
+type UpsertVideo =
+  (typeof import('~/lib/discord/interactions/archive-repository'))['upsertVideo']
+type UpsertChallenge =
+  (typeof import('~/lib/discord/interactions/archive-repository'))['upsertChallenge']
+type SendDevAlert =
+  (typeof import('~/lib/discord/interactions/dev-alert'))['sendDevAlert']
+
+const upsertVideoMock = vi.fn<Parameters<UpsertVideo>, ReturnType<UpsertVideo>>(
+  async () => ({
+    ok: false as const,
+    code: 'duplicate' as const,
+  }),
+)
+const upsertChallengeMock = vi.fn<
+  Parameters<UpsertChallenge>,
+  ReturnType<UpsertChallenge>
+>(async () => ({
+  ok: true as const,
+}))
+const sendDevAlertMock = vi.fn<
+  Parameters<SendDevAlert>,
+  ReturnType<SendDevAlert>
+>(async () => ({
+  ok: false as const,
+  reason: 'not_configured' as const,
+}))
+
+vi.mock('~/lib/observability/logger', () => ({
+  logger: {
+    withCorrelation: () => ({
+      debug: vi.fn(),
+      info: infoMock,
+      warn: warnMock,
+      error: errorMock,
+    }),
+  },
+}))
+
+vi.mock('~/lib/discord/interactions/verify-signature', () => ({
+  verifyRequestSignature: vi.fn(async () => true),
+}))
+
+vi.mock('~/lib/discord/interactions/archive-repository', () => ({
+  upsertVideo: (...args: Parameters<UpsertVideo>) => upsertVideoMock(...args),
+  upsertChallenge: (...args: Parameters<UpsertChallenge>) =>
+    upsertChallengeMock(...args),
+}))
+
+vi.mock('~/lib/discord/interactions/dev-alert', () => ({
+  sendDevAlert: (...args: Parameters<SendDevAlert>) =>
+    sendDevAlertMock(...args),
+}))
+
+type RequestContext = Parameters<typeof onRequest>[0]
+
+const makeCtx = (init?: {
+  body?: unknown
+  headers?: HeadersInit
+  env?: RequestContext['env']
+}) => {
+  const headers = new Headers(init?.headers)
+  const req = new Request('http://localhost/api/discord/interactions', {
+    method: 'POST',
+    body: JSON.stringify(init?.body ?? {}),
+    headers,
+  })
+  const ctx: RequestContext = {
+    request: req,
+    env: init?.env ?? ({} as RequestContext['env']),
+    params: {} as RequestContext['params'],
+    data: {} as RequestContext['data'],
+    waitUntil: () => {},
+    next: () => Promise.resolve(new Response('NEXT')),
+  }
+  return ctx
+}
+
+const baseHeaders = {
+  'X-Signature-Ed25519': 'mock-sig',
+  'X-Signature-Timestamp': 'mock-ts',
+} as const
+
+beforeEach(() => {
+  infoMock.mockReset()
+  warnMock.mockReset()
+  errorMock.mockReset()
+  upsertVideoMock.mockReset()
+  upsertChallengeMock.mockReset()
+  sendDevAlertMock.mockReset()
+})
+
+describe('error handling and logging', () => {
+  it('returns unauthorized without emitting logs when signature headers are missing', async () => {
+    const ctx = makeCtx({
+      body: {
+        type: 2,
+        id: 'corr-missing-sig',
+        data: { name: 'archive-video', options: [] },
+        member: { user: { id: 'user-1', username: 'user' } },
+      },
+    })
+
+    const res = await onRequest(ctx)
+    const json = await res
+      .clone()
+      .json()
+      .catch(() => null)
+
+    expect(res.status).toBe(200)
+    expect(json).toEqual({ type: 4, data: { content: '認証に失敗しました' } })
+    expect(infoMock).not.toHaveBeenCalled()
+    expect(warnMock).not.toHaveBeenCalled()
+    expect(errorMock).not.toHaveBeenCalled()
+  })
+
+  it('logs warn and returns validation message when video command is invalid', async () => {
+    const ctx = makeCtx({
+      headers: baseHeaders,
+      body: {
+        type: 2,
+        id: 'corr-validation',
+        data: { name: 'archive-video', options: [] },
+        member: { user: { id: 'user-2', username: 'user' } },
+      },
+    })
+
+    const res = await onRequest(ctx)
+    const json = await res
+      .clone()
+      .json()
+      .catch(() => null)
+
+    expect(res.status).toBe(200)
+    expect(json).toEqual({
+      type: 4,
+      data: { content: '必須項目が不足しています' },
+    })
+    expect(warnMock).toHaveBeenCalledWith('video_command_invalid', {
+      reason: '必須項目が不足しています',
+    })
+    expect(upsertVideoMock).not.toHaveBeenCalled()
+  })
+
+  it('logs warn and sends alert when OGP fetching fails', async () => {
+    upsertVideoMock.mockResolvedValueOnce({
+      ok: false as const,
+      code: 'ogp_fetch_failed' as const,
+    })
+    const ctx = makeCtx({
+      headers: baseHeaders,
+      body: {
+        type: 2,
+        id: 'corr-ogp',
+        data: {
+          name: 'archive-video',
+          options: [
+            { name: 'url', type: 3, value: 'https://example.com/video' },
+          ],
+        },
+        member: {
+          user: { id: 'user-3', username: 'user' },
+        },
+      },
+    })
+
+    const res = await onRequest(ctx)
+    const json = await res
+      .clone()
+      .json()
+      .catch(() => null)
+
+    expect(res.status).toBe(200)
+    expect(json).toEqual({
+      type: 4,
+      data: { content: 'アーカイブの情報を取得できませんでした' },
+    })
+    expect(warnMock).toHaveBeenCalledWith('video_upsert_ogp_failed', {
+      result: 'ogp_fetch_failed',
+    })
+    expect(sendDevAlertMock).toHaveBeenCalledWith(
+      expect.anything(),
+      'OGP取得に失敗しました',
+      expect.objectContaining({
+        code: 'ogp_fetch_failed',
+        correlationId: 'corr-ogp',
+      }),
+    )
+  })
+
+  it('logs error and returns unexpected error when repository throws', async () => {
+    upsertVideoMock.mockRejectedValueOnce(new Error('db down'))
+    const ctx = makeCtx({
+      headers: baseHeaders,
+      body: {
+        type: 2,
+        id: 'corr-exception',
+        data: {
+          name: 'archive-video',
+          options: [
+            { name: 'url', type: 3, value: 'https://example.com/video' },
+          ],
+        },
+        member: {
+          user: { id: 'user-4', username: 'user' },
+        },
+      },
+    })
+
+    const res = await onRequest(ctx)
+    const json = await res
+      .clone()
+      .json()
+      .catch(() => null)
+
+    expect(res.status).toBe(200)
+    expect(json).toEqual({
+      type: 4,
+      data: { content: '予期しないエラーが発生しました' },
+    })
+    expect(errorMock).toHaveBeenCalledWith('video_upsert_exception', {
+      message: 'db down',
+      cause: undefined,
+    })
+    expect(sendDevAlertMock).toHaveBeenCalledWith(
+      expect.anything(),
+      '予期しないエラーが発生しました',
+      expect.objectContaining({
+        code: 'unexpected',
+        correlationId: 'corr-exception',
+      }),
+    )
+  })
+})
