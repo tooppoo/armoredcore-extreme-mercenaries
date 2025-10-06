@@ -87,6 +87,13 @@ Koyeb で稼働中の Discord Bot を Cloudflare 環境へ移管し、フロン�
 - Worker: 重い処理・書き込み・再試行・レート制御・スケジュール実行
 - DB/Secrets: write 系バインド/権限を Worker 側に集約し最小権限を強化
 
+## 2025-10-05 追記
+
+- `packages/front/functions/api/discord/interactions.ts` で Discord 送信者の ID / 表示名をブランド型として取り扱い、`logger.withCorrelation(correlationId)` を用いた info/warn/error ログ整合性を確保した。
+- Vitest に `interactions.errors.spec.ts` と `performance.spec.ts` を追加し、署名欠落・OGP 失敗・例外発生時のレスポンスと p95 latency < 2s を継続検証できるようにした。対象ファイルの Statements カバレッジは 81.69%。
+- 依存監査（`pnpm audit`）で `@noble/ed25519@3.0.0` に脆弱性は確認されなかったが、`drizzle-kit` 経由の `esbuild<=0.24.2`（GHSA-67mh-4wv8-2f99）を把握し、開発専用利用とアップデート監視を継続する。
+- Secrets 運用および監査ログは `docs/checklist/add-dependency.md` に記録し、Pages プロジェクトの環境変数でのみ本番値を管理する方針を明文化した。
+
 ## 参考リンク
 
 - Issue: 移行検討と方針 https://github.com/tooppoo/armoredcore-extreme-mercenaries/issues/803
@@ -94,4 +101,3 @@ Koyeb で稼働中の Discord Bot を Cloudflare 環境へ移管し、フロン�
 - Cloudflare Workers（公式）: https://developers.cloudflare.com/workers/
 - Cloudflare Queues: https://developers.cloudflare.com/queues/
 - Discord Interactions（署名検証/応答）: https://discord.com/developers/docs/interactions/receiving-and-responding
-
