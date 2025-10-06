@@ -20,7 +20,7 @@
 - [x] T107 `specs/001-cloudflare-pages-functions/quickstart.md` と `docs/spec/archive/spec.md` を現行の `.spec.ts` / `app/lib/discord` 構成に更新する。
 - [x] T108 Secrets 運用と依存追加記録を `docs/checklist/add-dependency.md` 等に追記し、`@noble/ed25519@3.0.0` の監査結果を残す。
 - [ ] T109 `pnpm test --filter @ac-extreme-mercenaries/front` を実行してカバレッジ80%以上を確認し、結果を記録する。
-- [ ] T110 `docs/test/discord-bot-pages.md` に手動検証手順（ngrok + Discord Test Server）と実施結果を追記する。
+- [x] T110 `docs/test/discord-bot-pages.md` に手動検証手順（ngrok + Discord Test Server）と実施結果を追記する。
 - [ ] T111 `docs/adr/20250928-adopt-cloudflare-pages-functions-for-discord-bot.md` へ新構成と依存採用理由を反映する。
 - [ ] T112 `pnpm --filter @ac-extreme-mercenaries/front run lint` と `pnpm --filter @ac-extreme-mercenaries/front run typecheck` を完走させ、必要な修正を行う。
 - [ ] T113 `AGENTS.md`, quickstart, spec, README から旧 Koyeb Bot 記述を除去し、整合性を確認する。
