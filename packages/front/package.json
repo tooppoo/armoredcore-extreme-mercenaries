@@ -75,7 +75,7 @@
   },
   "optionalDependencies": {
     "@cloudflare/workerd-darwin-64": "1.20250924.0",
-    "@cloudflare/workerd-darwin-arm64": "1.20250924.0",
+    "@cloudflare/workerd-darwin-arm64": "1.20251004.0",
     "@cloudflare/workerd-linux-64": "1.20250924.0",
     "@rollup/rollup-darwin-arm64": "4.52.2",
     "@rollup/rollup-darwin-x64": "4.52.2",
