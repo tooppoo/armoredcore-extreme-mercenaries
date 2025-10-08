@@ -3,12 +3,18 @@ import { onRequest } from '../interactions'
 
 type RequestContext = Parameters<typeof onRequest>[0]
 
+const baseEnv: Partial<RequestContext['env']> = {
+  ASSETS: {
+    fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, init),
+  },
+}
+
 const makeCtx = (init?: {
   method?: string
   body?: unknown
   rawBody?: string
   headers?: HeadersInit
-  env?: RequestContext['env']
+  env?: Partial<RequestContext['env']>
 }) => {
   const method = init?.method ?? 'POST'
   const body = (() => {
@@ -22,15 +28,17 @@ const makeCtx = (init?: {
     body,
     headers,
   })
-  const ctx: RequestContext = {
-    request: req,
-    env: init?.env ?? ({} as RequestContext['env']),
+  const env = { ...baseEnv, ...init?.env } as RequestContext['env']
+  return {
+    request: req as RequestContext['request'],
+    env,
     params: {} as RequestContext['params'],
     data: {} as RequestContext['data'],
     waitUntil: () => {},
     next: () => Promise.resolve(new Response('NEXT')),
-  }
-  return ctx
+    functionPath: '',
+    passThroughOnException: () => {},
+  } satisfies RequestContext
 }
 
 describe('Discord Interactions contract', () => {
@@ -38,10 +46,10 @@ describe('Discord Interactions contract', () => {
     const ctx = makeCtx({ body: { type: 1 } })
     const res = await onRequest(ctx)
     expect(res.status).toBe(200)
-    const json = await res
+    const json = (await res
       .clone()
       .json()
-      .catch(() => null)
+      .catch(() => null)) as { type?: number }
     expect(json).toEqual({ type: 1 })
   })
 
@@ -56,10 +64,10 @@ describe('Discord Interactions contract', () => {
     })
     const res = await onRequest(ctx)
     expect(res.status).toBe(200)
-    const json = await res
+    const json = (await res
       .clone()
       .json()
-      .catch(() => null)
+      .catch(() => null)) as { type?: number; data?: { content?: string } }
     expect(json).toEqual({ type: 4, data: { content: '認証に失敗しました' } })
   })
 
@@ -73,10 +81,10 @@ describe('Discord Interactions contract', () => {
       },
     })
     const res = await onRequest(ctx)
-    const json = await res
+    const json = (await res
       .clone()
       .json()
-      .catch(() => null)
+      .catch(() => null)) as { data?: { flags?: number } }
     expect(json?.data?.flags ?? 0).not.toBe(64)
   })
 

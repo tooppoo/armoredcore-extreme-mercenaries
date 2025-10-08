@@ -104,8 +104,10 @@ export async function upsertChallenge(
     const contents = await (async () => {
       if (args.type === 'text') {
         return buildChallengeArchiveFromText({
+          type: 'text',
           title: args.title,
           text: args.text,
+          discord_user: { id: args.user.id, name: args.user.name },
         })
       }
       return buildChallengeArchiveFromUrl(

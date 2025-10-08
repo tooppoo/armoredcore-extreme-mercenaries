@@ -1,18 +1,27 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { onRequest } from '../interactions'
 
-const upsertChallengeMock = vi.fn(async () => ({ ok: true as const }))
+type RequestContext = Parameters<typeof onRequest>[0]
+type UpsertChallenge =
+  (typeof import('~/lib/discord/interactions/archive-repository'))['upsertChallenge']
+
+const upsertChallengeMock = vi.fn<UpsertChallenge>()
 
 vi.mock('~/lib/discord/interactions/archive-repository', () => ({
-  upsertChallenge: upsertChallengeMock,
+  upsertChallenge: (...args: Parameters<UpsertChallenge>) =>
+    upsertChallengeMock(...args),
 }))
 
-type RequestContext = Parameters<typeof onRequest>[0]
+const baseEnv: Partial<RequestContext['env']> = {
+  ASSETS: {
+    fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, init),
+  },
+}
 
 const makeCtx = (init?: {
   body?: unknown
   headers?: HeadersInit
-  env?: RequestContext['env']
+  env?: Partial<RequestContext['env']>
 }) => {
   const headers = new Headers(init?.headers)
   const req = new Request('http://localhost/api/discord/interactions', {
@@ -20,20 +29,23 @@ const makeCtx = (init?: {
     body: JSON.stringify(init?.body ?? {}),
     headers,
   })
-  const ctx: RequestContext = {
-    request: req,
-    env: init?.env ?? ({} as RequestContext['env']),
+  const env = { ...baseEnv, ...init?.env } as RequestContext['env']
+  return {
+    request: req as RequestContext['request'],
+    env,
     params: {} as RequestContext['params'],
     data: {} as RequestContext['data'],
     waitUntil: () => {},
     next: () => Promise.resolve(new Response('NEXT')),
-  }
-  return ctx
+    functionPath: '',
+    passThroughOnException: () => {},
+  } satisfies RequestContext
 }
 
 describe('/archive-challenge integration', () => {
   beforeEach(() => {
-    upsertChallengeMock.mockClear()
+    upsertChallengeMock.mockReset()
+    upsertChallengeMock.mockResolvedValue({ ok: true })
   })
 
   it('happy path: accepts command and responds public message', async () => {
@@ -64,10 +76,10 @@ describe('/archive-challenge integration', () => {
     const ctx = makeCtx({ body, headers })
     const res = await onRequest(ctx)
     expect(res.status).toBe(200)
-    const json = await res
+    const json = (await res
       .clone()
       .json()
-      .catch(() => null)
+      .catch(() => null)) as { type?: number; data?: { flags?: number } | undefined }
     expect([4, 5]).toContain(json?.type)
     expect(json?.data?.flags ?? 0).not.toBe(64)
     expect(upsertChallengeMock).toHaveBeenCalledWith(

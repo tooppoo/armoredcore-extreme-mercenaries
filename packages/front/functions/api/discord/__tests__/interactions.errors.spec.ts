@@ -12,25 +12,9 @@ type UpsertChallenge =
 type SendDevAlert =
   (typeof import('~/lib/discord/interactions/dev-alert'))['sendDevAlert']
 
-const upsertVideoMock = vi.fn<Parameters<UpsertVideo>, ReturnType<UpsertVideo>>(
-  async () => ({
-    ok: false as const,
-    code: 'duplicate' as const,
-  }),
-)
-const upsertChallengeMock = vi.fn<
-  Parameters<UpsertChallenge>,
-  ReturnType<UpsertChallenge>
->(async () => ({
-  ok: true as const,
-}))
-const sendDevAlertMock = vi.fn<
-  Parameters<SendDevAlert>,
-  ReturnType<SendDevAlert>
->(async () => ({
-  ok: false as const,
-  reason: 'not_configured' as const,
-}))
+const upsertVideoMock = vi.fn<UpsertVideo>()
+const upsertChallengeMock = vi.fn<UpsertChallenge>()
+const sendDevAlertMock = vi.fn<SendDevAlert>()
 
 vi.mock('~/lib/observability/logger', () => ({
   logger: {
@@ -60,10 +44,16 @@ vi.mock('~/lib/discord/interactions/dev-alert', () => ({
 
 type RequestContext = Parameters<typeof onRequest>[0]
 
+const baseEnv: Partial<RequestContext['env']> = {
+  ASSETS: {
+    fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, init),
+  },
+}
+
 const makeCtx = (init?: {
   body?: unknown
   headers?: HeadersInit
-  env?: RequestContext['env']
+  env?: Partial<RequestContext['env']>
 }) => {
   const headers = new Headers(init?.headers)
   const req = new Request('http://localhost/api/discord/interactions', {
@@ -71,15 +61,17 @@ const makeCtx = (init?: {
     body: JSON.stringify(init?.body ?? {}),
     headers,
   })
-  const ctx: RequestContext = {
-    request: req,
-    env: init?.env ?? ({} as RequestContext['env']),
+  const env = { ...baseEnv, ...init?.env } as RequestContext['env']
+  return {
+    request: req as RequestContext['request'],
+    env,
     params: {} as RequestContext['params'],
     data: {} as RequestContext['data'],
     waitUntil: () => {},
     next: () => Promise.resolve(new Response('NEXT')),
-  }
-  return ctx
+    functionPath: '',
+    passThroughOnException: () => {},
+  } satisfies RequestContext
 }
 
 const baseHeaders = {
@@ -92,8 +84,11 @@ beforeEach(() => {
   warnMock.mockReset()
   errorMock.mockReset()
   upsertVideoMock.mockReset()
+  upsertVideoMock.mockResolvedValue({ ok: false, code: 'duplicate' })
   upsertChallengeMock.mockReset()
+  upsertChallengeMock.mockResolvedValue({ ok: true })
   sendDevAlertMock.mockReset()
+  sendDevAlertMock.mockResolvedValue({ ok: false, reason: 'not_configured' })
 })
 
 describe('error handling and logging', () => {
@@ -108,10 +103,10 @@ describe('error handling and logging', () => {
     })
 
     const res = await onRequest(ctx)
-    const json = await res
+    const json = (await res
       .clone()
       .json()
-      .catch(() => null)
+      .catch(() => null)) as { type?: number; data?: { content?: string } }
 
     expect(res.status).toBe(200)
     expect(json).toEqual({ type: 4, data: { content: '認証に失敗しました' } })
@@ -132,10 +127,10 @@ describe('error handling and logging', () => {
     })
 
     const res = await onRequest(ctx)
-    const json = await res
+    const json = (await res
       .clone()
       .json()
-      .catch(() => null)
+      .catch(() => null)) as { type?: number; data?: { content?: string } }
 
     expect(res.status).toBe(200)
     expect(json).toEqual({
@@ -171,10 +166,10 @@ describe('error handling and logging', () => {
     })
 
     const res = await onRequest(ctx)
-    const json = await res
+    const json = (await res
       .clone()
       .json()
-      .catch(() => null)
+      .catch(() => null)) as { type?: number; data?: { content?: string } }
 
     expect(res.status).toBe(200)
     expect(json).toEqual({

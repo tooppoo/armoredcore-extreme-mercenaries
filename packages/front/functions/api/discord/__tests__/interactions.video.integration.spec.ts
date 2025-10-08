@@ -1,21 +1,26 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { onRequest } from '../interactions'
 
-const upsertVideoMock = vi.fn(async () => ({
-  ok: false,
-  code: 'duplicate' as const,
-}))
+type RequestContext = Parameters<typeof onRequest>[0]
+type UpsertVideo =
+  (typeof import('~/lib/discord/interactions/archive-repository'))['upsertVideo']
+
+const upsertVideoMock = vi.fn<UpsertVideo>()
 
 vi.mock('~/lib/discord/interactions/archive-repository', () => ({
-  upsertVideo: upsertVideoMock,
+  upsertVideo: (...args: Parameters<UpsertVideo>) => upsertVideoMock(...args),
 }))
 
-type RequestContext = Parameters<typeof onRequest>[0]
+const baseEnv: Partial<RequestContext['env']> = {
+  ASSETS: {
+    fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, init),
+  },
+}
 
 const makeCtx = (init?: {
   body?: unknown
   headers?: HeadersInit
-  env?: RequestContext['env']
+  env?: Partial<RequestContext['env']>
 }) => {
   const headers = new Headers(init?.headers)
   const req = new Request('http://localhost/api/discord/interactions', {
@@ -23,20 +28,23 @@ const makeCtx = (init?: {
     body: JSON.stringify(init?.body ?? {}),
     headers,
   })
-  const ctx: RequestContext = {
-    request: req,
-    env: init?.env ?? ({} as RequestContext['env']),
+  const env = { ...baseEnv, ...init?.env } as RequestContext['env']
+  return {
+    request: req as RequestContext['request'],
+    env,
     params: {} as RequestContext['params'],
     data: {} as RequestContext['data'],
     waitUntil: () => {},
     next: () => Promise.resolve(new Response('NEXT')),
-  }
-  return ctx
+    functionPath: '',
+    passThroughOnException: () => {},
+  } satisfies RequestContext
 }
 
 describe('/archive-video duplicate handling', () => {
   beforeEach(() => {
-    upsertVideoMock.mockClear()
+    upsertVideoMock.mockReset()
+    upsertVideoMock.mockResolvedValue({ ok: false, code: 'duplicate' })
   })
 
   it('returns duplicate notice for already-registered URL', async () => {
@@ -64,10 +72,10 @@ describe('/archive-video duplicate handling', () => {
     const ctx = makeCtx({ body, headers })
     const res = await onRequest(ctx)
     expect(res.status).toBe(200)
-    const json = await res
+    const json = (await res
       .clone()
       .json()
-      .catch(() => null)
+      .catch(() => null)) as { data?: { content?: string }; type?: number }
     expect(json?.data?.content ?? '').toContain('登録済み')
     expect(upsertVideoMock).toHaveBeenCalledTimes(1)
     expect(upsertVideoMock.mock.calls[0]?.[0]?.user).toEqual({

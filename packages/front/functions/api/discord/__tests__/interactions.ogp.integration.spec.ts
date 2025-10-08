@@ -7,10 +7,16 @@ vi.mock('~/lib/discord/interactions/archive-repository', () => ({
 
 type RequestContext = Parameters<typeof onRequest>[0]
 
+const baseEnv: Partial<RequestContext['env']> = {
+  ASSETS: {
+    fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, init),
+  },
+}
+
 const makeCtx = (init?: {
   body?: unknown
   headers?: HeadersInit
-  env?: RequestContext['env']
+  env?: Partial<RequestContext['env']>
 }) => {
   const headers = new Headers(init?.headers)
   const req = new Request('http://localhost/api/discord/interactions', {
@@ -18,15 +24,17 @@ const makeCtx = (init?: {
     body: JSON.stringify(init?.body ?? {}),
     headers,
   })
-  const ctx: RequestContext = {
-    request: req,
-    env: init?.env ?? ({} as RequestContext['env']),
+  const env = { ...baseEnv, ...init?.env } as RequestContext['env']
+  return {
+    request: req as RequestContext['request'],
+    env,
     params: {} as RequestContext['params'],
     data: {} as RequestContext['data'],
     waitUntil: () => {},
     next: () => Promise.resolve(new Response('NEXT')),
-  }
-  return ctx
+    functionPath: '',
+    passThroughOnException: () => {},
+  } satisfies RequestContext
 }
 
 describe('OGP fallback', () => {
@@ -54,10 +62,10 @@ describe('OGP fallback', () => {
     const ctx = makeCtx({ body, headers })
     const res = await onRequest(ctx)
     expect(res.status).toBe(200)
-    const json = await res
+    const json = (await res
       .clone()
       .json()
-      .catch(() => null)
+      .catch(() => null)) as { data?: { content?: string } }
     expect(json?.data?.content ?? '').toContain('取得できません')
   })
 })

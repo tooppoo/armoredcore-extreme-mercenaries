@@ -22,7 +22,7 @@
 - [ ] T109 `pnpm test --filter @ac-extreme-mercenaries/front` を実行してカバレッジ80%以上を確認し、結果を記録する。
 - [x] T110 `docs/test/discord-bot-pages.md` に手動検証手順（ngrok + Discord Test Server）と実施結果を追記する。
 - [x] T111 `docs/adr/20250928-adopt-cloudflare-pages-functions-for-discord-bot.md` へ新構成と依存採用理由を反映する。
-- [ ] T112 `pnpm --filter @ac-extreme-mercenaries/front run lint` と `pnpm --filter @ac-extreme-mercenaries/front run typecheck` を完走させ、必要な修正を行う。
+- [x] T112 `pnpm --filter @ac-extreme-mercenaries/front run lint` と `pnpm --filter @ac-extreme-mercenaries/front run typecheck` を完走させ、必要な修正を行う。
 - [ ] T113 `AGENTS.md`, quickstart, spec, README から旧 Koyeb Bot 記述を除去し、整合性を確認する。
 
 ## Dependencies

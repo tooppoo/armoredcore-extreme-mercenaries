@@ -2,15 +2,10 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { performance } from 'node:perf_hooks'
 import { onRequest } from '../interactions'
 
-type UpsertVideoArgs = Parameters<
+type UpsertVideo =
   (typeof import('~/lib/discord/interactions/archive-repository'))['upsertVideo']
->[0]
 
-type UpsertVideoResult = ReturnType<
-  (typeof import('~/lib/discord/interactions/archive-repository'))['upsertVideo']
->
-
-let upsertVideoImpl: (input: UpsertVideoArgs) => UpsertVideoResult
+let upsertVideoImpl: UpsertVideo
 
 vi.mock('~/lib/discord/interactions/verify-signature', () => ({
   verifyRequestSignature: vi.fn(async () => true),
@@ -32,16 +27,22 @@ vi.mock('~/lib/discord/interactions/dev-alert', () => ({
 }))
 
 vi.mock('~/lib/discord/interactions/archive-repository', () => ({
-  upsertVideo: (input: UpsertVideoArgs) => upsertVideoImpl(input),
+  upsertVideo: (...args: Parameters<UpsertVideo>) => upsertVideoImpl(...args),
   upsertChallenge: vi.fn(async () => ({ ok: true as const })),
 }))
 
 type RequestContext = Parameters<typeof onRequest>[0]
 
+const baseEnv: Partial<RequestContext['env']> = {
+  ASSETS: {
+    fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, init),
+  },
+}
+
 const makeCtx = (init?: {
   id: string
   body?: unknown
-  env?: RequestContext['env']
+  env?: Partial<RequestContext['env']>
 }) => {
   const body = init?.body ?? {
     type: 2,
@@ -62,15 +63,17 @@ const makeCtx = (init?: {
     body: JSON.stringify(body),
     headers,
   })
-  const ctx: RequestContext = {
-    request: req,
-    env: init?.env ?? ({} as RequestContext['env']),
+  const env = { ...baseEnv, ...init?.env } as RequestContext['env']
+  return {
+    request: req as RequestContext['request'],
+    env,
     params: {} as RequestContext['params'],
     data: {} as RequestContext['data'],
     waitUntil: () => {},
     next: () => Promise.resolve(new Response('NEXT')),
-  }
-  return ctx
+    functionPath: '',
+    passThroughOnException: () => {},
+  } satisfies RequestContext
 }
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
@@ -84,7 +87,8 @@ const percentile = (samples: number[], p: number) => {
 }
 
 beforeEach(() => {
-  upsertVideoImpl = async () => {
+  upsertVideoImpl = async (input) => {
+    if (!input.url) throw new Error('url is required')
     return { ok: true }
   }
 })
@@ -92,7 +96,9 @@ beforeEach(() => {
 describe('interaction performance budget', () => {
   it('keeps OGP fallback responses under 2s p95', async () => {
     const samples: number[] = []
-    upsertVideoImpl = async () => {
+    upsertVideoImpl = async (input, env) => {
+      if (!input.url) throw new Error('url is required')
+      void env
       await delay(15)
       return { ok: false, code: 'ogp_fetch_failed' }
     }
@@ -111,7 +117,9 @@ describe('interaction performance budget', () => {
 
   it('keeps successful upsert operations under 2s p95', async () => {
     const samples: number[] = []
-    upsertVideoImpl = async () => {
+    upsertVideoImpl = async (input, env) => {
+      if (!input.url) throw new Error('url is required')
+      void env
       await delay(10)
       return { ok: true }
     }

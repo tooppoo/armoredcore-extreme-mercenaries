@@ -146,9 +146,9 @@ const respondWithError = async (code: ErrorCode, status = 200) => {
   )
 }
 
-export const onRequest: PagesFunction = async (ctx) => {
+export const onRequest: PagesFunction<DiscordEnv> = async (ctx) => {
   const { request, env } = ctx
-  const pagesEnv = env as DiscordEnv
+  const pagesEnv = env
 
   const rawBody = await request.text()
   const parsed = parseInteraction(rawBody)
