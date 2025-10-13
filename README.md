@@ -4,8 +4,8 @@ ARMAC（Armored Core Extreme Mercenaries）関連コンテンツのアーカイ�
 
 ## 構成概要
 
-- `packages/front`: Cloudflare Pages / React Router を用いたフロントエンドアプリケーション
-- `packages/discord-bot`: Discord Slash Command ベースのアーカイブ登録 Bot
+- `packages/front`: Cloudflare Pages / React Router を用いたフロントエンドおよび Pages Functions (Discord Slash Command ハンドラを内包)
+- `packages/discord-bot`: レガシーの自前ホスティング版 Discord Bot（保守終了、必要時のみコード参照）
 - `packages/e2e`: Playwright による E2E テスト群
 - `packages/adr`: ADR ドキュメントビューア（Eleventy ベース）
 - `docs/`: 仕様・ADR・チェックリストなどの開発ドキュメント（[詳細](docs/README.md)）
