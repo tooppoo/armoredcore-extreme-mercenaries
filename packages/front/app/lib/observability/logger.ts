@@ -7,11 +7,11 @@ const redact = (obj: Record<string, unknown>) => {
     'authorization',
     'password',
     'secret',
-    'DISCORD_BOT_TOKEN',
-    'DISCORD_PUBLIC_KEY',
+    'discord_bot_token',
+    'discord_public_key',
   ]
   for (const k of Object.keys(clone)) {
-    if (redactKeys.includes(k)) clone[k] = '[REDACTED]'
+    if (redactKeys.includes(k.toLowerCase())) clone[k] = '[REDACTED]'
   }
   return clone
 }
