@@ -79,7 +79,10 @@ describe('/archive-challenge integration', () => {
     const json = (await res
       .clone()
       .json()
-      .catch(() => null)) as { type?: number; data?: { flags?: number } | undefined }
+      .catch(() => null)) as {
+      type?: number
+      data?: { flags?: number } | undefined
+    }
     expect([4, 5]).toContain(json?.type)
     expect(json?.data?.flags ?? 0).not.toBe(64)
     expect(upsertChallengeMock).toHaveBeenCalledWith(

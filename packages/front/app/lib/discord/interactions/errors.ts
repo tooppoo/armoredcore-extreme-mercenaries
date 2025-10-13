@@ -22,4 +22,3 @@ const messages: Record<ErrorCode, string> = {
 }
 
 export const messageFor = (code: ErrorCode): string => messages[code]
-
