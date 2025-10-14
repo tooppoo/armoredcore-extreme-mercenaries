@@ -14,7 +14,7 @@
     "report": "playwright show-report",
     "lint": "run-s run-eslint run-prettier",
     "run-eslint": "eslint --cache --cache-location ./node_modules/.cache/eslint --fix .",
-    "run-prettier": "prettier --write ."
+    "run-prettier": "prettier --cache --write ."
   },
   "author": "",
   "license": "MIT",

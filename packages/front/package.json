@@ -18,7 +18,7 @@
     "typecheck": "react-router typegen && tsc",
     "lint": "run-s run-eslint run-prettier",
     "run-eslint": "eslint --cache --cache-location ./node_modules/.cache/eslint --fix .",
-    "run-prettier": "prettier --write .",
+    "run-prettier": "prettier --cache --write .",
     "typegen": "wrangler types && react-router typegen",
     "cf-typegen": "wrangler types",
     "migration": "wrangler d1 migrations apply ac-extreme-mercenaries-db --local",
