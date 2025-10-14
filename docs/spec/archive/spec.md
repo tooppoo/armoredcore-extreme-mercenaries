@@ -6,7 +6,8 @@
 **Input**: User description: "Cloudflare Pages Functions に Discord Bot を移管して slash command を処理する機能仕様"
 
 ## Execution Flow (main)
-```
+
+```txt
 1. Parse user description from Input
    → If empty: ERROR "No feature description provided"
 2. Extract key concepts from description
@@ -29,17 +30,21 @@
 ---
 
 ## ⚡ Quick Guidelines
+
 - ✅ Focus on WHAT users need and WHY
 - ❌ Avoid HOW to implement (no tech stack, APIs, code structure)
 - 👥 Written for business stakeholders, not developers
 
 ### Section Requirements
+
 - **Mandatory sections**: Must be completed for every feature
 - **Optional sections**: Include only when relevant to the feature
 - When a section doesn't apply, remove it entirely (don't leave as "N/A")
 
 ### For AI Generation
+
 When creating this spec from a user prompt:
+
 1. **Mark all ambiguities**: Use [NEEDS CLARIFICATION: specific question] for any assumption you'd need to make
 2. **Don't guess**: If the prompt doesn't specify something (e.g., "login system" without auth method), mark it
 3. **Think like a tester**: Every vague requirement should fail the "testable and unambiguous" checklist item
@@ -56,13 +61,16 @@ When creating this spec from a user prompt:
 ## User Scenarios & Testing *(mandatory)*
 
 ### Primary User Story
+
 Discord コミュニティ参加者が許可対象チャンネルで `/archive-challenge` または `/archive-video` を実行すると、Cloudflare Pages Functions 上で稼働する Bot がリクエストを受け付け、必要情報を確認の上でアーカイブ登録の結果を参加者へ返す。
 
 ### Acceptance Scenarios
+
 1. **Given** Bot が Cloudflare Pages Functions 上で稼働しており Slash Command が Discord に登録されている, **When** 参加者が `/archive-challenge` に必須項目を入力して送信する, **Then** コマンド受信が成功し、アーカイブ登録結果（成功メッセージと登録内容の要約）が Discord チャンネルに公開メッセージとして通知される。
 2. **Given** 参加者が既に登録済みの URL を `/archive-video` で送信する, **When** Bot がリクエストを受け付ける, **Then** システムは重複を検知し「登録済み」と通知して新規登録を行わない。
 
 ### Edge Cases
+
 - OGP 取得に失敗した場合はフォールバック文言を設定し、エラーを構造化ログに記録する。
 - 利用者入力の不足や重複は warn ログで記録し、システム障害（例: D1 エラー）は error ログで記録する。
 - 署名検証に失敗した場合は直ちに処理を中断し、利用者には一般的な失敗メッセージが返る。
@@ -72,6 +80,7 @@ Discord コミュニティ参加者が許可対象チャンネルで `/archive-c
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
+
 - **Permitted Channel**: Slash Command を実行できるチャンネル ID リスト（環境変数管理）を保持し、許可されていないチャンネルでは実行を拒否する。
 - **Data Store**: Cloudflare D1（既存のアーカイブテーブル）を利用し、Pages Functions で書き込み・読み取りを行う。
 
@@ -89,12 +98,14 @@ Discord コミュニティ参加者が許可対象チャンネルで `/archive-c
 - **FR-011**: システム MUST Slash Command の送信者（Guild Member または Direct Message の user）から Discord 識別子と表示名を取得し、登録処理に利用できない場合はリクエストを `bad_request` として拒否する。
 
 ### Key Entities *(include if feature involves data)*
+
 - **Archive Submission**: Discord 参加者が入力したタイトル、URL、任意の説明、送信時刻、送信者 ID（Guild Member or User）、表示名を含むリクエスト単位。Pages Functions が OGP 情報を取得して補完し、重複判定や登録成否がログに記録される。
 - **Processing Outcome**: アーカイブ登録結果（成功、重複、システムエラー）と Discord への通知内容を表す。Pages Functions が Cloudflare D1 に直接書き込み、取得した OGP 情報と構造化ログ（Correlation ID 付き）を保持する。
 
 ## Clarifications
 
 ### Session 2025-09-28
+
 - Q: Cloudflare Pages Functions からアーカイブ登録を行う際のデータ経路はどれにしますか？ → A: Pages Functions から直接 DB に書き込む
 - Q: Cloudflare Pages Functions から直接書き込むデータベースはどれを想定していますか？ → A: Cloudflare D1（既存アーカイブテーブル）
 - Q: OGP情報（説明文やタイトル補完）が必要な場合、どこで取得・反映しますか？ → A: Pages Functions が OGP を取得して Cloudflare D1 に保存する
@@ -104,15 +115,18 @@ Discord コミュニティ参加者が許可対象チャンネルで `/archive-c
 ---
 
 ## Review & Acceptance Checklist
-*GATE: Automated checks run during main() execution*
+
+*GATE: Automated checks run during main() execution*.
 
 ### Content Quality
+
 - [x] No implementation details (languages, frameworks, APIs)
 - [x] Focused on user value and business needs
 - [x] Written for non-technical stakeholders
 - [x] All mandatory sections completed
 
 ### Requirement Completeness
+
 - [x] No [NEEDS CLARIFICATION] markers remain
 - [x] Requirements are testable and unambiguous  
 - [x] Success criteria are measurable
@@ -124,7 +138,8 @@ Discord コミュニティ参加者が許可対象チャンネルで `/archive-c
 ---
 
 ## Execution Status
-*Updated by main() during processing*
+
+*Updated by main() during processing*.
 
 - [x] User description parsed
 - [x] Key concepts extracted

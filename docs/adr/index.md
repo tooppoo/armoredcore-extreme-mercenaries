@@ -3,8 +3,6 @@ layout: base.njk
 title: Architecture Decision Records
 ---
 
-# Architecture Decision Records
-
 ac-extreme-mercenariesのアーキテクチャ知識ベースへようこそ 👋
 ここではプロジェクトのすべてのアーキテクチャ決定記録（ADR）を確認できます。
 

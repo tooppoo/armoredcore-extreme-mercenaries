@@ -4,7 +4,7 @@
 - 日付: 2025-09-05
 - タグ: sitemap, caching, etag, ttl, cloudflare, d1
 
-技術ストーリー: https://github.com/tooppoo/armoredcore-extreme-mercenaries/issues/656
+技術ストーリー: <https://github.com/tooppoo/armoredcore-extreme-mercenaries/issues/656>
 
 ## 背景 / 文脈
 
@@ -44,19 +44,23 @@
 ## 各選択肢の利点と欠点
 
 ### 1. 弱いETag + 動的TTL + Last-Modified
+
 - 良い点: 実装容易・計算軽量・304最大化・セキュア
 - 良い点: 更新頻度適応のTTLで再クロール最適化
 - 悪い点: 本文差分を示す強い整合性はない
 
 ### 2. 強いETag（本文ハッシュ）+ 固定TTL
+
 - 良い点: 本文整合性が厳密
 - 悪い点: 生成コスト・実装複雑、TTL最適化が難しい
 
 ### 3. Last-Modified のみ + 固定TTL
+
 - 良い点: 実装最小
 - 悪い点: 精度が粗く304命中率が下がる可能性
 
 ### 4. パージ中心運用
+
 - 良い点: キャッシュ制御を単純化
 - 悪い点: 手当が増えミスリスク、304効果を享受しづらい
 
@@ -68,6 +72,5 @@
 
 ## 参考リンク
 
-- Issue: https://github.com/tooppoo/armoredcore-extreme-mercenaries/issues/656
+- Issue: <https://github.com/tooppoo/armoredcore-extreme-mercenaries/issues/656>
 - HTTP ETag/Conditional Requests（RFC7232/9110）
-

@@ -46,4 +46,3 @@ Interactions では「Ed25519署名検証」および「3秒以内のACK」が�
 - 実装は `packages/front/functions/api/discord/interactions.ts` に配置する。
 - 既存の `app/routes/api/**` には Interactions ルートを作らない（二重定義回避）。
 - 将来、書き込み負荷や再試行要件が増した場合は、Worker + Queues への抽出を再検討する。
-

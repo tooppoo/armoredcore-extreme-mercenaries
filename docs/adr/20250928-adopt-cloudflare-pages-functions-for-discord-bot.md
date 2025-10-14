@@ -4,7 +4,7 @@
 - 日付: 2025-09-28
 - タグ: discord, cloudflare, pages, worker, interactions, security, migration
 
-技術ストーリー: https://github.com/tooppoo/armoredcore-extreme-mercenaries/issues/803
+技術ストーリー: <https://github.com/tooppoo/armoredcore-extreme-mercenaries/issues/803>
 
 ## 背景 / 文脈
 
@@ -96,8 +96,8 @@ Koyeb で稼働中の Discord Bot を Cloudflare 環境へ移管し、フロン�
 
 ## 参考リンク
 
-- Issue: 移行検討と方針 https://github.com/tooppoo/armoredcore-extreme-mercenaries/issues/803
-- Cloudflare Pages Functions（公式）: https://developers.cloudflare.com/pages/functions/
-- Cloudflare Workers（公式）: https://developers.cloudflare.com/workers/
-- Cloudflare Queues: https://developers.cloudflare.com/queues/
-- Discord Interactions（署名検証/応答）: https://discord.com/developers/docs/interactions/receiving-and-responding
+- Issue: 移行検討と方針 <https://github.com/tooppoo/armoredcore-extreme-mercenaries/issues/803>
+- Cloudflare Pages Functions（公式）: <https://developers.cloudflare.com/pages/functions/>
+- Cloudflare Workers（公式）: <https://developers.cloudflare.com/workers/>
+- Cloudflare Queues: <https://developers.cloudflare.com/queues/>
+- Discord Interactions（署名検証/応答）: <https://discord.com/developers/docs/interactions/receiving-and-responding>

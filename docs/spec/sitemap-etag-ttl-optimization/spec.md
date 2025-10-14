@@ -1,17 +1,20 @@
 # 仕様: SitemapのETag/TTL最適化（contents_revisions連動 + Conditional GET）
 
 ## 概要
+
 - `/sitemap.xml`（インデックス）と子サイトマップで、`contents_revisions` に基づき ETag/Last-Modified を算出。
 - `If-None-Match` 受領時は弱いETag `W/"<hash>"` で比較し、一致なら 304 を返す。
 - `Cache-Control` は更新頻度に応じて可変（動的TTL）。
 
 ### 子サイトマップ構成（2025-09 現在）
+
 - `/sitemap.core.xml` 静的/一覧ページ（TOP, 規約, 罰則, 更新履歴, アーカイブなど）
 - `/sitemap.updates.xml` 更新履歴の詳細ページ群（更新レコード由来・コード管理）
 - `/sitemap.challenge.xml` チャレンジ詳細ページ群（D1管理）
 - `/sitemap.video.xml` 動画アーカイブ一覧（個別詳細は無し）
 
 ## HTTP応答仕様
+
 - 200 OK（本文あり）
   - `Content-Type: application/xml; charset=utf-8`
   - `ETag: W/"<hash>"`
@@ -23,11 +26,13 @@
   - `Cache-Control` を再送
 
 ## ETag/Last-Modified の算出
+
 - `<hash>` は `contents_revisions.latest_revision` をベースに SHA-256 等で安定化（必要なら prefix を付与）。
 - `Last-Modified` は `contents_revisions.updated_at` を RFC1123 で整形。
 - 分割サイトマップでは領域別の最新リビジョンを集約してハッシュ化（順序と安定化を保証）。
 
 ## TTLポリシー（例）
+
 - `age = now - updated_at`
 - if `age < 10m`: `s-maxage=300`
 - else if `age < 24h`: `s-maxage=3600`
@@ -36,6 +41,7 @@
 - 併せて `stale-while-revalidate=60..600` を付与。
 
 ## 疑似コード（TypeScript）
+
 ```ts
 export async function handleSitemap(req: Request, env: Env): Promise<Response> {
   const ifNoneMatch = req.headers.get('If-None-Match');
@@ -75,14 +81,17 @@ export async function handleSitemap(req: Request, env: Env): Promise<Response> {
 ```
 
 ## セキュリティ
+
 - ETagは内部IDや連番をそのまま露出しない（`stableHash` で不可逆化）。
 - 障害時の応答で内部情報（SQL/環境変数）を露出しない。
 
 ## トレーサビリティ
+
 - `ETag` 内のハッシュは `contents_revisions.latest_revision` から一意に導出できる。
 - ログには `site.id`, `etag`, `status`, `cacheControl` を記録。
 
 ## テスト戦略
+
 - property-based testing
   - 同一 `latest_revision` で `ETag` が安定（同値である）。
   - 異なる `latest_revision` で `ETag` が異なる。

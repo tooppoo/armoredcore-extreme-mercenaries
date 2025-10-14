@@ -14,6 +14,7 @@
     "front": "pnpm --filter @ac-extreme-mercenaries/front",
     "front:dev": "pnpm --filter @ac-extreme-mercenaries/front run dev",
     "e2e": "pnpm --filter @ac-extreme-mercenaries/e2e",
+    "document": "pnpm --filter @ac-extreme-mercenaries/document",
     "adr": "pnpm --filter @ac-extreme-mercenaries/adr"
   },
   "engines": {

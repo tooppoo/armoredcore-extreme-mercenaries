@@ -4,8 +4,7 @@
   "description": "scripts to manage docs",
   "main": "index.js",
   "scripts": {
-    "lint": "markdownlint-cli2",
-    "format": "markdownlint-cli2 --fix"
+    "lint": "markdownlint-cli2 --fix"
   },
   "author": "philomagi <tooppoo56@gmail.com> (https://github.com/tooppoo)",
   "license": "MIT",
