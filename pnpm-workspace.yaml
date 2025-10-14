@@ -7,3 +7,6 @@ packages:
 injectWorkspacePackages: true # pnpm deploy のためtrue
 syncInjectedDepsAfterScripts:
   - build
+onlyBuiltDependencies:
+  - sharp
+  - workerd

@@ -23,6 +23,7 @@
   "workspaces": [
     "packages/adr",
     "packages/discord-bot",
+    "packages/document",
     "packages/front",
     "packages/e2e"
   ],
