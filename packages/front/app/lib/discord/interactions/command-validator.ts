@@ -30,7 +30,7 @@ export function validateVideoCommand(options?: Option[]): Validation<{
     }
   }
   try {
-    new URL(String(url))
+    new URL(url)
   } catch {
     return {
       ok: false,
@@ -38,14 +38,7 @@ export function validateVideoCommand(options?: Option[]): Validation<{
       message: messageFor('invalid_url'),
     }
   }
-  return {
-    ok: true,
-    data: {
-      url: String(url),
-      title: title as string | undefined,
-      description: description as string | undefined,
-    },
-  }
+  return { ok: true, data: { url, title, description } }
 }
 
 export function validateChallengeCommand(
@@ -76,17 +69,9 @@ export function validateChallengeCommand(
         message: messageFor('invalid_url'),
       }
     }
-    return {
-      ok: true,
-      data: {
-        kind: 'link',
-        title: String(title),
-        url: String(url),
-        description: description as string | undefined,
-      },
-    }
+    return { ok: true, data: { kind: 'link', title, url, description } }
   }
 
-  const text = (description as string | undefined) ?? ''
-  return { ok: true, data: { kind: 'text', title: String(title), text } }
+  const text = description ?? ''
+  return { ok: true, data: { kind: 'text', title, text } }
 }
