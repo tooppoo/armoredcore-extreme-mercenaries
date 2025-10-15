@@ -16,8 +16,8 @@ export async function verifyRequestSignature(
 
   const { DISCORD_PUBLIC_KEY: publicKeyHex } = env as SignatureEnv
 
-  // ローカル/テストで PUBLIC_KEY 未設定なら検証をスキップ（運用では必ず設定）
-  if (!publicKeyHex || publicKeyHex.trim().length === 0) return true
+  // 公開鍵が未設定の場合は検証失敗（セキュリティファースト）
+  if (!publicKeyHex || publicKeyHex.trim().length === 0) return false
 
   const message = new TextEncoder().encode(ts + rawBody)
   const signature = hexToBytes(sigHex)
