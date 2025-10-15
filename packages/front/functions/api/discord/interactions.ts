@@ -69,14 +69,17 @@ const channelListFrom = (value: unknown): string[] =>
     .filter((s) => s.length > 0)
 
 const getAllowedChannels = (env: DiscordEnv): Set<string> => {
-  const challenge = channelListFrom(
-    env.DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS,
-  )
-  const video = channelListFrom(env.DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS)
-  const merged = [...challenge, ...video]
-  const source =
-    merged.length > 0 ? merged : Array.from(DEFAULT_ALLOWED_CHANNELS)
-  return new Set(source)
+  const challengeChannels = env.DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS
+  const videoChannels = env.DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS
+
+  // 環境変数が両方とも未定義の場合のみ、ローカル開発用のデフォルト値にフォールバックする
+  if (challengeChannels === undefined && videoChannels === undefined) {
+    return new Set(DEFAULT_ALLOWED_CHANNELS)
+  }
+
+  const challenge = channelListFrom(challengeChannels)
+  const video = channelListFrom(videoChannels)
+  return new Set([...challenge, ...video])
 }
 
 const normalizeOptions = (
