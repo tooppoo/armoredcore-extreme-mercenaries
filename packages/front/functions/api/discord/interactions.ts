@@ -11,6 +11,7 @@ type DiscordEnv = Env & {
   DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS?: string
   DISCORD_DEV_ALERT_CHANNEL_ID?: string
   DISCORD_BOT_TOKEN?: string
+  DISCORD_PUBLIC_KEY?: string
 }
 
 type Result<T, E> = { ok: true; data: T } | { ok: false; error: E }

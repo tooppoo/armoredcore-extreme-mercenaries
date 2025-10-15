@@ -14,7 +14,7 @@ type RequestContext = Parameters<typeof onRequest>[0]
 
 const baseEnv: Partial<RequestContext['env']> = {
   ASSETS: {
-    fetch: (input: RequestInfo | URL, init?: RequestInfo) => fetch(input, init),
+    fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, init),
   },
   DISCORD_PUBLIC_KEY: 'test-key',
 }
