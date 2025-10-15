@@ -5,12 +5,18 @@ vi.mock('~/lib/discord/interactions/archive-repository', () => ({
   upsertVideo: async () => ({ ok: false, code: 'ogp_fetch_failed' as const }),
 }))
 
+// 署名検証をモック化
+vi.mock('~/lib/discord/interactions/verify-signature', () => ({
+  verifyRequestSignature: vi.fn().mockResolvedValue(true),
+}))
+
 type RequestContext = Parameters<typeof onRequest>[0]
 
 const baseEnv: Partial<RequestContext['env']> = {
   ASSETS: {
-    fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, init),
+    fetch: (input: RequestInfo | URL, init?: RequestInfo) => fetch(input, init),
   },
+  DISCORD_PUBLIC_KEY: 'test-key',
 }
 
 const makeCtx = (init?: {

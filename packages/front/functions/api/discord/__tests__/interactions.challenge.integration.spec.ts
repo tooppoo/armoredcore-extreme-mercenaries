@@ -12,10 +12,16 @@ vi.mock('~/lib/discord/interactions/archive-repository', () => ({
     upsertChallengeMock(...args),
 }))
 
+// 署名検証をモック化
+vi.mock('~/lib/discord/interactions/verify-signature', () => ({
+  verifyRequestSignature: vi.fn().mockResolvedValue(true),
+}))
+
 const baseEnv: Partial<RequestContext['env']> = {
   ASSETS: {
     fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, init),
   },
+  DISCORD_PUBLIC_KEY: 'test-key',
 }
 
 const makeCtx = (init?: {

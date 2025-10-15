@@ -1,5 +1,10 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { onRequest } from '../interactions'
+
+// 署名検証をモック化
+vi.mock('~/lib/discord/interactions/verify-signature', () => ({
+  verifyRequestSignature: vi.fn().mockResolvedValue(true),
+}))
 
 type RequestContext = Parameters<typeof onRequest>[0]
 
@@ -7,6 +12,7 @@ const baseEnv: Partial<RequestContext['env']> = {
   ASSETS: {
     fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, init),
   },
+  DISCORD_PUBLIC_KEY: 'test-key',
 }
 
 const makeCtx = (init?: {
@@ -64,7 +70,11 @@ describe('signature & channel guards', () => {
       'X-Signature-Ed25519': '00',
       'X-Signature-Timestamp': '0',
     }
-    const ctx = makeCtx({ body, headers })
+    const env = {
+      DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS: '111',
+      DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS: '222',
+    }
+    const ctx = makeCtx({ body, headers, env })
     const res = await onRequest(ctx)
     expect(res.status).toBe(403)
   })
