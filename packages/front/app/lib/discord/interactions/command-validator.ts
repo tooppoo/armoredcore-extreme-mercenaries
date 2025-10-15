@@ -41,9 +41,7 @@ export function validateVideoCommand(options?: Option[]): Validation<{
   return { ok: true, data: { url, title, description } }
 }
 
-export function validateChallengeCommand(
-  options?: Option[],
-): Validation<{
+export function validateChallengeCommand(options?: Option[]): Validation<{
   title: string
   url?: string
   description?: string
