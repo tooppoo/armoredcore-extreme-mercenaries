@@ -10,11 +10,7 @@
   ],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2023"],
-    "types": [
-      "@react-router/cloudflare",
-      "@react-router/node",
-      "vite/client"
-    ],
+    "types": ["@react-router/cloudflare", "@react-router/node", "vite/client"],
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",

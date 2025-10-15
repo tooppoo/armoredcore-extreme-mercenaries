@@ -6,7 +6,6 @@ import type {
   DiscordUserId,
 } from '~/lib/discord/interactions/archive-repository'
 
-
 type Result<T, E> = { ok: true; data: T } | { ok: false; error: E }
 
 const commandOptionSchema = z.object({
