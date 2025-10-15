@@ -6,7 +6,6 @@ import { saveVideoArchive } from '../../archives/video/upload/repository/save-vi
 import { overrideArchiveContents } from '../../archives/video/upload/override-archive-contents.server'
 
 import {
-  buildChallengeArchiveFromText,
   buildChallengeArchiveFromUrl,
 } from '../../archives/challenge/upload/functions.server'
 import { findChallengeArchiveByURL } from '../../archives/challenge/upload/repository/find-challenge-archive-by-url'
@@ -89,7 +88,7 @@ export async function upsertVideo(
 export async function upsertChallenge(
   args: {
     title: string
-    url?: string
+    url: string
     description?: string
     user: DiscordUser
   },
@@ -97,24 +96,14 @@ export async function upsertChallenge(
 ): Promise<UpsertResult> {
   try {
     const db = getDB(env)
-    const contents = await (async () => {
-      if (!args.url) {
-        return buildChallengeArchiveFromText({
-          type: 'text',
-          title: args.title,
-          text: args.description ?? '',
-          discord_user: { id: args.user.id, name: args.user.name },
-        })
-      }
-      return buildChallengeArchiveFromUrl(
-        { title: args.title, url: args.url, description: args.description },
-        {
-          env,
-          getOGPStrategy: getOgpStrategyProvider(env),
-          findArchiveByURL: findChallengeArchiveByURL(db),
-        },
-      )
-    })()
+    const contents = await buildChallengeArchiveFromUrl(
+      { title: args.title, url: args.url, description: args.description },
+      {
+        env,
+        getOGPStrategy: getOgpStrategyProvider(env),
+        findArchiveByURL: findChallengeArchiveByURL(db),
+      },
+    )
     await saveChallengeArchive(
       {
         contents,

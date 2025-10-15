@@ -43,7 +43,7 @@ export function validateVideoCommand(options?: Option[]): Validation<{
 
 export function validateChallengeCommand(options?: Option[]): Validation<{
   title: string
-  url?: string
+  url: string
   description?: string
 }> {
   const title = find(options, 'title')
@@ -57,19 +57,22 @@ export function validateChallengeCommand(options?: Option[]): Validation<{
       message: messageFor('missing_required_field'),
     }
   }
-
-  if (isNonEmpty(url)) {
-    try {
-      new URL(String(url))
-    } catch {
-      return {
-        ok: false,
-        code: 'invalid_url',
-        message: messageFor('invalid_url'),
-      }
+  if (!isNonEmpty(url)) {
+    return {
+      ok: false,
+      code: 'missing_required_field',
+      message: messageFor('missing_required_field'),
     }
-    return { ok: true, data: { title, url, description } }
   }
 
-  return { ok: true, data: { title, description } }
+  try {
+    new URL(String(url))
+  } catch {
+    return {
+      ok: false,
+      code: 'invalid_url',
+      message: messageFor('invalid_url'),
+    }
+  }
+  return { ok: true, data: { title, url, description } }
 }
