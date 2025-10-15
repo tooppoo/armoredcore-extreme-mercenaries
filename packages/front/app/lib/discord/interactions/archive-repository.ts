@@ -38,6 +38,20 @@ export type UpsertResult =
       code: 'duplicate' | 'unsupported' | 'ogp_fetch_failed' | 'unexpected'
     }
 
+function handleArchiveError(error: unknown): UpsertResult {
+  const err = error as ArchiveError
+  switch (err?.code) {
+    case duplicatedUrl:
+      return { ok: false, code: 'duplicate' }
+    case unsupportedUrl:
+      return { ok: false, code: 'unsupported' }
+    case failedGetOGP:
+      return { ok: false, code: 'ogp_fetch_failed' }
+    default:
+      return { ok: false, code: 'unexpected' }
+  }
+}
+
 export async function upsertVideo(
   args: {
     url: string
@@ -68,17 +82,7 @@ export async function upsertVideo(
     )
     return { ok: true }
   } catch (error: unknown) {
-    const err = error as ArchiveError
-    switch (err?.code) {
-      case duplicatedUrl:
-        return { ok: false, code: 'duplicate' }
-      case unsupportedUrl:
-        return { ok: false, code: 'unsupported' }
-      case failedGetOGP:
-        return { ok: false, code: 'ogp_fetch_failed' }
-      default:
-        return { ok: false, code: 'unexpected' }
-    }
+    return handleArchiveError(error)
   }
 }
 
@@ -128,16 +132,6 @@ export async function upsertChallenge(
     )
     return { ok: true }
   } catch (error: unknown) {
-    const err = error as ArchiveError
-    switch (err?.code) {
-      case duplicatedUrl:
-        return { ok: false, code: 'duplicate' }
-      case unsupportedUrl:
-        return { ok: false, code: 'unsupported' }
-      case failedGetOGP:
-        return { ok: false, code: 'ogp_fetch_failed' }
-      default:
-        return { ok: false, code: 'unexpected' }
-    }
+    return handleArchiveError(error)
   }
 }
