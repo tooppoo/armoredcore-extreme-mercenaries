@@ -6,13 +6,6 @@ import type {
   DiscordUserId,
 } from '~/lib/discord/interactions/archive-repository'
 
-type DiscordEnv = Env & {
-  DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS?: string
-  DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS?: string
-  DISCORD_DEV_ALERT_CHANNEL_ID?: string
-  DISCORD_BOT_TOKEN?: string
-  DISCORD_PUBLIC_KEY?: string
-}
 
 type Result<T, E> = { ok: true; data: T } | { ok: false; error: E }
 
@@ -69,7 +62,7 @@ const channelListFrom = (value: unknown): string[] =>
     .map((s) => s.trim())
     .filter((s) => s.length > 0)
 
-const getAllowedChannels = (env: DiscordEnv): Set<string> => {
+const getAllowedChannels = (env: Env): Set<string> => {
   const challengeChannels = env.DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS
   const videoChannels = env.DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS
 
@@ -150,7 +143,7 @@ const respondWithError = async (code: ErrorCode, status = 200) => {
   )
 }
 
-export const onRequest: PagesFunction<DiscordEnv> = async (ctx) => {
+export const onRequest: PagesFunction<Env> = async (ctx) => {
   const { request, env } = ctx
   const pagesEnv = env
 
