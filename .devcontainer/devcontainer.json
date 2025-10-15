@@ -1,6 +1,6 @@
 {
   "name": "Node 22.19.0 + TypeScript",
-  "image": "node:22.19.0-bookworm",
+  "image": "node:22.20.0-bookworm",
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
       "username": "node",

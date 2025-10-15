@@ -1,6 +1,6 @@
 
 # buildのための共通イメージ
-FROM node:22.19.0-slim@sha256:4a4884e8a44826194dff92ba316264f392056cbe243dcc9fd3551e71cea02b90 AS base-build
+FROM node:22.20.0-slim@sha256:c407baf6e71f4127777b0b660b162e3c88c1974067b1be9f1f962709ea817d59 AS base-build
 
 ARG PNPM_STORE_DIR=/root/.pnpm-store
 
