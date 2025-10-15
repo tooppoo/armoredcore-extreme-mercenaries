@@ -5,9 +5,7 @@ import { findVideoArchiveByURL } from '../../archives/video/upload/repository/fi
 import { saveVideoArchive } from '../../archives/video/upload/repository/save-video-archive.server'
 import { overrideArchiveContents } from '../../archives/video/upload/override-archive-contents.server'
 
-import {
-  buildChallengeArchiveFromUrl,
-} from '../../archives/challenge/upload/functions.server'
+import { buildChallengeArchiveFromUrl } from '../../archives/challenge/upload/functions.server'
 import { findChallengeArchiveByURL } from '../../archives/challenge/upload/repository/find-challenge-archive-by-url'
 import { saveChallengeArchive } from '../../archives/challenge/upload/repository/save-challenge-archive.server'
 
