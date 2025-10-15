@@ -26,6 +26,9 @@ reports/
 # AI
 .codex/
 !.codex/prompts/*
+.claude/
+!.claude/agents
+!.claude/commands
 
 # other
 tmp/
