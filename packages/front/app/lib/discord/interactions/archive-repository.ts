@@ -87,30 +87,22 @@ export async function upsertVideo(
 }
 
 export async function upsertChallenge(
-  args:
-    | {
-        type: 'link'
-        url: string
-        title: string
-        description?: string
-        user: DiscordUser
-      }
-    | {
-        type: 'text'
-        title: string
-        text: string
-        user: DiscordUser
-      },
+  args: {
+    title: string
+    url?: string
+    description?: string
+    user: DiscordUser
+  },
   env: Env,
 ): Promise<UpsertResult> {
   try {
     const db = getDB(env)
     const contents = await (async () => {
-      if (args.type === 'text') {
+      if (!args.url) {
         return buildChallengeArchiveFromText({
           type: 'text',
           title: args.title,
-          text: args.text,
+          text: args.description ?? '',
           discord_user: { id: args.user.id, name: args.user.name },
         })
       }

@@ -93,6 +93,9 @@ describe('/archive-challenge integration', () => {
     expect(json?.data?.flags ?? 0).not.toBe(64)
     expect(upsertChallengeMock).toHaveBeenCalledWith(
       expect.objectContaining({
+        title: 'タイトル',
+        url: 'https://example.com/page',
+        description: undefined,
         user: { id: '7890', name: '挑戦者' },
       }),
       expect.anything(),
@@ -108,7 +111,7 @@ describe('/archive-challenge integration', () => {
         name: 'archive-challenge',
         options: [
           { name: 'title', type: 3, value: '別タイトル' },
-          { name: 'text', type: 3, value: 'メモ' },
+          { name: 'description', type: 3, value: 'メモ' },
         ],
       },
       member: {
@@ -126,6 +129,9 @@ describe('/archive-challenge integration', () => {
     await onRequest(ctx)
     expect(upsertChallengeMock).toHaveBeenCalledWith(
       expect.objectContaining({
+        title: '別タイトル',
+        url: undefined,
+        description: 'メモ',
         user: { id: '4444', name: 'fallback-name' },
       }),
       expect.anything(),

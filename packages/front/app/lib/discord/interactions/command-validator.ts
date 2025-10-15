@@ -43,10 +43,11 @@ export function validateVideoCommand(options?: Option[]): Validation<{
 
 export function validateChallengeCommand(
   options?: Option[],
-): Validation<
-  | { kind: 'link'; title: string; url: string; description?: string }
-  | { kind: 'text'; title: string; text: string }
-> {
+): Validation<{
+  title: string
+  url?: string
+  description?: string
+}> {
   const title = find(options, 'title')
   const url = find(options, 'url')
   const description = find(options, 'description')
@@ -69,9 +70,8 @@ export function validateChallengeCommand(
         message: messageFor('invalid_url'),
       }
     }
-    return { ok: true, data: { kind: 'link', title, url, description } }
+    return { ok: true, data: { title, url, description } }
   }
 
-  const text = description ?? ''
-  return { ok: true, data: { kind: 'text', title, text } }
+  return { ok: true, data: { title, description } }
 }

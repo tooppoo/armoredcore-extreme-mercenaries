@@ -293,27 +293,18 @@ export const onRequest: PagesFunction<DiscordEnv> = async (ctx) => {
       const { upsertChallenge } = await import(
         '~/lib/discord/interactions/archive-repository'
       )
-      const result = await (async () => {
-        if (v.data.kind === 'link')
-          return upsertChallenge(
-            {
-              type: 'link',
-              url: v.data.url,
-              title: v.data.title,
-              description: v.data.description,
-              user,
-            },
-            pagesEnv,
-          )
-        return upsertChallenge(
-          { type: 'text', title: v.data.title, text: v.data.text, user },
-          pagesEnv,
-        )
-      })()
+      const result = await upsertChallenge(
+        {
+          title: v.data.title,
+          url: v.data.url,
+          description: v.data.description,
+          user,
+        },
+        pagesEnv,
+      )
       if (result.ok) {
         log.info('challenge_upsert_success', {
           result: 'ok',
-          mode: v.data.kind,
         })
         return json(
           { type: 5, data: { content: 'アーカイブに登録しました' } },
