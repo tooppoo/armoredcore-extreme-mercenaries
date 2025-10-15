@@ -13,8 +13,7 @@
     "types": [
       "@react-router/cloudflare",
       "@react-router/node",
-      "vite/client",
-      "@cloudflare/workers-types/2023-07-01"
+      "vite/client"
     ],
     "isolatedModules": true,
     "esModuleInterop": true,

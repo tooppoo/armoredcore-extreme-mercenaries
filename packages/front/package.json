@@ -35,9 +35,9 @@
     "secrets:gen": "openssl rand -base64 32"
   },
   "dependencies": {
-    "@noble/ed25519": "3.0.0",
     "@date-fns/tz": "1.4.1",
     "@heroicons/react": "2.2.0",
+    "@noble/ed25519": "3.0.0",
     "@react-router/cloudflare": "7.9.2",
     "date-fns": "4.1.0",
     "drizzle-orm": "0.44.5",
@@ -54,7 +54,6 @@
     "zod": "4.1.11"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20250922.0",
     "@fast-check/vitest": "0.2.2",
     "@react-router/dev": "7.9.2",
     "@react-router/node": "7.9.2",
