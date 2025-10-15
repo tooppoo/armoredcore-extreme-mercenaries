@@ -111,6 +111,7 @@ describe('/archive-challenge integration', () => {
         name: 'archive-challenge',
         options: [
           { name: 'title', type: 3, value: '別タイトル' },
+          { name: 'url', type: 3, value: 'https://example.com/page' },
           { name: 'description', type: 3, value: 'メモ' },
         ],
       },
@@ -130,7 +131,7 @@ describe('/archive-challenge integration', () => {
     expect(upsertChallengeMock).toHaveBeenCalledWith(
       expect.objectContaining({
         title: '別タイトル',
-        url: undefined,
+        url: 'https://example.com/page',
         description: 'メモ',
         user: { id: '4444', name: 'fallback-name' },
       }),
