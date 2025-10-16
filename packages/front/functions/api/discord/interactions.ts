@@ -19,7 +19,9 @@ const validateEnvironment = async (env: Env): Promise<void> => {
     logger.fatal(
       'DISCORD_PUBLIC_KEY is not set. Application cannot process requests.',
     )
-    throw new Error('Required environment variable DISCORD_PUBLIC_KEY is missing')
+    throw new Error(
+      'Required environment variable DISCORD_PUBLIC_KEY is missing',
+    )
   }
 
   envValidated = true
@@ -81,7 +83,9 @@ const getAllowedChannels = (
   command: 'archive-video' | 'archive-challenge',
 ): Set<string> => {
   if (command === 'archive-video') {
-    return new Set(channelListFrom(env.DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS))
+    return new Set(
+      channelListFrom(env.DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS),
+    )
   }
   if (command === 'archive-challenge') {
     return new Set(
@@ -305,10 +309,7 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
   if (!commandName) return respondWithError('bad_request')
 
   // コマンドごとに許可されたチャンネルをチェック
-  if (
-    commandName === 'archive-video' ||
-    commandName === 'archive-challenge'
-  ) {
+  if (commandName === 'archive-video' || commandName === 'archive-challenge') {
     const allowed = getAllowedChannels(pagesEnv, commandName)
     const channelId = body.channel_id
     if (channelId && !allowed.has(String(channelId)))
