@@ -1,50 +1,11 @@
 import { describe, it, expect, vi } from 'vitest'
 import { onRequest } from '../interactions'
+import { makeCtx } from './helpers'
 
 // 署名検証をモック化
 vi.mock('~/lib/discord/interactions/verify-signature', () => ({
   verifyRequestSignature: vi.fn().mockResolvedValue(true),
 }))
-
-type RequestContext = Parameters<typeof onRequest>[0]
-
-const baseEnv: Partial<RequestContext['env']> = {
-  ASSETS: {
-    fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, init),
-  },
-}
-
-const makeCtx = (init?: {
-  method?: string
-  body?: unknown
-  rawBody?: string
-  headers?: HeadersInit
-  env?: Partial<RequestContext['env']>
-}) => {
-  const method = init?.method ?? 'POST'
-  const body = (() => {
-    if (init?.rawBody !== undefined) return init.rawBody
-    if (init?.body !== undefined) return JSON.stringify(init.body)
-    return undefined
-  })()
-  const headers = new Headers(init?.headers)
-  const req = new Request('http://localhost/api/discord/interactions', {
-    method,
-    body,
-    headers,
-  })
-  const env = { ...baseEnv, ...init?.env } as RequestContext['env']
-  return {
-    request: req as RequestContext['request'],
-    env,
-    params: {} as RequestContext['params'],
-    data: {} as RequestContext['data'],
-    waitUntil: () => {},
-    next: () => Promise.resolve(new Response('NEXT')),
-    functionPath: '',
-    passThroughOnException: () => {},
-  } satisfies RequestContext
-}
 
 describe('Discord Interactions contract', () => {
   it('responds PONG to PING (type=1)', async () => {

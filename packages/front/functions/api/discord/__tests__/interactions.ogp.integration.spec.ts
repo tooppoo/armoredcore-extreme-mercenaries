@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { onRequest } from '../interactions'
+import { makeCtx } from './helpers'
 
 vi.mock('~/lib/discord/interactions/archive-repository', () => ({
   upsertVideo: async () => ({ ok: false, code: 'ogp_fetch_failed' as const }),
@@ -9,39 +10,6 @@ vi.mock('~/lib/discord/interactions/archive-repository', () => ({
 vi.mock('~/lib/discord/interactions/verify-signature', () => ({
   verifyRequestSignature: vi.fn().mockResolvedValue(true),
 }))
-
-type RequestContext = Parameters<typeof onRequest>[0]
-
-const baseEnv: Partial<RequestContext['env']> = {
-  ASSETS: {
-    fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, init),
-  },
-  DISCORD_PUBLIC_KEY: 'test-key',
-}
-
-const makeCtx = (init?: {
-  body?: unknown
-  headers?: HeadersInit
-  env?: Partial<RequestContext['env']>
-}) => {
-  const headers = new Headers(init?.headers)
-  const req = new Request('http://localhost/api/discord/interactions', {
-    method: 'POST',
-    body: JSON.stringify(init?.body ?? {}),
-    headers,
-  })
-  const env = { ...baseEnv, ...init?.env } as RequestContext['env']
-  return {
-    request: req as RequestContext['request'],
-    env,
-    params: {} as RequestContext['params'],
-    data: {} as RequestContext['data'],
-    waitUntil: () => {},
-    next: () => Promise.resolve(new Response('NEXT')),
-    functionPath: '',
-    passThroughOnException: () => {},
-  } satisfies RequestContext
-}
 
 describe('OGP fallback', () => {
   it('sets fallback message when OGP fetching fails', async () => {

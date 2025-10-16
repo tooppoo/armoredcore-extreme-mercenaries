@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { onRequest } from '../interactions'
-
-type RequestContext = Parameters<typeof onRequest>[0]
+import { makeCtx } from './helpers'
 type UpsertVideo =
   (typeof import('~/lib/discord/interactions/archive-repository'))['upsertVideo']
 
@@ -15,37 +14,6 @@ vi.mock('~/lib/discord/interactions/archive-repository', () => ({
 vi.mock('~/lib/discord/interactions/verify-signature', () => ({
   verifyRequestSignature: vi.fn().mockResolvedValue(true),
 }))
-
-const baseEnv: Partial<RequestContext['env']> = {
-  ASSETS: {
-    fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, init),
-  },
-  DISCORD_PUBLIC_KEY: 'test-key',
-}
-
-const makeCtx = (init?: {
-  body?: unknown
-  headers?: HeadersInit
-  env?: Partial<RequestContext['env']>
-}) => {
-  const headers = new Headers(init?.headers)
-  const req = new Request('http://localhost/api/discord/interactions', {
-    method: 'POST',
-    body: JSON.stringify(init?.body ?? {}),
-    headers,
-  })
-  const env = { ...baseEnv, ...init?.env } as RequestContext['env']
-  return {
-    request: req as RequestContext['request'],
-    env,
-    params: {} as RequestContext['params'],
-    data: {} as RequestContext['data'],
-    waitUntil: () => {},
-    next: () => Promise.resolve(new Response('NEXT')),
-    functionPath: '',
-    passThroughOnException: () => {},
-  } satisfies RequestContext
-}
 
 describe('/archive-video duplicate handling', () => {
   beforeEach(() => {

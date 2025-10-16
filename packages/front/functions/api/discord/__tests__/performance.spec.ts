@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { performance } from 'node:perf_hooks'
 import { onRequest } from '../interactions'
+import { makeCtx as makeCtxBase } from './helpers'
 
 type UpsertVideo =
   (typeof import('~/lib/discord/interactions/archive-repository'))['upsertVideo']
@@ -31,18 +32,11 @@ vi.mock('~/lib/discord/interactions/archive-repository', () => ({
   upsertChallenge: vi.fn(async () => ({ ok: true as const })),
 }))
 
-type RequestContext = Parameters<typeof onRequest>[0]
-
-const baseEnv: Partial<RequestContext['env']> = {
-  ASSETS: {
-    fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, init),
-  },
-}
-
+// パフォーマンステスト用のローカルラッパー（デフォルトボディを設定）
 const makeCtx = (init?: {
   id: string
   body?: unknown
-  env?: Partial<RequestContext['env']>
+  env?: Parameters<typeof makeCtxBase>[0]['env']
 }) => {
   const body = init?.body ?? {
     type: 2,
@@ -54,26 +48,16 @@ const makeCtx = (init?: {
     },
     member: { user: { id: 'user-perf', username: 'perf-user' } },
   }
-  const headers = new Headers({
-    'X-Signature-Ed25519': 'sig',
-    'X-Signature-Timestamp': 'ts',
-  })
-  const req = new Request('http://localhost/api/discord/interactions', {
+  return makeCtxBase({
+    id: init?.id,
     method: 'POST',
-    body: JSON.stringify(body),
-    headers,
+    body,
+    headers: {
+      'X-Signature-Ed25519': 'sig',
+      'X-Signature-Timestamp': 'ts',
+    },
+    env: init?.env,
   })
-  const env = { ...baseEnv, ...init?.env } as RequestContext['env']
-  return {
-    request: req as RequestContext['request'],
-    env,
-    params: {} as RequestContext['params'],
-    data: {} as RequestContext['data'],
-    waitUntil: () => {},
-    next: () => Promise.resolve(new Response('NEXT')),
-    functionPath: '',
-    passThroughOnException: () => {},
-  } satisfies RequestContext
 }
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
