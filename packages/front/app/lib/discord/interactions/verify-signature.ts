@@ -1,5 +1,4 @@
 import * as ed from '@noble/ed25519'
-import { logger } from '~/lib/observability/logger'
 
 const hexToBytes = (hex: string): Uint8Array =>
   new Uint8Array((hex.match(/.{1,2}/g) || []).map((b) => parseInt(b, 16)))
@@ -16,10 +15,8 @@ export async function verifyRequestSignature(
   const { DISCORD_PUBLIC_KEY: publicKeyHex } = env
 
   // 公開鍵が未設定の場合は検証失敗（セキュリティファースト）
+  // 注: 環境変数の検証は起動時に実行されるため、ここでは到達しないはず
   if (!publicKeyHex || publicKeyHex.trim().length === 0) {
-    logger.warn(
-      'DISCORD_PUBLIC_KEY is not set. Signature verification will always fail.',
-    )
     return false
   }
 

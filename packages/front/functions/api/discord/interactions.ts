@@ -8,6 +8,23 @@ import type {
 
 type Result<T, E> = { ok: true; data: T } | { ok: false; error: E }
 
+let envValidated = false
+
+const validateEnvironment = async (env: Env): Promise<void> => {
+  if (envValidated) return
+
+  const { logger } = await import('~/lib/observability/logger')
+
+  if (!env.DISCORD_PUBLIC_KEY?.trim()) {
+    logger.fatal(
+      'DISCORD_PUBLIC_KEY is not set. Application cannot process requests.',
+    )
+    throw new Error('Required environment variable DISCORD_PUBLIC_KEY is missing')
+  }
+
+  envValidated = true
+}
+
 const commandOptionSchema = z.object({
   name: z.string(),
   type: z.number(),
@@ -59,13 +76,19 @@ const channelListFrom = (value: unknown): string[] =>
     .map((s) => s.trim())
     .filter((s) => s.length > 0)
 
-const getAllowedChannels = (env: Env): Set<string> => {
-  const challengeChannels = env.DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS
-  const videoChannels = env.DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS
-
-  const challenge = channelListFrom(challengeChannels)
-  const video = channelListFrom(videoChannels)
-  return new Set([...challenge, ...video])
+const getAllowedChannels = (
+  env: Env,
+  command: 'archive-video' | 'archive-challenge',
+): Set<string> => {
+  if (command === 'archive-video') {
+    return new Set(channelListFrom(env.DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS))
+  }
+  if (command === 'archive-challenge') {
+    return new Set(
+      channelListFrom(env.DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS),
+    )
+  }
+  return new Set()
 }
 
 const normalizeOptions = (
@@ -252,6 +275,9 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
   const { request, env } = ctx
   const pagesEnv = env
 
+  // 環境変数の検証（初回のみ実行）
+  await validateEnvironment(pagesEnv)
+
   const rawBody = await request.text()
   const parsed = parseInteraction(rawBody)
   if (!parsed.ok) return respondWithError(parsed.error)
@@ -275,21 +301,27 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
 
   if (body.type === 1) return json({ type: 1 }, { status: 200 })
 
-  const allowed = getAllowedChannels(pagesEnv)
-  const channelId = body.channel_id
-  if (channelId && !allowed.has(String(channelId)))
-    return json(
-      {
-        type: 4,
-        data: {
-          content: 'このチャンネルではコマンドを使用できません。',
-        },
-      },
-      { status: 200 },
-    )
-
   const commandName = body.data?.name
   if (!commandName) return respondWithError('bad_request')
+
+  // コマンドごとに許可されたチャンネルをチェック
+  if (
+    commandName === 'archive-video' ||
+    commandName === 'archive-challenge'
+  ) {
+    const allowed = getAllowedChannels(pagesEnv, commandName)
+    const channelId = body.channel_id
+    if (channelId && !allowed.has(String(channelId)))
+      return json(
+        {
+          type: 4,
+          data: {
+            content: 'このチャンネルではコマンドを使用できません。',
+          },
+        },
+        { status: 200 },
+      )
+  }
 
   const options = normalizeOptions(body.data?.options)
   const correlationId = body.id
