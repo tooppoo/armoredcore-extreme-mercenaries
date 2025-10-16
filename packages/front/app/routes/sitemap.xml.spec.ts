@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import type { D1Database } from '@cloudflare/workers-types'
 import { loader } from './sitemap.xml'
 
 vi.mock('~/lib/archives/challenge/revision/repository', () => ({
