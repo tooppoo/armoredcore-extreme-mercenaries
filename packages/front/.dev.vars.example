@@ -1,4 +1,5 @@
 TZ=Asia/Tokyo
+APP_ENV=local
 
 # auth
 AUTH_UPLOAD_ARCHIVE=<secret>

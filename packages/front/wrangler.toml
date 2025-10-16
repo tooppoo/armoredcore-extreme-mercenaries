@@ -18,6 +18,7 @@ pages_build_output_dir = "./build/client"
 # - https://developers.cloudflare.com/pages/functions/bindings/#secrets
 [vars]
 TZ = "Asia/Tokyo"
+APP_ENV = "local"
 PNPM_VERSION = "10.17.0"
 
 # Bind the Workers AI model catalog. Run machine learning models, powered by serverless GPUs, on Cloudflare’s global network
@@ -73,6 +74,7 @@ migrations_dir = "./app/db/migrations"
 
 [env.preview.vars]
 TZ = "Asia/Tokyo"
+APP_ENV = "production"
 DISCORD_LINK_INVITE = "https://discord.gg/F9HkPsQ37J"
 DISCORD_LINK_QUESTION = "https://discord.com/channels/1240446809906610236/1240455428589223996"
 DISCORD_LINK_SUGGESTION = "https://discord.com/channels/1240446809906610236/1240455802272092211"
@@ -94,6 +96,7 @@ migrations_dir = "./app/db/migrations"
 
 [env.production.vars]
 TZ = "Asia/Tokyo"
+APP_ENV = "production"
 DISCORD_LINK_INVITE = "https://discord.gg/F9HkPsQ37J"
 DISCORD_LINK_QUESTION = "https://discord.com/channels/1240446809906610236/1240455428589223996"
 DISCORD_LINK_SUGGESTION = "https://discord.com/channels/1240446809906610236/1240455802272092211"
