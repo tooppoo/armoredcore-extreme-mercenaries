@@ -63,11 +63,6 @@ const getAllowedChannels = (env: Env): Set<string> => {
   const challengeChannels = env.DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS
   const videoChannels = env.DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS
 
-  // 環境変数が両方とも未定義の場合、許可チャンネルなし
-  if (challengeChannels === undefined && videoChannels === undefined) {
-    return new Set()
-  }
-
   const challenge = channelListFrom(challengeChannels)
   const video = channelListFrom(videoChannels)
   return new Set([...challenge, ...video])
@@ -116,15 +111,14 @@ const extractUser = (
     candidateUser?.global_name,
     candidateUser?.username,
   ]
-  const resolvedName = nameCandidates.find((name) => name?.trim()) ?? 'unknown'
-  const normalizedName =
-    resolvedName.trim().length > 0 ? resolvedName.trim() : 'unknown'
+  const resolvedName =
+    nameCandidates.map((name) => name?.trim()).find((name) => name) ?? 'unknown'
 
   return {
     ok: true,
     data: {
       id: asDiscordUserId(rawId),
-      name: asDiscordDisplayName(normalizedName),
+      name: asDiscordDisplayName(resolvedName),
     },
   }
 }

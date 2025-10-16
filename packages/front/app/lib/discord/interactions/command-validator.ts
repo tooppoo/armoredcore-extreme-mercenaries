@@ -66,7 +66,7 @@ export function validateChallengeCommand(options?: Option[]): Validation<{
   }
 
   try {
-    new URL(String(url))
+    new URL(url)
   } catch {
     return {
       ok: false,
