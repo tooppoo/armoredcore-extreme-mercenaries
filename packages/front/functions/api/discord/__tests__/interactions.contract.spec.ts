@@ -1,5 +1,10 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { onRequest } from '../interactions'
+
+// 署名検証をモック化
+vi.mock('~/lib/discord/interactions/verify-signature', () => ({
+  verifyRequestSignature: vi.fn().mockResolvedValue(true),
+}))
 
 type RequestContext = Parameters<typeof onRequest>[0]
 
@@ -43,7 +48,13 @@ const makeCtx = (init?: {
 
 describe('Discord Interactions contract', () => {
   it('responds PONG to PING (type=1)', async () => {
-    const ctx = makeCtx({ body: { type: 1 } })
+    const ctx = makeCtx({
+      body: { type: 1 },
+      headers: {
+        'X-Signature-Ed25519': 'sig',
+        'X-Signature-Timestamp': 'ts',
+      },
+    })
     const res = await onRequest(ctx)
     expect(res.status).toBe(200)
     const json = (await res
@@ -63,7 +74,7 @@ describe('Discord Interactions contract', () => {
       },
     })
     const res = await onRequest(ctx)
-    expect(res.status).toBe(200)
+    expect(res.status).toBe(401)
     const json = (await res
       .clone()
       .json()

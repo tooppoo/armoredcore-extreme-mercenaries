@@ -1,6 +1,6 @@
 ---
 name: ui-designer
-description: When design or implenents Web UI
+description: When design or implements Web UI
 model: sonnet
 color: blue
 ---

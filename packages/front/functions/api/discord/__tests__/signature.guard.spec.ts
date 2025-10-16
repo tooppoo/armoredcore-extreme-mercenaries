@@ -50,7 +50,7 @@ describe('signature & channel guards', () => {
       },
     })
     const res = await onRequest(ctx)
-    expect(res.status).toBe(200)
+    expect(res.status).toBe(401)
     const json = (await res
       .clone()
       .json()
@@ -76,7 +76,15 @@ describe('signature & channel guards', () => {
     }
     const ctx = makeCtx({ body, headers, env })
     const res = await onRequest(ctx)
-    expect(res.status).toBe(403)
+    expect(res.status).toBe(200)
+    const json = (await res
+      .clone()
+      .json()
+      .catch(() => null)) as { type?: number; data?: { content?: string } }
+    expect(json).toEqual({
+      type: 4,
+      data: { content: 'このチャンネルではコマンドを使用できません。' },
+    })
   })
 
   it('allows commands when channel is listed in either allowed set', async () => {

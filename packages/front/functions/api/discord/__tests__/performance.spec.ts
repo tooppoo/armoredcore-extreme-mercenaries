@@ -87,8 +87,7 @@ const percentile = (samples: number[], p: number) => {
 }
 
 beforeEach(() => {
-  upsertVideoImpl = async (input) => {
-    if (!input.url) throw new Error('url is required')
+  upsertVideoImpl = async () => {
     return { ok: true }
   }
 })
@@ -96,9 +95,8 @@ beforeEach(() => {
 describe('interaction performance budget', () => {
   it('keeps OGP fallback responses under 2s p95', async () => {
     const samples: number[] = []
-    upsertVideoImpl = async (input, env) => {
+    upsertVideoImpl = async (input) => {
       if (!input.url) throw new Error('url is required')
-      void env
       await delay(15)
       return { ok: false, code: 'ogp_fetch_failed' }
     }
@@ -117,9 +115,8 @@ describe('interaction performance budget', () => {
 
   it('keeps successful upsert operations under 2s p95', async () => {
     const samples: number[] = []
-    upsertVideoImpl = async (input, env) => {
+    upsertVideoImpl = async (input) => {
       if (!input.url) throw new Error('url is required')
-      void env
       await delay(10)
       return { ok: true }
     }

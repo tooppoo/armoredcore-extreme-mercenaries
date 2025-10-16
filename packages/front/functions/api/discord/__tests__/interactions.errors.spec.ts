@@ -108,7 +108,7 @@ describe('error handling and logging', () => {
       .json()
       .catch(() => null)) as { type?: number; data?: { content?: string } }
 
-    expect(res.status).toBe(200)
+    expect(res.status).toBe(401)
     expect(json).toEqual({ type: 4, data: { content: '認証に失敗しました' } })
     expect(infoMock).not.toHaveBeenCalled()
     expect(warnMock).not.toHaveBeenCalled()

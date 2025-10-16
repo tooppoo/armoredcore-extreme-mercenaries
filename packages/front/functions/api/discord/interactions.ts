@@ -151,26 +151,36 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
   if (!parsed.ok) return respondWithError(parsed.error)
 
   const body = parsed.data
-  if (body.type === 1) return json({ type: 1 }, { status: 200 })
 
+  // 署名検証をPING判定より前に実行
   const sig = request.headers.get('X-Signature-Ed25519')
   const ts = request.headers.get('X-Signature-Timestamp')
-  if (!sig || !ts) return respondWithError('unauthorized')
+  if (!sig || !ts) return respondWithError('unauthorized', 401)
 
   try {
     const { verifyRequestSignature } = await import(
       '~/lib/discord/interactions/verify-signature'
     )
     const ok = await verifyRequestSignature(request, pagesEnv, rawBody)
-    if (!ok) return respondWithError('unauthorized')
+    if (!ok) return respondWithError('unauthorized', 401)
   } catch {
-    return respondWithError('unauthorized')
+    return respondWithError('unauthorized', 401)
   }
+
+  if (body.type === 1) return json({ type: 1 }, { status: 200 })
 
   const allowed = getAllowedChannels(pagesEnv)
   const channelId = body.channel_id
   if (channelId && !allowed.has(String(channelId)))
-    return respondWithError('forbidden', 403)
+    return json(
+      {
+        type: 4,
+        data: {
+          content: 'このチャンネルではコマンドを使用できません。',
+        },
+      },
+      { status: 200 },
+    )
 
   const commandName = body.data?.name
   if (!commandName) return respondWithError('bad_request')
@@ -299,7 +309,7 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
           result: 'ok',
         })
         return json(
-          { type: 5, data: { content: 'アーカイブに登録しました' } },
+          { type: 4, data: { content: 'アーカイブに登録しました' } },
           { status: 200 },
         )
       }
