@@ -36,7 +36,7 @@ vi.mock('~/lib/discord/interactions/archive-repository', () => ({
 const makeCtx = (init?: {
   id: string
   body?: unknown
-  env?: Parameters<typeof makeCtxBase>[0]['env']
+  env?: NonNullable<Parameters<typeof makeCtxBase>[0]>['env']
 }) => {
   const body = init?.body ?? {
     type: 2,
