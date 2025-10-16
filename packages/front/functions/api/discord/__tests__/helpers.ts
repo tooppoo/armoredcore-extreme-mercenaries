@@ -15,7 +15,6 @@ export const baseEnv: Partial<RequestContext['env']> = {
  * テスト用のリクエストコンテキストを生成する共通ヘルパー関数
  *
  * @param init - リクエストの初期化オプション
- * @param init.id - リクエストID（オプショナル）
  * @param init.method - HTTPメソッド（デフォルト: 'POST'）
  * @param init.body - リクエストボディ（オブジェクト）
  * @param init.rawBody - 生のリクエストボディ（文字列、bodyより優先）
