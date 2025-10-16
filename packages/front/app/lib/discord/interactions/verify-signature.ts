@@ -16,7 +16,9 @@ export async function verifyRequestSignature(
 
   // 公開鍵が未設定の場合は検証失敗（セキュリティファースト）
   if (!publicKeyHex || publicKeyHex.trim().length === 0) {
-    console.warn('DISCORD_PUBLIC_KEY is not set. Signature verification will always fail.')
+    console.warn(
+      'DISCORD_PUBLIC_KEY is not set. Signature verification will always fail.',
+    )
     return false
   }
 

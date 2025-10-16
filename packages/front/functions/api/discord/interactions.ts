@@ -141,7 +141,9 @@ type CommandConfig<T> = {
 }
 
 type Option = { name: string; type: number; value?: string }
-type Validation<T> = { ok: true; data: T } | { ok: false; code: ErrorCode; message: string }
+type Validation<T> =
+  | { ok: true; data: T }
+  | { ok: false; code: ErrorCode; message: string }
 type UpsertResult =
   | { ok: true }
   | {
@@ -162,8 +164,13 @@ const handleArchiveCommand = async <T>(
   const log = logger.withCorrelation(correlationId)
 
   if (!validation.ok) {
-    log.warn(`${config.logPrefix}_command_invalid`, { reason: validation.message })
-    return json({ type: 4, data: { content: validation.message } }, { status: 200 })
+    log.warn(`${config.logPrefix}_command_invalid`, {
+      reason: validation.message,
+    })
+    return json(
+      { type: 4, data: { content: validation.message } },
+      { status: 200 },
+    )
   }
 
   try {
@@ -201,7 +208,9 @@ const handleArchiveCommand = async <T>(
     }
 
     if (result.code === 'unsupported') {
-      log.warn(`${config.logPrefix}_upsert_unsupported`, { result: result.code })
+      log.warn(`${config.logPrefix}_upsert_unsupported`, {
+        result: result.code,
+      })
       return json(
         { type: 4, data: { content: messageFor('unsupported') } },
         { status: 200 },
