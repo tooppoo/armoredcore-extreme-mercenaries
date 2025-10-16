@@ -134,6 +134,111 @@ const respondWithError = async (code: ErrorCode, status = 200) => {
   )
 }
 
+type CommandConfig<T> = {
+  validator: (options?: Option[]) => Validation<T>
+  handler: (args: T & { user: DiscordUser }, env: Env) => Promise<UpsertResult>
+  logPrefix: string
+}
+
+type Option = { name: string; type: number; value?: string }
+type Validation<T> = { ok: true; data: T } | { ok: false; code: ErrorCode; message: string }
+type UpsertResult =
+  | { ok: true }
+  | {
+      ok: false
+      code: 'duplicate' | 'unsupported' | 'ogp_fetch_failed' | 'unexpected'
+    }
+
+const handleArchiveCommand = async <T>(
+  config: CommandConfig<T>,
+  options: Option[] | undefined,
+  user: DiscordUser,
+  env: Env,
+  correlationId: string,
+): Promise<Response> => {
+  const { messageFor } = await import('~/lib/discord/interactions/errors')
+  const validation = config.validator(options)
+  const { logger } = await import('~/lib/observability/logger')
+  const log = logger.withCorrelation(correlationId)
+
+  if (!validation.ok) {
+    log.warn(`${config.logPrefix}_command_invalid`, { reason: validation.message })
+    return json({ type: 4, data: { content: validation.message } }, { status: 200 })
+  }
+
+  try {
+    const result = await config.handler({ ...validation.data, user }, env)
+
+    if (result.ok) {
+      log.info(`${config.logPrefix}_upsert_success`, { result: 'ok' })
+      return json(
+        { type: 4, data: { content: 'アーカイブに登録しました' } },
+        { status: 200 },
+      )
+    }
+
+    if (result.code === 'duplicate') {
+      log.warn(`${config.logPrefix}_upsert_duplicate`, { result: result.code })
+      return json(
+        { type: 4, data: { content: messageFor('duplicate') } },
+        { status: 200 },
+      )
+    }
+
+    if (result.code === 'ogp_fetch_failed') {
+      log.warn(`${config.logPrefix}_upsert_ogp_failed`, { result: result.code })
+      const { sendDevAlert } = await import(
+        '~/lib/discord/interactions/dev-alert'
+      )
+      await sendDevAlert(env, 'OGP取得に失敗しました', {
+        code: result.code,
+        correlationId,
+      })
+      return json(
+        { type: 4, data: { content: messageFor('ogp_fetch_failed') } },
+        { status: 200 },
+      )
+    }
+
+    if (result.code === 'unsupported') {
+      log.warn(`${config.logPrefix}_upsert_unsupported`, { result: result.code })
+      return json(
+        { type: 4, data: { content: messageFor('unsupported') } },
+        { status: 200 },
+      )
+    }
+
+    log.error(`${config.logPrefix}_upsert_unexpected`, { result: result.code })
+    const { sendDevAlert } = await import(
+      '~/lib/discord/interactions/dev-alert'
+    )
+    await sendDevAlert(env, '予期しないエラーが発生しました', {
+      code: result.code,
+      correlationId,
+    })
+    return json(
+      { type: 4, data: { content: messageFor('unexpected') } },
+      { status: 200 },
+    )
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'unknown'
+    const cause =
+      error instanceof Error && error.cause ? String(error.cause) : undefined
+    log.error(`${config.logPrefix}_upsert_exception`, { message, cause })
+    const { sendDevAlert } = await import(
+      '~/lib/discord/interactions/dev-alert'
+    )
+    await sendDevAlert(env, '予期しないエラーが発生しました', {
+      code: 'unexpected',
+      correlationId,
+    })
+    return json(
+      { type: 4, data: { content: messageFor('unexpected') } },
+      { status: 200 },
+    )
+  }
+}
+
 export const onRequest: PagesFunction<Env> = async (ctx) => {
   const { request, env } = ctx
   const pagesEnv = env
@@ -184,185 +289,43 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
   const user = userResult.data
 
   if (commandName === 'archive-video') {
-    const { messageFor } = await import('~/lib/discord/interactions/errors')
     const { validateVideoCommand } = await import(
       '~/lib/discord/interactions/command-validator'
     )
-    const v = validateVideoCommand(options)
-    const { logger } = await import('~/lib/observability/logger')
-    const log = logger.withCorrelation(correlationId)
-    if (!v.ok) {
-      log.warn('video_command_invalid', { reason: v.message })
-      return json({ type: 4, data: { content: v.message } }, { status: 200 })
-    }
-    const { url, title, description } = v.data
-    try {
-      const { upsertVideo } = await import(
-        '~/lib/discord/interactions/archive-repository'
-      )
-      const result = await upsertVideo(
-        { url, title, description, user },
-        pagesEnv,
-      )
-      if (result.ok) {
-        log.info('video_upsert_success', { result: 'ok' })
-        return json(
-          { type: 4, data: { content: 'アーカイブに登録しました' } },
-          { status: 200 },
-        )
-      }
-      if (result.code === 'duplicate') {
-        log.warn('video_upsert_duplicate', { result: result.code })
-        return json(
-          { type: 4, data: { content: messageFor('duplicate') } },
-          { status: 200 },
-        )
-      }
-      if (result.code === 'ogp_fetch_failed') {
-        log.warn('video_upsert_ogp_failed', { result: result.code })
-        const { sendDevAlert } = await import(
-          '~/lib/discord/interactions/dev-alert'
-        )
-        await sendDevAlert(pagesEnv, 'OGP取得に失敗しました', {
-          code: result.code,
-          correlationId,
-        })
-        return json(
-          { type: 4, data: { content: messageFor('ogp_fetch_failed') } },
-          { status: 200 },
-        )
-      }
-      if (result.code === 'unsupported') {
-        log.warn('video_upsert_unsupported', { result: result.code })
-        return json(
-          { type: 4, data: { content: messageFor('unsupported') } },
-          { status: 200 },
-        )
-      }
-      log.error('video_upsert_unexpected', { result: result.code })
-      const { sendDevAlert } = await import(
-        '~/lib/discord/interactions/dev-alert'
-      )
-      await sendDevAlert(pagesEnv, '予期しないエラーが発生しました', {
-        code: result.code,
-        correlationId,
-      })
-      return json(
-        { type: 4, data: { content: messageFor('unexpected') } },
-        { status: 200 },
-      )
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'unknown'
-      const cause =
-        error instanceof Error && error.cause ? String(error.cause) : undefined
-      log.error('video_upsert_exception', { message, cause })
-      const { sendDevAlert } = await import(
-        '~/lib/discord/interactions/dev-alert'
-      )
-      await sendDevAlert(pagesEnv, '予期しないエラーが発生しました', {
-        code: 'unexpected',
-        correlationId,
-      })
-      const { messageFor } = await import('~/lib/discord/interactions/errors')
-      return json(
-        { type: 4, data: { content: messageFor('unexpected') } },
-        { status: 200 },
-      )
-    }
+    const { upsertVideo } = await import(
+      '~/lib/discord/interactions/archive-repository'
+    )
+    return handleArchiveCommand(
+      {
+        validator: validateVideoCommand,
+        handler: upsertVideo,
+        logPrefix: 'video',
+      },
+      options,
+      user,
+      pagesEnv,
+      correlationId,
+    )
   }
 
   if (commandName === 'archive-challenge') {
-    const { messageFor } = await import('~/lib/discord/interactions/errors')
     const { validateChallengeCommand } = await import(
       '~/lib/discord/interactions/command-validator'
     )
-    const v = validateChallengeCommand(options)
-    const { logger } = await import('~/lib/observability/logger')
-    const log = logger.withCorrelation(correlationId)
-    if (!v.ok) {
-      log.warn('challenge_command_invalid', { reason: v.message })
-      return json({ type: 4, data: { content: v.message } }, { status: 200 })
-    }
-    try {
-      const { upsertChallenge } = await import(
-        '~/lib/discord/interactions/archive-repository'
-      )
-      const result = await upsertChallenge(
-        {
-          title: v.data.title,
-          url: v.data.url,
-          description: v.data.description,
-          user,
-        },
-        pagesEnv,
-      )
-      if (result.ok) {
-        log.info('challenge_upsert_success', {
-          result: 'ok',
-        })
-        return json(
-          { type: 4, data: { content: 'アーカイブに登録しました' } },
-          { status: 200 },
-        )
-      }
-      if (result.code === 'duplicate') {
-        log.warn('challenge_upsert_duplicate', { result: result.code })
-        return json(
-          { type: 4, data: { content: messageFor('duplicate') } },
-          { status: 200 },
-        )
-      }
-      if (result.code === 'ogp_fetch_failed') {
-        log.warn('challenge_upsert_ogp_failed', { result: result.code })
-        const { sendDevAlert } = await import(
-          '~/lib/discord/interactions/dev-alert'
-        )
-        await sendDevAlert(pagesEnv, 'OGP取得に失敗しました', {
-          code: result.code,
-          correlationId,
-        })
-        return json(
-          { type: 4, data: { content: messageFor('ogp_fetch_failed') } },
-          { status: 200 },
-        )
-      }
-      if (result.code === 'unsupported') {
-        log.warn('challenge_upsert_unsupported', { result: result.code })
-        return json(
-          { type: 4, data: { content: messageFor('unsupported') } },
-          { status: 200 },
-        )
-      }
-      log.error('challenge_upsert_unexpected', { result: result.code })
-      const { sendDevAlert } = await import(
-        '~/lib/discord/interactions/dev-alert'
-      )
-      await sendDevAlert(pagesEnv, '予期しないエラーが発生しました', {
-        code: result.code,
-        correlationId,
-      })
-      return json(
-        { type: 4, data: { content: messageFor('unexpected') } },
-        { status: 200 },
-      )
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'unknown'
-      const cause =
-        error instanceof Error && error.cause ? String(error.cause) : undefined
-      log.error('challenge_upsert_exception', { message, cause })
-      const { sendDevAlert } = await import(
-        '~/lib/discord/interactions/dev-alert'
-      )
-      await sendDevAlert(pagesEnv, '予期しないエラーが発生しました', {
-        code: 'unexpected',
-        correlationId,
-      })
-      const { messageFor } = await import('~/lib/discord/interactions/errors')
-      return json(
-        { type: 4, data: { content: messageFor('unexpected') } },
-        { status: 200 },
-      )
-    }
+    const { upsertChallenge } = await import(
+      '~/lib/discord/interactions/archive-repository'
+    )
+    return handleArchiveCommand(
+      {
+        validator: validateChallengeCommand,
+        handler: upsertChallenge,
+        logPrefix: 'challenge',
+      },
+      options,
+      user,
+      pagesEnv,
+      correlationId,
+    )
   }
 
   return json({ type: 4, data: { content: 'OK' } }, { status: 200 })

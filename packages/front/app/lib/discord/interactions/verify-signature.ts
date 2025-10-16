@@ -15,7 +15,10 @@ export async function verifyRequestSignature(
   const { DISCORD_PUBLIC_KEY: publicKeyHex } = env
 
   // 公開鍵が未設定の場合は検証失敗（セキュリティファースト）
-  if (!publicKeyHex || publicKeyHex.trim().length === 0) return false
+  if (!publicKeyHex || publicKeyHex.trim().length === 0) {
+    console.warn('DISCORD_PUBLIC_KEY is not set. Signature verification will always fail.')
+    return false
+  }
 
   const message = new TextEncoder().encode(ts + rawBody)
   const signature = hexToBytes(sigHex)
