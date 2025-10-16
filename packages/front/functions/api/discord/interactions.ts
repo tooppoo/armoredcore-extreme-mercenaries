@@ -53,8 +53,6 @@ const json = (value: unknown, init?: ResponseInit) =>
     ...init,
   })
 
-const DEFAULT_ALLOWED_CHANNELS = ['111', '222'] as const
-
 const channelListFrom = (value: unknown): string[] =>
   String(value ?? '')
     .split(',')
@@ -65,9 +63,9 @@ const getAllowedChannels = (env: Env): Set<string> => {
   const challengeChannels = env.DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS
   const videoChannels = env.DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS
 
-  // 環境変数が両方とも未定義の場合のみ、ローカル開発用のデフォルト値にフォールバックする
+  // 環境変数が両方とも未定義の場合、許可チャンネルなし
   if (challengeChannels === undefined && videoChannels === undefined) {
-    return new Set(DEFAULT_ALLOWED_CHANNELS)
+    return new Set()
   }
 
   const challenge = channelListFrom(challengeChannels)
