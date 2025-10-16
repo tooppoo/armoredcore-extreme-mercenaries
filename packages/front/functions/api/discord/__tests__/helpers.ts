@@ -7,6 +7,8 @@ export const baseEnv: Partial<RequestContext['env']> = {
     fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, init),
   },
   DISCORD_PUBLIC_KEY: 'test-key',
+  DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS: '111',
+  DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS: '111',
 }
 
 /**
