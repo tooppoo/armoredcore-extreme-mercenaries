@@ -24,7 +24,6 @@ export const baseEnv: Partial<RequestContext['env']> = {
  * @returns テスト用のリクエストコンテキスト
  */
 export const makeCtx = (init?: {
-  id?: string
   method?: string
   body?: unknown
   rawBody?: string

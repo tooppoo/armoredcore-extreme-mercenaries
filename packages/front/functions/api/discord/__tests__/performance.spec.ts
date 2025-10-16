@@ -49,7 +49,6 @@ const makeCtx = (init?: {
     member: { user: { id: 'user-perf', username: 'perf-user' } },
   }
   return makeCtxBase({
-    id: init?.id,
     method: 'POST',
     body,
     headers: {
