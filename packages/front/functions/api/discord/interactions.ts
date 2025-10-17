@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { ErrorCode } from '~/lib/discord/interactions/errors'
+import { type ErrorCode } from '~/lib/discord/interactions/errors'
 import type {
   DiscordDisplayName,
   DiscordUser,
@@ -78,25 +78,35 @@ const channelListFrom = (value: unknown): string[] =>
     .map((s) => s.trim())
     .filter((s) => s.length > 0)
 
-const getAllowedChannels = (
+const commandIsAllowed = (
   env: Env,
-  command: 'archive-video' | 'archive-challenge',
-): Set<string> => {
+  command: string,
+  channelId: string,
+): Result<{ allowed: boolean }, ErrorCode> => {
   switch (command) {
     case 'archive-video':
-      return new Set(
-        channelListFrom(env.DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS),
-      )
+      return {
+        ok: true,
+        data: {
+          allowed: new Set(
+            channelListFrom(env.DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS),
+          ).has(channelId),
+        },
+      }
     case 'archive-challenge':
-      return new Set(
-        channelListFrom(env.DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS),
-      )
-    default: {
-      // 型システムにより、このパスには到達しないはずです
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const _: never = command
-      throw new Error(`Unknown command for channel check: ${command}`)
-    }
+      return {
+        ok: true,
+        data: {
+          allowed: new Set(
+            channelListFrom(env.DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS),
+          ).has(channelId),
+        },
+      }
+    default:
+      return {
+        ok: false,
+        error: 'unsupported_command',
+      }
   }
 }
 
@@ -313,20 +323,19 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
   const commandName = body.data?.name
   if (!commandName) return respondWithError('bad_request')
 
-  // コマンドごとに許可されたチャンネルをチェック
-  if (commandName === 'archive-video' || commandName === 'archive-challenge') {
-    const allowed = getAllowedChannels(pagesEnv, commandName)
-    const channelId = body.channel_id
-    if (channelId && !allowed.has(String(channelId)))
-      return json(
-        {
-          type: 4,
-          data: {
-            content: 'このチャンネルではコマンドを使用できません。',
-          },
-        },
-        { status: 200 },
-      )
+  // チャンネル制限のチェック（channel_idが指定されている場合のみ）
+  if (body.channel_id) {
+    const resultCommandIsAllowed = commandIsAllowed(
+      pagesEnv,
+      commandName,
+      body.channel_id,
+    )
+    if (!resultCommandIsAllowed.ok) {
+      return respondWithError(resultCommandIsAllowed.error)
+    }
+    if (!resultCommandIsAllowed.data.allowed) {
+      return respondWithError('channel_not_allowed')
+    }
   }
 
   const options = normalizeOptions(body.data?.options)
@@ -375,5 +384,18 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
     )
   }
 
-  return json({ type: 4, data: { content: 'OK' } }, { status: 200 })
+  // このパスに到達することは想定されていないが、万が一到達した場合の処理
+  const { logger } = await import('~/lib/observability/logger')
+  logger.error('unhandled_command', { command: commandName, correlationId })
+
+  const { sendDevAlert } = await import('~/lib/discord/interactions/dev-alert')
+  await sendDevAlert(pagesEnv, `コマンド処理が未実装です: ${commandName}`, {
+    code: 'unhandled_command',
+    correlationId,
+  })
+
+  return json(
+    { type: 4, data: { content: 'コマンドを処理できませんでした。' } },
+    { status: 200 },
+  )
 }

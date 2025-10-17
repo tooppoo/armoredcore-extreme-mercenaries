@@ -8,6 +8,8 @@ export type ErrorCode =
   | 'unauthorized'
   | 'forbidden'
   | 'bad_request'
+  | 'channel_not_allowed'
+  | 'unsupported_command'
 
 const messages: Record<ErrorCode, string> = {
   duplicate: '登録済みのアーカイブなので、スキップしました',
@@ -19,6 +21,8 @@ const messages: Record<ErrorCode, string> = {
   unauthorized: '認証に失敗しました',
   forbidden: '許可されていない操作です',
   bad_request: 'リクエストが不正です',
+  unsupported_command: 'サポートされていないコマンドです',
+  channel_not_allowed: 'このチャンネルではコマンドを使用できません。',
 }
 
 export const messageFor = (code: ErrorCode): string => messages[code]
