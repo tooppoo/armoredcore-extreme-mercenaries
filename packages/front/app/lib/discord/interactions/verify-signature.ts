@@ -1,4 +1,10 @@
 import * as ed from '@noble/ed25519'
+import { sha512 } from '@noble/hashes/sha512'
+
+// Cloudflare Workers環境でed25519を使用するために必要
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+;(ed.etc as any).sha512Sync = (...m: Uint8Array[]) =>
+  sha512(ed.etc.concatBytes(...m))
 
 const hexToBytes = (hex: string): Uint8Array =>
   new Uint8Array((hex.match(/.{1,2}/g) || []).map((b) => parseInt(b, 16)))
