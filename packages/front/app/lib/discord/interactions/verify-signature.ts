@@ -25,8 +25,27 @@ export async function verifyRequestSignature(
   const publicKey = hexToBytes(publicKeyHex)
 
   try {
-    return await ed.verify(signature, message, publicKey)
-  } catch {
+    const result = await ed.verify(signature, message, publicKey)
+
+    // デバッグ用: 検証結果の詳細をログ出力
+    if (!result) {
+      const { logger } = await import('~/lib/observability/logger')
+      logger.warn('ed25519_verification_details', {
+        signatureLength: signature.length,
+        publicKeyLength: publicKey.length,
+        messageLength: message.length,
+        timestampLength: ts.length,
+        bodyLength: rawBody.length,
+      })
+    }
+
+    return result
+  } catch (error) {
+    const { logger } = await import('~/lib/observability/logger')
+    const errorMessage = error instanceof Error ? error.message : 'unknown'
+    logger.error('ed25519_verify_exception', {
+      error: errorMessage,
+    })
     return false
   }
 }
