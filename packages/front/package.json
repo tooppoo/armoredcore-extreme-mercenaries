@@ -39,7 +39,7 @@
     "@heroicons/react": "2.2.0",
     "@react-router/cloudflare": "7.9.2",
     "date-fns": "4.1.0",
-    "discord-interactions": "^4.4.0",
+    "discord-interactions": "4.4.0",
     "drizzle-orm": "0.44.5",
     "highlight.js": "11.11.1",
     "html-react-parser": "5.2.3",

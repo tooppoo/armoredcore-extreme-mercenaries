@@ -329,10 +329,20 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
     return respondWithError('unauthorized', 401)
   }
 
-  if (body.type === 1) return json({ type: 1 }, { status: 200 })
+  if (body.type === 1) {
+    logger.info('pong_response', {})
+
+    return json({ type: 1 }, { status: 200 })
+  }
+
+  const interactionLog = logger.withCorrelation(body.id)
 
   const commandName = body.data?.name
-  if (!commandName) return respondWithError('bad_request')
+  if (!commandName) {
+    interactionLog.warn('command_name_missing', { body })
+
+    return respondWithError('bad_request')
+  }
 
   // チャンネル制限のチェック（channel_idが指定されている場合のみ）
   if (body.channel_id) {
@@ -342,9 +352,11 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
       body.channel_id,
     )
     if (!resultCommandIsAllowed.ok) {
+      interactionLog.warn('command_not_allowed', { commandName, channelId: body.channel_id })
       return respondWithError(resultCommandIsAllowed.error)
     }
     if (!resultCommandIsAllowed.data.allowed) {
+      interactionLog.info('command_channel_not_allowed', { commandName, channelId: body.channel_id })
       return respondWithError('channel_not_allowed')
     }
   }
@@ -352,7 +364,10 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
   const options = normalizeOptions(body.data?.options)
   const correlationId = body.id
   const userResult = extractUser(body)
-  if (!userResult.ok) return respondWithError(userResult.error)
+  if (!userResult.ok) {
+    interactionLog.warn('user_extraction_failed', { body })
+    return respondWithError(userResult.error)
+  }
   const user = userResult.data
 
   if (commandName === 'archive-video') {
@@ -362,6 +377,9 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
     const { upsertVideo } = await import(
       '~/lib/discord/interactions/archive-repository'
     )
+
+    interactionLog.info('processing_archive_video_command', { userId: user.id })
+
     return handleArchiveCommand(
       {
         validator: validateVideoCommand,
@@ -382,6 +400,9 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
     const { upsertChallenge } = await import(
       '~/lib/discord/interactions/archive-repository'
     )
+
+    interactionLog.info('processing_archive_challenge_command', { userId: user.id })
+
     return handleArchiveCommand(
       {
         validator: validateChallengeCommand,
@@ -396,7 +417,7 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
   }
 
   // このパスに到達することは想定されていないが、万が一到達した場合の処理
-  logger.error('unhandled_command', { command: commandName, correlationId })
+  interactionLog.error('unhandled_command', { command: commandName })
 
   const { sendDevAlert } = await import('~/lib/discord/interactions/dev-alert')
   await sendDevAlert(pagesEnv, `コマンド処理が未実装です: ${commandName}`, {
