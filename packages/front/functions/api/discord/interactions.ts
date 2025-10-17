@@ -308,13 +308,24 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
   const ts = request.headers.get('X-Signature-Timestamp')
   if (!sig || !ts) return respondWithError('unauthorized', 401)
 
+  const { logger } = await import('~/lib/observability/logger')
+
   try {
     const { verifyRequestSignature } = await import(
       '~/lib/discord/interactions/verify-signature'
     )
     const ok = await verifyRequestSignature(request, pagesEnv, rawBody)
-    if (!ok) return respondWithError('unauthorized', 401)
-  } catch {
+    if (!ok) {
+      // 署名検証失敗の詳細をログ出力（トラブルシューティング用）
+      logger.warn('signature_verification_failed', {
+        publicKeyLength: pagesEnv.DISCORD_PUBLIC_KEY?.length ?? 0,
+      })
+      return respondWithError('unauthorized', 401)
+    }
+  } catch (error) {
+    // verifyRequestSignature関数のインポート失敗など、予期しない例外をログ出力
+    const message = error instanceof Error ? error.message : 'unknown'
+    logger.error('signature_verification_exception', { message })
     return respondWithError('unauthorized', 401)
   }
 
@@ -385,7 +396,6 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
   }
 
   // このパスに到達することは想定されていないが、万が一到達した場合の処理
-  const { logger } = await import('~/lib/observability/logger')
   logger.error('unhandled_command', { command: commandName, correlationId })
 
   const { sendDevAlert } = await import('~/lib/discord/interactions/dev-alert')
