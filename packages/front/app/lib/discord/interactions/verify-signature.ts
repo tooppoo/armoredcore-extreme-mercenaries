@@ -10,8 +10,7 @@ const ensureEd25519Initialized = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const etc = ed.etc as any
   if (!etc.sha512Sync) {
-    etc.sha512Sync = (...m: Uint8Array[]) =>
-      sha512(etc.concatBytes(...m))
+    etc.sha512Sync = (...m: Uint8Array[]) => sha512(etc.concatBytes(...m))
   }
 }
 
