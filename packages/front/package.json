@@ -37,8 +37,6 @@
   "dependencies": {
     "@date-fns/tz": "1.4.1",
     "@heroicons/react": "2.2.0",
-    "@noble/ed25519": "3.0.0",
-    "@noble/hashes": "1.8.0",
     "@react-router/cloudflare": "7.9.2",
     "date-fns": "4.1.0",
     "discord-interactions": "^4.4.0",
