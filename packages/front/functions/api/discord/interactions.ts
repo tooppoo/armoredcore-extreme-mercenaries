@@ -82,17 +82,22 @@ const getAllowedChannels = (
   env: Env,
   command: 'archive-video' | 'archive-challenge',
 ): Set<string> => {
-  if (command === 'archive-video') {
-    return new Set(
-      channelListFrom(env.DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS),
-    )
+  switch (command) {
+    case 'archive-video':
+      return new Set(
+        channelListFrom(env.DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS),
+      )
+    case 'archive-challenge':
+      return new Set(
+        channelListFrom(env.DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS),
+      )
+    default: {
+      // 型システムにより、このパスには到達しないはずです
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const _: never = command
+      throw new Error(`Unknown command for channel check: ${command}`)
+    }
   }
-  if (command === 'archive-challenge') {
-    return new Set(
-      channelListFrom(env.DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS),
-    )
-  }
-  return new Set()
 }
 
 const normalizeOptions = (
