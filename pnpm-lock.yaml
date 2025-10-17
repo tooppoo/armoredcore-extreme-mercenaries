@@ -134,6 +134,9 @@ importers:
       date-fns:
         specifier: 4.1.0
         version: 4.1.0
+      discord-interactions:
+        specifier: ^4.4.0
+        version: 4.4.0
       drizzle-orm:
         specifier: 0.44.5
         version: 0.44.5(@cloudflare/workers-types@4.20250922.0)
@@ -1301,10 +1304,6 @@ packages:
   '@noble/ed25519@3.0.0':
     resolution: {integrity: sha512-QyteqMNm0GLqfa5SoYbSC3+Pvykwpn95Zgth4MFVSMKBB75ELl9tX1LAVsN4c3HXOrakHsF2gL4zWDAYCcsnzg==}
 
-  '@noble/hashes@1.6.1':
-    resolution: {integrity: sha512-pq5D8h10hHBjyqX+cfBm0i8JUXJ0UhczFc4r74zbuT9XgewFo2E3J1cOaGtdZynILNmQ685YWGzGE1Zv6io50w==}
-    engines: {node: ^14.21.3 || >=16}
-
   '@noble/hashes@1.8.0':
     resolution: {integrity: sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==}
     engines: {node: ^14.21.3 || >=16}
@@ -2340,6 +2339,10 @@ packages:
 
   discord-api-types@0.38.26:
     resolution: {integrity: sha512-xpmPviHjIJ6dFu1eNwNDIGQ3N6qmPUUYFVAx/YZ64h7ZgPkTcKjnciD8bZe8Vbeji7yS5uYljyciunpq0J5NSw==}
+
+  discord-interactions@4.4.0:
+    resolution: {integrity: sha512-jjJx8iwAeJcj8oEauV43fue9lNqkf38fy60aSs2+G8D1nJmDxUIrk08o3h0F3wgwuBWWJUZO+X/VgfXsxpCiJA==}
+    engines: {node: '>=18.4.0'}
 
   discord.js@14.22.1:
     resolution: {integrity: sha512-3k+Kisd/v570Jr68A1kNs7qVhNehDwDJAPe4DZ2Syt+/zobf9zEcuYFvsfIaAOgCa0BiHMfOOKQY4eYINl0z7w==}
@@ -4809,7 +4812,7 @@ snapshots:
       '@date-fns/tz': 1.4.1
       '@heroicons/react': 2.2.0(react@19.1.1)
       '@noble/ed25519': 3.0.0
-      '@noble/hashes': 1.6.1
+      '@noble/hashes': 1.8.0
       '@react-router/cloudflare': 7.9.2(@cloudflare/workers-types@4.20250922.0)(react-router@7.9.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(typescript@5.9.2)
       date-fns: 4.1.0
       drizzle-orm: 0.44.5(@cloudflare/workers-types@4.20250922.0)
@@ -5670,8 +5673,6 @@ snapshots:
       '@noble/hashes': 1.8.0
 
   '@noble/ed25519@3.0.0': {}
-
-  '@noble/hashes@1.6.1': {}
 
   '@noble/hashes@1.8.0': {}
 
@@ -6674,6 +6675,8 @@ snapshots:
       dequal: 2.0.3
 
   discord-api-types@0.38.26: {}
+
+  discord-interactions@4.4.0: {}
 
   discord.js@14.22.1:
     dependencies:

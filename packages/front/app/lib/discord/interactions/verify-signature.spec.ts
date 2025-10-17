@@ -1,16 +1,17 @@
 import { describe, it, expect, vi } from 'vitest'
 import { verifyRequestSignature } from './verify-signature'
-import * as ed from '@noble/ed25519'
+import * as discordInteractions from 'discord-interactions'
 
-// テスト用の公開鍵（@noble/ed25519でランダム生成した固定値）
+// テスト用の公開鍵（Discord形式の16進数文字列）
 const TEST_PUBLIC_KEY_HEX =
   'e5564300c360ac729086e2cc806e828a84877f1eb8e5d974d873e065224901555'
 
-vi.mock('@noble/ed25519', async () => {
-  const actual = await vi.importActual<typeof ed>('@noble/ed25519')
+vi.mock('discord-interactions', async () => {
+  const actual =
+    await vi.importActual<typeof discordInteractions>('discord-interactions')
   return {
     ...actual,
-    verify: vi.fn(),
+    verifyKey: vi.fn(),
   }
 })
 
@@ -20,8 +21,8 @@ describe('verifyRequestSignature', () => {
   } as unknown as Env
 
   it('should return true for valid signature', async () => {
-    const mockVerify = vi.mocked(ed.verify)
-    mockVerify.mockResolvedValue(true)
+    const mockVerifyKey = vi.mocked(discordInteractions.verifyKey)
+    mockVerifyKey.mockResolvedValue(true)
 
     const req = new Request('https://example.com', {
       method: 'POST',
@@ -36,7 +37,7 @@ describe('verifyRequestSignature', () => {
     const result = await verifyRequestSignature(req, mockEnv, rawBody)
 
     expect(result).toBe(true)
-    expect(mockVerify).toHaveBeenCalledOnce()
+    expect(mockVerifyKey).toHaveBeenCalledOnce()
   })
 
   it('should return false when signature header is missing', async () => {
@@ -90,8 +91,8 @@ describe('verifyRequestSignature', () => {
   })
 
   it('should return false when verification fails', async () => {
-    const mockVerify = vi.mocked(ed.verify)
-    mockVerify.mockResolvedValue(false)
+    const mockVerifyKey = vi.mocked(discordInteractions.verifyKey)
+    mockVerifyKey.mockResolvedValue(false)
 
     const req = new Request('https://example.com', {
       method: 'POST',
@@ -108,9 +109,9 @@ describe('verifyRequestSignature', () => {
     expect(result).toBe(false)
   })
 
-  it('should return false when ed25519 verification throws', async () => {
-    const mockVerify = vi.mocked(ed.verify)
-    mockVerify.mockRejectedValue(new Error('Invalid signature format'))
+  it('should return false when discord verification throws', async () => {
+    const mockVerifyKey = vi.mocked(discordInteractions.verifyKey)
+    mockVerifyKey.mockRejectedValue(new Error('Invalid signature format'))
 
     const req = new Request('https://example.com', {
       method: 'POST',
