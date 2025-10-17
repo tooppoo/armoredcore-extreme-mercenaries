@@ -126,8 +126,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       '@noble/hashes':
-        specifier: 1.6.1
-        version: 1.6.1
+        specifier: 1.8.0
+        version: 1.8.0
       '@react-router/cloudflare':
         specifier: 7.9.2
         version: 7.9.2(@cloudflare/workers-types@4.20250922.0)(react-router@7.9.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(typescript@5.9.2)
@@ -4809,6 +4809,7 @@ snapshots:
       '@date-fns/tz': 1.4.1
       '@heroicons/react': 2.2.0(react@19.1.1)
       '@noble/ed25519': 3.0.0
+      '@noble/hashes': 1.6.1
       '@react-router/cloudflare': 7.9.2(@cloudflare/workers-types@4.20250922.0)(react-router@7.9.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(typescript@5.9.2)
       date-fns: 4.1.0
       drizzle-orm: 0.44.5(@cloudflare/workers-types@4.20250922.0)

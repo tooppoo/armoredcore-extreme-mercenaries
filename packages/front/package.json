@@ -38,7 +38,7 @@
     "@date-fns/tz": "1.4.1",
     "@heroicons/react": "2.2.0",
     "@noble/ed25519": "3.0.0",
-    "@noble/hashes": "1.6.1",
+    "@noble/hashes": "1.8.0",
     "@react-router/cloudflare": "7.9.2",
     "date-fns": "4.1.0",
     "drizzle-orm": "0.44.5",
