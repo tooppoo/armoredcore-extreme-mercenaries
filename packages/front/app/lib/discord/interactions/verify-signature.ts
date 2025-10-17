@@ -22,9 +22,9 @@ export async function verifyRequestSignature(
 
   try {
     // discord-interactions パッケージの verifyKey を使用
-    // rawBody を Uint8Array に変換して渡す
+    // verifyKey は文字列を期待し、内部でタイムスタンプとの結合やエンコードを行う
     const isValid = await verifyKey(
-      new TextEncoder().encode(rawBody),
+      rawBody,
       signature,
       timestamp,
       publicKey,
