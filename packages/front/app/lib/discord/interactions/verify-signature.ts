@@ -23,12 +23,7 @@ export async function verifyRequestSignature(
   try {
     // discord-interactions パッケージの verifyKey を使用
     // verifyKey は文字列を期待し、内部でタイムスタンプとの結合やエンコードを行う
-    const isValid = await verifyKey(
-      rawBody,
-      signature,
-      timestamp,
-      publicKey,
-    )
+    const isValid = await verifyKey(rawBody, signature, timestamp, publicKey)
 
     // デバッグ用: 検証結果の詳細をログ出力
     if (!isValid) {

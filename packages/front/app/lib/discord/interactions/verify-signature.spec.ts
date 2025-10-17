@@ -7,8 +7,9 @@ const TEST_PUBLIC_KEY_HEX =
   'e5564300c360ac729086e2cc806e828a84877f1eb8e5d974d873e065224901555'
 
 vi.mock('discord-interactions', async () => {
-  const actual =
-    await vi.importActual<typeof discordInteractions>('discord-interactions')
+  const actual = await vi.importActual<typeof discordInteractions>(
+    'discord-interactions',
+  )
   return {
     ...actual,
     verifyKey: vi.fn(),
