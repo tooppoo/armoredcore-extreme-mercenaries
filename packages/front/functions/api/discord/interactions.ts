@@ -313,8 +313,18 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
       '~/lib/discord/interactions/verify-signature'
     )
     const ok = await verifyRequestSignature(request, pagesEnv, rawBody)
-    if (!ok) return respondWithError('unauthorized', 401)
-  } catch {
+    if (!ok) {
+      // 署名検証失敗の詳細をログ出力（トラブルシューティング用）
+      const { logger } = await import('~/lib/observability/logger')
+      logger.warn('signature_verification_failed', {
+        publicKeyLength: pagesEnv.DISCORD_PUBLIC_KEY?.length ?? 0,
+      })
+      return respondWithError('unauthorized', 401)
+    }
+  } catch (error) {
+    const { logger } = await import('~/lib/observability/logger')
+    const message = error instanceof Error ? error.message : 'unknown'
+    logger.error('signature_verification_exception', { message })
     return respondWithError('unauthorized', 401)
   }
 
