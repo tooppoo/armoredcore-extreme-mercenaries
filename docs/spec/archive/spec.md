@@ -1,279 +1,152 @@
-# チャレンジ/動画アーカイブ Discord コマンド登録: 仕様
+# Feature Specification: Cloudflare Pages Functions で Discord アーカイブコマンドを提供する
 
-## 対象ドキュメント
+**Feature Branch**: `001-cloudflare-pages-functions`  
+**Created**: 2025-09-28  
+**Status**: Draft  
+**Input**: User description: "Cloudflare Pages Functions に Discord Bot を移管して slash command を処理する機能仕様"
 
-- 要求: `docs/spec/archive/requests.md`
-- シナリオ: `docs/spec/archive/scenario.md`
-- 要件: `docs/spec/archive/requirements.md`
+## Execution Flow (main)
 
-## 概要
-
-Discord スラッシュコマンド `/archive-challenge` と `/archive-video` を用いて参加者がチャレンジアーカイブと動画アーカイブを登録する。Bot がアプリケーション API（`POST /api/archives/challenge` / `POST /api/archives/video`）を呼び出し、結果に応じたメッセージをチャンネルへ公開投稿する。構造化ログと開発者向け通知でトレーサビリティと運用性を確保する。
-
-## コマンド仕様
-
-### Slash Command `/archive-challenge`
-
-- 利用者: Discord 一般参加者
-- 入力パラメータ（Discord のコマンドビルダーで設定）
-  1. `title` (string, 必須)
-  2. `url` (string, 必須)
-  3. `description` (string, 任意)
-- 利用チャンネル制約
-  - 環境変数 `DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS`（カンマ区切り）で指定されたチャンネル ID のみで受け付ける
-  - その他のチャンネルでは「このコマンドは許可されたチャンネルでのみ利用できます」を返し、処理を打ち切る
-- 応答メッセージ（公開投稿）
-  - 成功: `アーカイブに登録しました`
-  - 重複 (`duplicated-url`): `登録済みのアーカイブなので、スキップしました`
-  - サポート外 (`unsupported-url`): `サポート外のURLなのでスキップしました`
-  - ネットワーク/Fetch失敗: `アーカイブ追加に失敗しました`
-  - 500 エラー (`failed-get-ogp`, `unknownError`, 追加予定コード含む): `予期しないエラーが発生しました (コード: {errorCode})`（`errorCode` が欠落した場合は `unknown` を表示）
-
-### Slash Command `/archive-video`
-
-- 利用者: Discord 一般参加者
-- 入力パラメータ
-  1. `url` (string, 必須)
-  2. `title` (string, 任意)
-  3. `description` (string, 任意)
-- 利用チャンネル制約
-  - 環境変数 `DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS`（カンマ区切り）で指定されたチャンネル ID のみで受け付ける
-  - その他のチャンネルでは「このコマンドは許可されたチャンネルでのみ利用できます」を返し、処理を打ち切る
-- 応答メッセージ（公開投稿）
-  - 成功: `アーカイブに登録しました`
-  - 重複 (`duplicated-url`): `既にアーカイブ済みのURLなのでスキップしました`
-  - サポート外 (`unsupported-url`): `サポート外のURLなのでスキップしました`
-  - OGP 取得失敗 (`failed-get-ogp`): `アーカイブの情報を取得できませんでした`
-  - ネットワーク/Fetch失敗: `アーカイブ追加に失敗しました`
-  - 500 エラー（`unknownError` など）: `予期しないエラーが発生しました (コード: {errorCode})`
-
-### 開発者通知
-
-- 500 エラー発生時、`DISCORD_DEV_ALERT_CHANNEL_ID` で指定された開発者専用チャンネルへ通知を送信
-- 通知メッセージ例
-  - チャレンジ: `チャレンジアーカイブ登録でエラー (コード: failed-get-ogp, correlationId: 123...)`
-  - 動画: `動画アーカイブ登録でエラー (コード: failed-get-ogp, correlationId: 123...)`
-- 通知内容: `correlationId`, `errorCode`, Discord ユーザー、入力 URL など運用に必要な最小限情報
-- 実装方式: `discord.js` の Bot クライアントから `client.channels.fetch(DISCORD_DEV_ALERT_CHANNEL_ID)` でテキストチャンネルを取得し `channel.send(...)` を実行
-- 送信に失敗した場合は最大3回までリトライし、それでも失敗した場合はエラーログへフォールバックする
-
-## Bot 実装仕様
-
-### 処理フロー
-
-1. Discord から Interaction を受信し `interaction.id` を `correlationId` として採用
-2. コマンド入力値とユーザー情報を抽出
-3. 許可チャンネル判定（コマンド種別に応じた `DISCORD_ALLOWED_*_ARCHIVE_CHANNEL_IDS`）
-4. 上記をパラメータとして API（`/api/archives/challenge` または `/api/archives/video`）へ POST
-5. API 応答ステータスと `errorCode` に応じてメッセージを決定
-6. エラー時は必要に応じ開発者チャンネルへ通知
-
-### API 呼び出し
-
-- URL（コマンド種別に応じて切り替え）
-  - `${FRONT_URL}/api/archives/challenge`
-  - `${FRONT_URL}/api/archives/video`
-- メソッド: POST
-- ヘッダー
-  - `Content-Type: application/json`
-  - `Authorization: Bearer ${FRONT_AUTH_UPLOAD_ARCHIVE}`
-  - `X-Correlation-ID: ${interaction.id}`
-- ボディ
-
-  ```json
-  // チャレンジアーカイブ (type=link) の場合
-  {
-    "type": "link",
-    "title": "...",
-    "url": "...",
-    "description": "...",  // オプショナル（未指定の場合は自動取得）
-    "discord_user": {
-      "id": "...",
-      "name": "..."
-    }
-  }
-
-  // チャレンジアーカイブ (type=text) の場合
-  {
-    "type": "text",
-    "title": "...",
-    "text": "...",       // テキスト本文
-    "discord_user": {
-      "id": "...",
-      "name": "..."
-    }
-  }
-  
-  // 動画アーカイブの場合
-  {
-    "url": "...",
-    "title": "...",
-    "description": "...",
-    "discord_user": {
-      "id": "...",
-      "name": "..."
-    }
-  }
-  ```
-
-- タイムアウト/リトライ: 既存の `frontRequestHandler` 実装に準拠（デフォルトタイムアウト、失敗時の再試行なし）
-
-### 構造化ログ出力
-
-- Bot 側 (`packages/discord-bot/src/lib/log.ts` 利用)
-  - 許可外チャンネル呼び出し、API 応答、Fetch 失敗などを `correlationId`・`discordUserId` 付きで JSON 形式出力
-  - 500 エラー発生時は `errorCode`・入力 URL・任意入力パラメータを含めたログを出力
-- API 側
-  - 論理エラー (`duplicated-url` 等) は構造化ロガーで `correlationId`・`errorCode` を記録
-  - 500 エラーは `detail` を含め `level: "error"` で出力し Bot 側通知と突合できるようにする
-
-## API 仕様（再掲）
-
-- `POST /api/archives/challenge`
-  - 認証: Bearer Token (`FRONT_AUTH_UPLOAD_ARCHIVE`)
-  - 入力バリデーション: Zod スキーマ (`postChallengeArchiveBody`)
-  - 処理概要
-    1. URL 重複チェック (`findChallengeArchiveByURL`)
-    2. サポート外 URL 判定 (`getOgpStrategyProvider`)
-    3. OGP 取得成功時のみ description を設定（失敗で 500）
-    4. `saveChallengeArchive` で D1 保存（正規化 URL）
-    5. `updateChallengeArchiveListRevision` 呼出
-  - 応答
-    - 成功: 200 OK / ボディは `null`
-    - 400: `unsupported-url`, `duplicated-url` など
-    - 500: `failed-get-ogp`, `unknownError`, その他追加コード
-- `POST /api/archives/video`
-  - 認証: Bearer Token (`FRONT_AUTH_UPLOAD_ARCHIVE`)
-  - 入力バリデーション: Zod スキーマ (`postArchiveBody`)
-  - 処理概要
-    1. URL 正規化と重複チェック (`findVideoArchiveByURL`)
-    2. サポート外 URL 判定 (`getOgpStrategyProvider`)
-    3. OGP 取得後にリクエスト値で上書き (`overrideArchiveContents`)
-    4. `saveVideoArchive` で D1 保存
-  - 応答
-    - 成功: 200 OK / ボディは `null`
-    - 400: `unsupported-url`, `duplicated-url`, `failed-get-ogp`（500 で返すケースもあり）
-    - 500: `failed-get-ogp`, `unknownError`, その他追加コード
-
-## 通知チャンネル設定
-
-- 環境変数
-  - `DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS`: チャレンジアーカイブ許可チャンネル ID 群
-  - `DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS`: 動画アーカイブ許可チャンネル ID 群
-  - `DISCORD_DEV_ALERT_CHANNEL_ID`: 500 エラー通知先チャンネル ID
-  - `FRONT_URL`, `FRONT_AUTH_UPLOAD_ARCHIVE`: API 呼び出し用
-- 追加想定
-  - 通知を無効化するフラグ（例: `DISCORD_NOTIFY_ERRORS=false`）を将来導入する余地を残す
-
-## セキュリティ
-
-- 実行チャンネル判定・認証トークンは環境変数で管理しリポジトリに含めない
-- ログにはトークンや個人情報を含めない（Discord ユーザー名は API 保存済みのためログには ID のみ原則とする。表示が必要な場合でもマスクを検討）
-
-## テスト計画（仕様準拠）
-
-- Bot ユニットテスト: メッセージマッピング、チャンネル判定、開発者通知の条件分岐（チャレンジ/動画両対応）
-- API 統合テスト: 400/500 応答時の `errorCode` 出力とログ内容
-- e2e テスト（Playwright 等）: Discord モックまたは Bot スタブで `/archive-challenge`・`/archive-video` の基本フロー確認
-- 通知テスト: テスト用チャンネル ID を使い、通知フォーマットが期待通りか
-
-## シーケンス図
-
-```mermaid
-sequenceDiagram
-  participant User as Discord参加者
-  participant Discord as Discord
-  participant Bot as Discord Bot
-  participant API as Application API
-  participant DB as D1 Database
-  participant Dev as Dev Channel
-  participant Log as Structured Logs
-
-  User->>Discord: /archive-(challenge|video)(...)
-  Discord->>Bot: Interaction(correlationId)
-  Bot->>API: POST /api/archives/(challenge|video) (X-Correlation-ID)
-  API->>DB: Save Archive
-  DB-->>API: OK
-  API-->>Bot: 200 OK
-  API->>Log: info/error (correlationId,...)
-  Bot->>Log: info/error (correlationId,...)
-  alt 500 Error
-    API-->>Bot: 500 (errorCode)
-    Bot-->>Discord: 予期しないエラー...(コード: errorCode)
-    Bot->>Dev: 通知(errorCode, correlationId)
-  else 非500応答
-    Bot-->>Discord: 対応するメッセージ
-  end
+```txt
+1. Parse user description from Input
+   → If empty: ERROR "No feature description provided"
+2. Extract key concepts from description
+   → Identify: actors, actions, data, constraints
+3. For each unclear aspect:
+   → Mark with [NEEDS CLARIFICATION: specific question]
+4. Fill User Scenarios & Testing section
+   → If no clear user flow: ERROR "Cannot determine user scenarios"
+5. Generate Functional Requirements
+   → Each requirement must be testable
+   → Evaluate i18n/a11y applicability; if undecided, mark with [NEEDS CLARIFICATION]
+   → Mark ambiguous requirements
+6. Identify Key Entities (if data involved)
+7. Run Review Checklist
+   → If any [NEEDS CLARIFICATION]: WARN "Spec has uncertainties"
+   → If implementation details found: ERROR "Remove tech details"
+8. Return: SUCCESS (spec ready for planning)
 ```
 
-## コンポーネント図
+---
 
-![コンポーネント図](./images/component.svg)
+## ⚡ Quick Guidelines
 
-<details>
+- ✅ Focus on WHAT users need and WHY
+- ❌ Avoid HOW to implement (no tech stack, APIs, code structure)
+- 👥 Written for business stakeholders, not developers
 
-```plantuml
-@startuml
-'--- スキンパラメータなどの設定例 ---
-skinparam defaultFontName "Meiryo"         ' 日本語表示用フォント例
-skinparam componentStyle rectangle
-skinparam maxMessageSize 80
+### Section Requirements
 
-'--- コンポーネント定義 ---
-component "Koyeb\n<img:https://lh3.googleusercontent.com/p/AF1QipPA3ov75cU1ue8kWgr0GCRTii37VBxj177TVvqT=s1360-w1360-h1020{scale=0.1}>" as koyeb {
-  component "Hono\n<img:https://avatars.githubusercontent.com/u/98495527?s=200&v=4{scale=0.3}>" as hono {
-    [Discord Bot] as discordbot
-  }
-}
+- **Mandatory sections**: Must be completed for every feature
+- **Optional sections**: Include only when relevant to the feature
+- When a section doesn't apply, remove it entirely (don't leave as "N/A")
 
-component "Cloudflare\n<img:https://cf-assets.www.cloudflare.com/slt3lc6tev37/fdh7MDcUlyADCr49kuUs2/5f780ced9677a05d52b05605be88bc6f/cf-logo-v-rgb.png{scale=0.1}>" as cloudflare {
-  component "Remix" as Remix {
-    [Archiveアプリ] as archive
-  }
-  database "Cloudflare D1" as db
-}
+### For AI Generation
 
-component "OGP Scanner" as ogpScanner
-component "YouTube Data API\n<img:https://developers.google.com/static/site-assets/logo-youtube.svg{scale=0.3}>" as youtubeAPI
+When creating this spec from a user prompt:
 
-[Discord] as discord
+1. **Mark all ambiguities**: Use [NEEDS CLARIFICATION: specific question] for any assumption you'd need to make
+2. **Don't guess**: If the prompt doesn't specify something (e.g., "login system" without auth method), mark it
+3. **Think like a tester**: Every vague requirement should fail the "testable and unambiguous" checklist item
+4. **Common underspecified areas**:
+   - User types and permissions
+   - Data retention/deletion policies  
+   - Performance targets and scale
+   - Error handling behaviors
+   - Integration requirements
+   - Security/compliance needs
 
-'--- アクター定義 ---
-actor "一般ユーザー" as user
-actor "管理者" as admin
+---
 
-'--- インターフェース ---
-interface "Webhook API" as webhook
-interface "Web UI" as web_ui
-interface "Admin UI" as admin_ui
+## User Scenarios & Testing *(mandatory)*
 
-'--- 関連 ---
-discord -- discordbot : メッセージ監視
-discordbot -> webhook : 新規URL通知
-webhook -> archive : URL通知
+### Primary User Story
 
-archive --> youtubeAPI : 情報取得
-archive --> ogpScanner : 情報取得
-archive -> db : OGP保存/取得
+Discord コミュニティ参加者が許可対象チャンネルで `/archive-challenge` または `/archive-video` を実行すると、Cloudflare Pages Functions 上で稼働する Bot がリクエストを受け付け、必要情報を確認の上でアーカイブ登録の結果を参加者へ返す。
 
-discordbot -> discord : 保存完了通知
+### Acceptance Scenarios
 
-user --> web_ui
-web_ui --> archive : アクセス
-admin --> admin_ui
-admin_ui --> archive : アクセス/管理
+1. **Given** Bot が Cloudflare Pages Functions 上で稼働しており Slash Command が Discord に登録されている, **When** 参加者が `/archive-challenge` に必須項目を入力して送信する, **Then** コマンド受信が成功し、アーカイブ登録結果（成功メッセージと登録内容の要約）が Discord チャンネルに公開メッセージとして通知される。
+2. **Given** 参加者が既に登録済みの URL を `/archive-video` で送信する, **When** Bot がリクエストを受け付ける, **Then** システムは重複を検知し「登録済み」と通知して新規登録を行わない。
 
-'--- メモ ---
-note bottom of archive
-  - URLからOGP抽出
-  - DB保存(Cloudflare D1)
-  - アーカイブ管理
-end note
+### Edge Cases
 
-note bottom of db
-  - アーカイブ情報(OGPなど)
-end note
-@enduml
-```
+- OGP 取得に失敗した場合はフォールバック文言を設定し、エラーを構造化ログに記録する。
+- 利用者入力の不足や重複は warn ログで記録し、システム障害（例: D1 エラー）は error ログで記録する。
+- 署名検証に失敗した場合は直ちに処理を中断し、利用者には一般的な失敗メッセージが返る。
+- アーカイブ登録先のデータストアにアクセスできない場合は再試行を行わず「システムエラー」が通知され、管理者向けのモニタリングで検出できる。
+- Slash Command が 3 秒以内に応答できない処理量となった場合は一時応答で受領し、完了通知を後報する。
 
-</details>
+## Requirements *(mandatory)*
+
+### Functional Requirements
+
+- **Permitted Channel**: Slash Command を実行できるチャンネル ID リスト（環境変数管理）を保持し、許可されていないチャンネルでは実行を拒否する。
+- **Data Store**: Cloudflare D1（既存のアーカイブテーブル）を利用し、Pages Functions で書き込み・読み取りを行う。
+
+- **FR-000**: 要求ドキュメントとのトレーサビリティを `docs/spec/archive/requests.md` に保持する。
+- **FR-001**: システム MUST Cloudflare Pages Functions 上で `/archive-challenge` と `/archive-video` のリクエストを受け付け、Pages Functions から Cloudflare D1 へ直接書き込み、必要に応じて OGP 情報を取得・補完した上でアーカイブ登録できるようにする。
+- **FR-002**: システム MUST Discord から送信される署名付きリクエストの検証に成功した場合のみ処理を続行し、失敗時は 401 相当のエラー応答と警告ログを記録する。
+- **FR-003**: システム MUST アーカイブ登録の可否に関わらず 3 秒以内に Discord へ受領応答を返却し、必要に応じて後続通知で最終結果を伝える。
+- **FR-004**: システム MUST URL 重複や必須項目不足など利用者の入力起因の失敗を判定し、公開メッセージで利用者が理解できる文言を Discord チャンネルに通知する。
+- **FR-005**: システム MUST アーカイブ登録処理の結果（成功・重複・失敗）を構造化ログで記録し、Correlation ID により `docs/spec/archive/requirements.md` で定義された利用シナリオと紐づけられるようにする。
+- **FR-006**: システム MUST ロケール「ja-JP」を前提としたメッセージ文言を提供し、多言語化は行わないことを明示する。
+- **FR-007**: システム MUST 利用者が Slash Command を完了するために必要な入力項目と補助説明を提示し、アクセシビリティ要件（読み上げ対応、色依存表現を避ける）を設計資料に明記する。
+- **FR-008**: システム MUST Pages Functions がアーカイブ対象URLの OGP 情報（タイトル・説明・サムネイルURL）を取得し、取得成功時は Cloudflare D1 に保存、取得失敗時は既定のフォールバック文言を設定して通知する。
+- **FR-009**: システム MUST すべての Slash Command 応答を Discord チャンネルの公開メッセージとして投稿し、エフェメラル返信は使用しない。
+- **FR-010**: システム MUST Slash Command の実行チャンネルを環境変数で管理し、許可されたチャンネル以外からの実行はエラーメッセージで拒否する。
+- **FR-011**: システム MUST Slash Command の送信者（Guild Member または Direct Message の user）から Discord 識別子と表示名を取得し、登録処理に利用できない場合はリクエストを `bad_request` として拒否する。
+
+### Key Entities *(include if feature involves data)*
+
+- **Archive Submission**: Discord 参加者が入力したタイトル、URL、任意の説明、送信時刻、送信者 ID（Guild Member or User）、表示名を含むリクエスト単位。Pages Functions が OGP 情報を取得して補完し、重複判定や登録成否がログに記録される。
+- **Processing Outcome**: アーカイブ登録結果（成功、重複、システムエラー）と Discord への通知内容を表す。Pages Functions が Cloudflare D1 に直接書き込み、取得した OGP 情報と構造化ログ（Correlation ID 付き）を保持する。
+
+## Clarifications
+
+### Session 2025-09-28
+
+- Q: Cloudflare Pages Functions からアーカイブ登録を行う際のデータ経路はどれにしますか？ → A: Pages Functions から直接 DB に書き込む
+- Q: Cloudflare Pages Functions から直接書き込むデータベースはどれを想定していますか？ → A: Cloudflare D1（既存アーカイブテーブル）
+- Q: OGP情報（説明文やタイトル補完）が必要な場合、どこで取得・反映しますか？ → A: Pages Functions が OGP を取得して Cloudflare D1 に保存する
+- Q: Slash Command 応答はDiscord上でどの公開範囲にしますか？ → A: チャンネル公開メッセージ
+- Q: Slash Command はどのチャンネルで実行できるようにしますか？ → A: 設定した特定チャンネルのみ許可する
+
+---
+
+## Review & Acceptance Checklist
+
+*GATE: Automated checks run during main() execution*.
+
+### Content Quality
+
+- [x] No implementation details (languages, frameworks, APIs)
+- [x] Focused on user value and business needs
+- [x] Written for non-technical stakeholders
+- [x] All mandatory sections completed
+
+### Requirement Completeness
+
+- [x] No [NEEDS CLARIFICATION] markers remain
+- [x] Requirements are testable and unambiguous  
+- [x] Success criteria are measurable
+- [x] Scope is clearly bounded
+- [x] Dependencies and assumptions identified
+- [x] i18n/a11yの適用可否と理由が明示されている
+- [x] 要求→シナリオ→要件→ユースケース→仕様の参照関係が記載されている
+
+---
+
+## Execution Status
+
+*Updated by main() during processing*.
+
+- [x] User description parsed
+- [x] Key concepts extracted
+- [x] Ambiguities marked
+- [x] User scenarios defined
+- [x] Requirements generated
+- [x] Entities identified
+- [x] Review checklist passed
+
+---

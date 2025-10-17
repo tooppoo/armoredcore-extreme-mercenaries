@@ -1,0 +1,166 @@
+openapi: 3.1.0
+info:
+  title: Discord Interactions Handler (Cloudflare Pages Functions)
+  version: 0.1.0
+  description: |
+    Discord Slash Command `/archive-challenge` および `/archive-video` を処理する Cloudflare Pages Functions。
+    署名検証、OGP 取得、Cloudflare D1 への書き込み、公開レスポンスを担う。
+servers:
+  - url: https://{project}.pages.dev
+    variables:
+      project:
+        default: armoredcore-extreme-mercenaries
+paths:
+  /api/discord/interactions:
+    post:
+      operationId: handleInteraction
+      summary: Discord Interactions (Slash Commands)
+      description: Validate Discord signature, ACK within 3 seconds, persist archive submission to D1, post public message.
+      tags:
+        - Discord
+      security: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/PingInteraction'
+                - $ref: '#/components/schemas/CommandInteraction'
+      responses:
+        '200':
+          description: Immediate ACK or final response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InteractionResponse'
+        '202':
+          description: Deferred response acknowledged; final message will be sent later.
+        '401':
+          description: Signature validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded. (Should only happen on Discord side; documented for completeness.)
+        '500':
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-required-headers:
+        - name: X-Signature-Ed25519
+          description: Discord generated ed25519 signature (hex)
+        - name: X-Signature-Timestamp
+          description: Discord request timestamp
+      x-rate-limit-policy:
+        name: Discord Global
+        bucket: interactions
+        limit: 3
+        period: 1s
+components:
+  schemas:
+    PingInteraction:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: integer
+          const: 1
+          description: Discord PING interaction
+    CommandInteraction:
+      type: object
+      required: [type, id, token, data, member]
+      properties:
+        type:
+          type: integer
+          const: 2
+        id:
+          type: string
+          description: Interaction Snowflake used as correlationId
+        token:
+          type: string
+        guild_id:
+          type: string
+        channel_id:
+          type: string
+        member:
+          $ref: '#/components/schemas/GuildMember'
+        data:
+          $ref: '#/components/schemas/ApplicationCommandData'
+    GuildMember:
+      type: object
+      required: [user]
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+    User:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        global_name:
+          type: string
+    ApplicationCommandData:
+      type: object
+      required: [name, options]
+      properties:
+        name:
+          type: string
+          enum: [archive-challenge, archive-video]
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationCommandOption'
+    ApplicationCommandOption:
+      type: object
+      required: [name, type]
+      properties:
+        name:
+          type: string
+          enum: [title, url, description]
+        type:
+          type: integer
+        value:
+          type: string
+    InteractionResponse:
+      type: object
+      description: Immediate response complying with Discord Interactions API
+      required: [type]
+      properties:
+        type:
+          type: integer
+          enum: [1, 4, 5]
+          description: 1=PONG, 4=Channel message with source, 5=Deferred channel message
+        data:
+          type: object
+          properties:
+            content:
+              type: string
+              description: Message to post publicly in the channel
+            flags:
+              type: integer
+              description: Flags bitfield; MUST NOT include ephemeral flag (64)
+    ErrorResponse:
+      type: object
+      required: [message, code]
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+          enum:
+            - signature_invalid
+            - rate_limited
+            - ogp_fetch_failed
+            - d1_write_failed
+            - unexpected_error
+        correlationId:
+          type: string
+  securitySchemes: {}

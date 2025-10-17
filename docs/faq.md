@@ -25,4 +25,3 @@
 - 補足:
   - Node のバージョンを `engines`（`>=20`）に合わせると安定します。
   - それでも解決しない場合は `npm rebuild` の実行、Vite/Tailwind のキャッシュ削除（`packages/front/build`, `packages/front/.vite`）も試してください。
-
