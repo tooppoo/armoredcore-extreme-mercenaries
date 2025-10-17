@@ -16,7 +16,7 @@ const validateEnvironment = async (env: Env): Promise<void> => {
   const { logger } = await import('~/lib/observability/logger')
 
   if (!env.DISCORD_PUBLIC_KEY?.trim()) {
-    logger.fatal(
+    logger.error(
       'DISCORD_PUBLIC_KEY is not set. Application cannot process requests.',
     )
     throw new Error(
