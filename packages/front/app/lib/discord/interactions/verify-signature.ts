@@ -8,10 +8,10 @@ const hexToBytes = (hex: string): Uint8Array =>
 // 関数内で毎回実行することで、遅延ロードされるモジュールでも確実に初期化される
 const ensureEd25519Initialized = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (!(ed.etc as any).sha512Sync) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(ed.etc as any).sha512Sync = (...m: Uint8Array[]) =>
-      sha512(ed.etc.concatBytes(...m))
+  const etc = ed.etc as any
+  if (!etc.sha512Sync) {
+    etc.sha512Sync = (...m: Uint8Array[]) =>
+      sha512(etc.concatBytes(...m))
   }
 }
 
