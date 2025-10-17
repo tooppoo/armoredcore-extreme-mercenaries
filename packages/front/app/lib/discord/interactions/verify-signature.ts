@@ -1,13 +1,19 @@
 import * as ed from '@noble/ed25519'
-import { sha512 } from '@noble/hashes/sha512'
-
-// Cloudflare Workers環境でed25519を使用するために必要
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-;(ed.etc as any).sha512Sync = (...m: Uint8Array[]) =>
-  sha512(ed.etc.concatBytes(...m))
+import { sha512 } from '@noble/hashes/sha2'
 
 const hexToBytes = (hex: string): Uint8Array =>
   new Uint8Array((hex.match(/.{1,2}/g) || []).map((b) => parseInt(b, 16)))
+
+// Cloudflare Workers環境でed25519を使用するためにSHA-512を初期化
+// 関数内で毎回実行することで、遅延ロードされるモジュールでも確実に初期化される
+const ensureEd25519Initialized = () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (!(ed.etc as any).sha512Sync) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(ed.etc as any).sha512Sync = (...m: Uint8Array[]) =>
+      sha512(ed.etc.concatBytes(...m))
+  }
+}
 
 export async function verifyRequestSignature(
   req: Request,
@@ -31,6 +37,9 @@ export async function verifyRequestSignature(
   const publicKey = hexToBytes(publicKeyHex)
 
   try {
+    // SHA-512の初期化を確実に実行
+    ensureEd25519Initialized()
+
     const result = await ed.verify(signature, message, publicKey)
 
     // デバッグ用: 検証結果の詳細をログ出力
