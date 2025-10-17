@@ -47,5 +47,5 @@ export async function sendDevAlert(
       body: JSON.stringify(body),
     },
   )
-  return { ok: res.ok as boolean, status: res.status }
+  return { ok: res.ok, status: res.status }
 }
