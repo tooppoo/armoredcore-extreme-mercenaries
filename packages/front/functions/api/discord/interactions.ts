@@ -120,17 +120,22 @@ const normalizeOptions = (
   }))
 
 const parseInteraction = (rawBody: string): Result<Interaction, ErrorCode> => {
-  if (!rawBody) return { ok: false, error: 'bad_request' }
+  if (!rawBody) {
+    logger.warn('Received empty body')
+    return { ok: false, error: 'bad_request' }
+  }
 
   let jsonBody: unknown
   try {
     jsonBody = JSON.parse(rawBody)
   } catch {
+    logger.warn('Received invalid JSON')
     return { ok: false, error: 'bad_request' }
   }
 
   const parsed = interactionSchema.safeParse(jsonBody)
   if (!parsed.success) {
+    logger.warn('Received invalid body')
     return { ok: false, error: 'bad_request' }
   }
 
@@ -146,7 +151,10 @@ const extractUser = (
 ): Result<DiscordUser, ErrorCode> => {
   const candidateUser = interaction.member?.user ?? interaction.user
   const rawId = candidateUser?.id?.trim()
-  if (!rawId) return { ok: false, error: 'bad_request' }
+  if (!rawId) {
+    logger.warn('User ID is missing in interaction')
+    return { ok: false, error: 'bad_request' }
+  }
 
   const nameCandidates = [
     interaction.member?.nick,
