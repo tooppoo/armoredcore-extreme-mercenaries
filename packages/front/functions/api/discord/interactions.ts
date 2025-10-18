@@ -128,13 +128,13 @@ const parseInteraction = (rawBody: string): Result<Interaction, ErrorCode> => {
   try {
     jsonBody = JSON.parse(rawBody)
   } catch {
-    logger.warn('Received invalid JSON')
+    logger.warn('Received invalid JSON', { rawBody })
     return { ok: false, error: 'bad_request' }
   }
 
   const parsed = interactionSchema.safeParse(jsonBody)
   if (!parsed.success) {
-    logger.warn('Received invalid body')
+    logger.warn('Received invalid body', { jsonBody })
     return { ok: false, error: 'bad_request' }
   }
 
