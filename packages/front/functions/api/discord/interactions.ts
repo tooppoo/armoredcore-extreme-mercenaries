@@ -5,6 +5,7 @@ import type {
   DiscordUser,
   DiscordUserId,
 } from '~/lib/discord/interactions/archive-repository'
+import { logger } from '~/lib/observability/logger'
 
 type Result<T, E> = { ok: true; data: T } | { ok: false; error: E }
 
@@ -12,8 +13,6 @@ let envValidated = false
 
 const validateEnvironment = async (env: Env): Promise<void> => {
   if (envValidated) return
-
-  const { logger } = await import('~/lib/observability/logger')
 
   if (!env.DISCORD_PUBLIC_KEY?.trim()) {
     logger.error(
