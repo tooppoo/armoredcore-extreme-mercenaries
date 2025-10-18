@@ -172,6 +172,17 @@ const extractUser = (
   }
 }
 
+const formatCommandArgs = (args: {
+  title?: string
+  description?: string
+  url?: string
+}): string => {
+  const title = args.title?.trim() || '-'
+  const description = args.description?.trim() || '-'
+  const url = args.url?.trim() || '-'
+  return `\n\ntitle: ${title}\ndescription: ${description}\nurl: ${url}`
+}
+
 const respondWithError = async (code: ErrorCode, status = 200) => {
   const { messageFor } = await import('~/lib/discord/interactions/errors')
   return new Response(
@@ -200,7 +211,7 @@ type UpsertResult =
       code: 'duplicate' | 'unsupported' | 'ogp_fetch_failed' | 'unexpected'
     }
 
-const handleArchiveCommand = async <T>(
+const handleArchiveCommand = async <T extends { title?: string; description?: string; url?: string }>(
   config: CommandConfig<T>,
   options: Option[] | undefined,
   user: DiscordUser,
@@ -222,13 +233,15 @@ const handleArchiveCommand = async <T>(
     )
   }
 
+  const argsDisplay = formatCommandArgs(validation.data)
+
   try {
     const result = await config.handler({ ...validation.data, user }, env)
 
     if (result.ok) {
       log.info(`${config.logPrefix}_upsert_success`, { result: 'ok' })
       return json(
-        { type: 4, data: { content: 'アーカイブに登録しました' } },
+        { type: 4, data: { content: `アーカイブに登録しました${argsDisplay}` } },
         { status: 200 },
       )
     }
@@ -236,7 +249,7 @@ const handleArchiveCommand = async <T>(
     if (result.code === 'duplicate') {
       log.warn(`${config.logPrefix}_upsert_duplicate`, { result: result.code })
       return json(
-        { type: 4, data: { content: messageFor('duplicate') } },
+        { type: 4, data: { content: `${messageFor('duplicate')}${argsDisplay}` } },
         { status: 200 },
       )
     }
@@ -251,7 +264,7 @@ const handleArchiveCommand = async <T>(
         correlationId,
       })
       return json(
-        { type: 4, data: { content: messageFor('ogp_fetch_failed') } },
+        { type: 4, data: { content: `${messageFor('ogp_fetch_failed')}${argsDisplay}` } },
         { status: 200 },
       )
     }
@@ -261,7 +274,7 @@ const handleArchiveCommand = async <T>(
         result: result.code,
       })
       return json(
-        { type: 4, data: { content: messageFor('unsupported') } },
+        { type: 4, data: { content: `${messageFor('unsupported')}${argsDisplay}` } },
         { status: 200 },
       )
     }
@@ -275,7 +288,7 @@ const handleArchiveCommand = async <T>(
       correlationId,
     })
     return json(
-      { type: 4, data: { content: messageFor('unexpected') } },
+      { type: 4, data: { content: `${messageFor('unexpected')}${argsDisplay}` } },
       { status: 200 },
     )
   } catch (error) {
@@ -291,7 +304,7 @@ const handleArchiveCommand = async <T>(
       correlationId,
     })
     return json(
-      { type: 4, data: { content: messageFor('unexpected') } },
+      { type: 4, data: { content: `${messageFor('unexpected')}${argsDisplay}` } },
       { status: 200 },
     )
   }
@@ -372,7 +385,7 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
   const correlationId = body.id
   const userResult = extractUser(body)
   if (!userResult.ok) {
-    interactionLog.warn('user_extraction_failed', { body })
+    interactionLog.warn('user_extraction_failed', { error: userResult.error })
     return respondWithError(userResult.error)
   }
   const user = userResult.data
