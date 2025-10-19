@@ -99,13 +99,13 @@ const createEventContext = (
   }
 
   const globalCaches =
-    (globalThis as { caches?: CacheStorage }).caches ??
-    ({} as CacheStorage)
+    (globalThis as { caches?: CacheStorage }).caches ?? ({} as CacheStorage)
 
   const cloudflareContext = {
     ...baseContext,
-    cf: (typedRequest as Request & { cf?: IncomingRequestCfProperties<unknown> })
-      .cf,
+    cf: (
+      typedRequest as Request & { cf?: IncomingRequestCfProperties<unknown> }
+    ).cf,
     ctx: {
       waitUntil,
       passThroughOnException,
@@ -113,7 +113,9 @@ const createEventContext = (
     caches: globalCaches,
   }
 
-  return Object.assign(baseContext, { cloudflare: cloudflareContext }) as WorkerEventContext
+  return Object.assign(baseContext, {
+    cloudflare: cloudflareContext,
+  }) as WorkerEventContext
 }
 
 const handleWithFallback = async (

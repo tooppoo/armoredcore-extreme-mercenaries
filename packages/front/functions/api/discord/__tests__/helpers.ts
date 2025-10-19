@@ -16,7 +16,8 @@ const createMockSocket = (): AssetSocket => ({
 })
 
 const assetsMock: Env['ASSETS'] = {
-  fetch: (input, init) => fetch(input as RequestInfo | URL, init as RequestInit),
+  fetch: (input, init) =>
+    fetch(input as RequestInfo | URL, init as RequestInit),
   connect: ((...args: Parameters<AssetConnect>) => {
     void args
     return createMockSocket()
