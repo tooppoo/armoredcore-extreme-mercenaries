@@ -11,6 +11,10 @@ directory = "./build/client"
 [observability]
 enabled = true
 
+[[routes]]
+pattern = "armoredcore-extreme-mercenaries.philomagi.dev"
+custom_domain = true
+
 # Automatically place your workloads in an optimal location to minimize latency.
 # If you are running back-end logic in a Pages Function, running it closer to your back-end infrastructure
 # rather than the end user may result in better performance.
