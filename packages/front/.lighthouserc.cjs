@@ -11,7 +11,7 @@ module.exports = {
         'http://localhost:8788/archives/video',
         'http://localhost:8788/archives/challenge',
       ],
-      startServerCommand: 'npm run preview',
+      startServerCommand: 'pnpm run build && pnpm run preview',
       numberOfRuns: 1,
     },
     assertions: {
