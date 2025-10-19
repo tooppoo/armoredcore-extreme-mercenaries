@@ -21,6 +21,9 @@ alias l1='ls -1'
 # util
 alias now='date "+%Y%m%d-%H%M%S"'
 alias grep='grep --color=auto'
+
+# ai
+alias claude_bypass='claude --dangerously-skip-permissions'
 ALIASES
 
 for shell_rc in ~/.bashrc ~/.zshrc ~/.profile; do

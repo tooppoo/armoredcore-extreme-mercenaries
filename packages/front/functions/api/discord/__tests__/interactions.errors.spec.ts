@@ -1,10 +1,4 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { onRequest } from '../interactions'
-import { makeCtx } from './helpers'
-
-const infoMock = vi.fn()
-const warnMock = vi.fn()
-const errorMock = vi.fn()
 
 type UpsertVideo =
   (typeof import('~/lib/discord/interactions/archive-repository'))['upsertVideo']
@@ -17,16 +11,25 @@ const upsertVideoMock = vi.fn<UpsertVideo>()
 const upsertChallengeMock = vi.fn<UpsertChallenge>()
 const sendDevAlertMock = vi.fn<SendDevAlert>()
 
-vi.mock('~/lib/observability/logger', () => ({
-  logger: {
-    withCorrelation: () => ({
-      debug: vi.fn(),
-      info: infoMock,
-      warn: warnMock,
-      error: errorMock,
-    }),
-  },
-}))
+vi.mock('~/lib/observability/logger', () => {
+  const infoFn = vi.fn()
+  const warnFn = vi.fn()
+  const errorFn = vi.fn()
+
+  return {
+    logger: {
+      info: infoFn,
+      warn: warnFn,
+      error: errorFn,
+      withCorrelation: () => ({
+        debug: vi.fn(),
+        info: infoFn,
+        warn: warnFn,
+        error: errorFn,
+      }),
+    },
+  }
+})
 
 vi.mock('~/lib/discord/interactions/verify-signature', () => ({
   verifyRequestSignature: vi.fn(async () => true),
@@ -42,6 +45,14 @@ vi.mock('~/lib/discord/interactions/dev-alert', () => ({
   sendDevAlert: (...args: Parameters<SendDevAlert>) =>
     sendDevAlertMock(...args),
 }))
+
+import { onRequest } from '../interactions'
+import { makeCtx } from './helpers'
+import { logger } from '~/lib/observability/logger'
+
+const infoMock = vi.mocked(logger.info)
+const warnMock = vi.mocked(logger.warn)
+const errorMock = vi.mocked(logger.error)
 
 const baseHeaders = {
   'X-Signature-Ed25519': 'mock-sig',
@@ -143,7 +154,10 @@ describe('error handling and logging', () => {
     expect(res.status).toBe(200)
     expect(json).toEqual({
       type: 4,
-      data: { content: 'アーカイブの情報を取得できませんでした' },
+      data: {
+        content:
+          'アーカイブの情報を取得できませんでした\n\ntitle: -\ndescription: -\nurl: https://example.com/video',
+      },
     })
     expect(warnMock).toHaveBeenCalledWith('video_upsert_ogp_failed', {
       result: 'ogp_fetch_failed',
@@ -186,7 +200,10 @@ describe('error handling and logging', () => {
     expect(res.status).toBe(200)
     expect(json).toEqual({
       type: 4,
-      data: { content: '予期しないエラーが発生しました' },
+      data: {
+        content:
+          '予期しないエラーが発生しました\n\ntitle: -\ndescription: -\nurl: https://example.com/video',
+      },
     })
     expect(errorMock).toHaveBeenCalledWith('video_upsert_exception', {
       message: 'db down',

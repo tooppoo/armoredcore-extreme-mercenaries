@@ -1,4 +1,8 @@
 import { z } from 'zod'
+import {
+  ARCHIVE_VIDEO_COMMAND_NAME,
+  ARCHIVE_CHALLENGE_COMMAND_NAME,
+} from '@ac-extreme-mercenaries/discord-bot/command-names'
 import { type ErrorCode } from '~/lib/discord/interactions/errors'
 import type {
   DiscordDisplayName,
@@ -45,7 +49,7 @@ const userSchema = z.object({
 
 const guildMemberSchema = z.object({
   user: userSchema.optional(),
-  nick: z.string().nullable(),
+  nick: z.string().nullable().optional(),
 })
 
 const interactionSchema = z.discriminatedUnion('type', [
@@ -83,7 +87,7 @@ const commandIsAllowed = (
   channelId: string,
 ): Result<{ allowed: boolean }, ErrorCode> => {
   switch (command) {
-    case 'archive-video':
+    case ARCHIVE_VIDEO_COMMAND_NAME:
       return {
         ok: true,
         data: {
@@ -92,7 +96,7 @@ const commandIsAllowed = (
           ).has(channelId),
         },
       }
-    case 'archive-challenge':
+    case ARCHIVE_CHALLENGE_COMMAND_NAME:
       return {
         ok: true,
         data: {
@@ -127,7 +131,7 @@ const parseInteraction = (rawBody: string): Result<Interaction, ErrorCode> => {
   let jsonBody: unknown
   try {
     jsonBody = JSON.parse(rawBody)
-  } catch(e: unknown) {
+  } catch (e: unknown) {
     logger.warn('Received invalid JSON', { error: e, rawBody })
     return { ok: false, error: 'bad_request' }
   }
@@ -183,15 +187,12 @@ const formatCommandArgs = (args: {
   return `\n\ntitle: ${title}\ndescription: ${description}\nurl: ${url}`
 }
 
+const respondWithContent = (content: string, status = 200) =>
+  json({ type: 4, data: { content } }, { status })
+
 const respondWithError = async (code: ErrorCode, status = 200) => {
   const { messageFor } = await import('~/lib/discord/interactions/errors')
-  return new Response(
-    JSON.stringify({ type: 4, data: { content: messageFor(code) } }),
-    {
-      status,
-      headers: { 'content-type': 'application/json; charset=utf-8' },
-    },
-  )
+  return respondWithContent(messageFor(code), status)
 }
 
 type CommandConfig<T> = {
@@ -211,7 +212,9 @@ type UpsertResult =
       code: 'duplicate' | 'unsupported' | 'ogp_fetch_failed' | 'unexpected'
     }
 
-const handleArchiveCommand = async <T extends { title?: string; description?: string; url?: string }>(
+const handleArchiveCommand = async <
+  T extends { title?: string; description?: string; url?: string },
+>(
   config: CommandConfig<T>,
   options: Option[] | undefined,
   user: DiscordUser,
@@ -227,10 +230,7 @@ const handleArchiveCommand = async <T extends { title?: string; description?: st
     log.warn(`${config.logPrefix}_command_invalid`, {
       reason: validation.message,
     })
-    return json(
-      { type: 4, data: { content: validation.message } },
-      { status: 200 },
-    )
+    return respondWithContent(validation.message)
   }
 
   const argsDisplay = formatCommandArgs(validation.data)
@@ -240,18 +240,12 @@ const handleArchiveCommand = async <T extends { title?: string; description?: st
 
     if (result.ok) {
       log.info(`${config.logPrefix}_upsert_success`, { result: 'ok' })
-      return json(
-        { type: 4, data: { content: `アーカイブに登録しました${argsDisplay}` } },
-        { status: 200 },
-      )
+      return respondWithContent(`アーカイブに登録しました${argsDisplay}`)
     }
 
     if (result.code === 'duplicate') {
       log.warn(`${config.logPrefix}_upsert_duplicate`, { result: result.code })
-      return json(
-        { type: 4, data: { content: `${messageFor('duplicate')}${argsDisplay}` } },
-        { status: 200 },
-      )
+      return respondWithContent(`${messageFor('duplicate')}${argsDisplay}`)
     }
 
     if (result.code === 'ogp_fetch_failed') {
@@ -263,9 +257,8 @@ const handleArchiveCommand = async <T extends { title?: string; description?: st
         code: result.code,
         correlationId,
       })
-      return json(
-        { type: 4, data: { content: `${messageFor('ogp_fetch_failed')}${argsDisplay}` } },
-        { status: 200 },
+      return respondWithContent(
+        `${messageFor('ogp_fetch_failed')}${argsDisplay}`,
       )
     }
 
@@ -273,10 +266,7 @@ const handleArchiveCommand = async <T extends { title?: string; description?: st
       log.warn(`${config.logPrefix}_upsert_unsupported`, {
         result: result.code,
       })
-      return json(
-        { type: 4, data: { content: `${messageFor('unsupported')}${argsDisplay}` } },
-        { status: 200 },
-      )
+      return respondWithContent(`${messageFor('unsupported')}${argsDisplay}`)
     }
 
     log.error(`${config.logPrefix}_upsert_unexpected`, { result: result.code })
@@ -287,10 +277,7 @@ const handleArchiveCommand = async <T extends { title?: string; description?: st
       code: result.code,
       correlationId,
     })
-    return json(
-      { type: 4, data: { content: `${messageFor('unexpected')}${argsDisplay}` } },
-      { status: 200 },
-    )
+    return respondWithContent(`${messageFor('unexpected')}${argsDisplay}`)
   } catch (error) {
     const message = error instanceof Error ? error.message : 'unknown'
     const cause =
@@ -303,10 +290,7 @@ const handleArchiveCommand = async <T extends { title?: string; description?: st
       code: 'unexpected',
       correlationId,
     })
-    return json(
-      { type: 4, data: { content: `${messageFor('unexpected')}${argsDisplay}` } },
-      { status: 200 },
-    )
+    return respondWithContent(`${messageFor('unexpected')}${argsDisplay}`)
   }
 }
 
@@ -352,7 +336,7 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
   if (body.type === 1) {
     logger.info('pong_response', {})
 
-    return json({ type: 1 }, { status: 200 })
+    return json({ type: 1 })
   }
 
   const interactionLog = logger.withCorrelation(body.id)
@@ -372,11 +356,17 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
       body.channel_id,
     )
     if (!resultCommandIsAllowed.ok) {
-      interactionLog.warn('command_not_allowed', { commandName, channelId: body.channel_id })
+      interactionLog.warn('command_not_allowed', {
+        commandName,
+        channelId: body.channel_id,
+      })
       return respondWithError(resultCommandIsAllowed.error)
     }
     if (!resultCommandIsAllowed.data.allowed) {
-      interactionLog.info('command_channel_not_allowed', { commandName, channelId: body.channel_id })
+      interactionLog.info('command_channel_not_allowed', {
+        commandName,
+        channelId: body.channel_id,
+      })
       return respondWithError('channel_not_allowed')
     }
   }
@@ -390,7 +380,7 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
   }
   const user = userResult.data
 
-  if (commandName === 'archive-video') {
+  if (commandName === ARCHIVE_VIDEO_COMMAND_NAME) {
     const { validateVideoCommand } = await import(
       '~/lib/discord/interactions/command-validator'
     )
@@ -413,7 +403,7 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
     )
   }
 
-  if (commandName === 'archive-challenge') {
+  if (commandName === ARCHIVE_CHALLENGE_COMMAND_NAME) {
     const { validateChallengeCommand } = await import(
       '~/lib/discord/interactions/command-validator'
     )
@@ -421,7 +411,9 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
       '~/lib/discord/interactions/archive-repository'
     )
 
-    interactionLog.info('processing_archive_challenge_command', { userId: user.id })
+    interactionLog.info('processing_archive_challenge_command', {
+      userId: user.id,
+    })
 
     return handleArchiveCommand(
       {
@@ -445,8 +437,5 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
     correlationId,
   })
 
-  return json(
-    { type: 4, data: { content: 'コマンドを処理できませんでした。' } },
-    { status: 200 },
-  )
+  return respondWithContent('コマンドを処理できませんでした。')
 }
