@@ -18,7 +18,7 @@
   "dependencies": {
     "@hono/node-server": "^1.13.7",
     "discord.js": "14.22.1",
-    "dotenv": "17.2.2",
+    "dotenv": "17.2.3",
     "hono": "^4.9.7"
   },
   "devDependencies": {
