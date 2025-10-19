@@ -3,6 +3,15 @@
   "version": "1.0.0",
   "main": "dist/app.js",
   "type": "module",
+  "exports": {
+    ".": {
+      "default": "./dist/app.js"
+    },
+    "./command-names": {
+      "types": "./src/command-names.ts",
+      "default": "./src/command-names.ts"
+    }
+  },
   "scripts": {
     "deploy:commands": "tsx scripts/deploy-commands.ts",
     "build": "tsc --project tsconfig.build.json",

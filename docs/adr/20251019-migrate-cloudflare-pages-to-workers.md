@@ -21,8 +21,8 @@
 ## 検討した選択肢
 
 1. Cloudflare Pages Functions を継続利用し、ログは外部にforwardする
-1. SSRのみWorkersへ移行し、slash command はPagesに残す（ハイブリッド）
-1. SSRとslash command のエントリポイントを単一の Cloudflare Worker に集約する（採択）
+2. SSRのみWorkersへ移行し、slash command はPagesに残す（ハイブリッド）
+3. SSRとslash command のエントリポイントを単一の Cloudflare Worker に集約する（採択）
 
 ## 決定（採択）
 

@@ -2,7 +2,7 @@ import { z } from 'zod'
 import {
   ARCHIVE_VIDEO_COMMAND_NAME,
   ARCHIVE_CHALLENGE_COMMAND_NAME,
-} from '@ac-extreme-mercenaries/discord-bot/src/command-names'
+} from '@ac-extreme-mercenaries/discord-bot/command-names'
 import { type ErrorCode } from '~/lib/discord/interactions/errors'
 import type {
   DiscordDisplayName,

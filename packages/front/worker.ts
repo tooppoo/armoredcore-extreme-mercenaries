@@ -6,14 +6,15 @@ import type { ServerBuild } from 'react-router'
 import * as build from './build/server'
 import { getLoadContext } from './load-context'
 import { handleDiscordInteractions } from './functions/api/discord/interactions'
+import { logger } from './app/lib/observability/logger'
 
-const buildWithHackedType = build as unknown as ServerBuild
-const getLoadContextHackedType =
+const buildWithCompatibleType = build as unknown as ServerBuild
+const getLoadContextWithCompatibleType =
   getLoadContext as unknown as GetLoadContextFunction
 
 const handleRequest = createRequestHandler<Env>({
-  build: buildWithHackedType,
-  getLoadContext: getLoadContextHackedType,
+  build: buildWithCompatibleType,
+  getLoadContext: getLoadContextWithCompatibleType,
 })
 
 type WorkerEventContext = Parameters<typeof handleRequest>[0]
@@ -44,9 +45,12 @@ const tryFetchAsset = async (
     }
   } catch (error) {
     // 資産取得が失敗した場合はSSRにフォールバックする
-    if (env.APP_ENV !== 'production') {
-      console.error('Failed to fetch asset, falling back to SSR', error)
-    }
+    const message = error instanceof Error ? error.message : 'unknown'
+    logger.warn('asset_fetch_failed_fallback', {
+      appEnv: env.APP_ENV,
+      url: request.url,
+      message,
+    })
   }
 
   return undefined
@@ -135,10 +139,22 @@ const handleWithFallback = async (
   try {
     return await handleApp(context)
   } catch (error) {
+    if (error instanceof Response) return error
     if (context.env.APP_ENV !== 'production' && error instanceof Error) {
-      console.error(error)
-      return new Response(error.message ?? error.toString(), {
-        status: 500,
+      logger.error('app_handler_exception', {
+        message: error.message,
+        stack: error.stack,
+        url: context.request.url,
+      })
+    } else if (error instanceof Error) {
+      logger.error('app_handler_exception', {
+        message: error.message,
+        url: context.request.url,
+      })
+    } else {
+      logger.error('app_handler_exception_unknown', {
+        url: context.request.url,
+        error,
       })
     }
 
