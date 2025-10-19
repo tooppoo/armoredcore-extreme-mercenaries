@@ -49,7 +49,7 @@ const userSchema = z.object({
 
 const guildMemberSchema = z.object({
   user: userSchema.optional(),
-  nick: z.string().nullable(),
+  nick: z.string().nullable().optional(),
 })
 
 const interactionSchema = z.discriminatedUnion('type', [
