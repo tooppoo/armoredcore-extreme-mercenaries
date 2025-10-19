@@ -59,7 +59,7 @@
     "@fast-check/vitest": "0.2.2",
     "@react-router/dev": "7.9.2",
     "@react-router/node": "7.9.2",
-    "@tailwindcss/postcss": "4.1.13",
+    "@tailwindcss/postcss": "4.1.14",
     "@types/jsdom": "21.1.7",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
@@ -72,7 +72,7 @@
     "eslint-plugin-react-hooks": "5.2.0",
     "fast-check": "4.3.0",
     "postcss": "8.5.6",
-    "tailwindcss": "4.1.13",
+    "tailwindcss": "4.1.14",
     "wrangler": "4.40.1"
   },
   "optionalDependencies": {
