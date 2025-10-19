@@ -55,16 +55,14 @@ describe('signature & channel guards', () => {
     })
   })
 
-  it(
-    'allows commands only when channel matches command-specific allowed list',
-    async () => {
-      const body = {
-        type: 2,
-        id: 'corr-union',
-        channel_id: '999',
-        data: { name: 'archive-challenge', options: [] },
-        member: { user: { id: 'guard-3', username: 'guard-user-3' } },
-      }
+  it('allows commands only when channel matches command-specific allowed list', async () => {
+    const body = {
+      type: 2,
+      id: 'corr-union',
+      channel_id: '999',
+      data: { name: 'archive-challenge', options: [] },
+      member: { user: { id: 'guard-3', username: 'guard-user-3' } },
+    }
     const headers = {
       'X-Signature-Ed25519': '00',
       'X-Signature-Timestamp': '0',
@@ -76,14 +74,12 @@ describe('signature & channel guards', () => {
     const ctx = makeCtx({ body, headers, env })
     const res = await handleDiscordInteractions(ctx)
     expect(res.status).toBe(200)
-      const json = (await res
-        .clone()
-        .json()
-        .catch(() => null)) as { data?: { content?: string } }
-      expect(json?.data?.content ?? '').toContain('必須項目が不足しています')
-    },
-    10000,
-  )
+    const json = (await res
+      .clone()
+      .json()
+      .catch(() => null)) as { data?: { content?: string } }
+    expect(json?.data?.content ?? '').toContain('必須項目が不足しています')
+  }, 10000)
 
   it('allows archive-video only in video-specific channels', async () => {
     const body = {
