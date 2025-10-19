@@ -187,15 +187,12 @@ const formatCommandArgs = (args: {
   return `\n\ntitle: ${title}\ndescription: ${description}\nurl: ${url}`
 }
 
+const respondWithContent = (content: string, status = 200) =>
+  json({ type: 4, data: { content } }, { status })
+
 const respondWithError = async (code: ErrorCode, status = 200) => {
   const { messageFor } = await import('~/lib/discord/interactions/errors')
-  return new Response(
-    JSON.stringify({ type: 4, data: { content: messageFor(code) } }),
-    {
-      status,
-      headers: { 'content-type': 'application/json; charset=utf-8' },
-    },
-  )
+  return respondWithContent(messageFor(code), status)
 }
 
 type CommandConfig<T> = {
@@ -233,10 +230,7 @@ const handleArchiveCommand = async <
     log.warn(`${config.logPrefix}_command_invalid`, {
       reason: validation.message,
     })
-    return json(
-      { type: 4, data: { content: validation.message } },
-      { status: 200 },
-    )
+    return respondWithContent(validation.message)
   }
 
   const argsDisplay = formatCommandArgs(validation.data)
@@ -246,24 +240,12 @@ const handleArchiveCommand = async <
 
     if (result.ok) {
       log.info(`${config.logPrefix}_upsert_success`, { result: 'ok' })
-      return json(
-        {
-          type: 4,
-          data: { content: `アーカイブに登録しました${argsDisplay}` },
-        },
-        { status: 200 },
-      )
+      return respondWithContent(`アーカイブに登録しました${argsDisplay}`)
     }
 
     if (result.code === 'duplicate') {
       log.warn(`${config.logPrefix}_upsert_duplicate`, { result: result.code })
-      return json(
-        {
-          type: 4,
-          data: { content: `${messageFor('duplicate')}${argsDisplay}` },
-        },
-        { status: 200 },
-      )
+      return respondWithContent(`${messageFor('duplicate')}${argsDisplay}`)
     }
 
     if (result.code === 'ogp_fetch_failed') {
@@ -275,12 +257,8 @@ const handleArchiveCommand = async <
         code: result.code,
         correlationId,
       })
-      return json(
-        {
-          type: 4,
-          data: { content: `${messageFor('ogp_fetch_failed')}${argsDisplay}` },
-        },
-        { status: 200 },
+      return respondWithContent(
+        `${messageFor('ogp_fetch_failed')}${argsDisplay}`,
       )
     }
 
@@ -288,13 +266,7 @@ const handleArchiveCommand = async <
       log.warn(`${config.logPrefix}_upsert_unsupported`, {
         result: result.code,
       })
-      return json(
-        {
-          type: 4,
-          data: { content: `${messageFor('unsupported')}${argsDisplay}` },
-        },
-        { status: 200 },
-      )
+      return respondWithContent(`${messageFor('unsupported')}${argsDisplay}`)
     }
 
     log.error(`${config.logPrefix}_upsert_unexpected`, { result: result.code })
@@ -305,13 +277,7 @@ const handleArchiveCommand = async <
       code: result.code,
       correlationId,
     })
-    return json(
-      {
-        type: 4,
-        data: { content: `${messageFor('unexpected')}${argsDisplay}` },
-      },
-      { status: 200 },
-    )
+    return respondWithContent(`${messageFor('unexpected')}${argsDisplay}`)
   } catch (error) {
     const message = error instanceof Error ? error.message : 'unknown'
     const cause =
@@ -324,13 +290,7 @@ const handleArchiveCommand = async <
       code: 'unexpected',
       correlationId,
     })
-    return json(
-      {
-        type: 4,
-        data: { content: `${messageFor('unexpected')}${argsDisplay}` },
-      },
-      { status: 200 },
-    )
+    return respondWithContent(`${messageFor('unexpected')}${argsDisplay}`)
   }
 }
 
@@ -376,7 +336,7 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
   if (body.type === 1) {
     logger.info('pong_response', {})
 
-    return json({ type: 1 }, { status: 200 })
+    return json({ type: 1 })
   }
 
   const interactionLog = logger.withCorrelation(body.id)
@@ -477,8 +437,5 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
     correlationId,
   })
 
-  return json(
-    { type: 4, data: { content: 'コマンドを処理できませんでした。' } },
-    { status: 200 },
-  )
+  return respondWithContent('コマンドを処理できませんでした。')
 }

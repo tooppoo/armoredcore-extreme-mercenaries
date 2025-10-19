@@ -1,7 +1,6 @@
 {
   "name": "@ac-extreme-mercenaries/discord-bot",
   "version": "1.0.0",
-  "main": "dist/app.js",
   "type": "module",
   "exports": {
     "./command-names": "./src/command-names.ts"

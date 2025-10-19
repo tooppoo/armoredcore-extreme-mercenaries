@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js'
-import { createArchiveCommand } from './lib/archive-command-factory.js'
+import type { Command } from './types.js'
 import { ARCHIVE_CHALLENGE_COMMAND_NAME } from '../../command-names.js'
 
 export const commandName = ARCHIVE_CHALLENGE_COMMAND_NAME
@@ -23,4 +23,4 @@ const data = new SlashCommandBuilder()
       .setRequired(false),
   )
 
-export const archiveChallengeCommand = createArchiveCommand(data)
+export const archiveChallengeCommand: Command = { data }

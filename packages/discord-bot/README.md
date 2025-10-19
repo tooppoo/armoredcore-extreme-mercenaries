@@ -40,16 +40,12 @@ DISCORD_CLIENT_ID=your_client_id_here
 
 ## 開発
 
-### 起動
+### コマンド登録
+
+Discord にコマンドを登録する場合は、以下のスクリプトを実行します。
 
 ```bash
-pnpm run dev
-```
-
-### テスト
-
-```bash
-pnpm test
+pnpm run deploy:commands
 ```
 
 ### 型チェック
