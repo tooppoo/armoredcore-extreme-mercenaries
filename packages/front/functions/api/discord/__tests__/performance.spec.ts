@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { performance } from 'node:perf_hooks'
-import { onRequest } from '../interactions'
+import { handleDiscordInteractions } from '../interactions'
 import { makeCtx as makeCtxBase } from './helpers'
 
 type UpsertVideo =
@@ -87,7 +87,7 @@ describe('interaction performance budget', () => {
     for (let i = 0; i < 10; i += 1) {
       const ctx = makeCtx({ id: `corr-ogp-${i}` })
       const start = performance.now()
-      await onRequest(ctx)
+      await handleDiscordInteractions(ctx)
       const end = performance.now()
       samples.push(end - start)
     }
@@ -107,7 +107,7 @@ describe('interaction performance budget', () => {
     for (let i = 0; i < 10; i += 1) {
       const ctx = makeCtx({ id: `corr-success-${i}` })
       const start = performance.now()
-      await onRequest(ctx)
+      await handleDiscordInteractions(ctx)
       const end = performance.now()
       samples.push(end - start)
     }

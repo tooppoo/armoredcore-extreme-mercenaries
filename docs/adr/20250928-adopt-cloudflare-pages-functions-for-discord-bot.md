@@ -1,6 +1,6 @@
 # Discord Bot を Cloudflare Pages Functions で実装する
 
-- ステータス: 承認済み
+- ステータス: 廃止（[20251019-migrate-cloudflare-pages-to-workers.md](20251019-migrate-cloudflare-pages-to-workers.md) によって置き換え）
 - 日付: 2025-09-28
 - タグ: discord, cloudflare, pages, worker, interactions, security, migration
 

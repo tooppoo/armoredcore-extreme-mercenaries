@@ -1,8 +1,15 @@
 #:schema node_modules/wrangler/config-schema.json
 name = "ac-extreme-mercenaries-test"
+main = "./worker.ts"
 compatibility_date = "2025-01-09"
 compatibility_flags = ["nodejs_compat_v2"]
-pages_build_output_dir = "./build/client"
+
+[assets]
+binding = "ASSETS"
+directory = "./build/client"
+
+[observability]
+enabled = true
 
 [[d1_databases]]
 binding = "DB"

@@ -4,7 +4,7 @@ ARMAC（Armored Core Extreme Mercenaries）関連コンテンツのアーカイ�
 
 ## 構成概要
 
-- `packages/front`: Cloudflare Pages / React Router を用いたフロントエンドおよび Pages Functions (Discord Slash Command ハンドラを内包)
+- `packages/front`: Cloudflare Workers / React Router を用いたフロントエンドおよび Workers Runtime (Discord Slash Command ハンドラを内包)
 - `packages/discord-bot`: レガシーの自前ホスティング版 Discord Bot（保守終了、必要時のみコード参照）
 - `packages/e2e`: Playwright による E2E テスト群
 - `packages/adr`: ADR ドキュメントビューア（Eleventy ベース）
@@ -25,7 +25,8 @@ pnpm install
 
 | コマンド | 説明 |
 | --- | --- |
-| `pnpm run front:dev` | フロントエンド開発サーバーを起動（Cloudflare Pages エミュレーション） |
+| `pnpm run front:dev` | フロントエンド開発サーバーを起動（React Router dev） |
+| `pnpm --filter @ac-extreme-mercenaries/front run start` | Workers ランタイムでSSR + APIを実行（`wrangler dev`） |
 | `pnpm run discord-bot:dev` | Discord Bot をローカル起動（`.env` / `.env.local` 必須） |
 | `pnpm run test` | ルート配下のテストスクリプトを一括実行 |
 | `pnpm run lint` / `pnpm run typecheck` | Lint / 型チェック |

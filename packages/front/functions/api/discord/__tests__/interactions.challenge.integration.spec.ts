@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { onRequest } from '../interactions'
+import { handleDiscordInteractions } from '../interactions'
 import { makeCtx } from './helpers'
 type UpsertChallenge =
   (typeof import('~/lib/discord/interactions/archive-repository'))['upsertChallenge']
@@ -48,7 +48,7 @@ describe('/archive-challenge integration', () => {
       'X-Signature-Timestamp': '0',
     }
     const ctx = makeCtx({ body, headers })
-    const res = await onRequest(ctx)
+    const res = await handleDiscordInteractions(ctx)
     expect(res.status).toBe(200)
     const json = (await res
       .clone()
@@ -95,7 +95,7 @@ describe('/archive-challenge integration', () => {
       'X-Signature-Timestamp': '0',
     }
     const ctx = makeCtx({ body, headers })
-    await onRequest(ctx)
+    await handleDiscordInteractions(ctx)
     expect(upsertChallengeMock).toHaveBeenCalledWith(
       expect.objectContaining({
         title: '別タイトル',

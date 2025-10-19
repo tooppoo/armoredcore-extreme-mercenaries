@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { onRequest } from '../interactions'
+import { handleDiscordInteractions } from '../interactions'
 import { makeCtx } from './helpers'
 
 // 署名検証をモック化
@@ -16,7 +16,7 @@ describe('Discord Interactions contract', () => {
         'X-Signature-Timestamp': 'ts',
       },
     })
-    const res = await onRequest(ctx)
+    const res = await handleDiscordInteractions(ctx)
     expect(res.status).toBe(200)
     const json = (await res
       .clone()
@@ -34,7 +34,7 @@ describe('Discord Interactions contract', () => {
         member: { user: { id: 'u-1', username: 'user-1' } },
       },
     })
-    const res = await onRequest(ctx)
+    const res = await handleDiscordInteractions(ctx)
     expect(res.status).toBe(401)
     const json = (await res
       .clone()
@@ -52,7 +52,7 @@ describe('Discord Interactions contract', () => {
         member: { user: { id: 'u-2', username: 'user-2' } },
       },
     })
-    const res = await onRequest(ctx)
+    const res = await handleDiscordInteractions(ctx)
     const json = (await res
       .clone()
       .json()
@@ -62,7 +62,7 @@ describe('Discord Interactions contract', () => {
 
   it('returns structured error when body is invalid JSON', async () => {
     const ctx = makeCtx({ rawBody: '{invalid' })
-    const res = await onRequest(ctx)
+    const res = await handleDiscordInteractions(ctx)
     expect(res.status).toBe(200)
     const json = await res
       .clone()

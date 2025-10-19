@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { onRequest } from '../interactions'
+import { handleDiscordInteractions } from '../interactions'
 import { makeCtx } from './helpers'
 
 vi.mock('~/lib/discord/interactions/archive-repository', () => ({
@@ -34,7 +34,7 @@ describe('OGP fallback', () => {
       'X-Signature-Timestamp': '0',
     }
     const ctx = makeCtx({ body, headers })
-    const res = await onRequest(ctx)
+    const res = await handleDiscordInteractions(ctx)
     expect(res.status).toBe(200)
     const json = (await res
       .clone()

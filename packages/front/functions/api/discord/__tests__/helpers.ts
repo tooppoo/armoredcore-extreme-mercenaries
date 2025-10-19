@@ -1,11 +1,33 @@
-import type { onRequest } from '../interactions'
+import type { DiscordInteractionsHandlerContext } from '../interactions'
 
-export type RequestContext = Parameters<typeof onRequest>[0]
+type AssetConnect = Env['ASSETS']['connect']
+type AssetSocket = ReturnType<AssetConnect>
+type AssetSocketOpened = Awaited<AssetSocket['opened']>
+
+const createMockSocket = (): AssetSocket => ({
+  readable: new ReadableStream(),
+  writable: new WritableStream(),
+  closed: Promise.resolve(),
+  opened: Promise.resolve({} as AssetSocketOpened),
+  upgraded: false,
+  secureTransport: 'off',
+  close: async () => {},
+  startTls: () => createMockSocket(),
+})
+
+const assetsMock: Env['ASSETS'] = {
+  fetch: (input, init) =>
+    fetch(input as RequestInfo | URL, init as RequestInit),
+  connect: ((...args: Parameters<AssetConnect>) => {
+    void args
+    return createMockSocket()
+  }) as AssetConnect,
+}
+
+export type RequestContext = DiscordInteractionsHandlerContext
 
 export const baseEnv: Partial<RequestContext['env']> = {
-  ASSETS: {
-    fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, init),
-  },
+  ASSETS: assetsMock,
   DISCORD_PUBLIC_KEY: 'test-key',
   DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS: '111',
   DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS: '111',
@@ -43,13 +65,9 @@ export const makeCtx = (init?: {
   })
   const env = { ...baseEnv, ...init?.env } as RequestContext['env']
   return {
-    request: req as RequestContext['request'],
+    request: req,
     env,
-    params: {} as RequestContext['params'],
-    data: {} as RequestContext['data'],
     waitUntil: () => {},
-    next: () => Promise.resolve(new Response('NEXT')),
-    functionPath: '',
     passThroughOnException: () => {},
-  } satisfies RequestContext
+  }
 }

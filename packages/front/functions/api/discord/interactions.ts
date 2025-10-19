@@ -294,12 +294,19 @@ const handleArchiveCommand = async <
   }
 }
 
-export const onRequest: PagesFunction<Env> = async (ctx) => {
-  const { request, env } = ctx
-  const pagesEnv = env
+export type DiscordInteractionsHandlerContext = {
+  request: Request
+  env: Env
+  waitUntil?: (promise: Promise<unknown>) => void
+  passThroughOnException?: () => void
+}
 
-  // 環境変数の検証（初回のみ実行）
-  await validateEnvironment(pagesEnv)
+export const handleDiscordInteractions = async ({
+  request,
+  env,
+  waitUntil,
+}: DiscordInteractionsHandlerContext): Promise<Response> => {
+  await validateEnvironment(env)
 
   const rawBody = await request.text()
   const parsed = parseInteraction(rawBody)
@@ -307,7 +314,6 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
 
   const body = parsed.data
 
-  // 署名検証をPING判定より前に実行
   const sig = request.headers.get('X-Signature-Ed25519')
   const ts = request.headers.get('X-Signature-Timestamp')
   if (!sig || !ts) return respondWithError('unauthorized', 401)
@@ -318,16 +324,14 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
     const { verifyRequestSignature } = await import(
       '~/lib/discord/interactions/verify-signature'
     )
-    const ok = await verifyRequestSignature(request, pagesEnv, rawBody)
+    const ok = await verifyRequestSignature(request, env, rawBody)
     if (!ok) {
-      // 署名検証失敗の詳細をログ出力（トラブルシューティング用）
       logger.warn('signature_verification_failed', {
-        publicKeyLength: pagesEnv.DISCORD_PUBLIC_KEY?.length ?? 0,
+        publicKeyLength: env.DISCORD_PUBLIC_KEY?.length ?? 0,
       })
       return respondWithError('unauthorized', 401)
     }
   } catch (error) {
-    // verifyRequestSignature関数のインポート失敗など、予期しない例外をログ出力
     const message = error instanceof Error ? error.message : 'unknown'
     logger.error('signature_verification_exception', { message })
     return respondWithError('unauthorized', 401)
@@ -335,7 +339,6 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
 
   if (body.type === 1) {
     logger.info('pong_response', {})
-
     return json({ type: 1 })
   }
 
@@ -344,14 +347,12 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
   const commandName = body.data?.name
   if (!commandName) {
     interactionLog.warn('command_name_missing', { body })
-
     return respondWithError('bad_request')
   }
 
-  // チャンネル制限のチェック（channel_idが指定されている場合のみ）
   if (body.channel_id) {
     const resultCommandIsAllowed = commandIsAllowed(
-      pagesEnv,
+      env,
       commandName,
       body.channel_id,
     )
@@ -398,7 +399,7 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
       },
       options,
       user,
-      pagesEnv,
+      env,
       correlationId,
     )
   }
@@ -423,19 +424,32 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
       },
       options,
       user,
-      pagesEnv,
+      env,
       correlationId,
     )
   }
 
-  // このパスに到達することは想定されていないが、万が一到達した場合の処理
   interactionLog.error('unhandled_command', { command: commandName })
 
   const { sendDevAlert } = await import('~/lib/discord/interactions/dev-alert')
-  await sendDevAlert(pagesEnv, `コマンド処理が未実装です: ${commandName}`, {
-    code: 'unhandled_command',
-    correlationId,
-  })
+  const devAlertPromise = sendDevAlert(
+    env,
+    `コマンド処理が未実装です: ${commandName}`,
+    {
+      code: 'unhandled_command',
+      correlationId,
+    },
+  )
+  const logDevAlertFailure = (error: unknown) => {
+    interactionLog.error('dev_alert_dispatch_failed', {
+      message: error instanceof Error ? error.message : 'unknown',
+    })
+  }
+  if (waitUntil) {
+    waitUntil(devAlertPromise.catch(logDevAlertFailure))
+  } else {
+    await devAlertPromise.catch(logDevAlertFailure)
+  }
 
   return respondWithContent('コマンドを処理できませんでした。')
 }
