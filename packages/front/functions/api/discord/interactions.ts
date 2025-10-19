@@ -14,7 +14,6 @@ import { logger } from '~/lib/observability/logger'
 type Result<T, E> = { ok: true; data: T } | { ok: false; error: E }
 
 let envValidated = false
-
 const validateEnvironment = async (env: Env): Promise<void> => {
   if (envValidated) return
 
@@ -351,7 +350,11 @@ export const handleDiscordInteractions = async ({
   }
 
   if (body.channel_id) {
-    const resultCommandIsAllowed = commandIsAllowed(env, commandName, body.channel_id)
+    const resultCommandIsAllowed = commandIsAllowed(
+      env,
+      commandName,
+      body.channel_id,
+    )
     if (!resultCommandIsAllowed.ok) {
       interactionLog.warn('command_not_allowed', {
         commandName,
