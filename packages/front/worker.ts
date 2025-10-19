@@ -63,7 +63,10 @@ const createEventContext = (
   const passThroughOnException =
     executionContext.passThroughOnException.bind(executionContext)
 
-  const next: WorkerEventContext['next'] = (input?: Request | string, init?) => {
+  const next: WorkerEventContext['next'] = (
+    input?: Request | string,
+    init?,
+  ) => {
     if (!env.ASSETS) {
       return Promise.resolve(new Response('Not Found', { status: 404 }))
     }

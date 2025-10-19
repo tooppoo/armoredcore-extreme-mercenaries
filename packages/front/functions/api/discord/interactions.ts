@@ -16,9 +16,8 @@ type Result<T, E> = { ok: true; data: T } | { ok: false; error: E }
 let envValidated = false
 
 type WorkerSocket = ReturnType<Env['ASSETS']['connect']>
-type WorkerSocketOpened = WorkerSocket['opened'] extends Promise<infer T>
-  ? T
-  : never
+type WorkerSocketOpened =
+  WorkerSocket['opened'] extends Promise<infer T> ? T : never
 type WorkerSocketConnectArgs = Parameters<Env['ASSETS']['connect']>
 
 const createMockSocket = (): WorkerSocket => ({
@@ -373,7 +372,11 @@ export const handleDiscordInteractions = async ({
   }
 
   if (body.channel_id) {
-    const resultCommandIsAllowed = commandIsAllowed(env, commandName, body.channel_id)
+    const resultCommandIsAllowed = commandIsAllowed(
+      env,
+      commandName,
+      body.channel_id,
+    )
     if (!resultCommandIsAllowed.ok) {
       interactionLog.warn('command_not_allowed', {
         commandName,
@@ -459,11 +462,13 @@ export const handleDiscordInteractions = async ({
     },
   )
   if (waitUntil) {
-    waitUntil(devAlertPromise.catch((error) => {
-      interactionLog.error('dev_alert_dispatch_failed', {
-        message: error instanceof Error ? error.message : 'unknown',
-      })
-    }))
+    waitUntil(
+      devAlertPromise.catch((error) => {
+        interactionLog.error('dev_alert_dispatch_failed', {
+          message: error instanceof Error ? error.message : 'unknown',
+        })
+      }),
+    )
   }
   await devAlertPromise
 
