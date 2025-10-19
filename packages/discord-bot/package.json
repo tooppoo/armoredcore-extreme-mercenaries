@@ -14,7 +14,7 @@
   },
   "scripts": {
     "deploy:commands": "tsx scripts/deploy-commands.ts",
-    "build": "tsc --project tsconfig.build.json",
+    "build": "tsc --project tsconfig.json",
     "lint": "run-s run-eslint run-prettier",
     "run-eslint": "eslint --cache --cache-location ./node_modules/.cache/eslint --fix .",
     "run-prettier": "prettier --write .",
