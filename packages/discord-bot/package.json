@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "dist/app.js",
   "type": "module",
+  "exports": {
+    "./command-names": "./src/command-names.ts"
+  },
   "scripts": {
     "deploy:commands": "tsx scripts/deploy-commands.ts",
     "lint": "run-s run-eslint run-prettier",

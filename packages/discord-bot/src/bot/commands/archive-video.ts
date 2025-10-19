@@ -1,10 +1,11 @@
 import { SlashCommandBuilder } from 'discord.js'
-import {
-  createArchiveCommand,
-} from './lib/archive-command-factory.js'
+import { createArchiveCommand } from './lib/archive-command-factory.js'
+import { ARCHIVE_VIDEO_COMMAND_NAME } from '../../command-names.js'
+
+export const commandName = ARCHIVE_VIDEO_COMMAND_NAME
 
 const data = new SlashCommandBuilder()
-  .setName('archive-video')
+  .setName(commandName)
   .setDescription('動画アーカイブを登録します')
   .addStringOption((option) =>
     option.setName('url').setDescription('対象のURL（必須）').setRequired(true),
@@ -22,6 +23,4 @@ const data = new SlashCommandBuilder()
       .setRequired(false),
   )
 
-export const archiveVideoCommand = createArchiveCommand(
-  data,
-)
+export const archiveVideoCommand = createArchiveCommand(data)

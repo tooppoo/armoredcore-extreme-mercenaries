@@ -116,6 +116,9 @@ importers:
 
   packages/front:
     dependencies:
+      '@ac-extreme-mercenaries/discord-bot':
+        specifier: workspace:*
+        version: link:../discord-bot
       '@date-fns/tz':
         specifier: 1.4.1
         version: 1.4.1
@@ -294,6 +297,9 @@ packages:
   '@11ty/recursive-copy@4.0.2':
     resolution: {integrity: sha512-174nFXxL/6KcYbLYpra+q3nDbfKxLxRTNVY1atq2M1pYYiPfHse++3IFNl8mjPFsd7y2qQjxLORzIjHMjL3NDQ==}
     engines: {node: '>=18'}
+
+  '@ac-extreme-mercenaries/discord-bot@file:packages/discord-bot':
+    resolution: {directory: packages/discord-bot, type: directory}
 
   '@ac-extreme-mercenaries/front@file:packages/front':
     resolution: {directory: packages/front, type: directory}
@@ -4798,8 +4804,19 @@ snapshots:
       maximatch: 0.1.0
       slash: 3.0.0
 
+  '@ac-extreme-mercenaries/discord-bot@file:packages/discord-bot':
+    dependencies:
+      '@hono/node-server': 1.19.4(hono@4.9.8)
+      discord.js: 14.22.1
+      dotenv: 17.2.2
+      hono: 4.9.8
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   '@ac-extreme-mercenaries/front@file:packages/front(@cloudflare/workers-types@4.20250922.0)(@types/react@19.1.13)(typescript@5.9.2)':
     dependencies:
+      '@ac-extreme-mercenaries/discord-bot': file:packages/discord-bot
       '@date-fns/tz': 1.4.1
       '@heroicons/react': 2.2.0(react@19.1.1)
       '@react-router/cloudflare': 7.9.2(@cloudflare/workers-types@4.20250922.0)(react-router@7.9.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(typescript@5.9.2)

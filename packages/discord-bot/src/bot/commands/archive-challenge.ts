@@ -1,10 +1,11 @@
 import { SlashCommandBuilder } from 'discord.js'
-import {
-  createArchiveCommand,
-} from './lib/archive-command-factory.js'
+import { createArchiveCommand } from './lib/archive-command-factory.js'
+import { ARCHIVE_CHALLENGE_COMMAND_NAME } from '../../command-names.js'
+
+export const commandName = ARCHIVE_CHALLENGE_COMMAND_NAME
 
 const data = new SlashCommandBuilder()
-  .setName('archive-challenge')
+  .setName(commandName)
   .setDescription('チャレンジアーカイブを登録します')
   .addStringOption((option) =>
     option
@@ -22,6 +23,4 @@ const data = new SlashCommandBuilder()
       .setRequired(false),
   )
 
-export const archiveChallengeCommand = createArchiveCommand(
-  data,
-)
+export const archiveChallengeCommand = createArchiveCommand(data)
