@@ -1,12 +1,11 @@
 {
   "name": "@ac-extreme-mercenaries/discord-bot",
   "version": "1.0.0",
+  "main": "dist/app.js",
   "type": "module",
-  "exports": {
-    "./command-names": "./src/command-names.ts"
-  },
   "scripts": {
     "deploy:commands": "tsx scripts/deploy-commands.ts",
+    "build": "tsc --project tsconfig.build.json",
     "lint": "run-s run-eslint run-prettier",
     "run-eslint": "eslint --cache --cache-location ./node_modules/.cache/eslint --fix .",
     "run-prettier": "prettier --write .",
@@ -16,12 +15,6 @@
   "license": "MIT",
   "description": "",
   "dependencies": {
-    "@hono/node-server": "^1.13.7",
-    "discord.js": "14.22.1",
-    "dotenv": "17.2.2",
-    "hono": "^4.9.7"
-  },
-  "devDependencies": {
-    "@dotenvx/dotenvx": "1.51.0"
+    "discord.js": "14.22.1"
   }
 }
