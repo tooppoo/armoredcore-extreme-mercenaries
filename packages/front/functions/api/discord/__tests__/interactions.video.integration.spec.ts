@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { onRequest } from '../interactions'
+import { handleDiscordInteractions } from '../interactions'
 import { makeCtx } from './helpers'
 type UpsertVideo =
   (typeof import('~/lib/discord/interactions/archive-repository'))['upsertVideo']
@@ -44,7 +44,7 @@ describe('/archive-video duplicate handling', () => {
       'X-Signature-Timestamp': '0',
     }
     const ctx = makeCtx({ body, headers })
-    const res = await onRequest(ctx)
+    const res = await handleDiscordInteractions(ctx)
     expect(res.status).toBe(200)
     const json = (await res
       .clone()
@@ -80,7 +80,7 @@ describe('/archive-video duplicate handling', () => {
       'X-Signature-Timestamp': '0',
     }
     const ctx = makeCtx({ body, headers })
-    await onRequest(ctx)
+    await handleDiscordInteractions(ctx)
     expect(upsertVideoMock).toHaveBeenCalledTimes(1)
     expect(upsertVideoMock.mock.calls[0]?.[0]?.user).toEqual({
       id: '654321',
@@ -107,7 +107,7 @@ describe('/archive-video duplicate handling', () => {
       'X-Signature-Timestamp': '0',
     }
     const ctx = makeCtx({ body, headers })
-    await onRequest(ctx)
+    await handleDiscordInteractions(ctx)
     expect(upsertVideoMock).toHaveBeenCalledWith(
       expect.objectContaining({ user: { id: 'dm-user', name: 'dm-username' } }),
       expect.anything(),

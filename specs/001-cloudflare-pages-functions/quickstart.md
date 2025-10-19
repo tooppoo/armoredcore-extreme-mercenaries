@@ -1,29 +1,30 @@
-# Quickstart: Cloudflare Pages Functions Discord アーカイブ Bot
+# Quickstart: Cloudflare Workers Discord アーカイブ Bot
 
 ## 1. 事前準備
 - Node.js 22.18.0 以上 / pnpm 10.17.1
-- Cloudflare アカウント（Pages / D1 アクセス権あり）
+- Cloudflare アカウント（Workers / D1 アクセス権あり）
 - Discord Developer Portal のアプリケーション（Public Key, Bot Token, Slash Command 登録済み）
-- `.env.local` や Pages プロジェクトに以下を登録
+- `.env.local` や Workers プロジェクトに以下を登録
   - `DISCORD_PUBLIC_KEY`
   - `DISCORD_BOT_TOKEN`
   - `DISCORD_ALLOWED_CHALLENGE_ARCHIVE_CHANNEL_IDS`
   - `DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS`
   - `DISCORD_DEV_ALERT_CHANNEL_ID`
-  - `D1_DB`（Pages Functions 用バインディング）
+  - `D1_DB`（Workers 用バインディング）
 
 ## 2. インストール
 ```bash
 pnpm install
 ```
 
-## 3. ローカル開発（Miniflare）
+## 3. ローカル開発（Wrangler）
 ```bash
 cd packages/front
-pnpm run dev   # wrangler pages dev を想定
+pnpm run start   # wrangler dev を実行（SSR Worker）
 ```
 - `/api/discord/interactions` がローカルポート（例: 8788）で待機。
-- Miniflare の D1 in-memory を利用し、必要に応じて `pnpm run migration:test` でテーブルを初期化。
+- Wrangler のローカルD1を利用し、必要に応じて `pnpm run migration:test` でテーブルを初期化。
+- HMR が必要な場合は別ターミナルで `pnpm run dev` を実行し、ビルド後に `wrangler dev` を再起動する。
 
 ## 4. 自動テスト
 ### 4.1 Discord Interactions テスト（Vitest）
@@ -56,11 +57,11 @@ pnpm --filter @ac-extreme-mercenaries/front test -- \
 
 ## 6. デプロイ手順
 1. PR 作成 → テスト通過 → レビュー
-2. `pnpm --filter @ac-extreme-mercenaries/front run deploy`（Pages ビルド）
-3. Cloudflare Pages プロジェクトで Secrets / D1 バインディングを最新化
+2. `pnpm --filter @ac-extreme-mercenaries/front run deploy`（Workers デプロイ）
+3. Cloudflare Workers プロジェクトで Secrets / D1 バインディングを最新化
 4. Discord Developer Portal で Interactions Endpoint を本番 URL へ切り替え
 5. `/archive-...` コマンドを本番チャンネルで実行し、成功レスポンス・D1 登録を確認
-6. Cloudflare Pages デプロイ後に Slash Command を再登録し、ロールバック手順として wrangler ログと D1 バックアップを取得
+6. `wrangler deployments list/rollback` を用いてロールバック手順を把握し、D1 バックアップを取得
 
 ## 7. ログ・監視
 - `logger.withCorrelation(correlationId).info|warn|error` で JSON 構造化ログを出力（機微情報は含めない）
@@ -68,6 +69,6 @@ pnpm --filter @ac-extreme-mercenaries/front test -- \
 - Slash Command エラー発生時は `DISCORD_DEV_ALERT_CHANNEL_ID` への通知で一次対応を起動
 
 ## 8. トラブルシューティング
-- **401 Unauthorized**: 署名ヘッダー不正 → Cloudflare Pages で `DISCORD_PUBLIC_KEY` を再確認
-- **D1 書き込み失敗**: マイグレーション未適用 → `pnpm front db:migrate` を実行
+- **401 Unauthorized**: 署名ヘッダー不正 → Cloudflare Workers の環境変数 `DISCORD_PUBLIC_KEY` を再確認
+- **D1 書き込み失敗**: マイグレーション未適用 → `pnpm run migration` 系コマンドで適用
 - **OGP タイムアウト**: 2 秒タイムアウトによりフォールバック → URL を検証し必要なら手動補完

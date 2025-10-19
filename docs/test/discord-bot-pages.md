@@ -1,4 +1,4 @@
-# 手動テストログ: Cloudflare Pages Functions Discord アーカイブ Bot
+# 手動テストログ: Cloudflare Workers Discord アーカイブ Bot
 
 ## 実行日時
 
@@ -17,7 +17,7 @@
 
 ## 手動シナリオ
 
-1. Cloudflare Pages dev server を `pnpm run dev` で起動し、ngrok で `/api/discord/interactions` を公開。
+1. Cloudflare Workers dev サーバーを `pnpm --filter @ac-extreme-mercenaries/front run start` で起動し、ngrok で `/api/discord/interactions` を公開。
 2. Discord Test Server で `/archive-challenge` を送信。成功レスポンスと公開メッセージを確認。
 3. 同チャンネルで `/archive-video` を同一 URL で再送し、「登録済み」応答を確認。
 4. `https://httpstat.us/404` を `/archive-video` で送信し、フォールバック文言と warn ログ（`video_upsert_ogp_failed`）を確認。
@@ -32,6 +32,6 @@
 
 ## ロールバック手順メモ
 
-- Cloudflare Pages で最新デプロイをロールバック、`wrangler pages deploy --commit <previous>` を実施。
+- Cloudflare Workers のデプロイ一覧を確認し、`wrangler deployments list --env production` で対象を特定した上で `wrangler deployments rollback <deployment-id> --env production` を実施。
 - D1 の差分は `wrangler d1 export` でバックアップし、障害時は `wrangler d1 execute --file` で復元。
 - Discord Slash Command のエンドポイント URL を旧バージョンへ差し戻す。

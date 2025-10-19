@@ -46,7 +46,7 @@ vi.mock('~/lib/discord/interactions/dev-alert', () => ({
     sendDevAlertMock(...args),
 }))
 
-import { onRequest } from '../interactions'
+import { handleDiscordInteractions } from '../interactions'
 import { makeCtx } from './helpers'
 import { logger } from '~/lib/observability/logger'
 
@@ -82,7 +82,7 @@ describe('error handling and logging', () => {
       },
     })
 
-    const res = await onRequest(ctx)
+    const res = await handleDiscordInteractions(ctx)
     const json = (await res
       .clone()
       .json()
@@ -106,7 +106,7 @@ describe('error handling and logging', () => {
       },
     })
 
-    const res = await onRequest(ctx)
+    const res = await handleDiscordInteractions(ctx)
     const json = (await res
       .clone()
       .json()
@@ -145,7 +145,7 @@ describe('error handling and logging', () => {
       },
     })
 
-    const res = await onRequest(ctx)
+    const res = await handleDiscordInteractions(ctx)
     const json = (await res
       .clone()
       .json()
@@ -191,7 +191,7 @@ describe('error handling and logging', () => {
       },
     })
 
-    const res = await onRequest(ctx)
+    const res = await handleDiscordInteractions(ctx)
     const json = await res
       .clone()
       .json()

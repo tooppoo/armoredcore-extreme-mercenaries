@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { onRequest } from '../interactions'
+import { handleDiscordInteractions } from '../interactions'
 import { makeCtx } from './helpers'
 
 // 署名検証をモック化
@@ -17,7 +17,7 @@ describe('signature & channel guards', () => {
         member: { user: { id: 'guard-1', username: 'guard-user' } },
       },
     })
-    const res = await onRequest(ctx)
+    const res = await handleDiscordInteractions(ctx)
     expect(res.status).toBe(401)
     const json = (await res
       .clone()
@@ -43,7 +43,7 @@ describe('signature & channel guards', () => {
       DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS: '222',
     }
     const ctx = makeCtx({ body, headers, env })
-    const res = await onRequest(ctx)
+    const res = await handleDiscordInteractions(ctx)
     expect(res.status).toBe(200)
     const json = (await res
       .clone()
@@ -72,7 +72,7 @@ describe('signature & channel guards', () => {
       DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS: '222',
     }
     const ctx = makeCtx({ body, headers, env })
-    const res = await onRequest(ctx)
+    const res = await handleDiscordInteractions(ctx)
     expect(res.status).toBe(200)
     const json = (await res
       .clone()
@@ -98,7 +98,7 @@ describe('signature & channel guards', () => {
       DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS: '222',
     }
     const ctx = makeCtx({ body, headers, env })
-    const res = await onRequest(ctx)
+    const res = await handleDiscordInteractions(ctx)
     expect(res.status).toBe(200)
     const json = (await res
       .clone()
@@ -124,7 +124,7 @@ describe('signature & channel guards', () => {
       DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS: '222',
     }
     const ctx = makeCtx({ body, headers, env })
-    const res = await onRequest(ctx)
+    const res = await handleDiscordInteractions(ctx)
     expect(res.status).toBe(200)
     const json = (await res
       .clone()
@@ -153,7 +153,7 @@ describe('signature & channel guards', () => {
       DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS: '222',
     }
     const ctx = makeCtx({ body, headers, env })
-    const res = await onRequest(ctx)
+    const res = await handleDiscordInteractions(ctx)
     expect(res.status).toBe(200)
     const json = (await res
       .clone()

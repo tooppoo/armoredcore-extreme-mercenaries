@@ -1,8 +1,15 @@
 #:schema node_modules/wrangler/config-schema.json
 name = "armoredcore-extreme-mercenaries"
+main = "./worker.ts"
 compatibility_date = "2025-01-09"
 compatibility_flags = ["nodejs_compat_v2"]
-pages_build_output_dir = "./build/client"
+
+[assets]
+binding = "ASSETS"
+directory = "./build/client"
+
+[observability]
+enabled = true
 
 # Automatically place your workloads in an optimal location to minimize latency.
 # If you are running back-end logic in a Pages Function, running it closer to your back-end infrastructure

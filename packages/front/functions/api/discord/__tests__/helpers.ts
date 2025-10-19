@@ -1,10 +1,14 @@
-import type { onRequest } from '../interactions'
+import {
+  WorkerSocketConnect,
+  type DiscordInteractionsHandlerContext,
+} from '../interactions'
 
-export type RequestContext = Parameters<typeof onRequest>[0]
+export type RequestContext = DiscordInteractionsHandlerContext
 
 export const baseEnv: Partial<RequestContext['env']> = {
   ASSETS: {
     fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, init),
+    connect: WorkerSocketConnect,
   },
   DISCORD_PUBLIC_KEY: 'test-key',
   DISCORD_ALLOWED_VIDEO_ARCHIVE_CHANNEL_IDS: '111',
@@ -43,13 +47,9 @@ export const makeCtx = (init?: {
   })
   const env = { ...baseEnv, ...init?.env } as RequestContext['env']
   return {
-    request: req as RequestContext['request'],
+    request: req,
     env,
-    params: {} as RequestContext['params'],
-    data: {} as RequestContext['data'],
     waitUntil: () => {},
-    next: () => Promise.resolve(new Response('NEXT')),
-    functionPath: '',
     passThroughOnException: () => {},
-  } satisfies RequestContext
+  }
 }
