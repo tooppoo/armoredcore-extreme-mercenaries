@@ -42,15 +42,20 @@ const tryFetchAsset = async (
     ) {
       return new Response(assetResponse.body, assetResponse)
     }
-  } catch {
+  } catch (error) {
     // 資産取得が失敗した場合はSSRにフォールバックする
+    if (env.APP_ENV !== 'production') {
+      console.error('Failed to fetch asset, falling back to SSR', error)
+    }
   }
 
   return undefined
 }
 
-const handleApp = (context: WorkerEventContext): Promise<Response> => {
-  return Promise.resolve(handleRequest(context))
+const handleApp = (
+  context: WorkerEventContext,
+): ReturnType<typeof handleRequest> => {
+  return handleRequest(context)
 }
 
 const createEventContext = (
@@ -79,7 +84,7 @@ const createEventContext = (
     return env.ASSETS.fetch(request, init)
   }
 
-  return {
+  const baseContext: WorkerEventContext = {
     request: typedRequest,
     env,
     waitUntil,
@@ -89,6 +94,23 @@ const createEventContext = (
     params: {} as WorkerEventContext['params'],
     data: {} as WorkerEventContext['data'],
   }
+
+  const globalCaches =
+    (globalThis as { caches?: CacheStorage }).caches ??
+    ({} as CacheStorage)
+
+  const cloudflareContext = {
+    ...baseContext,
+    cf: (typedRequest as Request & { cf?: IncomingRequestCfProperties<unknown> })
+      .cf,
+    ctx: {
+      waitUntil,
+      passThroughOnException,
+    },
+    caches: globalCaches,
+  }
+
+  return Object.assign(baseContext, { cloudflare: cloudflareContext }) as WorkerEventContext
 }
 
 const handleWithFallback = async (
@@ -108,7 +130,7 @@ const handleWithFallback = async (
   try {
     return await handleApp(context)
   } catch (error) {
-    if (process.env.NODE_ENV === 'development' && error instanceof Error) {
+    if (context.env.APP_ENV !== 'production' && error instanceof Error) {
       console.error(error)
       return new Response(error.message ?? error.toString(), {
         status: 500,

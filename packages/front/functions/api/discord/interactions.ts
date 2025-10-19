@@ -15,28 +15,6 @@ type Result<T, E> = { ok: true; data: T } | { ok: false; error: E }
 
 let envValidated = false
 
-type WorkerSocket = ReturnType<Env['ASSETS']['connect']>
-type WorkerSocketOpened = WorkerSocket['opened'] extends Promise<infer T>
-  ? T
-  : never
-type WorkerSocketConnectArgs = Parameters<Env['ASSETS']['connect']>
-
-const createMockSocket = (): WorkerSocket => ({
-  readable: new ReadableStream(),
-  writable: new WritableStream(),
-  closed: Promise.resolve(),
-  opened: Promise.resolve({} as WorkerSocketOpened),
-  upgraded: false,
-  secureTransport: 'off',
-  close: async () => {},
-  startTls: () => createMockSocket(),
-})
-
-export const WorkerSocketConnect = ((...args: WorkerSocketConnectArgs) => {
-  void args
-  return createMockSocket()
-}) as Env['ASSETS']['connect']
-
 const validateEnvironment = async (env: Env): Promise<void> => {
   if (envValidated) return
 
@@ -458,14 +436,16 @@ export const handleDiscordInteractions = async ({
       correlationId,
     },
   )
-  if (waitUntil) {
-    waitUntil(devAlertPromise.catch((error) => {
-      interactionLog.error('dev_alert_dispatch_failed', {
-        message: error instanceof Error ? error.message : 'unknown',
-      })
-    }))
+  const logDevAlertFailure = (error: unknown) => {
+    interactionLog.error('dev_alert_dispatch_failed', {
+      message: error instanceof Error ? error.message : 'unknown',
+    })
   }
-  await devAlertPromise
+  if (waitUntil) {
+    waitUntil(devAlertPromise.catch(logDevAlertFailure))
+  } else {
+    await devAlertPromise.catch(logDevAlertFailure)
+  }
 
   return respondWithContent('コマンドを処理できませんでした。')
 }
