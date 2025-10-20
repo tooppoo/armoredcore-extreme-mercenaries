@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "devDependencies": {
-    "@playwright/test": "1.55.1"
+    "@playwright/test": "1.56.1"
   },
   "scripts": {
     "build": "echo skip",
