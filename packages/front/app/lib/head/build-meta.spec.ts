@@ -43,6 +43,18 @@ describe('buildMeta', () => {
     expectValidJsonLd(meta)
   })
 
+  it('should avoid duplicating site name when title already includes it', () => {
+    const title = `${siteName} 非公式コミュニティ`
+    const meta = buildMeta({
+      title,
+      description: 'Description with site name',
+      pathname: '/',
+    })
+
+    expect(meta).toContainEqual({ title })
+    expect(meta).toContainEqual({ property: 'og:title', content: title })
+  })
+
   it('should integrate structured data when provided', () => {
     const meta = buildMeta({
       title: 'FAQ Title',
