@@ -10,7 +10,6 @@ type SchemaIds = Readonly<{
   webpageId: string
 }>
 
-
 /**
  * 構造化データを統合してJSON-LDメタタグを生成する
  *
@@ -60,15 +59,18 @@ function createSchemaIds(url: string): SchemaIds {
  * 構造化データがない場合の基本的なJSON-LDを生成する
  * Organization、WebSite、WebPageのみを含むシンプルな構造
  */
-function buildBasicJsonLd({
-  title,
-  description,
-  url,
-}: {
-  title: string
-  description: string
-  url: string
-}, ids: SchemaIds): Meta {
+function buildBasicJsonLd(
+  {
+    title,
+    description,
+    url,
+  }: {
+    title: string
+    description: string
+    url: string
+  },
+  ids: SchemaIds,
+): Meta {
   return [
     {
       'script:ld+json': {
