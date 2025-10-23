@@ -43,8 +43,8 @@ describe('buildMeta', () => {
     expectValidJsonLd(meta)
   })
 
-  it('should avoid duplicating site name when title already includes it', () => {
-    const title = `${siteName} 非公式コミュニティ`
+  it('should avoid duplicating site name when already suffixed', () => {
+    const title = `Archive Index | ${siteName}`
     const meta = buildMeta({
       title,
       description: 'Description with site name',
@@ -53,6 +53,19 @@ describe('buildMeta', () => {
 
     expect(meta).toContainEqual({ title })
     expect(meta).toContainEqual({ property: 'og:title', content: title })
+  })
+
+  it('should still append site name when title only contains it internally', () => {
+    const title = `${siteName} 非公式コミュニティ`
+    const meta = buildMeta({
+      title,
+      description: 'Description with site name',
+      pathname: '/',
+    })
+
+    const expected = `${title} | ${siteName}`
+    expect(meta).toContainEqual({ title: expected })
+    expect(meta).toContainEqual({ property: 'og:title', content: expected })
   })
 
   it('should integrate structured data when provided', () => {

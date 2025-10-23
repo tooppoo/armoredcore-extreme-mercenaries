@@ -81,7 +81,7 @@ function title(s: string): Meta {
  * サイト名付きのタイトルを生成する内部関数
  */
 function _title(s: string): string {
-  if (s.includes(siteName)) {
+  if (s === siteName || s.endsWith(` | ${siteName}`)) {
     return s
   }
 

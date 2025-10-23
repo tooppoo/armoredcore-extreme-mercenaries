@@ -47,12 +47,25 @@ export function buildStructuredData(
 }
 
 function createSchemaIds(url: string): SchemaIds {
-  // URLフラグメントを除外し、同一ページ内リンクでもWebPageスキーマのIDを固定する
-  const normalizedUrl = url.split('#')[0]
+  const normalizedUrl = normalizeUrl(url)
   return {
     orgId: `${origin}/#org`,
     websiteId: `${origin}/#website`,
     webpageId: `${normalizedUrl}#webpage`,
+  }
+}
+
+/**
+ * WebPageごとの一意なID生成のために、フラグメントを除外した絶対URLへ正規化する
+ */
+function normalizeUrl(url: string): string {
+  try {
+    const parsed = new URL(url, origin)
+    parsed.hash = ''
+    return parsed.toString()
+  } catch {
+    // URLパースに失敗した場合でも、フラグメントを除去して安定したIDを返す
+    return url.split('#')[0]
   }
 }
 
