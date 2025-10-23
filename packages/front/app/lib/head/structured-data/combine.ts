@@ -47,6 +47,7 @@ export function buildStructuredData(
 }
 
 function createSchemaIds(url: string): SchemaIds {
+  // URLフラグメントを除外し、同一ページ内リンクでもWebPageスキーマのIDを固定する
   const normalizedUrl = url.split('#')[0]
   return {
     orgId: `${origin}/#org`,
