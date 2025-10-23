@@ -4,6 +4,11 @@ import type { StructuredDataOptions, JsonLdSchema } from './types'
 import { buildFaqSchema } from './faq'
 
 type Meta = MetaDescriptor[]
+type SchemaIds = Readonly<{
+  orgId: string
+  websiteId: string
+  webpageId: string
+}>
 
 /**
  * 構造化データを統合してJSON-LDメタタグを生成する
@@ -22,8 +27,10 @@ export function buildStructuredData(
   options: StructuredDataOptions | undefined,
   args: { title: string; description: string; url: string },
 ): Meta {
+  const schemaIds = createSchemaIds(args.url)
+
   if (!options || Object.keys(options).length === 0) {
-    return buildBasicJsonLd(args)
+    return buildBasicJsonLd(args, schemaIds)
   }
 
   const schemas: JsonLdSchema[] = []
@@ -36,34 +43,62 @@ export function buildStructuredData(
   // if (options.breadcrumb) schemas.push(...buildBreadcrumbSchema(options.breadcrumb))
   // if (options.product) schemas.push(...buildProductSchema(options.product))
 
-  return buildJsonLdWithStructuredData(args, schemas)
+  return buildJsonLdWithStructuredData(args, schemaIds, schemas)
+}
+
+function createSchemaIds(url: string): SchemaIds {
+  const normalizedUrl = normalizeUrl(url)
+  return {
+    orgId: `${origin}/#org`,
+    websiteId: `${origin}/#website`,
+    webpageId: `${normalizedUrl}#webpage`,
+  }
+}
+
+/**
+ * WebPageごとの一意なID生成のために、フラグメントを除外した絶対URLへ正規化する
+ */
+function normalizeUrl(url: string): string {
+  try {
+    const parsed = new URL(url, origin)
+    parsed.hash = ''
+    return parsed.toString()
+  } catch {
+    // URLパースに失敗した場合でも、フラグメントを除去して安定したIDを返す
+    return url.split('#')[0]
+  }
 }
 
 /**
  * 構造化データがない場合の基本的なJSON-LDを生成する
  * Organization、WebSite、WebPageのみを含むシンプルな構造
  */
-function buildBasicJsonLd({
-  title,
-  description,
-  url,
-}: {
-  title: string
-  description: string
-  url: string
-}): Meta {
-  const orgId = `${origin}/#org`
-  const websiteId = `${origin}/#website`
-  const webpageId = `${origin}/#webpage`
-
+function buildBasicJsonLd(
+  {
+    title,
+    description,
+    url,
+  }: {
+    title: string
+    description: string
+    url: string
+  },
+  ids: SchemaIds,
+): Meta {
   return [
     {
       'script:ld+json': {
         '@context': 'https://schema.org',
         '@graph': [
-          buildOrganizationSchema(orgId),
-          buildWebPageSchema({ webpageId, websiteId, title, description, url }),
-          buildWebSiteSchema({ websiteId, orgId }),
+          buildOrganizationSchema(ids.orgId),
+          buildWebPageSchema({
+            webpageId: ids.webpageId,
+            websiteId: ids.websiteId,
+            title,
+            description,
+            url,
+          }),
+          buildWebSiteSchema({ websiteId: ids.websiteId, orgId: ids.orgId }),
         ],
       },
     },
@@ -85,15 +120,12 @@ function buildJsonLdWithStructuredData(
     description,
     url,
   }: { title: string; description: string; url: string },
+  ids: SchemaIds,
   structuredDataSchemas: JsonLdSchema[],
 ): Meta {
-  const orgId = `${origin}/#org`
-  const websiteId = `${origin}/#website`
-  const webpageId = `${origin}/#webpage`
-
   const webPageNode: Record<string, unknown> = buildWebPageSchema({
-    webpageId,
-    websiteId,
+    webpageId: ids.webpageId,
+    websiteId: ids.websiteId,
     title,
     description,
     url,
@@ -117,9 +149,9 @@ function buildJsonLdWithStructuredData(
       'script:ld+json': {
         '@context': 'https://schema.org',
         '@graph': [
-          buildOrganizationSchema(orgId),
+          buildOrganizationSchema(ids.orgId),
           webPageNode,
-          buildWebSiteSchema({ websiteId, orgId }),
+          buildWebSiteSchema({ websiteId: ids.websiteId, orgId: ids.orgId }),
         ],
       },
     },

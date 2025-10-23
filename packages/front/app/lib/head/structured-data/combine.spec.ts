@@ -5,6 +5,7 @@ import {
   expectValidJsonLd,
   expectFaqSchema,
   hasStructuredData,
+  findWebPageNode,
 } from '../test-helpers/structured-data'
 
 describe('combineStructuredData', () => {
@@ -26,6 +27,19 @@ describe('combineStructuredData', () => {
 
     expectValidJsonLd(result)
     expect(hasStructuredData(result)).toBe(true)
+  })
+
+  it('should derive webpage id from page url', () => {
+    const url = 'https://example.com/archives'
+    const result = buildStructuredData(undefined, {
+      title: 'Archive Index',
+      description: 'Archive description',
+      url,
+    })
+
+    const webPage = findWebPageNode(result)
+    expect(webPage?.['@id']).toBe(`${url}#webpage`)
+    expect(webPage?.url).toBe(url)
   })
 
   it('should integrate FAQ structured data', () => {
