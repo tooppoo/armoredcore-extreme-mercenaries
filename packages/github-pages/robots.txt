@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://armoredcore-extreme-mercenaries.philomagi.dev/sitemap.xml

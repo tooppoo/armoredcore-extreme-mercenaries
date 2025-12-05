@@ -1,0 +1,42 @@
+name: デプロイ GitHub Pages
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "packages/github-pages/**"
+      - ".github/workflows/deploy-github-pages.yml"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: コードをチェックアウト
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+
+      - name: Pages を設定
+        id: pages
+        uses: actions/configure-pages@v5.0.0
+
+      - name: 静的ファイルをアップロード
+        id: upload
+        uses: actions/upload-pages-artifact@v4.0.0
+        with:
+          path: packages/github-pages
+
+      - name: デプロイ
+        id: deployment
+        uses: actions/deploy-pages@v4.0.4
