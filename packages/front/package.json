@@ -76,9 +76,9 @@
     "wrangler": "4.43.0"
   },
   "optionalDependencies": {
-    "@cloudflare/workerd-darwin-64": "1.20251024.0",
-    "@cloudflare/workerd-darwin-arm64": "1.20250926.0",
-    "@cloudflare/workerd-linux-64": "1.20251024.0",
+    "@cloudflare/workerd-darwin-64": "1.20251225.0",
+    "@cloudflare/workerd-darwin-arm64": "1.20251225.0",
+    "@cloudflare/workerd-linux-64": "1.20251225.0",
     "@rollup/rollup-darwin-arm64": "4.52.2",
     "@rollup/rollup-darwin-x64": "4.52.2",
     "@rollup/rollup-linux-arm64-gnu": "4.52.2",
