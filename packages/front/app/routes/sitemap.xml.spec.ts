@@ -17,13 +17,14 @@ vi.mock('~/lib/archives/video/revision/repository', () => ({
 }))
 
 describe('sitemap.xml loader', () => {
-  const makeArgs = (headers?: Record<string, string>) => ({
-    request: new Request('https://example.com/sitemap.xml', {
-      headers,
-    }),
-    context: { db: {} as D1Database },
-    params: {},
-  }) as LoaderFunctionArgs<unknown>
+  const makeArgs = (headers?: Record<string, string>) =>
+    ({
+      request: new Request('https://example.com/sitemap.xml', {
+        headers,
+      }),
+      context: { db: {} as D1Database },
+      params: {},
+    }) as LoaderFunctionArgs<unknown>
 
   beforeEach(() => {
     vi.useFakeTimers()
