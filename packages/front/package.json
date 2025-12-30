@@ -56,7 +56,7 @@
     "zod": "4.1.11"
   },
   "devDependencies": {
-    "@fast-check/vitest": "0.2.2",
+    "@fast-check/vitest": "0.2.4",
     "@react-router/dev": "7.9.4",
     "@react-router/node": "7.9.2",
     "@tailwindcss/postcss": "4.1.18",
