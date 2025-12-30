@@ -10,6 +10,6 @@
   "license": "MIT",
   "devDependencies": {
     "markdownlint-cli2": "0.18.1",
-    "markdownlint-cli2-formatter-pretty": "0.0.8"
+    "markdownlint-cli2-formatter-pretty": "0.0.9"
   }
 }
