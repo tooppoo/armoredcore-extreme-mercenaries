@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { loader } from './sitemap.xml'
+import { LoaderFunctionArgs } from 'react-router'
 
 vi.mock('~/lib/archives/challenge/revision/repository', () => ({
   getChallengeArchiveListUpdatedAt: vi.fn(
@@ -22,7 +23,7 @@ describe('sitemap.xml loader', () => {
     }),
     context: { db: {} as D1Database },
     params: {},
-  })
+  }) as LoaderFunctionArgs<unknown>
 
   beforeEach(() => {
     vi.useFakeTimers()
