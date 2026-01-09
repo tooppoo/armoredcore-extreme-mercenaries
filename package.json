@@ -18,9 +18,9 @@
     "adr": "pnpm --filter @ac-extreme-mercenaries/adr"
   },
   "engines": {
-    "node": ">=22.18.0"
+    "node": "24.12.0"
   },
-  "packageManager": "pnpm@10.18.3",
+  "packageManager": "pnpm@10.26.1",
   "workspaces": [
     "packages/adr",
     "packages/discord-bot",
