@@ -30,7 +30,7 @@
   "devDependencies": {
     "@eslint/compat": "1.4.1",
     "@eslint/eslintrc": "3.3.3",
-    "@eslint/js": "9.36.0",
+    "@eslint/js": "9.39.2",
     "@types/node": "22.18.10",
     "@ysk8hori/typescript-graph": "0.26.5",
     "eslint": "9.39.2",
