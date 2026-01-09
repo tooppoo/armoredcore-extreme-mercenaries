@@ -12,22 +12,24 @@ ARMAC（Armored Core Extreme Mercenaries）関連コンテンツのアーカイ�
 
 ## 必要要件
 
-- Node.js 22.19.0 以上
+- Node.js 24.12.0 以上（`package.json` の `engine` を参照）
 - pnpm 10 系（`package.json` の `packageManager` を参照）
 
 ## セットアップ
 
 ```bash
 pnpm install
+pnpm front migration
+pnpm front seed:local
 ```
 
 ## スクリプト
 
 | コマンド | 説明 |
 | --- | --- |
-| `pnpm run front:dev` | フロントエンド開発サーバーを起動（React Router dev） |
-| `pnpm --filter @ac-extreme-mercenaries/front run start` | Workers ランタイムでSSR + APIを実行（`wrangler dev`） |
-| `pnpm run discord-bot:dev` | Discord Bot をローカル起動（`.env` / `.env.local` 必須） |
+| `pnpm run front dev` | フロントエンド開発サーバーを起動（React Router dev） |
+| `pnpm run front start` | Workers ランタイムでSSR + APIを実行（`wrangler dev`） |
+| `pnpm run discord-bot dev` | Discord Bot をローカル起動（`.env` / `.env.local` 必須） |
 | `pnpm run test` | ルート配下のテストスクリプトを一括実行 |
 | `pnpm run lint` / `pnpm run typecheck` | Lint / 型チェック |
 | `pnpm run coverage` | 各パッケージのカバレッジ取得 |

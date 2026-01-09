@@ -143,7 +143,7 @@ const lists = ({
   latestUpdates,
 }: IndexLoaderData): IndexItem[] => [
   {
-    caption: '本コミュニティについて',
+    caption: `${siteName}について`,
     id: 'about',
     content: (
       <>
@@ -153,7 +153,6 @@ const lists = ({
           <br />
           経験者・初心者を問わず、全てのプレイヤーが交流や情報共有、独自チャレンジの記録・閲覧を行える場を提供しています。
         </p>
-        <br />
         <p>
           本コミュニティは有志メンバーによって運営されています。
           <br />
@@ -161,7 +160,6 @@ const lists = ({
           <br />
           小規模ながらも、ルールや運営方針を明確にし、安心して利用できる環境づくりを心がけています。
         </p>
-        <br />
         <p>
           攻略・チャレンジのアーカイブやDiscord案内、ルール・罰則規定・更新履歴なども公開中です。シリーズ未経験者や復帰勢も歓迎していますので、ぜひご活用ください。
         </p>
@@ -192,17 +190,19 @@ const lists = ({
     content: (
       <>
         <p>
-          アーマードコアの縛り攻略およびチャレンジ情報を、アーカイブとして公開しています。
+          ARMORED COREシリーズのやりこみプレイ動画は、YouTube、X（Twitter）、
+          ニコニコ動画など様々なプラットフォームに散在しており、
+          特定のチャレンジや攻略法を探すのは困難です。
         </p>
-        <div className="highlight-box">
-          <LinkCard
-            to="/archives"
-            type="internal"
-            aria-label="攻略・チャレンジアーカイブページへ移動"
-          >
-            攻略・チャレンジアーカイブを見る
-          </LinkCard>
-        </div>
+        <p>
+          本サイトは、これらのコンテンツを一箇所に集約し、
+          キーワード検索やプラットフォーム別の絞り込みを可能にすることで、
+          プレイヤーが求める情報に素早くアクセスできる環境を提供します。
+        </p>
+        <p>
+          「バルテウス ノーダメージ」「ルビコン空手」といった検索で、
+          複数のプラットフォームから関連動画を横断的に発見できます。
+        </p>
         <div className="mt-6 space-y-3">
           <p>
             <strong>閲覧について：</strong>
@@ -213,8 +213,13 @@ const lists = ({
             アーカイブの登録はDiscordサーバー参加者にのみ開放しています。詳細はDiscordサーバー内の該当チャンネルにてご確認ください。
           </p>
         </div>
-        <div className="mt-6">
+        <div className="my-6">
           <h3 className="text-lg font-semibold mb-3">最近の動画</h3>
+          <p className="mb-3">
+            当コミュニティで最近登録された、注目のやりこみプレイ動画です。
+            <br />
+            コミュニティで話題のチャレンジや新記録達成の瞬間をいち早くチェックできます。
+          </p>
           {latestVideos.length > 0 ? (
             <section
               className={[
@@ -239,9 +244,23 @@ const lists = ({
           ) : (
             <p className="text-gray-500">まだ動画が登録されていません</p>
           )}
+          <div className="highlight-box">
+            <LinkCard
+              to="/archives/video"
+              type="internal"
+              aria-label="攻略アーカイブページへ移動"
+            >
+              すべての攻略アーカイブを見る
+            </LinkCard>
+          </div>
         </div>
-        <div className="mt-6">
+        <div className="my-6">
           <h3 className="text-lg font-semibold mb-3">最近のチャレンジ</h3>
+          <p className="mb-3">
+            コミュニティメンバーによって新たに登録・定義されたチャレンジです。
+            <br />
+            独創的な縛りプレイや高難度の挑戦が日々追加されています。
+          </p>
           {latestChallenges.length > 0 ? (
             <ArchiveTable className="w-full">
               {latestChallenges.map((challenge) => (
@@ -257,6 +276,26 @@ const lists = ({
           ) : (
             <p className="text-gray-500">まだチャレンジが登録されていません</p>
           )}
+          <div className="highlight-box">
+            <LinkCard
+              to="/archives/challenge"
+              type="internal"
+              aria-label="チャレンジアーカイブページへ移動"
+            >
+              すべてのチャレンジアーカイブを見る
+            </LinkCard>
+          </div>
+        </div>
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold mb-3">コンテンツ統計</h3>
+          <ul>
+            <li>動画アーカイブ：500件以上</li>
+            <li>チャレンジアーカイブ：50件以上</li>
+            <li>対応プラットフォーム：YouTube、X（Twitter）、ニコニコ動画</li>
+            <li>
+              人気カテゴリ：ノーダメージ系、武器縛り系、タイムアタック、素手縛り（ルビコン空手）、EN制限系
+            </li>
+          </ul>
         </div>
       </>
     ),
