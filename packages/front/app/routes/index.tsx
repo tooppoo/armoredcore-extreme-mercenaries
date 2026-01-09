@@ -213,8 +213,12 @@ const lists = ({
             アーカイブの登録はDiscordサーバー参加者にのみ開放しています。詳細はDiscordサーバー内の該当チャンネルにてご確認ください。
           </p>
         </div>
-        <div className="mt-6">
+        <div className="my-6">
           <h3 className="text-lg font-semibold mb-3">最近の動画</h3>
+          <p className='mb-3'>
+            当コミュニティで最近登録された、注目のやりこみプレイ動画です。<br />
+            コミュニティで話題のチャレンジや新記録達成の瞬間をいち早くチェックできます。
+          </p>
           {latestVideos.length > 0 ? (
             <section
               className={[
@@ -245,12 +249,16 @@ const lists = ({
               type="internal"
               aria-label="攻略アーカイブページへ移動"
             >
-              攻略アーカイブを見る
+              すべての攻略アーカイブを見る
             </LinkCard>
           </div>
         </div>
-        <div className="mt-6">
+        <div className="my-6">
           <h3 className="text-lg font-semibold mb-3">最近のチャレンジ</h3>
+          <p className='mb-3'>
+            コミュニティメンバーによって新たに登録・定義されたチャレンジです。<br />
+            独創的な縛りプレイや高難度の挑戦が日々追加されています。
+          </p>
           {latestChallenges.length > 0 ? (
             <ArchiveTable className="w-full">
               {latestChallenges.map((challenge) => (
@@ -272,7 +280,7 @@ const lists = ({
               type="internal"
               aria-label="チャレンジアーカイブページへ移動"
             >
-              チャレンジアーカイブを見る
+              すべてのチャレンジアーカイブを見る
             </LinkCard>
           </div>
         </div>
