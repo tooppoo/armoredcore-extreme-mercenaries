@@ -143,7 +143,7 @@ const lists = ({
   latestUpdates,
 }: IndexLoaderData): IndexItem[] => [
   {
-    caption: '本コミュニティについて',
+    caption: `${siteName}について`,
     id: 'about',
     content: (
       <>
