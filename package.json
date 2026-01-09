@@ -4,6 +4,7 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
+    "dev": "pnpm -r --if-present run dev",
     "test": "pnpm -r --if-present run test",
     "build": "pnpm -r --if-present run build",
     "coverage": "pnpm -r --if-present run coverage",
