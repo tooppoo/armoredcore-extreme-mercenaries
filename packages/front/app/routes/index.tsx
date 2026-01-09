@@ -268,6 +268,15 @@ const lists = ({
             </LinkCard>
           </div>
         </div>
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold mb-3">コンテンツ統計</h3>
+          <ul>
+            <li>動画アーカイブ：500件以上</li>
+            <li>チャレンジアーカイブ：50件以上</li>
+            <li>対応プラットフォーム：YouTube、X（Twitter）、ニコニコ動画</li>  
+            <li>人気カテゴリ：ノーダメージ系、武器縛り系、タイムアタック、素手縛り（ルビコン空手）、EN制限系</li>
+          </ul>
+        </div>
       </>
     ),
   },
