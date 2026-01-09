@@ -12,13 +12,15 @@ ARMAC（Armored Core Extreme Mercenaries）関連コンテンツのアーカイ�
 
 ## 必要要件
 
-- Node.js 22.19.0 以上
+- Node.js 24.12.1 以上（`package.json` の `engine` を参照）
 - pnpm 10 系（`package.json` の `packageManager` を参照）
 
 ## セットアップ
 
 ```bash
 pnpm install
+pnpm front migration
+pnpm front seed:local
 ```
 
 ## スクリプト
