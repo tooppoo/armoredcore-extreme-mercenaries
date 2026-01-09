@@ -194,15 +194,7 @@ const lists = ({
         <p>
           アーマードコアの縛り攻略およびチャレンジ情報を、アーカイブとして公開しています。
         </p>
-        <div className="highlight-box">
-          <LinkCard
-            to="/archives"
-            type="internal"
-            aria-label="攻略・チャレンジアーカイブページへ移動"
-          >
-            攻略・チャレンジアーカイブを見る
-          </LinkCard>
-        </div>
+
         <div className="mt-6 space-y-3">
           <p>
             <strong>閲覧について：</strong>
@@ -239,6 +231,15 @@ const lists = ({
           ) : (
             <p className="text-gray-500">まだ動画が登録されていません</p>
           )}
+          <div className="highlight-box">
+            <LinkCard
+              to="/archives/video"
+              type="internal"
+              aria-label="攻略アーカイブページへ移動"
+            >
+              攻略アーカイブを見る
+            </LinkCard>
+          </div>
         </div>
         <div className="mt-6">
           <h3 className="text-lg font-semibold mb-3">最近のチャレンジ</h3>
@@ -257,6 +258,15 @@ const lists = ({
           ) : (
             <p className="text-gray-500">まだチャレンジが登録されていません</p>
           )}
+          <div className="highlight-box">
+            <LinkCard
+              to="/archives/challenge"
+              type="internal"
+              aria-label="チャレンジアーカイブページへ移動"
+            >
+              チャレンジアーカイブを見る
+            </LinkCard>
+          </div>
         </div>
       </>
     ),
