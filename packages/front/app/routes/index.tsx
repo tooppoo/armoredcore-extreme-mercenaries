@@ -215,8 +215,9 @@ const lists = ({
         </div>
         <div className="my-6">
           <h3 className="text-lg font-semibold mb-3">最近の動画</h3>
-          <p className='mb-3'>
-            当コミュニティで最近登録された、注目のやりこみプレイ動画です。<br />
+          <p className="mb-3">
+            当コミュニティで最近登録された、注目のやりこみプレイ動画です。
+            <br />
             コミュニティで話題のチャレンジや新記録達成の瞬間をいち早くチェックできます。
           </p>
           {latestVideos.length > 0 ? (
@@ -255,8 +256,9 @@ const lists = ({
         </div>
         <div className="my-6">
           <h3 className="text-lg font-semibold mb-3">最近のチャレンジ</h3>
-          <p className='mb-3'>
-            コミュニティメンバーによって新たに登録・定義されたチャレンジです。<br />
+          <p className="mb-3">
+            コミュニティメンバーによって新たに登録・定義されたチャレンジです。
+            <br />
             独創的な縛りプレイや高難度の挑戦が日々追加されています。
           </p>
           {latestChallenges.length > 0 ? (
@@ -289,8 +291,10 @@ const lists = ({
           <ul>
             <li>動画アーカイブ：500件以上</li>
             <li>チャレンジアーカイブ：50件以上</li>
-            <li>対応プラットフォーム：YouTube、X（Twitter）、ニコニコ動画</li>  
-            <li>人気カテゴリ：ノーダメージ系、武器縛り系、タイムアタック、素手縛り（ルビコン空手）、EN制限系</li>
+            <li>対応プラットフォーム：YouTube、X（Twitter）、ニコニコ動画</li>
+            <li>
+              人気カテゴリ：ノーダメージ系、武器縛り系、タイムアタック、素手縛り（ルビコン空手）、EN制限系
+            </li>
           </ul>
         </div>
       </>
