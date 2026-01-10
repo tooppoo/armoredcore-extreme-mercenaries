@@ -92,7 +92,7 @@
       "optionalDependencies": {
         "@cloudflare/workerd-linux-64": "1.20251225.0",
         "@cloudflare/workerd-darwin-64": "1.20251225.0",
-        "@cloudflare/workerd-darwin-arm64": "1.20251225.0"
+        "@cloudflare/workerd-darwin-arm64": "1.20260103.0"
       }
     }
   },
