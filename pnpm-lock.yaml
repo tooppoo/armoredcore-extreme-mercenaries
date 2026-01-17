@@ -66,7 +66,7 @@ importers:
         version: 5.1.4(typescript@5.9.3)(vite@7.1.11(@types/node@22.18.10)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))
       vitest:
         specifier: 3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.10)(jiti@2.6.1)(jsdom@27.0.0(postcss@8.5.6))(lightningcss@1.30.2)(tsx@4.21.0)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.10)(jiti@2.6.1)(jsdom@27.0.0)(lightningcss@1.30.2)(tsx@4.21.0)
 
   packages/adr:
     devDependencies:
@@ -168,8 +168,8 @@ importers:
         specifier: 7.11.0
         version: 7.11.0(@types/node@22.18.10)(jiti@2.6.1)(lightningcss@1.30.2)(react-router@7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(tsx@4.21.0)(typescript@5.9.3)(vite@7.1.11(@types/node@22.18.10)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))(wrangler@4.43.0(@cloudflare/workers-types@4.20250922.0))
       '@react-router/node':
-        specifier: 7.11.0
-        version: 7.11.0(react-router@7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)
+        specifier: 7.12.0
+        version: 7.12.0(react-router@7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)
       '@tailwindcss/postcss':
         specifier: 4.1.18
         version: 4.1.18
@@ -1495,6 +1495,16 @@ packages:
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react-router: 7.11.0
+      typescript: ^5.1.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
+  '@react-router/node@7.12.0':
+    resolution: {integrity: sha512-o/t10Cse4LK8kFefqJ8JjC6Ng6YuKD2I87S2AiJs17YAYtXU5W731ZqB73AWyCDd2G14R0dSuqXiASRNK/xLjg==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      react-router: 7.12.0
       typescript: ^5.1.0
     peerDependenciesMeta:
       typescript:
@@ -5647,7 +5657,7 @@ snapshots:
   '@fast-check/vitest@0.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.18.10)(jiti@2.6.1)(jsdom@27.0.0(postcss@8.5.6))(lightningcss@1.30.2)(tsx@4.21.0))':
     dependencies:
       fast-check: 4.5.3
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.10)(jiti@2.6.1)(jsdom@27.0.0(postcss@8.5.6))(lightningcss@1.30.2)(tsx@4.21.0)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.10)(jiti@2.6.1)(jsdom@27.0.0)(lightningcss@1.30.2)(tsx@4.21.0)
 
   '@heroicons/react@2.2.0(react@19.1.1)':
     dependencies:
@@ -5883,6 +5893,13 @@ snapshots:
       - yaml
 
   '@react-router/node@7.11.0(react-router@7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)':
+    dependencies:
+      '@mjackson/node-fetch-server': 0.2.0
+      react-router: 7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+    optionalDependencies:
+      typescript: 5.9.3
+
+  '@react-router/node@7.12.0(react-router@7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)':
     dependencies:
       '@mjackson/node-fetch-server': 0.2.0
       react-router: 7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -6293,7 +6310,7 @@ snapshots:
       std-env: 3.9.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.10)(jiti@2.6.1)(jsdom@27.0.0(postcss@8.5.6))(lightningcss@1.30.2)(tsx@4.21.0)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.10)(jiti@2.6.1)(jsdom@27.0.0)(lightningcss@1.30.2)(tsx@4.21.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -9226,7 +9243,7 @@ snapshots:
       lightningcss: 1.30.2
       tsx: 4.21.0
 
-  vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.18.10)(jiti@2.6.1)(jsdom@27.0.0(postcss@8.5.6))(lightningcss@1.30.2)(tsx@4.21.0):
+  vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.18.10)(jiti@2.6.1)(jsdom@27.0.0)(lightningcss@1.30.2)(tsx@4.21.0):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.4

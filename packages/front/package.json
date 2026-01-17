@@ -58,7 +58,7 @@
   "devDependencies": {
     "@fast-check/vitest": "0.2.4",
     "@react-router/dev": "7.11.0",
-    "@react-router/node": "7.11.0",
+    "@react-router/node": "7.12.0",
     "@tailwindcss/postcss": "4.1.18",
     "@types/jsdom": "21.1.7",
     "@types/react": "19.2.2",
