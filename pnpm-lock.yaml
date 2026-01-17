@@ -114,10 +114,10 @@ importers:
         version: 1.4.1
       '@heroicons/react':
         specifier: 2.2.0
-        version: 2.2.0(react@19.1.1)
+        version: 2.2.0(react@19.2.3)
       '@react-router/cloudflare':
         specifier: 7.11.0
-        version: 7.11.0(@cloudflare/workers-types@4.20250922.0)(react-router@7.12.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(typescript@5.9.3)
+        version: 7.11.0(@cloudflare/workers-types@4.20250922.0)(react-router@7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)
       date-fns:
         specifier: 4.1.0
         version: 4.1.0
@@ -132,7 +132,7 @@ importers:
         version: 11.11.1
       html-react-parser:
         specifier: 5.2.3
-        version: 5.2.3(@types/react@19.2.2)(react@19.1.1)
+        version: 5.2.3(@types/react@19.2.2)(react@19.2.3)
       isbot:
         specifier: ^5.0.0
         version: 5.1.32
@@ -141,16 +141,16 @@ importers:
         version: 27.0.0(postcss@8.5.6)
       react:
         specifier: ^19.0.0
-        version: 19.1.1
+        version: 19.2.3
       react-dom:
         specifier: ^19.0.0
-        version: 19.1.1(react@19.1.1)
+        version: 19.2.3(react@19.2.3)
       react-hook-form:
         specifier: 7.63.0
-        version: 7.63.0(react@19.1.1)
+        version: 7.63.0(react@19.2.3)
       react-router:
         specifier: 7.12.0
-        version: 7.12.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       sanitize-html:
         specifier: 2.17.0
         version: 2.17.0
@@ -166,10 +166,10 @@ importers:
         version: 0.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.18.10)(jiti@2.6.1)(jsdom@27.0.0(postcss@8.5.6))(lightningcss@1.30.2)(tsx@4.21.0))
       '@react-router/dev':
         specifier: 7.11.0
-        version: 7.11.0(@types/node@22.18.10)(jiti@2.6.1)(lightningcss@1.30.2)(react-router@7.12.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(tsx@4.21.0)(typescript@5.9.3)(vite@7.1.11(@types/node@22.18.10)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))(wrangler@4.43.0(@cloudflare/workers-types@4.20250922.0))
+        version: 7.11.0(@types/node@22.18.10)(jiti@2.6.1)(lightningcss@1.30.2)(react-router@7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(tsx@4.21.0)(typescript@5.9.3)(vite@7.1.11(@types/node@22.18.10)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))(wrangler@4.43.0(@cloudflare/workers-types@4.20250922.0))
       '@react-router/node':
         specifier: 7.11.0
-        version: 7.11.0(react-router@7.12.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(typescript@5.9.3)
+        version: 7.11.0(react-router@7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)
       '@tailwindcss/postcss':
         specifier: 4.1.18
         version: 4.1.18
@@ -4009,6 +4009,11 @@ packages:
     peerDependencies:
       react: ^19.1.1
 
+  react-dom@19.2.3:
+    resolution: {integrity: sha512-yELu4WmLPw5Mr/lmeEpox5rw3RETacE++JgHqQzd2dg+YbJuat3jH4ingc+WPZhxaoFzdv9y33G+F7Nl5O0GBg==}
+    peerDependencies:
+      react: ^19.2.3
+
   react-hook-form@7.63.0:
     resolution: {integrity: sha512-ZwueDMvUeucovM2VjkCf7zIHcs1aAlDimZu2Hvel5C5907gUzMpm4xCrQXtRzCvsBqFjonB4m3x4LzCFI1ZKWA==}
     engines: {node: '>=18.0.0'}
@@ -4037,6 +4042,10 @@ packages:
 
   react@19.1.1:
     resolution: {integrity: sha512-w8nqGImo45dmMIfljjMwOGtbmC/mk4CMYhWIicdSflH91J9TyCyczcPFXJzrZ/ZXcgGRFeP6BU0BEJTw6tZdfQ==}
+    engines: {node: '>=0.10.0'}
+
+  react@19.2.3:
+    resolution: {integrity: sha512-Ku/hhYbVjOQnXDZFv2+RibmLFGwFdeeKHFcOTlrt7xplBnya5OGn/hIRDsqDiSUcfORsDC7MPxwork8jBwsIWA==}
     engines: {node: '>=0.10.0'}
 
   read-package-json-fast@4.0.0:
@@ -4121,6 +4130,9 @@ packages:
 
   scheduler@0.26.0:
     resolution: {integrity: sha512-NlHwttCI/l5gCPR3D1nNXtWABUmBwvZpEQiD4IXSbIDq8BzLIK/7Ir5gTFSGZDUu37K5cMNp0hFtzO38sC7gWA==}
+
+  scheduler@0.27.0:
+    resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
 
   section-matter@1.0.0:
     resolution: {integrity: sha512-vfD3pmTzGpufjScBh50YHKzEu2lxBWhVEHsNGoEXmCmn2hKGfeNLYMzCJpe8cD7gqX7TJluOVpBkAequ6dgMmA==}
@@ -5641,6 +5653,10 @@ snapshots:
     dependencies:
       react: 19.1.1
 
+  '@heroicons/react@2.2.0(react@19.2.3)':
+    dependencies:
+      react: 19.2.3
+
   '@humanfs/core@0.19.1': {}
 
   '@humanfs/node@0.16.7':
@@ -5809,7 +5825,14 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  '@react-router/dev@7.11.0(@types/node@22.18.10)(jiti@2.6.1)(lightningcss@1.30.2)(react-router@7.12.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(tsx@4.21.0)(typescript@5.9.3)(vite@7.1.11(@types/node@22.18.10)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))(wrangler@4.43.0(@cloudflare/workers-types@4.20250922.0))':
+  '@react-router/cloudflare@7.11.0(@cloudflare/workers-types@4.20250922.0)(react-router@7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)':
+    dependencies:
+      '@cloudflare/workers-types': 4.20250922.0
+      react-router: 7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+    optionalDependencies:
+      typescript: 5.9.3
+
+  '@react-router/dev@7.11.0(@types/node@22.18.10)(jiti@2.6.1)(lightningcss@1.30.2)(react-router@7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(tsx@4.21.0)(typescript@5.9.3)(vite@7.1.11(@types/node@22.18.10)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))(wrangler@4.43.0(@cloudflare/workers-types@4.20250922.0))':
     dependencies:
       '@babel/core': 7.28.4
       '@babel/generator': 7.28.3
@@ -5818,7 +5841,7 @@ snapshots:
       '@babel/preset-typescript': 7.27.1(@babel/core@7.28.4)
       '@babel/traverse': 7.28.4
       '@babel/types': 7.28.4
-      '@react-router/node': 7.11.0(react-router@7.12.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(typescript@5.9.3)
+      '@react-router/node': 7.11.0(react-router@7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)
       '@remix-run/node-fetch-server': 0.9.0
       arg: 5.0.2
       babel-dead-code-elimination: 1.0.10
@@ -5835,7 +5858,7 @@ snapshots:
       pkg-types: 2.3.0
       prettier: 3.6.2
       react-refresh: 0.14.2
-      react-router: 7.12.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      react-router: 7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       semver: 7.7.3
       tinyglobby: 0.2.15
       valibot: 1.2.0(typescript@5.9.3)
@@ -5859,10 +5882,10 @@ snapshots:
       - tsx
       - yaml
 
-  '@react-router/node@7.11.0(react-router@7.12.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(typescript@5.9.3)':
+  '@react-router/node@7.11.0(react-router@7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)':
     dependencies:
       '@mjackson/node-fetch-server': 0.2.0
-      react-router: 7.12.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      react-router: 7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
     optionalDependencies:
       typescript: 5.9.3
 
@@ -7532,6 +7555,16 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.2
 
+  html-react-parser@5.2.3(@types/react@19.2.2)(react@19.2.3):
+    dependencies:
+      domhandler: 5.0.3
+      html-dom-parser: 5.0.13
+      react: 19.2.3
+      react-property: 2.0.2
+      style-to-js: 1.1.16
+    optionalDependencies:
+      '@types/react': 19.2.2
+
   htmlparser2@10.0.0:
     dependencies:
       domelementtype: 2.3.0
@@ -8518,9 +8551,18 @@ snapshots:
       react: 19.1.1
       scheduler: 0.26.0
 
+  react-dom@19.2.3(react@19.2.3):
+    dependencies:
+      react: 19.2.3
+      scheduler: 0.27.0
+
   react-hook-form@7.63.0(react@19.1.1):
     dependencies:
       react: 19.1.1
+
+  react-hook-form@7.63.0(react@19.2.3):
+    dependencies:
+      react: 19.2.3
 
   react-is@16.13.1: {}
 
@@ -8536,7 +8578,17 @@ snapshots:
     optionalDependencies:
       react-dom: 19.1.1(react@19.1.1)
 
+  react-router@7.12.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
+    dependencies:
+      cookie: 1.0.2
+      react: 19.2.3
+      set-cookie-parser: 2.7.1
+    optionalDependencies:
+      react-dom: 19.2.3(react@19.2.3)
+
   react@19.1.1: {}
+
+  react@19.2.3: {}
 
   read-package-json-fast@4.0.0:
     dependencies:
@@ -8662,6 +8714,8 @@ snapshots:
       xmlchars: 2.2.0
 
   scheduler@0.26.0: {}
+
+  scheduler@0.27.0: {}
 
   section-matter@1.0.0:
     dependencies:
