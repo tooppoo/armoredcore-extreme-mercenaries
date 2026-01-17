@@ -66,7 +66,7 @@ importers:
         version: 5.1.4(typescript@5.9.3)(vite@7.3.1(@types/node@24.10.8)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))
       vitest:
         specifier: 3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.8)(jiti@2.6.1)(jsdom@27.0.0)(lightningcss@1.30.2)(tsx@4.21.0)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.8)(jiti@2.6.1)(jsdom@27.0.0(postcss@8.5.6))(lightningcss@1.30.2)(tsx@4.21.0)
 
   packages/adr:
     devDependencies:
@@ -125,8 +125,8 @@ importers:
         specifier: 4.4.0
         version: 4.4.0
       drizzle-orm:
-        specifier: 0.44.5
-        version: 0.44.5(@cloudflare/workers-types@4.20250922.0)
+        specifier: 0.45.1
+        version: 0.45.1(@cloudflare/workers-types@4.20250922.0)
       highlight.js:
         specifier: 11.11.1
         version: 11.11.1
@@ -2529,8 +2529,8 @@ packages:
     resolution: {integrity: sha512-O9EC/miwdnRDY10qRxM8P3Pg8hXe3LyU4ZipReKOgTwn4OqANmftj8XJz1UPUAS6NMHf0E2htjsbQujUTkncCg==}
     hasBin: true
 
-  drizzle-orm@0.44.5:
-    resolution: {integrity: sha512-jBe37K7d8ZSKptdKfakQFdeljtu3P2Cbo7tJoJSVZADzIKOBo9IAJPOmMsH2bZl90bZgh8FQlD8BjxXA/zuBkQ==}
+  drizzle-orm@0.45.1:
+    resolution: {integrity: sha512-Te0FOdKIistGNPMq2jscdqngBRfBpC8uMFVwqjf6gtTVJHIQ/dosgV/CLBU2N4ZJBsXL5savCba9b0YJskKdcA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=4'
@@ -4895,7 +4895,7 @@ snapshots:
       '@react-router/cloudflare': 7.12.0(@cloudflare/workers-types@4.20250922.0)(react-router@7.12.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(typescript@5.9.3)
       date-fns: 4.1.0
       discord-interactions: 4.4.0
-      drizzle-orm: 0.44.5(@cloudflare/workers-types@4.20250922.0)
+      drizzle-orm: 0.45.1(@cloudflare/workers-types@4.20250922.0)
       highlight.js: 11.11.1
       html-react-parser: 5.2.3(@types/react@19.2.8)(react@19.1.1)
       isbot: 5.1.31
@@ -5729,7 +5729,7 @@ snapshots:
   '@fast-check/vitest@0.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.10.8)(jiti@2.6.1)(jsdom@27.0.0(postcss@8.5.6))(lightningcss@1.30.2)(tsx@4.21.0))':
     dependencies:
       fast-check: 4.5.3
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.8)(jiti@2.6.1)(jsdom@27.0.0)(lightningcss@1.30.2)(tsx@4.21.0)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.8)(jiti@2.6.1)(jsdom@27.0.0(postcss@8.5.6))(lightningcss@1.30.2)(tsx@4.21.0)
 
   '@heroicons/react@2.2.0(react@19.1.1)':
     dependencies:
@@ -6375,7 +6375,7 @@ snapshots:
       std-env: 3.9.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.8)(jiti@2.6.1)(jsdom@27.0.0)(lightningcss@1.30.2)(tsx@4.21.0)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.8)(jiti@2.6.1)(jsdom@27.0.0(postcss@8.5.6))(lightningcss@1.30.2)(tsx@4.21.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -6921,7 +6921,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.44.5(@cloudflare/workers-types@4.20250922.0):
+  drizzle-orm@0.45.1(@cloudflare/workers-types@4.20250922.0):
     optionalDependencies:
       '@cloudflare/workers-types': 4.20250922.0
 
@@ -9309,7 +9309,7 @@ snapshots:
       lightningcss: 1.30.2
       tsx: 4.21.0
 
-  vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.10.8)(jiti@2.6.1)(jsdom@27.0.0)(lightningcss@1.30.2)(tsx@4.21.0):
+  vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.10.8)(jiti@2.6.1)(jsdom@27.0.0(postcss@8.5.6))(lightningcss@1.30.2)(tsx@4.21.0):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.4
