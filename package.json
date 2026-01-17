@@ -17,7 +17,7 @@
     "adr": "pnpm --filter @ac-extreme-mercenaries/adr"
   },
   "engines": {
-    "node": "24.12.0"
+    "node": "24.13.0"
   },
   "packageManager": "pnpm@10.26.1",
   "workspaces": [
