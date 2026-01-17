@@ -12,7 +12,6 @@ export default defineConfig({
     include: ['app/**/*.spec.ts', 'functions/**/*.spec.ts'],
     coverage: {
       reporter: ['text', 'json'],
-      all: true,
       include: ['app/**/*.ts', 'functions/**/*.ts'],
       exclude: ['app/**/*.spec.ts', 'functions/**/*.spec.ts'],
       provider: 'v8',
