@@ -250,9 +250,8 @@ const handleArchiveCommand = async <
 
     if (result.code === 'ogp_fetch_failed') {
       log.warn(`${config.logPrefix}_upsert_ogp_failed`, { result: result.code })
-      const { sendDevAlert } = await import(
-        '~/lib/discord/interactions/dev-alert'
-      )
+      const { sendDevAlert } =
+        await import('~/lib/discord/interactions/dev-alert')
       await sendDevAlert(env, 'OGP取得に失敗しました', {
         code: result.code,
         correlationId,
@@ -270,9 +269,8 @@ const handleArchiveCommand = async <
     }
 
     log.error(`${config.logPrefix}_upsert_unexpected`, { result: result.code })
-    const { sendDevAlert } = await import(
-      '~/lib/discord/interactions/dev-alert'
-    )
+    const { sendDevAlert } =
+      await import('~/lib/discord/interactions/dev-alert')
     await sendDevAlert(env, '予期しないエラーが発生しました', {
       code: result.code,
       correlationId,
@@ -283,9 +281,8 @@ const handleArchiveCommand = async <
     const cause =
       error instanceof Error && error.cause ? String(error.cause) : undefined
     log.error(`${config.logPrefix}_upsert_exception`, { message, cause })
-    const { sendDevAlert } = await import(
-      '~/lib/discord/interactions/dev-alert'
-    )
+    const { sendDevAlert } =
+      await import('~/lib/discord/interactions/dev-alert')
     await sendDevAlert(env, '予期しないエラーが発生しました', {
       code: 'unexpected',
       correlationId,
@@ -321,9 +318,8 @@ export const handleDiscordInteractions = async ({
   const { logger } = await import('~/lib/observability/logger')
 
   try {
-    const { verifyRequestSignature } = await import(
-      '~/lib/discord/interactions/verify-signature'
-    )
+    const { verifyRequestSignature } =
+      await import('~/lib/discord/interactions/verify-signature')
     const ok = await verifyRequestSignature(request, env, rawBody)
     if (!ok) {
       logger.warn('signature_verification_failed', {
@@ -382,12 +378,10 @@ export const handleDiscordInteractions = async ({
   const user = userResult.data
 
   if (commandName === ARCHIVE_VIDEO_COMMAND_NAME) {
-    const { validateVideoCommand } = await import(
-      '~/lib/discord/interactions/command-validator'
-    )
-    const { upsertVideo } = await import(
-      '~/lib/discord/interactions/archive-repository'
-    )
+    const { validateVideoCommand } =
+      await import('~/lib/discord/interactions/command-validator')
+    const { upsertVideo } =
+      await import('~/lib/discord/interactions/archive-repository')
 
     interactionLog.info('processing_archive_video_command', { userId: user.id })
 
@@ -405,12 +399,10 @@ export const handleDiscordInteractions = async ({
   }
 
   if (commandName === ARCHIVE_CHALLENGE_COMMAND_NAME) {
-    const { validateChallengeCommand } = await import(
-      '~/lib/discord/interactions/command-validator'
-    )
-    const { upsertChallenge } = await import(
-      '~/lib/discord/interactions/archive-repository'
-    )
+    const { validateChallengeCommand } =
+      await import('~/lib/discord/interactions/command-validator')
+    const { upsertChallenge } =
+      await import('~/lib/discord/interactions/archive-repository')
 
     interactionLog.info('processing_archive_challenge_command', {
       userId: user.id,
