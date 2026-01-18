@@ -30,7 +30,10 @@ const post = async ({
   const apiKey = env.OPENAI_API_KEY
   if (!apiKey) {
     logger.error('openai_api_key_not_configured', {})
-    return createErrorResponse('SERVICE_UNAVAILABLE', 'サービスが利用できません')
+    return createErrorResponse(
+      'SERVICE_UNAVAILABLE',
+      'サービスが利用できません',
+    )
   }
   const apiModel = env.OPENAI_MODEL || 'gpt-5-nano'
 
@@ -46,7 +49,8 @@ const post = async ({
 
   // 類似チャレンジ検索
   // NOTE: CHALLENGE_VECTORIZE は未設定の場合 undefined
-  const vectorize = (env as { CHALLENGE_VECTORIZE?: VectorizeIndex }).CHALLENGE_VECTORIZE
+  const vectorize = (env as { CHALLENGE_VECTORIZE?: VectorizeIndex })
+    .CHALLENGE_VECTORIZE
   const { challenges: similarChallenges } = await findSimilarChallenges(
     data.consultation,
     apiKey,
@@ -59,7 +63,7 @@ const post = async ({
     data.consultation,
     similarChallenges,
     apiKey,
-    apiModel
+    apiModel,
   )
 
   const response: ChallengeSuggestionResponse = {

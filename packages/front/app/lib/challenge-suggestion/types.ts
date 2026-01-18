@@ -51,4 +51,3 @@ export interface ChallengeEmbeddingMetadata {
   externalId: string
   title: string
 }
-

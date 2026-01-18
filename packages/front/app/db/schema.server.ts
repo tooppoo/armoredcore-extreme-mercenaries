@@ -117,4 +117,3 @@ export const contentsRevisions = sqliteTable('contents_revisions', {
     .notNull()
     .default(sql`(unixepoch())`),
 })
-

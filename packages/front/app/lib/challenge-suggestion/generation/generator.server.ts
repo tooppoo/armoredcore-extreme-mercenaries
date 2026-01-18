@@ -78,10 +78,7 @@ const buildUserPrompt = (
   const challengeExamples =
     similarChallenges.length > 0
       ? similarChallenges
-          .map(
-            (c, i) =>
-              `【例${i + 1}】${c.title}\n${c.description}`,
-          )
+          .map((c, i) => `【例${i + 1}】${c.title}\n${c.description}`)
           .join('\n\n')
       : 'なし'
 

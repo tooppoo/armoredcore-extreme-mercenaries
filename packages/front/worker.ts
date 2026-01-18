@@ -173,10 +173,7 @@ export default {
     return handleWithFallback(context)
   },
 
-  async scheduled(
-    controller: ScheduledController,
-    env: Env,
-  ): Promise<void> {
+  async scheduled(controller: ScheduledController, env: Env): Promise<void> {
     const cronName = controller.cron
 
     logger.info('scheduled_triggered', { cron: cronName })
@@ -197,7 +194,11 @@ export default {
       }
 
       try {
-        const result = await generateChallengeEmbeddings(env.DB, vectorize, apiKey)
+        const result = await generateChallengeEmbeddings(
+          env.DB,
+          vectorize,
+          apiKey,
+        )
         logger.info('scheduled_embedding_completed', {
           processed: result.processed,
           totalTokens: result.totalTokens,
