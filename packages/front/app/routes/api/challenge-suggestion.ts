@@ -47,36 +47,52 @@ const post = async ({
     consultationLength: data.consultation.length,
   })
 
-  // 類似チャレンジ検索
-  // NOTE: CHALLENGE_VECTORIZE は未設定の場合 undefined
-  const vectorize = (env as { CHALLENGE_VECTORIZE?: VectorizeIndex })
-    .CHALLENGE_VECTORIZE
-  const { challenges: similarChallenges } = await findSimilarChallenges(
-    data.consultation,
-    apiKey,
-    vectorize,
-    db,
-  )
+  // 類似チャレンジ検索およびチャレンジ生成
+  try {
+    // NOTE: CHALLENGE_VECTORIZE は未設定の場合 undefined
+    const vectorize = (env as { CHALLENGE_VECTORIZE?: VectorizeIndex })
+      .CHALLENGE_VECTORIZE
+    const { challenges: similarChallenges } = await findSimilarChallenges(
+      data.consultation,
+      apiKey,
+      vectorize,
+      db,
+    )
 
-  // 新規チャレンジ生成
-  const { suggestion } = await generateChallenge(
-    data.consultation,
-    similarChallenges,
-    apiKey,
-    apiModel,
-  )
+    // 新規チャレンジ生成
+    const { suggestion } = await generateChallenge(
+      data.consultation,
+      similarChallenges,
+      apiKey,
+      apiModel,
+    )
 
-  const response: ChallengeSuggestionResponse = {
-    similarChallenges,
-    suggestion,
+    const response: ChallengeSuggestionResponse = {
+      similarChallenges,
+      suggestion,
+    }
+
+    return new Response(JSON.stringify(response), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+  } catch (error) {
+    logger.error('challenge_suggestion_generation_failed', {
+      エラー種別:
+        error instanceof Error ? error.name : typeof error,
+      エラーメッセージ:
+        error instanceof Error ? error.message : '不明なエラーが発生しました',
+    })
+
+    // OpenAI API や埋め込み検索の失敗時は利用者に内部情報を開示せず、
+    // サービス一時停止として扱う
+    return createErrorResponse(
+      'SERVICE_UNAVAILABLE',
+      'サービスが利用できません',
+    )
   }
-
-  return new Response(JSON.stringify(response), {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
 }
 
 const createErrorResponse = (
