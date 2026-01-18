@@ -32,7 +32,12 @@ const tryFetchAsset = async (
   const assets = env.ASSETS
   if (!assets) return undefined
 
-  const assetRequest = new Request(request.url, request)
+  // NOTE: new Request(url, request) は request.body を消費するため、
+  // アセット取得に必要な情報のみをコピーする
+  const assetRequest = new Request(request.url, {
+    method: 'GET',
+    headers: request.headers,
+  })
   assetRequest.headers.delete('if-none-match')
 
   try {
