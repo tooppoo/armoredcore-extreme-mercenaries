@@ -104,7 +104,7 @@ const challengeSuggestionScheme = z.object({
   hashtag: z.string().min(1),
 })
 
-const 相談内容スキーマ = z
+const queryContentSchema = z
   .string()
   .trim()
   .min(1)
@@ -112,11 +112,11 @@ const 相談内容スキーマ = z
   .transform((value) => value.replace(/\u0000/g, ''))
 
 const parseConsultation = (consultation: string): string => {
-  const 解析結果 = 相談内容スキーマ.safeParse(consultation)
+  const result = queryContentSchema.safeParse(consultation)
 
-  if (!解析結果.success) {
+  if (!result.success) {
     logger.warn('consultation_validation_failed', {
-      issues: 解析結果.error.issues.map((issue) => ({
+      issues: result.error.issues.map((issue) => ({
         path: issue.path.join('.'),
         code: issue.code,
       })),
@@ -125,7 +125,7 @@ const parseConsultation = (consultation: string): string => {
     throw new Error('相談内容の形式が不正です')
   }
 
-  return 解析結果.data
+  return result.data
 }
 
 /**
