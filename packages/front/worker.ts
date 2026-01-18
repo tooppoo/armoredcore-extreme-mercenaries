@@ -179,35 +179,33 @@ export default {
     logger.info('scheduled_triggered', { cron: cronName })
 
     // チャレンジEmbedding生成
-    if (cronName === '0 3 * * *') {
-      const vectorize = env.CHALLENGE_VECTORIZE
-      const apiKey = env.OPENAI_API_KEY
+    const vectorize = env.CHALLENGE_VECTORIZE
+    const apiKey = env.OPENAI_API_KEY
 
-      if (!vectorize) {
-        logger.warn('scheduled_vectorize_not_configured', {})
-        return
-      }
+    if (!vectorize) {
+      logger.warn('scheduled_vectorize_not_configured', {})
+      return
+    }
 
-      if (!apiKey) {
-        logger.warn('scheduled_openai_api_key_not_configured', {})
-        return
-      }
+    if (!apiKey) {
+      logger.warn('scheduled_openai_api_key_not_configured', {})
+      return
+    }
 
-      try {
-        const result = await generateChallengeEmbeddings(
-          env.DB,
-          vectorize,
-          apiKey,
-        )
-        logger.info('scheduled_embedding_completed', {
-          processed: result.processed,
-          totalTokens: result.totalTokens,
-        })
-      } catch (error) {
-        logger.error('scheduled_embedding_failed', {
-          error: error instanceof Error ? error.message : 'unknown',
-        })
-      }
+    try {
+      const result = await generateChallengeEmbeddings(
+        env.DB,
+        vectorize,
+        apiKey,
+      )
+      logger.info('scheduled_embedding_completed', {
+        processed: result.processed,
+        totalTokens: result.totalTokens,
+      })
+    } catch (error) {
+      logger.error('scheduled_embedding_failed', {
+        error: error instanceof Error ? error.message : 'unknown',
+      })
     }
   },
 }
