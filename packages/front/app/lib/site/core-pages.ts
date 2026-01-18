@@ -62,6 +62,12 @@ export const corePages: readonly CorePage[] = [
     showInFooter: false,
     showInHeader: false,
   },
+  {
+    path: '/challenge-suggestion',
+    label: 'チャレンジ提案AI',
+    showInFooter: true,
+    showInHeader: false,
+  }
 ]
 
 /**

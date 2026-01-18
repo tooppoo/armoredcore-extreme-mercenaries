@@ -301,6 +301,28 @@ const lists = ({
     ),
   },
   {
+    caption: 'チャレンジ提案・生成',
+    id: 'challenge-suggestion',
+    content: (
+      <>
+        <p>
+          AIを活用したチャレンジ提案・生成機能を提供しています。
+          <br />
+          プレイヤーの興味やプレイスタイル、過去に登録されたチャレンジ情報に基づき、新たなチャレンジを自動生成します。
+        </p>
+        <div className="highlight-box">
+          <LinkCard
+            to="/challenge-suggestion"
+            type="internal"
+            aria-label="チャレンジ提案・生成ページへ移動"
+          >
+            チャレンジ提案・生成機能を試す
+          </LinkCard>
+        </div>
+      </>
+    ),
+  },
+  {
     caption: 'Discordサーバーの利用規約',
     id: 'rule',
     content: (
