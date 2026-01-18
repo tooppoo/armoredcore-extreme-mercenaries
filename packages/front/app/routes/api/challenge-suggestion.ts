@@ -80,8 +80,7 @@ const post = async ({
     })
   } catch (error) {
     logger.error('challenge_suggestion_generation_failed', {
-      エラー種別:
-        error instanceof Error ? error.name : typeof error,
+      エラー種別: error instanceof Error ? error.name : typeof error,
       エラーメッセージ:
         error instanceof Error ? error.message : '不明なエラーが発生しました',
     })
