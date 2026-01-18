@@ -9,6 +9,7 @@ export default [
   index('./routes/index.tsx'),
   route('rule', './routes/rule.tsx'),
   route('penalties', './routes/penalties.tsx'),
+  route('challenge-suggestion', './routes/challenge-suggestion.tsx'),
   // Sitemaps (index + children)
   route('sitemap.xml', './routes/sitemap.xml.ts'),
   route('sitemap.core.xml', './routes/sitemap.core.xml.ts'),
@@ -31,6 +32,7 @@ export default [
 
   ...prefix('api', [
     route('ping', './routes/api/ping.ts'),
+    route('challenge-suggestion', './routes/api/challenge-suggestion.ts'),
     ...prefix('archives', [
       route('video', './routes/api/archives/video.ts'),
       route('challenge', './routes/api/archives/challenge.ts'),
