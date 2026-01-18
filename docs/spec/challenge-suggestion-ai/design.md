@@ -32,13 +32,13 @@ sequenceDiagram
 
 | リソース | 名前 | 用途 |
 | ---------- | ------ | ------ |
-| Vectorize Index | `challenge-embeddings` | チャレンジのベクトルインデックス |
+| Vectorize Index | `ac-exm-challenge-embeddings` | チャレンジのベクトルインデックス |
 | Secret | `OPENAI_API_KEY` | OpenAI API認証 |
 
 ### Vectorize インデックス設定
 
 ```bash
-wrangler vectorize create challenge-embeddings \
+wrangler vectorize create ac-exm-challenge-embeddings \
   --dimensions=1536 \
   --metric=cosine
 ```
