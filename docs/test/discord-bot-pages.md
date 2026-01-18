@@ -8,7 +8,7 @@
 
 | コマンド | 結果 | 備考 |
 | --- | --- | --- |
-| `pnpm --filter @ac-extreme-mercenaries/front test` | ✅ | Vitest 87件通過。`logger.withCorrelation` の warn/error 出力を含む。|
+| `pnpm --filter @ac-extreme-mercenaries/front test` | ✅ | Vitest 87件通過。`logger.withCorrelation` の warn/error 出力を含む。 |
 | `pnpm --filter @ac-extreme-mercenaries/front coverage -- --reporter text-summary` | ⚠️ | 全体 Statements 51.97%、Branches 78.59%。`functions/api/discord/interactions.ts` は Statements 81.69%。`app/lib` や `app/routes` 配下に未カバー領域が残存。 |
 
 ## パフォーマンス検証

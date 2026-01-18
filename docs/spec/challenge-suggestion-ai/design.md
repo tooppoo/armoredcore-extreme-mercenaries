@@ -31,7 +31,7 @@ sequenceDiagram
 ### 新規リソース
 
 | リソース | 名前 | 用途 |
-|----------|------|------|
+| ---------- | ------ | ------ |
 | Vectorize Index | `challenge-embeddings` | チャレンジのベクトルインデックス |
 | Secret | `OPENAI_API_KEY` | OpenAI API認証 |
 
@@ -102,7 +102,7 @@ interface ErrorResponse {
 
 ## ディレクトリ構成
 
-```
+```txt
 packages/front/app/lib/challenge-suggestion/
 ├── embedding/
 │   ├── client.server.ts            # OpenAI Embedding クライアント
@@ -116,7 +116,7 @@ packages/front/app/lib/challenge-suggestion/
 
 ### システムプロンプト
 
-```
+```txt
 あなたはアーマードコア6のチャレンジ（縛りプレイ）を提案するAIです。
 ユーザーの相談内容と、過去の人気チャレンジを参考に、新しいチャレンジを提案してください。
 
@@ -133,7 +133,7 @@ packages/front/app/lib/challenge-suggestion/
 ### OpenAI API
 
 | モデル | 用途 | 単価 (per 1M tokens) |
-|--------|------|---------------------|
+| ------ | ---- | ------------------- |
 | text-embedding-3-small | Embedding | $0.02 |
 | gpt-4o-mini | チャレンジ生成 | $0.15 (input) / $0.60 (output) |
 
