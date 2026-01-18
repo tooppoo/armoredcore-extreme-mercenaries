@@ -1,6 +1,6 @@
 import { drizzle } from 'drizzle-orm/d1'
 import { challengeArchives } from '~/db/schema.server'
-import { createEmbedding } from './client.server'
+import { createEmbeddings } from './client.server'
 import { logger } from '~/lib/observability/logger'
 
 const BATCH_SIZE = 100
@@ -53,28 +53,34 @@ export const generateChallengeEmbeddings = async (
       batchSize: batch.length,
     })
 
-    // 各チャレンジのEmbeddingを生成
-    const vectors = []
-    let batchTokens = 0
+    // 各チャレンジのEmbeddingを一括生成
+    const textInBatch = batch.map((challenge) =>
+      buildSearchText(challenge.title, challenge.description),
+    )
+    const { embeddings, tokensUsed } = await createEmbeddings(
+      textInBatch,
+      apiKey,
+    )
 
-    for (const challenge of batch) {
-      const text = buildSearchText(challenge.title, challenge.description)
-      const { embedding, tokensUsed } = await createEmbedding(text, apiKey)
-
-      vectors.push({
-        id: `challenge-${challenge.id}`,
-        values: embedding,
-        metadata: {
-          challengeId: challenge.id,
-          externalId: challenge.externalId,
-          title: challenge.title,
-        },
+    if (embeddings.length !== batch.length) {
+      logger.error('embeddings_count_mismatch', {
+        expected: batch.length,
+        actual: embeddings.length,
       })
-
-      batchTokens += tokensUsed
+      throw new Error('Embedding generation result count does not match')
     }
 
-    totalTokens += batchTokens
+    const vectors = batch.map((challenge, index) => ({
+      id: `challenge-${challenge.id}`,
+      values: embeddings[index],
+      metadata: {
+        challengeId: challenge.id,
+        externalId: challenge.externalId,
+        title: challenge.title,
+      },
+    }))
+
+    totalTokens += tokensUsed
 
     // Vectorizeに書き込み
     await vectorize.upsert(vectors)
@@ -84,7 +90,7 @@ export const generateChallengeEmbeddings = async (
     logger.info('batch_completed', {
       batch: batchNumber,
       processed: batch.length,
-      tokens: batchTokens,
+      tokens: tokensUsed,
     })
   }
 
