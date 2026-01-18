@@ -1,6 +1,7 @@
 import { OpenAI } from 'openai'
 import type { SimilarChallenge, ChallengeSuggestion } from '../types'
 import { logger } from '~/lib/observability/logger'
+import { z } from 'zod'
 
 const SYSTEM_PROMPT = `あなたはアーマードコア6のチャレンジ（縛りプレイ）を提案するAIです。
 ユーザーの相談内容と、過去のチャレンジを参考に、新しいチャレンジを提案してください。
@@ -91,23 +92,42 @@ ${challengeExamples}
 上記の相談内容と過去のチャレンジを参考に、新しいチャレンジを1つ提案してください。`
 }
 
+const challengeSuggestionScheme = z.object({
+  title: z.string().min(1),
+  description: z.string().min(1),
+  hashtag: z.string().min(1),
+})
+
 /**
  * OpenAIの出力をパースしてChallengeSuggestionに変換
  */
 const parseChallengeSuggestion = (content: string): ChallengeSuggestion => {
-  const parsed = JSON.parse(content) as {
-    title?: string
-    description?: string
-    hashtag?: string
+  let jsonParsedContents: unknown
+  try {
+    jsonParsedContents = JSON.parse(content)
+  } catch (error) {
+    logger.warn('challenge_suggestion_parse_failed', {
+      reason: 'json_parse_failed',
+      errorType: error instanceof Error ? error.name : typeof error,
+      message: error instanceof Error ? error.message : 'unknown',
+      contentLength: content.length,
+    })
+    throw new Error('チャレンジ提案の解析に失敗しました')
   }
 
-  if (!parsed.title || !parsed.description || !parsed.hashtag) {
-    throw new Error('Invalid challenge suggestion format')
+  const schemeParsedContents = challengeSuggestionScheme.safeParse(jsonParsedContents)
+
+  if (!schemeParsedContents.success) {
+    logger.warn('challenge_suggestion_parse_failed', {
+      reason: 'schema_validation_failed',
+      issues: schemeParsedContents.error.issues.map((issue) => ({
+        path: issue.path.join('.'),
+        code: issue.code,
+      })),
+      contentLength: content.length,
+    })
+    throw new Error('チャレンジ提案の形式が不正です')
   }
 
-  return {
-    title: parsed.title,
-    description: parsed.description,
-    hashtag: parsed.hashtag,
-  }
+  return schemeParsedContents.data
 }
