@@ -8,7 +8,7 @@ import {
 import { findSimilarChallenges } from '~/lib/challenge-suggestion/embedding/similarity.server'
 import { generateChallenge } from '~/lib/challenge-suggestion/generation/generator.server'
 import { logger } from '~/lib/observability/logger'
-import { Route } from '../+types'
+import type { Route } from './+types/challenge-suggestion'
 
 export const action = async (args: Route.ActionArgs) => {
   switch (args.request.method.toUpperCase()) {

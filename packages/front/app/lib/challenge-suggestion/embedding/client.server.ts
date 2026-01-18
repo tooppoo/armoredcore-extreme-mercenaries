@@ -1,4 +1,4 @@
-import OpenAI from 'openai'
+import { OpenAI } from 'openai'
 import { logger } from '~/lib/observability/logger'
 
 const EMBEDDING_MODEL = 'text-embedding-3-small'

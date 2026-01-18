@@ -1,4 +1,4 @@
-import OpenAI from 'openai'
+import { OpenAI } from 'openai'
 import type { SimilarChallenge, ChallengeSuggestion } from '../types'
 import { logger } from '~/lib/observability/logger'
 
