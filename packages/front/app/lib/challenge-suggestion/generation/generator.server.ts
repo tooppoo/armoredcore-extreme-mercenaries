@@ -145,7 +145,8 @@ const parseChallengeSuggestion = (content: string): ChallengeSuggestion => {
     throw new Error('チャレンジ提案の解析に失敗しました')
   }
 
-  const schemeParsedContents = challengeSuggestionScheme.safeParse(jsonParsedContents)
+  const schemeParsedContents =
+    challengeSuggestionScheme.safeParse(jsonParsedContents)
 
   if (!schemeParsedContents.success) {
     logger.warn('challenge_suggestion_parse_failed', {
