@@ -1,4 +1,4 @@
-import { desc } from 'drizzle-orm'
+import { desc, inArray } from 'drizzle-orm'
 import type { Database } from '~/db/driver.server'
 import { challengeArchives } from '~/db/schema.server'
 import type { SimilarChallenge, ChallengeEmbeddingMetadata } from '../types'
@@ -43,8 +43,29 @@ const searchWithVectorize = async (
     return []
   }
 
-  // D1からチャレンジ詳細を取得
-  const challenges = await db.select().from(challengeArchives)
+  const candidatesOfChallengeList = results.matches
+    .map((match) => {
+      const metadata = match.metadata as unknown as ChallengeEmbeddingMetadata
+      return metadata.challengeId
+    })
+    .filter((challengeId): challengeId is number =>
+      Number.isFinite(challengeId),
+    )
+
+  if (candidatesOfChallengeList.length === 0) {
+    logger.warn('similar_challenges_metadata_missing', {
+      count: results.matches.length,
+    })
+    return []
+  }
+
+  const uniqueChallengeIdList = Array.from(new Set(candidatesOfChallengeList))
+
+  // D1からチャレンジ詳細を取得（Vectorizeの結果に限定）
+  const challenges = await db
+    .select()
+    .from(challengeArchives)
+    .where(inArray(challengeArchives.id, uniqueChallengeIdList))
 
   const challengeMap = new Map(challenges.map((c) => [c.id, c]))
 
