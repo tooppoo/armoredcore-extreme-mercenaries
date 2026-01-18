@@ -59,7 +59,7 @@ export const generateChallengeEmbeddings = async (
 
     for (const challenge of batch) {
       const text = buildSearchText(challenge.title, challenge.description)
-      const { embedding, tokens } = await createEmbedding(text, apiKey)
+      const { embedding, tokensUsed } = await createEmbedding(text, apiKey)
 
       vectors.push({
         id: `challenge-${challenge.id}`,
@@ -71,7 +71,7 @@ export const generateChallengeEmbeddings = async (
         },
       })
 
-      batchTokens += tokens
+      batchTokens += tokensUsed
     }
 
     totalTokens += batchTokens

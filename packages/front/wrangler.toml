@@ -44,10 +44,16 @@ migrations_dir = "./app/db/migrations"
 # Bind a Vectorize index for challenge embeddings
 # Docs: https://developers.cloudflare.com/vectorize/get-started/embeddings/
 # NOTE: Vectorize index must be created manually:
-#   wrangler vectorize create challenge-embeddings --dimensions=1536 --metric=cosine
+#   wrangler vectorize create ac-exm-challenge-embeddings --dimensions=1536 --metric=cosine
 [[vectorize]]
 binding = "CHALLENGE_VECTORIZE"
 index_name = "ac-exm-challenge-embeddings"
+
+# Cron Triggers for scheduled tasks
+# Docs: https://developers.cloudflare.com/workers/configuration/cron-triggers/
+# 毎日 12:00 JST (03:00 UTC) にチャレンジEmbeddingを生成
+[triggers]
+crons = ["0 3 * * *"]
 
 # Bind a Durable Object. Durable objects are a scale-to-zero compute primitive based on the actor model.
 # Durable Objects can live for as long as needed. Use these when you need a long-running "server", such as in realtime apps.
@@ -104,6 +110,13 @@ database_name = "ac-extreme-mercenaries-db"
 database_id = "dbadda99-8351-4150-a843-bb474d28ad4e"
 migrations_dir = "./app/db/migrations"
 
+[[env.preview.vectorize]]
+binding = "CHALLENGE_VECTORIZE"
+index_name = "ac-exm-challenge-embeddings"
+
+[env.preview.triggers]
+crons = ["0 3 * * *"]
+
 # [[env.preview.kv_namespaces]]
 # binding = "MY_KV_NAMESPACE"
 # id = "<PREVIEW_NAMESPACE_ID>"
@@ -126,6 +139,13 @@ binding = "DB"
 database_name = "ac-extreme-mercenaries-db"
 database_id = "dbadda99-8351-4150-a843-bb474d28ad4e"
 migrations_dir = "./app/db/migrations"
+
+[[env.production.vectorize]]
+binding = "CHALLENGE_VECTORIZE"
+index_name = "ac-exm-challenge-embeddings"
+
+[env.production.triggers]
+crons = ["0 3 * * *"]
 
 # [[env.production.kv_namespaces]]
 # binding = "MY_KV_NAMESPACE"

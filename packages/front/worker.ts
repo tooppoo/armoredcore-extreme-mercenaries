@@ -7,6 +7,7 @@ import * as build from './build/server'
 import { getLoadContext } from './load-context'
 import { handleDiscordInteractions } from './functions/api/discord/interactions'
 import { logger } from './app/lib/observability/logger'
+import { generateChallengeEmbeddings } from './app/lib/challenge-suggestion/embedding/generator.server'
 
 const buildWithCompatibleType = build as unknown as ServerBuild
 const getLoadContextWithCompatibleType =
@@ -170,5 +171,42 @@ export default {
   ): Promise<Response> {
     const context = createEventContext(request, env, executionContext)
     return handleWithFallback(context)
+  },
+
+  async scheduled(
+    controller: ScheduledController,
+    env: Env,
+  ): Promise<void> {
+    const cronName = controller.cron
+
+    logger.info('scheduled_triggered', { cron: cronName })
+
+    // チャレンジEmbedding生成
+    if (cronName === '0 3 * * *') {
+      const vectorize = env.CHALLENGE_VECTORIZE
+      const apiKey = env.OPENAI_API_KEY
+
+      if (!vectorize) {
+        logger.warn('scheduled_vectorize_not_configured', {})
+        return
+      }
+
+      if (!apiKey) {
+        logger.warn('scheduled_openai_api_key_not_configured', {})
+        return
+      }
+
+      try {
+        const result = await generateChallengeEmbeddings(env.DB, vectorize, apiKey)
+        logger.info('scheduled_embedding_completed', {
+          processed: result.processed,
+          totalTokens: result.totalTokens,
+        })
+      } catch (error) {
+        logger.error('scheduled_embedding_failed', {
+          error: error instanceof Error ? error.message : 'unknown',
+        })
+      }
+    }
   },
 }
