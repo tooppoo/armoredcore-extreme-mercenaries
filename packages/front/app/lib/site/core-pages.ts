@@ -67,7 +67,7 @@ export const corePages: readonly CorePage[] = [
     label: 'チャレンジ提案AI',
     showInFooter: true,
     showInHeader: false,
-  }
+  },
 ]
 
 /**
