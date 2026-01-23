@@ -43,7 +43,7 @@
     "date-fns": "4.1.0",
     "discord-interactions": "4.4.0",
     "drizzle-orm": "0.45.1",
-    "openai": "4.104.0",
+    "openai": "6.16.0",
     "highlight.js": "11.11.1",
     "html-react-parser": "5.2.3",
     "isbot": "^5.0.0",
