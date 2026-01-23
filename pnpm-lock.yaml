@@ -11,7 +11,7 @@ importers:
     dependencies:
       '@ac-extreme-mercenaries/front':
         specifier: workspace:*
-        version: file:packages/front(@cloudflare/workers-types@4.20250922.0)(@types/react@19.2.8)(typescript@5.9.3)
+        version: file:packages/front(@cloudflare/workers-types@4.20250922.0)(@types/react@19.2.8)(typescript@5.9.3)(ws@8.18.3)
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.44.0
         version: 8.53.0(@typescript-eslint/parser@8.53.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
@@ -140,8 +140,8 @@ importers:
         specifier: 27.4.0
         version: 27.4.0
       openai:
-        specifier: 4.77.0
-        version: 4.77.0(zod@4.3.5)
+        specifier: 4.104.0
+        version: 4.104.0(ws@8.18.3)(zod@4.3.5)
       react:
         specifier: ^19.0.0
         version: 19.2.3
@@ -3903,12 +3903,15 @@ packages:
     resolution: {integrity: sha512-oVlzkg3ENAhCk2zdv7IJwd/QUD4z2RxRwpkcGY8psCVcCYZNq4wYnVWALHM+brtuJjePWiYF/ClmuDr8Ch5+kg==}
     engines: {node: '>= 0.8'}
 
-  openai@4.77.0:
-    resolution: {integrity: sha512-WWacavtns/7pCUkOWvQIjyOfcdr9X+9n9Vvb0zFeKVDAqwCMDHB+iSr24SVaBAhplvSG6JrRXFpcNM9gWhOGIw==}
+  openai@4.104.0:
+    resolution: {integrity: sha512-p99EFNsA/yX6UhVO93f5kJsDRLAg+CTA2RBqdHK4RtK8u5IJw32Hyb2dTGKbnnFmnuoBv5r7Z2CURI9sGZpSuA==}
     hasBin: true
     peerDependencies:
+      ws: ^8.18.0
       zod: ^3.23.8
     peerDependenciesMeta:
+      ws:
+        optional: true
       zod:
         optional: true
 
@@ -4903,7 +4906,7 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@ac-extreme-mercenaries/front@file:packages/front(@cloudflare/workers-types@4.20250922.0)(@types/react@19.2.8)(typescript@5.9.3)':
+  '@ac-extreme-mercenaries/front@file:packages/front(@cloudflare/workers-types@4.20250922.0)(@types/react@19.2.8)(typescript@5.9.3)(ws@8.18.3)':
     dependencies:
       '@ac-extreme-mercenaries/discord-bot': file:packages/discord-bot
       '@date-fns/tz': 1.4.1
@@ -4916,7 +4919,7 @@ snapshots:
       html-react-parser: 5.2.3(@types/react@19.2.8)(react@19.1.1)
       isbot: 5.1.31
       jsdom: 27.4.0
-      openai: 4.77.0(zod@4.3.5)
+      openai: 4.104.0(ws@8.18.3)(zod@4.3.5)
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
       react-hook-form: 7.71.1(react@19.1.1)
@@ -4973,6 +4976,7 @@ snapshots:
       - supports-color
       - typescript
       - utf-8-validate
+      - ws
 
   '@acemir/cssom@0.9.31': {}
 
@@ -8499,7 +8503,7 @@ snapshots:
     dependencies:
       ee-first: 1.1.1
 
-  openai@4.77.0(zod@4.3.5):
+  openai@4.104.0(ws@8.18.3)(zod@4.3.5):
     dependencies:
       '@types/node': 18.19.130
       '@types/node-fetch': 2.6.13
@@ -8509,6 +8513,7 @@ snapshots:
       formdata-node: 4.4.1
       node-fetch: 2.7.0
     optionalDependencies:
+      ws: 8.18.3
       zod: 4.3.5
     transitivePeerDependencies:
       - encoding
