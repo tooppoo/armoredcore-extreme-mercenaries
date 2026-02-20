@@ -45,7 +45,7 @@
     "drizzle-orm": "0.45.1",
     "openai": "4.104.0",
     "highlight.js": "11.11.1",
-    "html-react-parser": "5.2.3",
+    "html-react-parser": "5.2.11",
     "isbot": "^5.0.0",
     "jsdom": "27.4.0",
     "react": "^19.0.0",
