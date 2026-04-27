@@ -15,3 +15,6 @@ onlyBuiltDependencies:
 
 syncInjectedDepsAfterScripts:
   - build
+minimumReleaseAgeExclude:
+  # Renovate security update: drizzle-orm@0.45.2
+  - drizzle-orm@0.45.2
