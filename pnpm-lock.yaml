@@ -141,7 +141,7 @@ importers:
         version: 27.4.0
       openai:
         specifier: 4.104.0
-        version: 4.104.0(ws@8.18.3)(zod@4.3.5)
+        version: 4.104.0(ws@8.18.3)(zod@4.6.6)
       react:
         specifier: ^19.0.0
         version: 19.2.3
@@ -161,8 +161,8 @@ importers:
         specifier: 13.0.0
         version: 13.0.0
       zod:
-        specifier: 4.3.5
-        version: 4.3.5
+        specifier: 4.6.6
+        version: 4.6.6
     devDependencies:
       '@fast-check/vitest':
         specifier: 0.2.4
@@ -616,11 +616,11 @@ packages:
 
   '@esbuild-kit/core-utils@3.3.2':
     resolution: {integrity: sha512-sPRAnw9CdSsRmEtnsl2WXWdyquogVpB3yZ3dgwJfe8zrOzTsV7cJvmwrKVa+0ma5BoiGJ+BoqkMvawbayKUsqQ==}
-    deprecated: 'Merged into tsx: https://tsx.is'
+    deprecated: 'Merged into tsx: https://tsx.hirok.io'
 
   '@esbuild-kit/esm-loader@2.6.5':
     resolution: {integrity: sha512-FxEMIkJKnodyA1OaCUoEvbYRkoZlLZ4d/eXFu9Fh8CbBBgP5EmZxrfTRyN0qpXZ4vOvqnE5YdRdcrmUUXuU+dA==}
-    deprecated: 'Merged into tsx: https://tsx.is'
+    deprecated: 'Merged into tsx: https://tsx.hirok.io'
 
   '@esbuild/aix-ppc64@0.25.11':
     resolution: {integrity: sha512-Xt1dOL13m8u0WE8iplx9Ibbm+hFAO0GsU2P34UNoDGvZYkY8ifSiy6Zuc1lYxfG7svWE2fzqCUmFp5HCn51gJg==}
@@ -2884,6 +2884,7 @@ packages:
   eslint@9.39.2:
     resolution: {integrity: sha512-LEyamqS7W5HB3ujJyvi0HQK/dtVINZvd5mAAp9eT5S/ujByGjiZLCzPcHVzuXbpJDJF/cxwHlfceVUDZ2lnSTw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'
@@ -4470,6 +4471,7 @@ packages:
   tsconfck@3.1.6:
     resolution: {integrity: sha512-ks6Vjr/jEw0P1gmOVwutM3B7fWxoWBL2KRDb1JfqGVawBmO5UsvmWOQFGHBPl5yxYz4eERr19E6L7NMv+Fej4w==}
     engines: {node: ^18 || >=20}
+    deprecated: unmaintained
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
@@ -4792,8 +4794,8 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
-  zod@4.3.5:
-    resolution: {integrity: sha512-k7Nwx6vuWx1IJ9Bjuf4Zt1PEllcwe7cls3VNzm4CQ1/hgtFUK2bRNG3rvnpPUhFjmqJKAKtjV576KnUkHocg/g==}
+  zod@4.6.6:
+    resolution: {integrity: sha512-4UmzQUF5fxvfcYHlbjBmejU+w+hbDnWFx4aS8kBx7nPBHcO2SqPbpAG8snbdg+Xse4pRefR98hgjFgIMCI/UhA==}
 
 snapshots:
 
@@ -4919,14 +4921,14 @@ snapshots:
       html-react-parser: 5.2.3(@types/react@19.2.8)(react@19.1.1)
       isbot: 5.1.31
       jsdom: 27.4.0
-      openai: 4.104.0(ws@8.18.3)(zod@4.3.5)
+      openai: 4.104.0(ws@8.18.3)(zod@4.6.6)
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
       react-hook-form: 7.71.1(react@19.1.1)
       react-router: 7.12.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       sanitize-html: 2.17.0
       uuid: 13.0.0
-      zod: 4.3.5
+      zod: 4.6.6
     optionalDependencies:
       '@cloudflare/workerd-darwin-64': 1.20260120.0
       '@cloudflare/workerd-darwin-arm64': 1.20260120.0
@@ -7317,8 +7319,8 @@ snapshots:
       '@babel/parser': 7.28.6
       eslint: 9.39.2(jiti@2.6.1)
       hermes-parser: 0.25.1
-      zod: 4.3.5
-      zod-validation-error: 4.0.2(zod@4.3.5)
+      zod: 4.6.6
+      zod-validation-error: 4.0.2(zod@4.6.6)
     transitivePeerDependencies:
       - supports-color
 
@@ -8503,7 +8505,7 @@ snapshots:
     dependencies:
       ee-first: 1.1.1
 
-  openai@4.104.0(ws@8.18.3)(zod@4.3.5):
+  openai@4.104.0(ws@8.18.3)(zod@4.6.6):
     dependencies:
       '@types/node': 18.19.130
       '@types/node-fetch': 2.6.13
@@ -8514,7 +8516,7 @@ snapshots:
       node-fetch: 2.7.0
     optionalDependencies:
       ws: 8.18.3
-      zod: 4.3.5
+      zod: 4.6.6
     transitivePeerDependencies:
       - encoding
 
@@ -9468,10 +9470,10 @@ snapshots:
       cookie: 1.0.2
       youch-core: 0.3.3
 
-  zod-validation-error@4.0.2(zod@4.3.5):
+  zod-validation-error@4.0.2(zod@4.6.6):
     dependencies:
-      zod: 4.3.5
+      zod: 4.6.6
 
   zod@3.25.76: {}
 
-  zod@4.3.5: {}
+  zod@4.6.6: {}
